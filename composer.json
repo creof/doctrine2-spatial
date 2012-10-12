@@ -1,0 +1,27 @@
+{
+    "name": "creof/doctrine2-spatial",
+    "type": "library",
+    "description": "Doctrine2 multi-platform support for spatial types and functions",
+    "keywords": ["orm", "dbal", "database", "postgresql", "mysql", "opengis", "gis", "spatial", "geometry", "geography"],
+    "authors": [
+        {
+            "name": "Derek Lambert",
+            "email": "dlambert@dereklambert.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "doctrine/orm": "dev-master"
+    },
+    "require-dev": {
+        "doctrine/common": "dev-master",
+        "doctrine/dbal": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "CrEOF\\PHP\\Types\\Spatial": "lib/CrEOF/PHP/Types/Spatial",
+            "CrEOF\\DBAL\\Types\\Spatial": "lib/CrEOF/DBAL/Types/Spatial",
+            "CrEOF\\Exception": "lib/CrEOF/Exception"
+        }
+    }
+}
