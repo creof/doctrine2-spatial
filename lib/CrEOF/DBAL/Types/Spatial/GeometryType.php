@@ -61,6 +61,7 @@ class GeometryType extends Type
      * @param AbstractPlatform $platform         The currently used database platform.
      *
      * @return string
+     * @throws UnsupportedPlatformException
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -82,6 +83,8 @@ class GeometryType extends Type
      * @param AbstractPlatform $platform
      *
      * @return Geometry|null
+     * @throws UnsupportedPlatformException
+     * @throws \Doctrine\DBAL\Types\ConversionException
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -135,6 +138,7 @@ class GeometryType extends Type
      * @param AbstractPlatform $platform
      *
      * @return string
+     * @throws UnsupportedPlatformException
      */
     public function convertToPHPValueSQL($sqlExpr, $platform)
     {
@@ -156,6 +160,7 @@ class GeometryType extends Type
      * @param AbstractPlatform $platform
      *
      * @return string
+     * @throws UnsupportedPlatformException
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
