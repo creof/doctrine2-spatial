@@ -34,13 +34,34 @@ use Exception;
  */
 class InvalidValueException extends Exception
 {
+    /**
+     * @param string $type
+     * @param mixed  $value
+     *
+     * @return InvalidValueException
+     */
     static public function invalidType($type, $value)
     {
         return new self(sprintf('Value needs to be of type "%s", is "%s".', $type, (is_object($value) ? get_class($value) : gettype($value))));
     }
 
+    /**
+     * @param LineString $ring
+     *
+     * @return InvalidValueException
+     */
     static public function ringNotClosed(LineString $ring)
     {
         return new self(sprintf('Ring "%s" is not closed.', $ring));
+    }
+
+    /**
+     * @param int $order
+     *
+     * @return InvalidValueException
+     */
+    static public function invalidByteOrder($order)
+    {
+        return new self(sprintf('Invalid byte order "%d".', $order));
     }
 }

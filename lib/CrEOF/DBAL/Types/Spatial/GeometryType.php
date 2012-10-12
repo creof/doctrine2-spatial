@@ -23,6 +23,7 @@
 
 namespace CrEOF\DBAL\Types\Spatial;
 
+use CrEOF\Exception\InvalidValueException;
 use CrEOF\Exception\UnsupportedPlatformException;
 use CrEOF\PHP\Types\Spatial\Geometry;
 use CrEOF\PHP\Types\Spatial\Geometry\LineString;
@@ -43,6 +44,8 @@ class GeometryType extends Type
     const POINT       = 'point';
     const LINESTRING  = 'linestring';
     const POLYGON     = 'polygon';
+
+    protected $byteOrder;
 
     /**
      * Gets the name of this type.
@@ -206,10 +209,25 @@ class GeometryType extends Type
      * @param string $value
      *
      * @return Geometry
+     * @throws InvalidValueException
      */
     private function convertWkbValue($value)
     {
-        $data   = unpack('CbyteOrder/LwkbType/A*value', $value);
+        $data            = unpack('CbyteOrder/A*value', $value);
+        $this->byteOrder = $data['byteOrder'];
+
+        switch ($this->byteOrder) {
+            case 0:
+                $data = unpack('NwkbType/A*value', $data['value']);
+                break;
+            case 1:
+                $data = unpack('VwkbType/A*value', $data['value']);
+                break;
+            default:
+                throw InvalidValueException::invalidByteOrder($this->byteOrder);
+                break;
+        }
+
         $method = 'convertWkbTo' . $this->getTypeName($data['wkbType']);
 
         return $this->$method($data['value']);
@@ -255,20 +273,47 @@ class GeometryType extends Type
      * @param string $value
      *
      * @return array
+     * @throws InvalidValueException
      */
     private function unpackWkbPoint($value)
     {
-        return unpack('dx/dy/A*value', $value);
+        switch ($this->byteOrder) {
+            case 0:
+                $data  = unpack('dx/dy/A*value', $value);
+                $fixed = unpack('dy/dx', strrev(pack('dd', $data['x'], $data['y'])));
+                $fixed['value'] = $data['value'];
+
+                return $fixed;
+                break;
+            case 1:
+                return unpack('dx/dy/A*value', $value);
+                break;
+            default:
+                throw InvalidValueException::invalidByteOrder($this->byteOrder);
+                break;
+        }
     }
 
     /**
      * @param string $value
      *
      * @return array
+     * @throws InvalidValueException
      */
     private function unpackWkbLineString($value)
     {
-        $data      = unpack('LnumPoints/A*value', $value);
+        switch ($this->byteOrder) {
+            case 0:
+                $data = unpack('NnumPoints/A*value', $value);
+                break;
+            case 1:
+                $data = unpack('VnumPoints/A*value', $value);
+                break;
+            default:
+                throw InvalidValueException::invalidByteOrder($this->byteOrder);
+                break;
+        }
+
         $numPoints = $data['numPoints'];
         $points    = array();
 
@@ -287,10 +332,22 @@ class GeometryType extends Type
      * @param string $value
      *
      * @return array
+     * @throws InvalidValueException
      */
     private function unpackWkbPolygon($value)
     {
-        $data     = unpack('LnumRings/A*value', $value);
+        switch ($this->byteOrder) {
+            case 0:
+                $data = unpack('NnumRings/A*value', $value);
+                break;
+            case 1:
+                $data = unpack('VnumRings/A*value', $value);
+                break;
+            default:
+                throw InvalidValueException::invalidByteOrder($this->byteOrder);
+                break;
+        }
+
         $numRings = $data['numRings'];
         $rings   = array();
 
