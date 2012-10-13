@@ -30,6 +30,8 @@ use CrEOF\PHP\Types\Spatial\Geometry\Point;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group common
  */
 class PointTest extends \PHPUnit_Framework_TestCase
 {

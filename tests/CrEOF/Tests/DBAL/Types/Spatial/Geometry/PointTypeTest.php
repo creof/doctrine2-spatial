@@ -33,6 +33,8 @@ use CrEOF\Tests\Fixtures\PointEntity;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group common
  */
 class PointTypeTest extends OrmTest
 {

@@ -35,6 +35,8 @@ use CrEOF\Tests\Fixtures\PolygonEntity;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group common
  */
 class PolygonTypeTest extends OrmTest
 {

@@ -31,6 +31,8 @@ use CrEOF\PHP\Types\Spatial\Geometry\Polygon;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group common
  */
 class PolygonTest extends \PHPUnit_Framework_TestCase
 {
