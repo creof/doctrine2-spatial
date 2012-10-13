@@ -2,7 +2,7 @@
     "name": "creof/doctrine2-spatial",
     "type": "library",
     "description": "Doctrine2 multi-platform support for spatial types and functions",
-    "keywords": ["orm", "dbal", "database", "postgresql", "mysql", "opengis", "gis", "spatial", "geometry", "geography"],
+    "keywords": ["orm", "dbal", "database", "postgresql", "mysql", "opengis", "postgis", "gis", "spatial", "geometry", "geography"],
     "authors": [
         {
             "name": "Derek Lambert",
