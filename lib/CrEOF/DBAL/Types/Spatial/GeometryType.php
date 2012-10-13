@@ -73,6 +73,10 @@ class GeometryType extends Type
                 return strtoupper($this->getName());
                 break;
             case 'postgresql':
+                if ($this->getName() == self::GEOMETRY) {
+                    return 'geometry';
+                }
+
                 return 'geometry('. strtoupper($this->getName()) . ')';
                 break;
             default:
