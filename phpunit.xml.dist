@@ -13,6 +13,7 @@
     <groups>
         <include>
             <group>common</group>
+            <group>postgresql</group>
         </include>
     </groups>
 
