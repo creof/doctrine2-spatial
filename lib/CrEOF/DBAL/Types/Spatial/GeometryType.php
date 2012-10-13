@@ -181,6 +181,34 @@ class GeometryType extends Type
     }
 
     /**
+     * @param string $value
+     *
+     * @return Geometry
+     * @throws InvalidValueException
+     */
+    protected function convertWkbValue($value)
+    {
+        $data            = unpack('CbyteOrder/A*value', $value);
+        $this->byteOrder = $data['byteOrder'];
+
+        switch ($this->byteOrder) {
+            case 0:
+                $data = unpack('NwkbType/A*value', $data['value']);
+                break;
+            case 1:
+                $data = unpack('VwkbType/A*value', $data['value']);
+                break;
+            default:
+                throw InvalidValueException::invalidByteOrder($this->byteOrder);
+                break;
+        }
+
+        $method = 'convertWkbTo' . $this->getTypeName($data['wkbType']);
+
+        return $this->$method($data['value']);
+    }
+
+    /**
      * @param int $wkbType
      *
      * @return null|string
@@ -203,34 +231,6 @@ class GeometryType extends Type
             default:
                 return null;
         }
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return Geometry
-     * @throws InvalidValueException
-     */
-    private function convertWkbValue($value)
-    {
-        $data            = unpack('CbyteOrder/A*value', $value);
-        $this->byteOrder = $data['byteOrder'];
-
-        switch ($this->byteOrder) {
-            case 0:
-                $data = unpack('NwkbType/A*value', $data['value']);
-                break;
-            case 1:
-                $data = unpack('VwkbType/A*value', $data['value']);
-                break;
-            default:
-                throw InvalidValueException::invalidByteOrder($this->byteOrder);
-                break;
-        }
-
-        $method = 'convertWkbTo' . $this->getTypeName($data['wkbType']);
-
-        return $this->$method($data['value']);
     }
 
     /**
