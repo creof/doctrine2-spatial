@@ -65,7 +65,7 @@ abstract class Geometry
     protected  function validateLineStringValue(array $points)
     {
         foreach ($points as $point) {
-            if (!($point instanceof Point)) {
+            if ( ! ($point instanceof Point)) {
                 throw InvalidValueException::invalidType('Point', $point);
             }
         }
@@ -79,11 +79,11 @@ abstract class Geometry
     protected  function validatePolygonValue(array $rings)
     {
         foreach ($rings as $ring) {
-            if (!($ring instanceof LineString)) {
+            if ( ! ($ring instanceof LineString)) {
                 throw InvalidValueException::invalidType('LineString', $ring);
             }
 
-            if (!$ring->isClosed()) {
+            if ( ! $ring->isClosed()) {
                 throw InvalidValueException::ringNotClosed($ring);
             }
         }

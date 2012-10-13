@@ -99,7 +99,7 @@ class GeometryType extends Type
             case 'mysql':
                 break;
             case 'postgresql':
-                if (!is_resource($value)) {
+                if ( ! is_resource($value)) {
                     throw \Doctrine\DBAL\Types\ConversionException::conversionFailed($value, self::GEOMETRY);
                 }
 
