@@ -19,9 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "CrEOF\\PHP\\Types\\Spatial": "lib/CrEOF/PHP/Types/Spatial",
-            "CrEOF\\DBAL\\Types\\Spatial": "lib/CrEOF/DBAL/Types/Spatial",
-            "CrEOF\\Exception": "lib/CrEOF/Exception"
+            "CrEOF\\Spatial": "lib/CrEOF/Spatial"
         }
     }
 }
