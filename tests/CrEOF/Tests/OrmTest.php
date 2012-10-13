@@ -23,7 +23,9 @@
 
 namespace CrEOF\Tests;
 
+use CrEOF\Exception\UnsupportedPlatformException;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\Query;
 
 /**
@@ -34,39 +36,75 @@ use Doctrine\ORM\Query;
  */
 abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
 {
+    /**
+     * @var bool
+     */
     protected static $_setup = false;
+
+    /**
+     * @var Connection
+     */
+    protected static $_sharedConn;
+
+    /**
+     * @var AbstractPlatform
+     */
+    protected $platform;
 
     const GEOMETRY_ENTITY   = 'CrEOF\Tests\Fixtures\GeometryEntity';
     const POINT_ENTITY      = 'CrEOF\Tests\Fixtures\PointEntity';
     const LINESTRING_ENTITY = 'CrEOF\Tests\Fixtures\LineStringEntity';
     const POLYGON_ENTITY    = 'CrEOF\Tests\Fixtures\PolygonEntity';
+    const GEOGRAPHY_ENTITY  = 'CrEOF\Tests\Fixtures\GeographyEntity';
 
     protected function setUp() {
         parent::setUp();
 
-        if (!static::$_setup) {
-            $conn = static::$_sharedConn;
+        $this->platform = static::$_sharedConn->getDatabasePlatform();
 
-            switch ($conn->getDatabasePlatform()->getName()) {
+        if ( ! static::$_setup) {
+            static::$_setup = true;
+
+            switch ($this->platform->getName()) {
                 case 'postgresql':
-                    $this->setUpPostgreSql($conn);
+                    $this->setUpPostgreSql(static::$_sharedConn);
+                    break;
+                case 'mysql':
+                    $this->setUpMySql(static::$_sharedConn);
+                    break;
+                default:
+                    throw UnsupportedPlatformException::unsupportedPlatform($this->platform->getName());
                     break;
             }
-
-            \Doctrine\DBAL\Types\Type::addType('geometry', '\CrEOF\DBAL\Types\Spatial\GeometryType');
-            \Doctrine\DBAL\Types\Type::addType('point', '\CrEOF\DBAL\Types\Spatial\Geometry\PointType');
-            \Doctrine\DBAL\Types\Type::addType('linestring', '\CrEOF\DBAL\Types\Spatial\Geometry\LineStringType');
-            \Doctrine\DBAL\Types\Type::addType('polygon', '\CrEOF\DBAL\Types\Spatial\Geometry\PolygonType');
-
-            $this->_schemaTool->createSchema(
-                array(
-                     $this->_em->getClassMetadata(self::GEOMETRY_ENTITY),
-                     $this->_em->getClassMetadata(self::POINT_ENTITY),
-                     $this->_em->getClassMetadata(self::LINESTRING_ENTITY),
-                     $this->_em->getClassMetadata(self::POLYGON_ENTITY)
-                ));
-            static::$_setup = true;
         }
+    }
+
+    protected function setupCommonTypes()
+    {
+        \Doctrine\DBAL\Types\Type::addType('geometry', '\CrEOF\DBAL\Types\Spatial\GeometryType');
+        \Doctrine\DBAL\Types\Type::addType('point', '\CrEOF\DBAL\Types\Spatial\Geometry\PointType');
+        \Doctrine\DBAL\Types\Type::addType('linestring', '\CrEOF\DBAL\Types\Spatial\Geometry\LineStringType');
+        \Doctrine\DBAL\Types\Type::addType('polygon', '\CrEOF\DBAL\Types\Spatial\Geometry\PolygonType');
+    }
+
+    protected function setupCommonEntities()
+    {
+        $this->_schemaTool->createSchema(
+            array(
+                $this->_em->getClassMetadata(self::GEOMETRY_ENTITY),
+                $this->_em->getClassMetadata(self::POINT_ENTITY),
+                $this->_em->getClassMetadata(self::LINESTRING_ENTITY),
+                $this->_em->getClassMetadata(self::POLYGON_ENTITY),
+            )
+        );
+    }
+
+    protected function tearDownCommonEntities(Connection $conn)
+    {
+        $conn->executeUpdate('DELETE FROM GeometryEntity');
+        $conn->executeUpdate('DELETE FROM PointEntity');
+        $conn->executeUpdate('DELETE FROM LineStringEntity');
+        $conn->executeUpdate('DELETE FROM PolygonEntity');
     }
 
     protected function tearDown()
@@ -77,16 +115,54 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
 
         $this->_sqlLoggerStack->enabled = false;
 
-        $conn->executeUpdate('DELETE FROM GeometryEntity');
-        $conn->executeUpdate('DELETE FROM PointEntity');
-        $conn->executeUpdate('DELETE FROM LineStringEntity');
-        $conn->executeUpdate('DELETE FROM PolygonEntity');
+        $this->tearDownCommonEntities($conn);
+
+        switch ($conn->getDatabasePlatform()->getName()) {
+            case 'postgresql':
+                $this->tearDownPostgreSql($conn);
+                break;
+            case 'mysql':
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($this->platform->getName());
+                break;
+        }
 
         $this->_em->clear();
     }
 
-    private function setUpPostgreSql(Connection $conn)
+    /**
+     * @param Connection $conn
+     */
+    protected function setUpMySql(Connection $conn)
+    {
+        $this->setupCommonTypes();
+        $this->setupCommonEntities();
+    }
+
+
+    /**
+     * @param Connection $conn
+     */
+    protected function setUpPostgreSql(Connection $conn)
     {
         $conn->exec('CREATE EXTENSION postgis');
+
+        $this->setupCommonTypes();
+        \Doctrine\DBAL\Types\Type::addType('geography', '\CrEOF\DBAL\Types\Spatial\GeographyType');
+
+        $this->setupCommonEntities();
+        $this->_schemaTool->createSchema(
+            array(
+                $this->_em->getClassMetadata(self::GEOGRAPHY_ENTITY)
+            ));
+    }
+
+    /**
+     * @param Connection $conn
+     */
+    protected function tearDownPostgreSql(Connection $conn)
+    {
+        $conn->executeUpdate('DELETE FROM GeographyEntity');
     }
 }
