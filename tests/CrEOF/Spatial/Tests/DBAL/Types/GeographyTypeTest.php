@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Tests\DBAL\Types;
+namespace CrEOF\Spatial\Tests\DBAL\Types;
 
 use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
