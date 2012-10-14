@@ -47,9 +47,14 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
     protected static $_sharedConn;
 
     /**
-     * @var AbstractPlatform
+     * @var Connection
      */
-    protected $platform;
+    protected $conn;
+
+    /**
+     * @var string
+     */
+    protected $platformName;
 
     const GEOMETRY_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeometryEntity';
     const POINT_ENTITY      = 'CrEOF\Spatial\Tests\Fixtures\PointEntity';
@@ -57,28 +62,81 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
     const POLYGON_ENTITY    = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
     const GEOGRAPHY_ENTITY  = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
 
-    protected function setUp() {
+    /**
+     * @throws UnsupportedPlatformException
+     */
+    protected function setUp()
+    {
         parent::setUp();
 
-        $this->platform = static::$_sharedConn->getDatabasePlatform();
+        $this->conn         = static::$_sharedConn;
+        $this->platformName = $this->conn->getDatabasePlatform()->getName();
 
+        /**
+         * Add types to DBAL and setup fixtures
+         */
         if ( ! static::$_setup) {
             static::$_setup = true;
 
-            switch ($this->platform->getName()) {
+            switch ($this->platformName) {
                 case 'postgresql':
-                    $this->setUpPostgreSql(static::$_sharedConn);
+                    $this->setUpPostgreSql();
                     break;
                 case 'mysql':
-                    $this->setUpMySql(static::$_sharedConn);
+                    $this->setUpMySql();
                     break;
                 default:
-                    throw UnsupportedPlatformException::unsupportedPlatform($this->platform->getName());
+                    throw UnsupportedPlatformException::unsupportedPlatform($this->platformName);
                     break;
             }
         }
+
+        /**
+         * Add DQL functions to ORM
+         */
+        $this->setupCommonFunctions();
+
+        switch ($this->platformName) {
+            case 'postgresql':
+                $this->setUpPostgreSqlFunctions();
+                break;
+            case 'mysql':
+                $this->setUpMySqlFunctions();
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($this->platformName);
+                break;
+        }
     }
 
+    /**
+     * @throws UnsupportedPlatformException
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        $this->_sqlLoggerStack->enabled = false;
+
+        $this->tearDownCommonEntities();
+
+        switch ($this->platformName) {
+            case 'postgresql':
+                $this->tearDownPostgreSql();
+                break;
+            case 'mysql':
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($this->platformName);
+                break;
+        }
+
+        $this->_em->clear();
+    }
+
+    /**
+     * Add types to DBAL common to all platforms
+     */
     protected function setupCommonTypes()
     {
         \Doctrine\DBAL\Types\Type::addType('geometry', '\CrEOF\Spatial\DBAL\Types\GeometryType');
@@ -87,6 +145,16 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         \Doctrine\DBAL\Types\Type::addType('polygon', '\CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
     }
 
+    /**
+     * Add DQL functions to ORM common to all platforms
+     */
+    protected function setupCommonFunctions()
+    {
+    }
+
+    /**
+     * Setup fixtures common to all platforms
+     */
     protected function setupCommonEntities()
     {
         $this->_schemaTool->createSchema(
@@ -99,70 +167,57 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         );
     }
 
-    protected function tearDownCommonEntities(Connection $conn)
+    protected function tearDownCommonEntities()
     {
-        $conn->executeUpdate('DELETE FROM GeometryEntity');
-        $conn->executeUpdate('DELETE FROM PointEntity');
-        $conn->executeUpdate('DELETE FROM LineStringEntity');
-        $conn->executeUpdate('DELETE FROM PolygonEntity');
+        $this->conn->executeUpdate('DELETE FROM GeometryEntity');
+        $this->conn->executeUpdate('DELETE FROM PointEntity');
+        $this->conn->executeUpdate('DELETE FROM LineStringEntity');
+        $this->conn->executeUpdate('DELETE FROM PolygonEntity');
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        $conn = static::$_sharedConn;
-
-        $this->_sqlLoggerStack->enabled = false;
-
-        $this->tearDownCommonEntities($conn);
-
-        switch ($conn->getDatabasePlatform()->getName()) {
-            case 'postgresql':
-                $this->tearDownPostgreSql($conn);
-                break;
-            case 'mysql':
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($this->platform->getName());
-                break;
-        }
-
-        $this->_em->clear();
-    }
-
-    /**
-     * @param Connection $conn
-     */
-    protected function setUpMySql(Connection $conn)
+    protected function setUpMySql()
     {
         $this->setupCommonTypes();
         $this->setupCommonEntities();
     }
 
-
-    /**
-     * @param Connection $conn
-     */
-    protected function setUpPostgreSql(Connection $conn)
+    protected function setUpPostgreSql()
     {
-        $conn->exec('CREATE EXTENSION postgis');
+        $this->conn->exec('CREATE EXTENSION postgis');
 
         $this->setupCommonTypes();
         \Doctrine\DBAL\Types\Type::addType('geography', '\CrEOF\Spatial\DBAL\Types\GeographyType');
+
+        $this->setupCommonFunctions();
 
         $this->setupCommonEntities();
         $this->_schemaTool->createSchema(
             array(
                 $this->_em->getClassMetadata(self::GEOGRAPHY_ENTITY)
-            ));
+            )
+        );
     }
 
-    /**
-     * @param Connection $conn
-     */
-    protected function tearDownPostgreSql(Connection $conn)
+    protected function setUpPostgreSqlFunctions()
     {
-        $conn->executeUpdate('DELETE FROM GeographyEntity');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_geomfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_asbinary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAsBinary');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_astext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAsText');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_length', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_area', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea');
+    }
+
+    protected function setUpMySqlFunctions()
+    {
+        $this->_em->getConfiguration()->addCustomNumericFunction('geomfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText');
+        $this->_em->getConfiguration()->addCustomNumericFunction('asbinary', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\AsBinary');
+        $this->_em->getConfiguration()->addCustomNumericFunction('astext', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\AsText');
+        $this->_em->getConfiguration()->addCustomNumericFunction('glength', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GLength');
+        $this->_em->getConfiguration()->addCustomNumericFunction('area', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area');
+    }
+
+    protected function tearDownPostgreSql()
+    {
+        $this->conn->executeUpdate('DELETE FROM GeographyEntity');
     }
 }
