@@ -220,6 +220,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->_em->getConfiguration()->addCustomNumericFunction('startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\StartPoint');
         $this->_em->getConfiguration()->addCustomNumericFunction('envelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Envelope');
         $this->_em->getConfiguration()->addCustomNumericFunction('contains', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains');
+        $this->_em->getConfiguration()->addCustomNumericFunction('mbrcontains', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRContains');
     }
 
     protected function tearDownPostgreSql()
