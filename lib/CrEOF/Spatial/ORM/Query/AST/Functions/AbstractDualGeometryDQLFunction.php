@@ -52,6 +52,7 @@ abstract class AbstractDualGeometryDQLFunction extends AbstractSingleGeometryDQL
 
         return sprintf(
             '%s(%s, %s)',
+            $this->functionName,
             $this->firstGeomExpression->dispatch($sqlWalker),
             $this->secondGeomExpression->dispatch($sqlWalker)
         );
