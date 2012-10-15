@@ -104,7 +104,7 @@ class STContainsProperlyTest extends OrmTest
 
         $entity2 = new PolygonEntity();
 
-        $entity2->setPolygon(new Polygon(array($lineString1, $lineString2)));
+        $entity2->setPolygon(new Polygon(array($lineString2)));
         $this->_em->persist($entity2);
         $this->_em->flush();
         $this->_em->clear();
