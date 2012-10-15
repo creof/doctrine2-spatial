@@ -64,4 +64,24 @@ class InvalidValueException extends Exception
     {
         return new self(sprintf('Invalid byte order "%d".', $order));
     }
+
+    /**
+     * @param string $type
+     *
+     * @return InvalidValueException
+     */
+    static public function unsupportedWktType($type)
+    {
+        return new self(sprintf('Unsupported WKT type "%s".', $type));
+    }
+
+    /**
+     * @param int $type
+     *
+     * @return InvalidValueException
+     */
+    static public function unsupportedWkbType($type)
+    {
+        return new self(sprintf('Unsupported WKB type "%d".', $type));
+    }
 }

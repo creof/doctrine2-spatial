@@ -25,6 +25,8 @@ namespace CrEOF\Spatial\DBAL\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use CrEOF\Spatial\DBAL\Types\WkbValueParser;
+use CrEOF\Spatial\DBAL\Types\WktValueParser;
 use CrEOF\Spatial\PHP\Types\Geometry;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -40,8 +42,6 @@ use Doctrine\DBAL\Types\Type;
  */
 class GeometryType extends Type
 {
-    protected $byteOrder;
-
     /**
      * Gets the name of this type.
      *
@@ -94,22 +94,11 @@ class GeometryType extends Type
             return null;
         }
 
-        switch ($platform->getName()) {
-            case 'mysql':
-                break;
-            case 'postgresql':
-                if ( ! is_resource($value)) {
-                    throw \Doctrine\DBAL\Types\ConversionException::conversionFailed($value, self::GEOMETRY);
-                }
-
-                $value = stream_get_contents($value);
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
+        if (gettype($value) == 'string' && ord($value) > 31) {
+            return $this->convertStringToPHPValue($value, $platform);
         }
 
-        return $this->convertWkbValue($value);
+        return $this->convertBinaryToPHPValue($value, $platform);
     }
 
     /**
@@ -180,184 +169,75 @@ class GeometryType extends Type
     }
 
     /**
-     * @param string $value
+     * @param string           $sqlExpr
+     * @param AbstractPlatform $platform
+     *
+     * @return Geometry
+     * @throws UnsupportedPlatformException
+     */
+    protected function convertStringToPHPValue($sqlExpr, AbstractPlatform $platform)
+    {
+        switch ($platform->getName()) {
+            case 'mysql':
+                // no break
+            case 'postgresql':
+                return $this->convertWktValue($sqlExpr);
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
+                break;
+        }
+    }
+
+    /**
+     * @param string           $sqlExpr
+     * @param AbstractPlatform $platform
      *
      * @return Geometry
      * @throws InvalidValueException
+     * @throws UnsupportedPlatformException
+     */
+    protected function convertBinaryToPHPValue($sqlExpr, AbstractPlatform $platform)
+    {
+        switch ($platform->getName()) {
+            case 'mysql':
+                break;
+            case 'postgresql':
+                if ( ! is_resource($sqlExpr)) {
+                    throw InvalidValueException::invalidType('resource', $sqlExpr);
+                }
+
+                $sqlExpr = stream_get_contents($sqlExpr);
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
+                break;
+        }
+
+        return $this->convertWkbValue($sqlExpr);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return Geometry
+     */
+    protected function convertWktValue($value)
+    {
+        $parser = new WktValueParser();
+
+        return $parser->parse($value);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return Geometry
      */
     protected function convertWkbValue($value)
     {
-        $data            = unpack('CbyteOrder/A*value', $value);
-        $this->byteOrder = $data['byteOrder'];
+        $parser = new WkbValueParser();
 
-        switch ($this->byteOrder) {
-            case 0:
-                $data = unpack('NwkbType/A*value', $data['value']);
-                break;
-            case 1:
-                $data = unpack('VwkbType/A*value', $data['value']);
-                break;
-            default:
-                throw InvalidValueException::invalidByteOrder($this->byteOrder);
-                break;
-        }
-
-        $method = 'convertWkbTo' . $this->getTypeName($data['wkbType']);
-
-        return $this->$method($data['value']);
-    }
-
-    /**
-     * @param int $wkbType
-     *
-     * @return null|string
-     */
-    private function getTypeName($wkbType)
-    {
-        switch ($wkbType) {
-            case (0):
-                return self::GEOMETRY;
-                break;
-            case (1):
-                return self::POINT;
-                break;
-            case (2):
-                return self::LINESTRING;
-                break;
-            case (3):
-                return self::POLYGON;
-                break;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return Point
-     */
-    private function convertWkbToPoint($value)
-    {
-        $data = $this->unpackWkbPoint($value);
-
-        return new Point($data['x'], $data['y']);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return LineString
-     */
-    private function convertWkbToLineString($value)
-    {
-        $data = $this->unpackWkbLineString($value);
-
-        return new LineString($data['points']);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return Polygon
-     */
-    private function convertWkbToPolygon($value)
-    {
-        $data = $this->unpackWkbPolygon($value);
-
-        return new Polygon($data['rings']);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return array
-     * @throws InvalidValueException
-     */
-    private function unpackWkbPoint($value)
-    {
-        switch ($this->byteOrder) {
-            case 0:
-                $data  = unpack('dx/dy/A*value', $value);
-                $fixed = unpack('dy/dx', strrev(pack('dd', $data['x'], $data['y'])));
-                $fixed['value'] = $data['value'];
-
-                return $fixed;
-                break;
-            case 1:
-                return unpack('dx/dy/A*value', $value);
-                break;
-            default:
-                throw InvalidValueException::invalidByteOrder($this->byteOrder);
-                break;
-        }
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return array
-     * @throws InvalidValueException
-     */
-    private function unpackWkbLineString($value)
-    {
-        switch ($this->byteOrder) {
-            case 0:
-                $data = unpack('NnumPoints/A*value', $value);
-                break;
-            case 1:
-                $data = unpack('VnumPoints/A*value', $value);
-                break;
-            default:
-                throw InvalidValueException::invalidByteOrder($this->byteOrder);
-                break;
-        }
-
-        $numPoints = $data['numPoints'];
-        $points    = array();
-
-        for ($j = 0; $j < $numPoints; $j++) {
-            $data     = $this->unpackWkbPoint($data['value']);
-            $points[] = new Point($data['x'], $data['y']);
-        }
-
-        return array(
-            'value'  => $data['value'],
-            'points' => $points
-        );
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return array
-     * @throws InvalidValueException
-     */
-    private function unpackWkbPolygon($value)
-    {
-        switch ($this->byteOrder) {
-            case 0:
-                $data = unpack('NnumRings/A*value', $value);
-                break;
-            case 1:
-                $data = unpack('VnumRings/A*value', $value);
-                break;
-            default:
-                throw InvalidValueException::invalidByteOrder($this->byteOrder);
-                break;
-        }
-
-        $numRings = $data['numRings'];
-        $rings   = array();
-
-        for ($i = 0; $i < $numRings; $i++) {
-            $data    = $this->unpackWkbLineString($data['value']);
-            $rings[] = new LineString($data['points']);
-        }
-
-        return array(
-            'value'  => $data['value'],
-            'rings' => $rings
-        );
+        return $parser->parse($value);
     }
 }
