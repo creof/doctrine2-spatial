@@ -68,14 +68,16 @@ class MBRContainsTest extends OrmTest
         $this->_em->flush();
         $this->_em->clear();
 
-        $query = $this->_em->createQuery('SELECT MBRContains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->_em->createQuery('SELECT p, MBRContains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
         $query->setParameter('p1', new Point(2, 2));
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
+        $this->assertEquals($entity1, $result[0][0]);
         $this->assertEquals(1, $result[0][1]);
+        $this->assertEquals($entity2, $result[1][0]);
         $this->assertEquals(0, $result[1][1]);
     }
 
