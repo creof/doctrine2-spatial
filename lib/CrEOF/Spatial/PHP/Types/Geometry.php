@@ -37,9 +37,10 @@ use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
  */
 abstract class Geometry
 {
-    const POINT      = 'POINT';
-    const LINESTRING = 'LINESTRING';
-    const POLYGON    = 'POLYGON';
+    const GEOMETRY   = 'geometry';
+    const POINT      = 'point';
+    const LINESTRING = 'linestring';
+    const POLYGON    = 'polygon';
 
     /**
      * @return string
@@ -51,7 +52,7 @@ abstract class Geometry
      */
     public function __toString()
     {
-        $type   = $this->getType();
+        $type   = strtoupper($this->getType());
         $method = 'toString' . $type;
 
         return sprintf('%s(%s)', $type, $this->$method($this));

@@ -40,11 +40,6 @@ use Doctrine\DBAL\Types\Type;
  */
 class GeometryType extends Type
 {
-    const GEOMETRY    = 'geometry';
-    const POINT       = 'point';
-    const LINESTRING  = 'linestring';
-    const POLYGON     = 'polygon';
-
     protected $byteOrder;
 
     /**
@@ -54,7 +49,7 @@ class GeometryType extends Type
      */
     public function getName()
     {
-        return self::GEOMETRY;
+        return Geometry::GEOMETRY;
     }
 
     /**
@@ -73,7 +68,7 @@ class GeometryType extends Type
                 return strtoupper($this->getName());
                 break;
             case 'postgresql':
-                if ($this->getName() == self::GEOMETRY) {
+                if ($this->getName() == Geometry::GEOMETRY) {
                     return 'geometry';
                 }
 

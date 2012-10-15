@@ -24,6 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Types\Geometry;
 
 use CrEOF\Spatial\DBAL\Types\GeometryType;
+use CrEOF\Spatial\PHP\Types\Geometry;
 
 /**
  * Doctrine LINESTRING type
@@ -40,6 +41,6 @@ class LineStringType extends GeometryType
      */
     public function getName()
     {
-        return self::LINESTRING;
+        return Geometry::LINESTRING;
     }
 }
