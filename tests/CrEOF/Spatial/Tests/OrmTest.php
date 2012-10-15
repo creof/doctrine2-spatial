@@ -207,6 +207,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->_em->getConfiguration()->addCustomNumericFunction('st_area', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea');
         $this->_em->getConfiguration()->addCustomNumericFunction('st_startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STStartPoint');
         $this->_em->getConfiguration()->addCustomNumericFunction('st_envelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STEnvelope');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_contains', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContains');
     }
 
     protected function setUpMySqlFunctions()
@@ -218,6 +219,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->_em->getConfiguration()->addCustomNumericFunction('area', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area');
         $this->_em->getConfiguration()->addCustomNumericFunction('startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\StartPoint');
         $this->_em->getConfiguration()->addCustomNumericFunction('envelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Envelope');
+        $this->_em->getConfiguration()->addCustomNumericFunction('contains', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains');
     }
 
     protected function tearDownPostgreSql()
