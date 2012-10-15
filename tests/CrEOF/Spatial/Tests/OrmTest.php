@@ -139,10 +139,10 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
      */
     protected function setupCommonTypes()
     {
-        \Doctrine\DBAL\Types\Type::addType('geometry', '\CrEOF\Spatial\DBAL\Types\GeometryType');
-        \Doctrine\DBAL\Types\Type::addType('point', '\CrEOF\Spatial\DBAL\Types\Geometry\PointType');
-        \Doctrine\DBAL\Types\Type::addType('linestring', '\CrEOF\Spatial\DBAL\Types\Geometry\LineStringType');
-        \Doctrine\DBAL\Types\Type::addType('polygon', '\CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
+        \Doctrine\DBAL\Types\Type::addType('geometry', 'CrEOF\Spatial\DBAL\Types\GeometryType');
+        \Doctrine\DBAL\Types\Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
+        \Doctrine\DBAL\Types\Type::addType('linestring', 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType');
+        \Doctrine\DBAL\Types\Type::addType('polygon', 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
     }
 
     /**
@@ -186,7 +186,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->conn->exec('CREATE EXTENSION postgis');
 
         $this->setupCommonTypes();
-        \Doctrine\DBAL\Types\Type::addType('geography', '\CrEOF\Spatial\DBAL\Types\GeographyType');
+        \Doctrine\DBAL\Types\Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
 
         $this->setupCommonFunctions();
 
