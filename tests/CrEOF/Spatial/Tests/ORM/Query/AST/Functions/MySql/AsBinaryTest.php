@@ -63,11 +63,14 @@ class AsBinaryTest extends OrmTest
         $this->_em->flush();
         $this->_em->clear();
 
-        $query = $this->_em->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query   = $this->_em->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $result  = $query->getResult();
+        $string1 = '010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440';
+        $string2 = '0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640';
+        $binary1 = pack('H*', $string1);
+        $binary2 = pack('H*', $string2);
 
-        $result = $query->getResult();
-
-        $this->assertEquals('010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440', bin2hex($result[0][1]));
-        $this->assertEquals('0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640', bin2hex($result[1][1]));
+        $this->assertEquals($binary1, $result[0][1]);
+        $this->assertEquals($binary2, $result[1][1]);
     }
 }
