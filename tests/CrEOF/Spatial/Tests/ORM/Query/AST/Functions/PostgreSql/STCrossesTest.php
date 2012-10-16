@@ -137,6 +137,6 @@ class STCrossesTest extends OrmTest
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity3, $result[0]);
+        $this->assertEquals($entity2, $result[0]);
     }
 }
