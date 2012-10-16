@@ -58,10 +58,17 @@ class Point extends Geometry
      * @param mixed $latitude
      *
      * @return self
+     * @throws InvalidValueException
      */
     public function setLatitude($latitude)
     {
-        $this->latitude = $this->toFloat($latitude);
+        $latitude = $this->toFloat($latitude);
+
+        if ($latitude < -90 || $latitude > 90) {
+            throw InvalidValueException::invalidLatitude($latitude);
+        }
+
+        $this->latitude = $latitude;
 
         return $this;
     }
@@ -78,10 +85,17 @@ class Point extends Geometry
      * @param mixed $longitude
      *
      * @return self
+     * @throws InvalidValueException
      */
     public function setLongitude($longitude)
     {
-        $this->longitude = $this->toFloat($longitude);
+        $longitude = $this->toFloat($longitude);
+
+        if ($longitude < -180 || $longitude > 180) {
+            throw InvalidValueException::invalidLongitude($longitude);
+        }
+
+        $this->longitude = $longitude;
 
         return $this;
     }
