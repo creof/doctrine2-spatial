@@ -22,6 +22,7 @@ Currently the following SQL functions are supported in DQL and more coming:
 * ST_AsBinary
 * ST_AsText
 * ST_Centroid
+* ST_ClosestPoint
 * ST_Contains
 * ST_ContainsProperly
 * ST_CoveredBy
