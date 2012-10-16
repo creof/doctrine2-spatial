@@ -90,11 +90,11 @@ class STDisjointTest extends OrmTest
 
         $this->assertCount(3, $result);
         $this->assertEquals($entity1, $result[0][0]);
-        $this->assertEquals(0, $result[0][1]);
+        $this->assertFalse($result[0][1]);
         $this->assertEquals($entity2, $result[1][0]);
-        $this->assertEquals(0, $result[1][1]);
+        $this->assertFalse($result[1][1]);
         $this->assertEquals($entity3, $result[2][0]);
-        $this->assertEquals(1, $result[2][1]);
+        $this->assertTrue($result[2][1]);
     }
 
     public function testSTDisjointWhereParameter()

@@ -76,9 +76,9 @@ class STCoversTest extends OrmTest
 
         $this->assertCount(2, $result);
         $this->assertEquals($entity1, $result[0][0]);
-        $this->assertEquals(0, $result[0][1]);
+        $this->assertFalse($result[0][1]);
         $this->assertEquals($entity2, $result[1][0]);
-        $this->assertEquals(1, $result[1][1]);
+        $this->assertTrue($result[1][1]);
     }
 
     public function testSTCoversWhereParameter()
