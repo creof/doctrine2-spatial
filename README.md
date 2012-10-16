@@ -31,6 +31,7 @@ Currently the following SQL functions are supported in DQL and more coming:
 * ST_Envelope
 * ST_GeomFromText
 * ST_Length
+* ST_LineCrossingDirection
 * ST_StartPoint
 
 ### MySQL
