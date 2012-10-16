@@ -31,12 +31,13 @@ use CrEOF\Spatial\Tests\OrmTest;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
 
 /**
- * Doctrine GeometryType tests
+ * Doctrine GeographyType tests
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * group postgresql
+ * @group skip
  */
 class GeographyTypeTest extends OrmTest
 {

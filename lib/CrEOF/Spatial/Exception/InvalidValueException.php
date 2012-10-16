@@ -86,6 +86,16 @@ class InvalidValueException extends Exception
     }
 
     /**
+     * @param string $type
+     *
+     * @return InvalidValueException
+     */
+    static public function unsupportedEwktType($type)
+    {
+        return new self(sprintf('Unsupported EWKT type "%s".', $type));
+    }
+
+    /**
      * @param mixed $value
      *
      * @return InvalidValueException

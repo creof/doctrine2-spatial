@@ -25,10 +25,7 @@ namespace CrEOF\Spatial\DBAL\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -78,36 +75,6 @@ class GeographyType extends GeometryType
     }
 
     /**
-     * @param string           $value
-     * @param AbstractPlatform $platform
-     *
-     * @return Geometry|null
-     * @throws UnsupportedPlatformException
-     * @throws \Doctrine\DBAL\Types\ConversionException
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        if (null === $value) {
-            return null;
-        }
-
-        switch ($platform->getName()) {
-            case 'postgresql':
-                if ( ! is_resource($value)) {
-                    throw \Doctrine\DBAL\Types\ConversionException::conversionFailed($value, self::GEOGRAPHY);
-                }
-
-                $value = stream_get_contents($value);
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
-        }
-
-        return $this->convertWkbValue($value);
-    }
-
-    /**
      * @param string           $sqlExpr
      * @param AbstractPlatform $platform
      *
@@ -118,7 +85,7 @@ class GeographyType extends GeometryType
     {
         switch ($platform->getName()) {
             case 'postgresql':
-                return sprintf('ST_AsBinary(%s)', $sqlExpr);
+                return sprintf('ST_AsEWKT(%s)', $sqlExpr);
                 break;
             default:
                 throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
@@ -144,4 +111,36 @@ class GeographyType extends GeometryType
                 break;
         }
     }
+
+    /**
+     * @param string           $sqlExpr
+     * @param AbstractPlatform $platform
+     *
+     * @return AbstractGeometry
+     * @throws UnsupportedPlatformException
+     */
+    protected function convertStringToPHPValue($sqlExpr, AbstractPlatform $platform)
+    {
+        switch ($platform->getName()) {
+            case 'postgresql':
+                return $this->convertEwktValue($sqlExpr);
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
+                break;
+        }
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return AbstractGeometry
+     */
+    protected function convertEwktValue($value)
+    {
+        $parser = new EwktValueParser();
+
+        return $parser->parse($value);
+    }
+
 }

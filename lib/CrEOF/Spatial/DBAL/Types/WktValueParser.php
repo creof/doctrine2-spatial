@@ -38,19 +38,24 @@ use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 class WktValueParser
 {
     /**
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * @var array
+     */
+    protected $current;
+
+    /**
+     * @var array
+     */
+    protected $point;
+
+    /**
      * @var array
      */
     private $stack;
-
-    /**
-     * @var array
-     */
-    private $current;
-
-    /**
-     * @var array
-     */
-    private $point;
 
     /**
      * @var int
@@ -68,11 +73,6 @@ class WktValueParser
     private $value;
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var int
      */
     private $level;
@@ -85,7 +85,7 @@ class WktValueParser
     public function parse($string)
     {
         if ( ! $string) {
-            return array();
+            return null;
         }
 
         $this->stack   = array();
@@ -155,6 +155,16 @@ class WktValueParser
         }
     }
 
+    protected function createPoint()
+    {
+        return new Point($this->point[0], $this->point[1]);
+    }
+
+    protected function createLineString()
+    {
+        return new LineString($this->current);
+    }
+
     private function pushNumber()
     {
         if ($this->marker !== null) {
@@ -168,7 +178,7 @@ class WktValueParser
         if ($this->marker !== null) {
             $this->pushNumber();
 
-            $this->current[] = new Point($this->point[0], $this->point[1]);
+            $this->current[] = $this->createPoint();
             $this->point     = array();
         }
     }
@@ -191,7 +201,7 @@ class WktValueParser
                 $t[] = $this->current;
                 break;
             case 1:
-                $t[] = new LineString($this->current);
+                $t[] = $this->createLineString();
                 break;
         }
 
