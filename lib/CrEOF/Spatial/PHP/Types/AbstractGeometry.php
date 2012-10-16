@@ -24,18 +24,15 @@
 namespace CrEOF\Spatial\PHP\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * Abstract geometry object for geometry type
+ * Abstract geometry object for spatial types
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class Geometry
+abstract class AbstractGeometry
 {
     const GEOMETRY   = 'geometry';
     const POINT      = 'point';
@@ -55,32 +52,36 @@ abstract class Geometry
         $type   = strtoupper($this->getType());
         $method = 'toString' . $type;
 
+        if ($this instanceof GeographyInterface) {
+            return sprintf('SRID=%d;%s(%s)', $this->getSrid(), $type, $this->$method($this));
+        }
+
         return sprintf('%s(%s)', $type, $this->$method($this));
     }
 
     /**
-     * @param Point[] $points
+     * @param AbstractPoint[] $points
      *
      * @throws InvalidValueException
      */
     protected  function validateLineStringValue(array $points)
     {
         foreach ($points as $point) {
-            if ( ! ($point instanceof Point)) {
+            if ( ! ($point instanceof AbstractPoint)) {
                 throw InvalidValueException::invalidType('Point', $point);
             }
         }
     }
 
     /**
-     * @param LineString[] $rings
+     * @param AbstractLineString[] $rings
      *
      * @throws InvalidValueException
      */
     protected  function validatePolygonValue(array $rings)
     {
         foreach ($rings as $ring) {
-            if ( ! ($ring instanceof LineString)) {
+            if ( ! ($ring instanceof AbstractLineString)) {
                 throw InvalidValueException::invalidType('LineString', $ring);
             }
 
@@ -91,21 +92,21 @@ abstract class Geometry
     }
 
     /**
-     * @param Point $point
+     * @param AbstractPoint $point
      *
      * @return string
      */
-    private function toStringPoint(Point $point)
+    private function toStringPoint(AbstractPoint $point)
     {
         return sprintf('%s %s', $point->getLatitude(), $point->getLongitude());
     }
 
     /**
-     * @param LineString $lineString
+     * @param AbstractLineString $lineString
      *
      * @return null|string
      */
-    private function toStringLineString(LineString $lineString)
+    private function toStringLineString(AbstractLineString $lineString)
     {
         $string = null;
 
@@ -117,11 +118,11 @@ abstract class Geometry
     }
 
     /**
-     * @param Polygon $polygon
+     * @param AbstractPolygon $polygon
      *
      * @return null|string
      */
-    private function toStringPolygon(Polygon $polygon)
+    private function toStringPolygon(AbstractPolygon $polygon)
     {
         $string = null;
 

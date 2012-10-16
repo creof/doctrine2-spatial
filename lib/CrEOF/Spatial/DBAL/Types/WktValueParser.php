@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\Geometry;
+use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
@@ -80,7 +80,7 @@ class WktValueParser
     /**
      * @param string $string
      *
-     * @return Geometry
+     * @return AbstractGeometry
      */
     public function parse($string)
     {
@@ -137,6 +137,24 @@ class WktValueParser
         return $this->finalize();
     }
 
+    protected function finalize()
+    {
+        switch ($this->type) {
+            case AbstractGeometry::POINT:
+                return $this->current[0];
+                break;
+            case AbstractGeometry::LINESTRING:
+                return new LineString($this->current);
+                break;
+            case AbstractGeometry::POLYGON:
+                return new Polygon($this->current);
+                break;
+            default:
+                throw InvalidValueException::unsupportedWktType($this->type);
+                break;
+        }
+    }
+
     private function pushNumber()
     {
         if ($this->marker !== null) {
@@ -178,23 +196,5 @@ class WktValueParser
         }
 
         $this->current = $t;
-    }
-
-    private function finalize()
-    {
-        switch ($this->type) {
-            case Geometry::POINT:
-                return $this->current[0];
-                break;
-            case Geometry::LINESTRING:
-                return new LineString($this->current);
-                break;
-            case Geometry::POLYGON:
-                return new Polygon($this->current);
-                break;
-            default:
-                throw InvalidValueException::unsupportedWktType($this->type);
-                break;
-        }
     }
 }

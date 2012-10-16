@@ -23,10 +23,7 @@
 
 namespace CrEOF\Spatial\PHP\Types\Geometry;
 
-use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\Geometry;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use CrEOF\Spatial\PHP\Types\AbstractPolygon;
 
 /**
  * Polygon object for POLYGON geometry type
@@ -34,60 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Polygon extends Geometry
+class Polygon extends AbstractPolygon
 {
-    /**
-     * @var LineString[] $polygons
-     */
-    protected $rings = array();
 
-    /**
-     * @param LineString[] $rings
-     */
-    public function __construct(array $rings)
-    {
-        $this->setRings($rings);
-    }
-
-    /**
-     * @param LineString $lineString
-     *
-     * @return self
-     */
-    public function addRing(LineString $lineString)
-    {
-        $this->rings[] = $lineString;
-
-        return $this;
-    }
-
-    /**
-     * @return LineString[]
-     */
-    public function getRings()
-    {
-        return $this->rings;
-    }
-
-    /**
-     * @param LineString[] $rings
-     *
-     * @return self
-     */
-    public function setRings(array $rings)
-    {
-        $this->validatePolygonValue($rings);
-
-        $this->rings = $rings;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::POLYGON;
-    }
 }

@@ -27,10 +27,7 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\DBAL\Types\WkbValueParser;
 use CrEOF\Spatial\DBAL\Types\WktValueParser;
-use CrEOF\Spatial\PHP\Types\Geometry;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -49,7 +46,7 @@ class GeometryType extends Type
      */
     public function getName()
     {
-        return Geometry::GEOMETRY;
+        return AbstractGeometry::GEOMETRY;
     }
 
     /**
@@ -68,7 +65,7 @@ class GeometryType extends Type
                 return strtoupper($this->getName());
                 break;
             case 'postgresql':
-                if ($this->getName() == Geometry::GEOMETRY) {
+                if ($this->getName() == AbstractGeometry::GEOMETRY) {
                     return 'geometry';
                 }
 
@@ -84,7 +81,7 @@ class GeometryType extends Type
      * @param string           $value
      * @param AbstractPlatform $platform
      *
-     * @return Geometry|null
+     * @return AbstractGeometry|null
      * @throws UnsupportedPlatformException
      * @throws \Doctrine\DBAL\Types\ConversionException
      */
@@ -102,14 +99,14 @@ class GeometryType extends Type
     }
 
     /**
-     * @param Point            $value
+     * @param AbstractGeometry $value
      * @param AbstractPlatform $platform
      *
      * @return string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if ($value instanceof Geometry) {
+        if ($value instanceof AbstractGeometry) {
             return (string) $value;
         }
 
@@ -172,7 +169,7 @@ class GeometryType extends Type
      * @param string           $sqlExpr
      * @param AbstractPlatform $platform
      *
-     * @return Geometry
+     * @return AbstractGeometry
      * @throws UnsupportedPlatformException
      */
     protected function convertStringToPHPValue($sqlExpr, AbstractPlatform $platform)
@@ -193,7 +190,7 @@ class GeometryType extends Type
      * @param string           $sqlExpr
      * @param AbstractPlatform $platform
      *
-     * @return Geometry
+     * @return AbstractGeometry
      * @throws InvalidValueException
      * @throws UnsupportedPlatformException
      */
@@ -220,7 +217,7 @@ class GeometryType extends Type
     /**
      * @param string $value
      *
-     * @return Geometry
+     * @return AbstractGeometry
      */
     protected function convertWktValue($value)
     {
@@ -232,7 +229,7 @@ class GeometryType extends Type
     /**
      * @param string $value
      *
-     * @return Geometry
+     * @return AbstractGeometry
      */
     protected function convertWkbValue($value)
     {

@@ -23,9 +23,7 @@
 
 namespace CrEOF\Spatial\PHP\Types\Geometry;
 
-use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\Geometry;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use CrEOF\Spatial\PHP\Types\AbstractLineString;
 
 /**
  * LineString object for LINESTRING geometry type
@@ -33,87 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class LineString extends Geometry
+class LineString extends AbstractLineString
 {
-    /**
-     * @var Point[] $points
-     */
-    protected $points = array();
-
-    /**
-     * @param Point[] $points
-     */
-    public function __construct(array $points)
-    {
-        $this->setPoints($points);
-    }
-
-    /**
-     * @param Point $point
-     *
-     * @return self
-     */
-    public function addPoint(Point $point)
-    {
-        $this->points[] = $point;
-
-        return $this;
-    }
-
-    /**
-     * @return Point[]
-     */
-    public function getPoints()
-    {
-        return $this->points;
-    }
-
-    /**
-     * @param int $index
-     *
-     * @return Point
-     */
-    public function getPoint($index)
-    {
-        if ($index == -1) {
-            return $this->points[count($this->points) - 1];
-        }
-
-        return $this->points[$index];
-    }
-
-    /**
-     * @param Point[] $points
-     *
-     * @return self
-     */
-    public function setPoints(array $points)
-    {
-        $this->validateLineStringValue($points);
-
-        $this->points = $points;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::LINESTRING;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClosed()
-    {
-        if ($this->getPoint(0) != $this->getPoint(-1)) {
-            return false;
-        }
-
-        return true;
-    }
 
 }

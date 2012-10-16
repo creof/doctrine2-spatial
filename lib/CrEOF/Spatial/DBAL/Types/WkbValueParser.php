@@ -23,9 +23,8 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\DBAL\Types\GeometryType;
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\Geometry;
+use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
@@ -46,7 +45,7 @@ class WkbValueParser
     /**
      * @param string $value
      *
-     * @return Geometry
+     * @return AbstractGeometry
      * @throws InvalidValueException
      */
     public function parse($value)
@@ -81,16 +80,16 @@ class WkbValueParser
     {
         switch ($wkbType) {
             case (0):
-                return Geometry::GEOMETRY;
+                return AbstractGeometry::GEOMETRY;
                 break;
             case (1):
-                return Geometry::POINT;
+                return AbstractGeometry::POINT;
                 break;
             case (2):
-                return Geometry::LINESTRING;
+                return AbstractGeometry::LINESTRING;
                 break;
             case (3):
-                return Geometry::POLYGON;
+                return AbstractGeometry::POLYGON;
                 break;
             default:
                 throw InvalidValueException::unsupportedWkbType($wkbType);

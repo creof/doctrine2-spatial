@@ -21,68 +21,95 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\Fixtures;
-
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+namespace CrEOF\Spatial\PHP\Types;
 
 /**
- * Geography entity
+ * Abstract LineString object for LINESTRING spatial types
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
- *
- * @Entity
- * @Table(options={"engine"="MyISAM"})
  */
-class GeographyEntity
+abstract class AbstractLineString extends AbstractGeometry
 {
     /**
-     * @var int $id
-     *
-     * @Id
-     * @GeneratedValue(strategy="AUTO")
-     * @Column(type="integer")
+     * @var AbstractPoint[] $points
      */
-    protected $id;
+    protected $points = array();
 
     /**
-     * @var AbstractGeometry $geography
-     *
-     * @Column(type="geography", nullable=true)
+     * @param AbstractPoint[] $points
      */
-    protected $geography;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
+    public function __construct(array $points)
     {
-        return $this->id;
+        $this->setPoints($points);
     }
 
     /**
-     * Set geography
-     *
-     * @param AbstractGeometry $geography
+     * @param AbstractPoint $point
      *
      * @return self
      */
-    public function setGeography(AbstractGeometry $geography)
+    public function addPoint(AbstractPoint $point)
     {
-        $this->geography = $geography;
+        $this->points[] = $point;
 
         return $this;
     }
 
     /**
-     * Get geography
-     *
-     * @return AbstractGeometry
+     * @return AbstractPoint[]
      */
-    public function getGeography()
+    public function getPoints()
     {
-        return $this->geography;
+        return $this->points;
     }
+
+    /**
+     * @param int $index
+     *
+     * @return AbstractPoint
+     */
+    public function getPoint($index)
+    {
+        if ($index == -1) {
+            return $this->points[count($this->points) - 1];
+        }
+
+        return $this->points[$index];
+    }
+
+    /**
+     * @param AbstractPoint[] $points
+     *
+     * @return self
+     */
+    public function setPoints(array $points)
+    {
+        $this->validateLineStringValue($points);
+
+        $this->points = $points;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return self::LINESTRING;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClosed()
+    {
+        if ($this->getPoint(0) != $this->getPoint(-1)) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

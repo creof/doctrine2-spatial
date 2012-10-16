@@ -21,26 +21,68 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Geometry;
-
-use CrEOF\Spatial\DBAL\Types\GeometryType;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+namespace CrEOF\Spatial\PHP\Types;
 
 /**
- * Doctrine LINESTRING type
+ * Abstract Polygon object for POLYGON spatial types
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class LineStringType extends GeometryType
+abstract class AbstractPolygon extends AbstractGeometry
 {
     /**
-     * Gets the name of this type.
+     * @var AbstractLineString[] $polygons
+     */
+    protected $rings = array();
+
+    /**
+     * @param AbstractLineString[] $rings
+     */
+    public function __construct(array $rings)
+    {
+        $this->setRings($rings);
+    }
+
+    /**
+     * @param AbstractLineString $lineString
      *
+     * @return self
+     */
+    public function addRing(AbstractLineString $lineString)
+    {
+        $this->rings[] = $lineString;
+
+        return $this;
+    }
+
+    /**
+     * @return AbstractLineString[]
+     */
+    public function getRings()
+    {
+        return $this->rings;
+    }
+
+    /**
+     * @param AbstractLineString[] $rings
+     *
+     * @return self
+     */
+    public function setRings(array $rings)
+    {
+        $this->validatePolygonValue($rings);
+
+        $this->rings = $rings;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    public function getName()
+    public function getType()
     {
-        return AbstractGeometry::LINESTRING;
+        return self::POLYGON;
     }
 }
