@@ -25,7 +25,7 @@ The following SQL types have been implemented as PHP objects and Doctrine types:
 * 3D/4D geometries ??
 * Rasters ??????
 
-There is support for both WKB/WKT and EWKB/EWKT return values. Currently only WKB/EWKB is used in statements.
+There is support for both WKB/WKT and EWKB/EWKT return values. Currently only WKT/EWKT is used in statements.
 
 ## Functions
 Currently the following SQL functions are supported in DQL (more coming):
