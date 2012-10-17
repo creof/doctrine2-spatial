@@ -2,20 +2,33 @@
 
 Doctrine2 multi-platform support for spatial types and functions.
 
-This project is a refactor/continuation of my [doctrine2-mysql-spatial](https://github.com/djlambert/doctrine2-mysql-spatial) pacakge.
+This package is a refactor/continuation of my [doctrine2-mysql-spatial](https://github.com/djlambert/doctrine2-mysql-spatial) package.
 
 ## Types
+The following SQL types have been implemented as PHP objects and Doctrine types:
+
 * Geometry
-* Point
-* LineString
-* Polygon
-* (todo) MultiPoint
-* (todo) MultiLineString
-* (todo) MultiPolygon
-* (todo) GeometryCollection
+    * Point
+    * LineString
+    * Polygon
+
+* Geography (PostgreSQL/PostGIS)
+    * Point
+    * LineString
+    * Polygon
+
+* Planned
+    * MultiPoint
+    * MultiLineString
+    * MultiPolygon
+    * GeometryCollection
+    * 3D/4D geometries ??
+    * Rasters ??????
+
+There is support for both WKB/WKT and EWKB/EWKT return values. Currently only WKB/EWKB is used in statements.
 
 ## Functions
-Currently the following SQL functions are supported in DQL and more coming:
+Currently the following SQL functions are supported in DQL (more coming):
 
 ### PostgreSQL
 * ST_Area
@@ -48,8 +61,16 @@ Currently the following SQL functions are supported in DQL and more coming:
 * StartPoint
 
 ## DQL AST Walker
-There is a DQL AST walker that in conjunction with the AsText/ST_AsText or AsBinary/ST_AsBinary DQL functions will return the appropriate Geometry type object from queries instead of strings.
+A DQL AST walker is included which when used with the following DQL functions will return the appropriate Geometry type object from queries instead of strings:
 
+* AsText
+* ST_AsText
+* AsBinary
+* ST_AsBinary
+
+EWKT/EWKB function support planned.
+
+### Example:
         $query = $this->em->createQuery('SELECT AsText(StartPoint(l.lineString)) MyLineStringEntity l');
 
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
