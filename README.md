@@ -7,23 +7,23 @@ This package is a refactor/continuation of my [doctrine2-mysql-spatial](https://
 ## Types
 The following SQL types have been implemented as PHP objects and Doctrine types:
 
-* Geometry
-    * Point
-    * LineString
-    * Polygon
+### Geometry
+* Point
+* LineString
+* Polygon
 
-* Geography (PostgreSQL/PostGIS)
-    * Point
-    * LineString
-    * Polygon
+### Geography (PostgreSQL/PostGIS)
+* Point
+* LineString
+* Polygon
 
-* Planned
-    * MultiPoint
-    * MultiLineString
-    * MultiPolygon
-    * GeometryCollection
-    * 3D/4D geometries ??
-    * Rasters ??????
+### Planned
+* MultiPoint
+* MultiLineString
+* MultiPolygon
+* GeometryCollection
+* 3D/4D geometries ??
+* Rasters ??????
 
 There is support for both WKB/WKT and EWKB/EWKT return values. Currently only WKB/EWKB is used in statements.
 
