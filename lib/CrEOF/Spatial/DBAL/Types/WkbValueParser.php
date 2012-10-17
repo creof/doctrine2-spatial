@@ -40,7 +40,7 @@ class WkbValueParser
     /**
      * @var int
      */
-    private $byteOrder;
+    protected $byteOrder;
 
     /**
      * @param string $value
@@ -65,7 +65,7 @@ class WkbValueParser
                 break;
         }
 
-        $method = 'convertWkbTo' . $this->getTypeName($data['wkbType']);
+        $method = 'convertTo' . $this->getTypeName($data['wkbType']);
 
         return $this->$method($data['value']);
     }
@@ -76,7 +76,7 @@ class WkbValueParser
      * @return string
      * @throws InvalidValueException
      */
-    private function getTypeName($wkbType)
+    protected function getTypeName($wkbType)
     {
         switch ($wkbType) {
             case (0):
@@ -102,11 +102,11 @@ class WkbValueParser
      *
      * @return Point
      */
-    private function convertWkbToPoint($value)
+    protected function convertToPoint($value)
     {
         $data = $this->unpackWkbPoint($value);
 
-        return new Point($data['x'], $data['y']);
+        return $this->createPoint($data['x'], $data['y']);
     }
 
     /**
@@ -114,11 +114,11 @@ class WkbValueParser
      *
      * @return LineString
      */
-    private function convertWkbToLineString($value)
+    protected function convertToLineString($value)
     {
         $data = $this->unpackWkbLineString($value);
 
-        return new LineString($data['points']);
+        return $this->createLineString($data['points']);
     }
 
     /**
@@ -126,11 +126,11 @@ class WkbValueParser
      *
      * @return Polygon
      */
-    private function convertWkbToPolygon($value)
+    protected function convertToPolygon($value)
     {
         $data = $this->unpackWkbPolygon($value);
 
-        return new Polygon($data['rings']);
+        return $this->createPolygon($data['rings']);
     }
 
     /**
@@ -139,7 +139,7 @@ class WkbValueParser
      * @return array
      * @throws InvalidValueException
      */
-    private function unpackWkbPoint($value)
+    protected function unpackWkbPoint($value)
     {
         switch ($this->byteOrder) {
             case 0:
@@ -164,7 +164,7 @@ class WkbValueParser
      * @return array
      * @throws InvalidValueException
      */
-    private function unpackWkbLineString($value)
+    protected function unpackWkbLineString($value)
     {
         switch ($this->byteOrder) {
             case 0:
@@ -183,7 +183,7 @@ class WkbValueParser
 
         for ($j = 0; $j < $numPoints; $j++) {
             $data     = $this->unpackWkbPoint($data['value']);
-            $points[] = new Point($data['x'], $data['y']);
+            $points[] = $this->createPoint($data['x'], $data['y']);
         }
 
         return array(
@@ -198,7 +198,7 @@ class WkbValueParser
      * @return array
      * @throws InvalidValueException
      */
-    private function unpackWkbPolygon($value)
+    protected function unpackWkbPolygon($value)
     {
         switch ($this->byteOrder) {
             case 0:
@@ -217,12 +217,43 @@ class WkbValueParser
 
         for ($i = 0; $i < $numRings; $i++) {
             $data    = $this->unpackWkbLineString($data['value']);
-            $rings[] = new LineString($data['points']);
+            $rings[] = $this->createLineString($data['points']);
         }
 
         return array(
             'value'  => $data['value'],
             'rings' => $rings
         );
+    }
+
+    /**
+     * @param float $latitude
+     * @param float $longitude
+     *
+     * @return Point
+     */
+    protected function createPoint($latitude, $longitude)
+    {
+        return new Point($latitude, $longitude);
+    }
+
+    /**
+     * @param Point[] $points
+     *
+     * @return LineString
+     */
+    protected function createLineString(array $points)
+    {
+        return new LineString($points);
+    }
+
+    /**
+     * @param LineString[] $rings
+     *
+     * @return Polygon
+     */
+    protected function createPolygon(array $rings)
+    {
+        return new Polygon($rings);
     }
 }

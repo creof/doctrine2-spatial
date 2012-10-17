@@ -132,6 +132,32 @@ class GeographyType extends GeometryType
     }
 
     /**
+     * @param string           $sqlExpr
+     * @param AbstractPlatform $platform
+     *
+     * @return AbstractGeometry
+     * @throws InvalidValueException
+     * @throws UnsupportedPlatformException
+     */
+    protected function convertBinaryToPHPValue($sqlExpr, AbstractPlatform $platform)
+    {
+        switch ($platform->getName()) {
+            case 'postgresql':
+                if ( ! is_resource($sqlExpr)) {
+                    throw InvalidValueException::invalidType('resource', $sqlExpr);
+                }
+
+                $sqlExpr = stream_get_contents($sqlExpr);
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
+                break;
+        }
+
+        return $this->convertEwkbValue($sqlExpr);
+    }
+
+    /**
      * @param string $value
      *
      * @return AbstractGeometry
@@ -143,4 +169,15 @@ class GeographyType extends GeometryType
         return $parser->parse($value);
     }
 
+    /**
+     * @param string $value
+     *
+     * @return AbstractGeometry
+     */
+    protected function convertEwkbValue($value)
+    {
+        $parser = new EwkbValueParser();
+
+        return $parser->parse($value);
+    }
 }
