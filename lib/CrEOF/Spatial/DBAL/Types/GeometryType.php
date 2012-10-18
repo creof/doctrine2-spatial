@@ -23,10 +23,8 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\DBAL\Types\WkbValueParser;
-use CrEOF\Spatial\DBAL\Types\WktValueParser;
+use CrEOF\Spatial\DBAL\Types\Platforms\PlatformInterface;
 use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
@@ -40,81 +38,7 @@ use Doctrine\DBAL\Types\Type;
 class GeometryType extends Type
 {
     /**
-     * Gets the name of this type.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return AbstractGeometry::GEOMETRY;
-    }
-
-    /**
-     * Gets the SQL declaration snippet for a field of this type.
-     *
-     * @param array            $fieldDeclaration The field declaration.
-     * @param AbstractPlatform $platform         The currently used database platform.
-     *
-     * @return string
-     * @throws UnsupportedPlatformException
-     */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        switch ($platform->getName()) {
-            case 'mysql':
-                return strtoupper($this->getName());
-                break;
-            case 'postgresql':
-                if ($this->getName() == AbstractGeometry::GEOMETRY) {
-                    return 'geometry';
-                }
-
-                return 'geometry('. strtoupper($this->getName()) . ')';
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
-        }
-    }
-
-    /**
-     * @param string           $value
-     * @param AbstractPlatform $platform
-     *
-     * @return AbstractGeometry|null
-     * @throws UnsupportedPlatformException
-     * @throws \Doctrine\DBAL\Types\ConversionException
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        if (null === $value) {
-            return null;
-        }
-
-        if (gettype($value) == 'string' && ord($value) > 31) {
-            return $this->convertStringToPHPValue($value, $platform);
-        }
-
-        return $this->convertBinaryToPHPValue($value, $platform);
-    }
-
-    /**
-     * @param AbstractGeometry $value
-     * @param AbstractPlatform $platform
-     *
-     * @return string|null
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        if ($value instanceof AbstractGeometry) {
-            return (string) $value;
-        }
-
-        return $value;
-    }
-
-    /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function canRequireSQLConversion()
     {
@@ -122,119 +46,77 @@ class GeometryType extends Type
     }
 
     /**
-     * @param string           $sqlExpr
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     * @throws UnsupportedPlatformException
+     * {@inheritdoc}
+     */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    {
+        $spatialPlatform = $this->getSpatialPlatform($platform);
+
+        return $spatialPlatform->convertToDatabaseValue($value);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function convertToPHPValueSQL($sqlExpr, $platform)
     {
-        switch ($platform->getName()) {
-            case 'mysql':
-                return sprintf('AsBinary(%s)', $sqlExpr);
-                break;
-            case 'postgresql':
-                return sprintf('ST_AsBinary(%s)', $sqlExpr);
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
-        }
+        $spatialPlatform = $this->getSpatialPlatform($platform);
+
+        return $spatialPlatform->convertToPHPValueSQL($sqlExpr);
     }
 
     /**
-     * @param string           $sqlExpr
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     * @throws UnsupportedPlatformException
+     * {@inheritdoc}
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        switch ($platform->getName()) {
-            case 'mysql':
-                return sprintf('GeomFromText(%s)', $sqlExpr);
-                break;
-            case 'postgresql':
-                return sprintf('ST_GeomFromText(%s)', $sqlExpr);
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
-        }
+        $spatialPlatform = $this->getSpatialPlatform($platform);
+
+        return $spatialPlatform->convertToDatabaseValueSQL($sqlExpr);
     }
 
     /**
-     * @param string           $sqlExpr
+     * {@inheritdoc}
+     */
+    public function convertToPHPValue($value, AbstractPlatform $platform)
+    {
+        $spatialPlatform = $this->getSpatialPlatform($platform);
+
+        return $spatialPlatform->convertToPHPValue($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return AbstractGeometry::GEOMETRY;
+    }
+
+    /**
      * @param AbstractPlatform $platform
      *
-     * @return AbstractGeometry
+     * @return PlatformInterface
      * @throws UnsupportedPlatformException
      */
-    protected function convertStringToPHPValue($sqlExpr, AbstractPlatform $platform)
+    protected function getSpatialPlatform(AbstractPlatform $platform)
     {
-        switch ($platform->getName()) {
-            case 'mysql':
-                // no break
-            case 'postgresql':
-                return $this->convertWktValue($sqlExpr);
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
-        }
-    }
+        $spatialPlatformClass = 'CrEOF\Spatial\DBAL\Types\Platforms\\' . $platform->getName();
 
-    /**
-     * @param string           $sqlExpr
-     * @param AbstractPlatform $platform
-     *
-     * @return AbstractGeometry
-     * @throws InvalidValueException
-     * @throws UnsupportedPlatformException
-     */
-    protected function convertBinaryToPHPValue($sqlExpr, AbstractPlatform $platform)
-    {
-        switch ($platform->getName()) {
-            case 'mysql':
-                break;
-            case 'postgresql':
-                if ( ! is_resource($sqlExpr)) {
-                    throw InvalidValueException::invalidType('resource', $sqlExpr);
-                }
-
-                $sqlExpr = stream_get_contents($sqlExpr);
-                break;
-            default:
-                throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
-                break;
+        if ( ! class_exists($spatialPlatformClass)) {
+            throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
         }
 
-        return $this->convertWkbValue($sqlExpr);
+        return new $spatialPlatformClass;
     }
 
     /**
-     * @param string $value
-     *
-     * @return AbstractGeometry
+     * {@inheritdoc}
      */
-    protected function convertWktValue($value)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $parser = new WktValueParser();
+        $spatialPlatform = $this->getSpatialPlatform($platform);
 
-        return $parser->parse($value);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return AbstractGeometry
-     */
-    protected function convertWkbValue($value)
-    {
-        $parser = new WkbValueParser();
-
-        return $parser->parse($value);
+        return $spatialPlatform->getSQLDeclaration($fieldDeclaration);
     }
 }
