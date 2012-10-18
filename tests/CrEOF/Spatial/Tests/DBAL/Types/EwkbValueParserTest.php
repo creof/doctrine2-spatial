@@ -207,11 +207,14 @@ class EwkbValueParserTest extends \PHPUnit_Framework_TestCase
 
     public function testEwkbNdrLineString()
     {
-        $lineString  = new GeographyLineString(array(
-            new GeographyPoint(5.45, -23.5),
-            new GeographyPoint(-4.2, 99),
-            new GeographyPoint(23, 57.2345)
-        ));
+        $lineString  = new GeographyLineString(
+            array(
+                new GeographyPoint(5.45, -23.5, 4326),
+                new GeographyPoint(-4.2, 99, 4326),
+                new GeographyPoint(23, 57.2345, 4326)
+            ),
+            4326
+        );
         $string = '0102000020E610000003000000CDCCCCCCCCCC154000000000008037C0CDCCCCCCCCCC10C00000000000C058400000000000003740BC749318049E4C40';
         $binary = pack('H*', $string);
         $parser = new EwkbValueParser();
@@ -222,11 +225,14 @@ class EwkbValueParserTest extends \PHPUnit_Framework_TestCase
 
     public function testEwkbXdrLineString()
     {
-        $lineString  = new GeographyLineString(array(
-            new GeographyPoint(5.45, -23.5),
-            new GeographyPoint(-4.2, 99),
-            new GeographyPoint(23, 57.2345)
-        ));
+        $lineString  = new GeographyLineString(
+            array(
+                new GeographyPoint(5.45, -23.5, 4326),
+                new GeographyPoint(-4.2, 99, 4326),
+                new GeographyPoint(23, 57.2345, 4326)
+            ),
+            4326
+        );
         $string = '0020000002000010E6000000034015CCCCCCCCCCCDC037800000000000C010CCCCCCCCCCCD4058C000000000004037000000000000404C9E04189374BC';
         $binary = pack('H*', $string);
         $parser = new EwkbValueParser();
@@ -238,22 +244,28 @@ class EwkbValueParserTest extends \PHPUnit_Framework_TestCase
     public function testEwkbNdrPolygon()
     {
         $rings = array(
-            new GeographyLineString(array(
-                new GeographyPoint(0, 0),
-                new GeographyPoint(10, 0),
-                new GeographyPoint(10, 10),
-                new GeographyPoint(0, 10),
-                new GeographyPoint(0, 0)
-            )),
-            new GeographyLineString(array(
-                new GeographyPoint(5, 5),
-                new GeographyPoint(7, 5),
-                new GeographyPoint(7, 7),
-                new GeographyPoint(5, 7),
-                new GeographyPoint(5, 5)
-            ))
+            new GeographyLineString(
+                array(
+                    new GeographyPoint(0, 0, 4326),
+                    new GeographyPoint(10, 0, 4326),
+                    new GeographyPoint(10, 10, 4326),
+                    new GeographyPoint(0, 10, 4326),
+                    new GeographyPoint(0, 0, 4326)
+                ),
+                4326
+            ),
+            new GeographyLineString(
+                array(
+                    new GeographyPoint(5, 5, 4326),
+                    new GeographyPoint(7, 5, 4326),
+                    new GeographyPoint(7, 7, 4326),
+                    new GeographyPoint(5, 7, 4326),
+                    new GeographyPoint(5, 5, 4326)
+                ),
+                4326
+            )
         );
-        $polygon = new GeographyPolygon($rings);
+        $polygon = new GeographyPolygon($rings, 4326);
         $string  = '0103000020E61000000200000005000000000000000000000000000000000000000000000000002440000000000000000000000000000024400000000000002440000000000000000000000000000024400000000000000000000000000000000005000000000000000000144000000000000014400000000000001C4000000000000014400000000000001C400000000000001C4000000000000014400000000000001C4000000000000014400000000000001440';
         $binary  = pack('H*', $string);
         $parser  = new EwkbValueParser();
@@ -265,22 +277,28 @@ class EwkbValueParserTest extends \PHPUnit_Framework_TestCase
     public function testEwkbXdrPolygon()
     {
         $rings = array(
-            new GeographyLineString(array(
-                new GeographyPoint(0, 0),
-                new GeographyPoint(10, 0),
-                new GeographyPoint(10, 10),
-                new GeographyPoint(0, 10),
-                new GeographyPoint(0, 0)
-            )),
-            new GeographyLineString(array(
-                new GeographyPoint(5, 5),
-                new GeographyPoint(7, 5),
-                new GeographyPoint(7, 7),
-                new GeographyPoint(5, 7),
-                new GeographyPoint(5, 5)
-            ))
+            new GeographyLineString(
+                array(
+                    new GeographyPoint(0, 0, 4326),
+                    new GeographyPoint(10, 0, 4326),
+                    new GeographyPoint(10, 10, 4326),
+                    new GeographyPoint(0, 10, 4326),
+                    new GeographyPoint(0, 0, 4326)
+                ),
+                4326
+            ),
+            new GeographyLineString(
+                array(
+                    new GeographyPoint(5, 5, 4326),
+                    new GeographyPoint(7, 5, 4326),
+                    new GeographyPoint(7, 7, 4326),
+                    new GeographyPoint(5, 7, 4326),
+                    new GeographyPoint(5, 5, 4326)
+                ),
+                4326
+            )
         );
-        $polygon = new GeographyPolygon($rings);
+        $polygon = new GeographyPolygon($rings, 4326);
         $string  = '0020000003000010E6000000020000000500000000000000000000000000000000402400000000000000000000000000004024000000000000402400000000000000000000000000004024000000000000000000000000000000000000000000000000000540140000000000004014000000000000401C0000000000004014000000000000401C000000000000401C0000000000004014000000000000401C00000000000040140000000000004014000000000000';
         $binary  = pack('H*', $string);
         $parser  = new EwkbValueParser();

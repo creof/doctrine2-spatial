@@ -38,10 +38,12 @@ abstract class AbstractPolygon extends AbstractGeometry
 
     /**
      * @param AbstractLineString[] $rings
+     * @param null|int             $srid
      */
-    public function __construct(array $rings)
+    public function __construct(array $rings, $srid = null)
     {
-        $this->setRings($rings);
+        $this->setRings($rings)
+            ->setSrid($srid);
     }
 
     /**

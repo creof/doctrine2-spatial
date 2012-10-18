@@ -38,6 +38,12 @@ abstract class AbstractGeometry
     const POINT      = 'point';
     const LINESTRING = 'linestring';
     const POLYGON    = 'polygon';
+    const MULTIPOINT = 'multipoint';
+
+    /**
+     * @var int
+     */
+    protected $srid;
 
     /**
      * @return string
@@ -57,6 +63,26 @@ abstract class AbstractGeometry
         }
 
         return sprintf('%s(%s)', $type, $this->$method($this));
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getSrid()
+    {
+        return $this->srid;
+    }
+
+    /**
+     * @param mixed $srid
+     *
+     * @return self
+     */
+    public function setSrid($srid)
+    {
+        $this->srid = (int) $srid;
+
+        return $this;
     }
 
     /**

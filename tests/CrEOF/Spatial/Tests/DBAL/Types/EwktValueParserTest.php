@@ -37,7 +37,7 @@ use CrEOF\Spatial\PHP\Types\Geography\Polygon as GeographyPolygon;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
  */
 class EwktValueParserTest extends \PHPUnit_Framework_TestCase
 {

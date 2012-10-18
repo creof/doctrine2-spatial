@@ -34,37 +34,5 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
  */
 class LineString extends AbstractLineString implements GeographyInterface
 {
-    /**
-     * @var int
-     */
-    protected $srid;
 
-    /**
-     * @param AbstractPoint[] $points
-     * @param int|null $srid
-     */
-    public function __construct(array $points, $srid = null)
-    {
-        $this->setPoints($points);
-    }
-
-    /**
-     * @return int
-     */
-    public function getSrid()
-    {
-        return $this->srid;
-    }
-
-    /**
-     * @param int $srid
-     *
-     * @return self
-     */
-    public function setSrid($srid)
-    {
-        $this->srid = ($srid ? $srid : self::DEFAULT_SRID);
-
-        return $this;
-    }
 }

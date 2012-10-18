@@ -59,7 +59,9 @@ class EwktValueParser extends WktValueParser
             $this->srid = $matches['srid'];
         }
 
-        return parent::parse($matches['value']);
+        $object = parent::parse($matches['value']);
+
+        return $object->setSrid($this->srid);
     }
 
     protected function finalize()
@@ -73,10 +75,10 @@ class EwktValueParser extends WktValueParser
                 return $this->current[0];
                 break;
             case AbstractGeometry::LINESTRING:
-                return new LineString($this->current);
+                return new LineString($this->current, $this->srid);
                 break;
             case AbstractGeometry::POLYGON:
-                return new Polygon($this->current);
+                return new Polygon($this->current, $this->srid);
                 break;
             default:
                 throw InvalidValueException::unsupportedEwktType($this->type);
@@ -99,7 +101,7 @@ class EwktValueParser extends WktValueParser
             return parent::createLineString();
         }
 
-        return new LineString($this->current);
+        return new LineString($this->current, $this->srid);
     }
 
 }

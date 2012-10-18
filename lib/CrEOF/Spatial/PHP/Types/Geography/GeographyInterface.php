@@ -31,17 +31,5 @@ namespace CrEOF\Spatial\PHP\Types\Geography;
  */
 interface GeographyInterface
 {
-    const DEFAULT_SRID = 4326;
 
-    /**
-     * @return int
-     */
-    public function getSrid();
-
-    /**
-     * @param int $srid
-     *
-     * @return self
-     */
-    public function setSrid($srid);
 }

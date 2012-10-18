@@ -38,10 +38,12 @@ abstract class AbstractLineString extends AbstractGeometry
 
     /**
      * @param AbstractPoint[] $points
+     * @param null|int        $srid
      */
-    public function __construct(array $points)
+    public function __construct(array $points, $srid = null)
     {
-        $this->setPoints($points);
+        $this->setPoints($points)
+            ->setSrid($srid);
     }
 
     /**
@@ -111,5 +113,4 @@ abstract class AbstractLineString extends AbstractGeometry
 
         return true;
     }
-
 }

@@ -44,13 +44,15 @@ abstract class AbstractPoint extends AbstractGeometry
     protected $longitude;
 
     /**
-     * @param mixed $latitude
-     * @param mixed $longitude
+     * @param mixed    $latitude
+     * @param mixed    $longitude
+     * @param null|int $srid
      */
-    public function __construct($latitude, $longitude)
+    public function __construct($latitude, $longitude, $srid = null)
     {
         $this->setLatitude($latitude)
-            ->setLongitude($longitude);
+            ->setLongitude($longitude)
+            ->setSrid($srid);
     }
 
     /**

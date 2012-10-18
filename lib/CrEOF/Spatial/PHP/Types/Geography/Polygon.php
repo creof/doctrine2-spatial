@@ -35,37 +35,5 @@ use CrEOF\Spatial\PHP\Types\AbstractPolygon;
  */
 class Polygon extends AbstractPolygon implements GeographyInterface
 {
-    /**
-     * @var int
-     */
-    protected $srid;
 
-    /**
-     * @param AbstractLineString[] $rings
-     * @param int|null $srid
-     */
-    public function __construct(array $rings, $srid = null)
-    {
-        $this->setRings($rings);
-    }
-
-    /**
-     * @return int
-     */
-    public function getSrid()
-    {
-        return $this->srid;
-    }
-
-    /**
-     * @param int $srid
-     *
-     * @return self
-     */
-    public function setSrid($srid)
-    {
-        $this->srid = ($srid ? $srid : self::DEFAULT_SRID);
-
-        return $this;
-    }
 }

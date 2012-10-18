@@ -33,39 +33,5 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
  */
 class Point extends AbstractPoint implements GeographyInterface
 {
-    /**
-     * @var int
-     */
-    protected $srid;
 
-    /**
-     * @param mixed    $latitude
-     * @param mixed    $longitude
-     * @param int|null $srid
-     */
-    public function __construct($latitude, $longitude, $srid = null)
-    {
-        parent::__construct($latitude, $longitude);
-        $this->setSrid($srid);
-    }
-
-    /**
-     * @return int
-     */
-    public function getSrid()
-    {
-        return $this->srid;
-    }
-
-    /**
-     * @param int $srid
-     *
-     * @return self
-     */
-    public function setSrid($srid)
-    {
-        $this->srid = ($srid ? $srid : self::DEFAULT_SRID);
-
-        return $this;
-    }
 }
