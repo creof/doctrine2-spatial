@@ -258,29 +258,6 @@ class Parser
         }
 
         $this->lexer->moveNext();
-
-//        if ($lookaheadType == $token || $token == Lexer::T_TYPE && $lookaheadType >= Lexer::T_TYPE) {
-//            return $this->lexer->moveNext();
-//        }
-//
-//        $this->syntaxError($this->lexer->getLiteral($token));
-
-//        if ($lookaheadType == $token) {
-//            return $this->lexer->moveNext();
-//        }
-//
-//        if ($token == Lexer::T_TYPE && $lookaheadType >= Lexer::T_TYPE) {
-//            return $this->lexer->moveNext();
-//        }
-//
-//        $this->syntaxError($this->lexer->getLiteral($token));
-
-// works for all but bad type
-//        if ($lookaheadType !== $token && $token !== Lexer::T_TYPE && $lookaheadType <= Lexer::T_TYPE) {
-//            $this->syntaxError($this->lexer->getLiteral($token));
-//        }
-//
-//        $this->lexer->moveNext();
     }
 
     /**
