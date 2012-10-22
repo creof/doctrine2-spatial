@@ -57,6 +57,11 @@ class BinaryParser
     /**
      * @var int
      */
+    private $type;
+
+    /**
+     * @var int
+     */
     private $srid;
 
     /**
@@ -77,20 +82,10 @@ class BinaryParser
      */
     public function parse()
     {
-        $this->byteOrder = $this->byteOrder();
-        $type            = $this->type();
+        $value         = $this->geometry();
+        $value['srid'] = $this->srid;
 
-        if ($this->isExtended($type)) {
-            $this->srid = $this->srid();
-        }
-
-        $typeName = $this->getTypeName($type);
-
-        return array(
-            'type'  => $typeName,
-            'srid'  => $this->srid,
-            'value' => $this->$typeName()
-        );
+        return $value;
     }
 
     /**
@@ -104,46 +99,6 @@ class BinaryParser
         $this->input = $data['value'];
 
         return $data['result'];
-    }
-
-    /**
-     * @param int $wkbType
-     *
-     * @return bool
-     */
-    private function isExtended($wkbType)
-    {
-        return ($wkbType & self::WKB_SRID) == self::WKB_SRID;
-    }
-
-    /**
-     * @param int $wkbType
-     *
-     * @return string
-     * @throws InvalidValueException
-     */
-    private function getTypeName($wkbType)
-    {
-        if ($this->isExtended($wkbType)) {
-            $wkbType = $wkbType ^ self::WKB_SRID;
-        }
-
-        switch ($wkbType) {
-            case (self::WKB_POINT):
-                $type = AbstractGeometry::POINT;
-                break;
-            case (self::WKB_LINESTRING):
-                $type = AbstractGeometry::LINESTRING;
-                break;
-            case (self::WKB_POLYGON):
-                $type = AbstractGeometry::POLYGON;
-                break;
-            default:
-                throw InvalidValueException::unsupportedWkbType($wkbType);
-                break;
-        }
-
-        return strtoupper($type);
     }
 
     /**
@@ -183,27 +138,104 @@ class BinaryParser
     }
 
     /**
-     * @return int
+     * @return array
+     */
+    private function geometry()
+    {
+        $this->byteOrder();
+        $this->type();
+
+        if ($this->isExtended()) {
+            $this->srid();
+        }
+
+        $typeName = $this->getTypeName();
+
+        return array(
+            'type'  => $typeName,
+            'value' => $this->$typeName()
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    private function isExtended()
+    {
+        return ($this->type & self::WKB_SRID) == self::WKB_SRID;
+    }
+
+    /**
+     * @return string
+     * @throws InvalidValueException
+     */
+    private function getTypeName()
+    {
+        if ($this->isExtended()) {
+            $this->type = $this->type ^ self::WKB_SRID;
+        }
+
+        switch ($this->type) {
+            case (self::WKB_POINT):
+                $type = AbstractGeometry::POINT;
+                break;
+            case (self::WKB_LINESTRING):
+                $type = AbstractGeometry::LINESTRING;
+                break;
+            case (self::WKB_POLYGON):
+                $type = AbstractGeometry::POLYGON;
+                break;
+            case (self::WKB_MULTIPOINT):
+                $type = AbstractGeometry::MULTIPOINT;
+                break;
+            case (self::WKB_MULTILINESTRING):
+                $type = AbstractGeometry::MULTILINESTRING;
+                break;
+            case (self::WKB_MULTIPOLYGON):
+                $type = AbstractGeometry::MULTIPOLYGON;
+                break;
+            case (self::WKB_GEOMETRYCOLLECTION):
+                $type = AbstractGeometry::GEOMETRYCOLLECTION;
+                break;
+            default:
+                throw InvalidValueException::unsupportedWkbType($this->type);
+                break;
+        }
+
+        return strtoupper($type);
+    }
+
+    /**
+     * @throws InvalidValueException
      */
     private function byteOrder()
     {
-        return $this->byte();
+        $byteOrder = $this->byte();
+
+        if ($byteOrder !== 0 && $byteOrder !== 1) {
+            throw InvalidValueException::invalidByteOrder($byteOrder);
+        }
+
+        $this->byteOrder = $byteOrder;
     }
 
-    /**
-     * @return int
-     */
     private function type()
     {
-        return $this->long();
+        $this->type = $this->long();
     }
 
     /**
-     * @return int
+     * @throws InvalidValueException
      */
     private function srid()
     {
-        return $this->long();
+        $srid = $this->long();
+
+        if ($srid < 0) {
+            throw InvalidValueException::invalidSrid($srid);
+        }
+
+        $this->srid = $srid;
     }
 
     /**
@@ -222,7 +254,7 @@ class BinaryParser
      */
     private function lineString()
     {
-        return $this->typeArray(AbstractGeometry::POINT);
+        return $this->valueArray(AbstractGeometry::POINT);
     }
 
     /**
@@ -230,7 +262,44 @@ class BinaryParser
      */
     private function polygon()
     {
-        return $this->typeArray(AbstractGeometry::LINESTRING);
+        return $this->valueArray(AbstractGeometry::LINESTRING);
+    }
+
+    private function multiPoint()
+    {
+        return $this->typeArray(AbstractGeometry::GEOMETRY);
+    }
+
+    private function multiLineString()
+    {
+        return $this->typeArray(AbstractGeometry::GEOMETRY);
+    }
+
+    private function multiPolygon()
+    {
+        return $this->typeArray(AbstractGeometry::GEOMETRY);
+    }
+
+    private function geometryCollection()
+    {
+        return $this->valueArray(AbstractGeometry::GEOMETRY);
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return array[]
+     */
+    private function valueArray($type)
+    {
+        $count  = $this->long();
+        $values = array();
+
+        for ($i = 0; $i < $count; $i++) {
+            $values[] = $this->$type();
+        }
+
+        return $values;
     }
 
     /**
@@ -244,7 +313,8 @@ class BinaryParser
         $values = array();
 
         for ($i = 0; $i < $count; $i++) {
-            $values[] = $this->$type();
+            $value = $this->$type();
+            $values[] = $value['value'];
         }
 
         return $values;
