@@ -114,4 +114,15 @@ class InvalidValueException extends Exception
     {
         return new self(sprintf('Invalid longitude value "%s", must be in range -180 to 180.', $value));
     }
+
+    /**
+     * @param string $message
+     * @param string $input
+     *
+     * @return InvalidValueException
+     */
+    static public function syntaxError($message, $input)
+    {
+        return new self(sprintf('[Syntax Error] %s in value "%s"', $message, $input));
+    }
 }
