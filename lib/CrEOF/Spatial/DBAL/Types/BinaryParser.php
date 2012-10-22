@@ -34,9 +34,6 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class BinaryParser
 {
-    const WKB_XDR                = 0;
-    const WKB_NDR                = 1;
-
     const WKB_POINT              = 1;
     const WKB_LINESTRING         = 2;
     const WKB_POLYGON            = 3;
@@ -52,11 +49,6 @@ class BinaryParser
     /**
      * @var int
      */
-    private $byteOrder;
-
-    /**
-     * @var int
-     */
     private $type;
 
     /**
@@ -65,16 +57,16 @@ class BinaryParser
     private $srid;
 
     /**
-     * @var string
+     * @var BinaryReader
      */
-    private $input;
+    private $reader;
 
     /**
      * @param string $input
      */
     public function __construct($input)
     {
-        $this->input = $input;
+        $this->reader = new BinaryReader($input);
     }
 
     /**
@@ -86,55 +78,6 @@ class BinaryParser
         $value['srid'] = $this->srid;
 
         return $value;
-    }
-
-    /**
-     * @param string $format
-     *
-     * @return array
-     */
-    private function unpackInput($format)
-    {
-        $data        = unpack($format . 'result/A*value', $this->input);
-        $this->input = $data['value'];
-
-        return $data['result'];
-    }
-
-    /**
-     * @return int
-     */
-    private function byte()
-    {
-        return $this->unpackInput('C');
-    }
-
-    /**
-     * @return int
-     */
-    private function long()
-    {
-        if (self::WKB_XDR == $this->byteOrder) {
-            return $this->unpackInput('N');
-        }
-
-        return $this->unpackInput('V');
-    }
-
-    /**
-     * @return float
-     */
-    protected function double()
-    {
-        $double = $this->unpackInput('d');
-
-        if (self::WKB_NDR == $this->byteOrder) {
-            return $double;
-        }
-
-        $double = unpack('ddouble', strrev(pack('d', $double)));
-
-        return $double['double'];
     }
 
     /**
@@ -210,18 +153,12 @@ class BinaryParser
      */
     private function byteOrder()
     {
-        $byteOrder = $this->byte();
-
-        if ($byteOrder !== 0 && $byteOrder !== 1) {
-            throw InvalidValueException::invalidByteOrder($byteOrder);
-        }
-
-        $this->byteOrder = $byteOrder;
+        $this->reader->byteOrder();
     }
 
     private function type()
     {
-        $this->type = $this->long();
+        $this->type = $this->reader->long();
     }
 
     /**
@@ -229,7 +166,7 @@ class BinaryParser
      */
     private function srid()
     {
-        $srid = $this->long();
+        $srid = $this->reader->long();
 
         if ($srid < 0) {
             throw InvalidValueException::invalidSrid($srid);
@@ -244,8 +181,8 @@ class BinaryParser
     private function point()
     {
         return array(
-            $this->double(),
-            $this->double()
+            $this->reader->double(),
+            $this->reader->double()
         );
     }
 
@@ -265,21 +202,33 @@ class BinaryParser
         return $this->valueArray(AbstractGeometry::LINESTRING);
     }
 
+    /**
+     * @return array[]
+     */
     private function multiPoint()
     {
-        return $this->typeArray(AbstractGeometry::GEOMETRY);
+        return $this->valueArrayValues(AbstractGeometry::GEOMETRY);
     }
 
+    /**
+     * @return array[]
+     */
     private function multiLineString()
     {
-        return $this->typeArray(AbstractGeometry::GEOMETRY);
+        return $this->valueArrayValues(AbstractGeometry::GEOMETRY);
     }
 
+    /**
+     * @return array[]
+     */
     private function multiPolygon()
     {
-        return $this->typeArray(AbstractGeometry::GEOMETRY);
+        return $this->valueArrayValues(AbstractGeometry::GEOMETRY);
     }
 
+    /**
+     * @return array[]
+     */
     private function geometryCollection()
     {
         return $this->valueArray(AbstractGeometry::GEOMETRY);
@@ -292,7 +241,7 @@ class BinaryParser
      */
     private function valueArray($type)
     {
-        $count  = $this->long();
+        $count  = $this->reader->long();
         $values = array();
 
         for ($i = 0; $i < $count; $i++) {
@@ -307,15 +256,11 @@ class BinaryParser
      *
      * @return array[]
      */
-    private function typeArray($type)
+    private function valueArrayValues($type)
     {
-        $count  = $this->long();
-        $values = array();
+        $values = $this->valueArray($type);
 
-        for ($i = 0; $i < $count; $i++) {
-            $value = $this->$type();
-            $values[] = $value['value'];
-        }
+        array_walk($values, create_function('&$a', '$a = $a["value"];'));
 
         return $values;
     }
