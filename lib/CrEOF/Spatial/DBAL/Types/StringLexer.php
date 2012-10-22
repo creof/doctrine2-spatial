@@ -29,7 +29,7 @@ namespace CrEOF\Spatial\DBAL\Types;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Lexer extends \Doctrine\Common\Lexer
+class StringLexer extends \Doctrine\Common\Lexer
 {
     const T_NONE               = 1;
     const T_INTEGER            = 2;

@@ -23,33 +23,33 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use CrEOF\Spatial\DBAL\Types\Parser;
+use CrEOF\Spatial\DBAL\Types\StringParser;
 
 /**
- * Parser tests
+ * StringParser tests
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
  */
-class ParserTest extends \PHPUnit_Framework_TestCase
+class StringParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 0: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_TYPE, got "PNT" in value "PNT(10 10)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 0: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_TYPE, got "PNT" in value "PNT(10 10)"
      */
     public function testParsingBadType()
     {
         $value  = 'PNT(10 10)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingPointValue()
     {
         $value    = 'POINT(34.23 -87)';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'POINT',
@@ -64,7 +64,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingPointValueWithSrid()
     {
         $value    = 'SRID=4326;POINT(34.23 -87)';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'POINT',
@@ -78,42 +78,42 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 5: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_INTEGER, got "432.6" in value "SRID=432.6;POINT(34.23 -87)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 5: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got "432.6" in value "SRID=432.6;POINT(34.23 -87)"
      */
     public function testParsingPointValueWithBadSrid()
     {
         $value  = 'SRID=432.6;POINT(34.23 -87)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 11: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_INTEGER, got ")" in value "POINT(34.23)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 11: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got ")" in value "POINT(34.23)"
      */
     public function testParsingPointValueMissingCoordinate()
     {
         $value  = 'POINT(34.23)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 8: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_INTEGER, got "," in value "POINT(10, 10)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 8: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got "," in value "POINT(10, 10)"
      */
     public function testParsingPointValueWithComma()
     {
         $value  = 'POINT(10, 10)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingLineStringValue()
     {
         $value    = 'LINESTRING(34.23 -87, 45.3 -92)';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'LINESTRING',
@@ -131,7 +131,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingLineStringValueWithSrid()
     {
         $value    = 'SRID=4326;LINESTRING(34.23 -87, 45.3 -92)';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'LINESTRING',
@@ -148,30 +148,30 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 21: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_CLOSE_PARENTHESIS, got "45.3" in value "LINESTRING(34.23 -87 45.3 -92)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 21: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_CLOSE_PARENTHESIS, got "45.3" in value "LINESTRING(34.23 -87 45.3 -92)"
      */
     public function testParsingLineStringValueMissingComma()
     {
         $value  = 'LINESTRING(34.23 -87 45.3 -92)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 26: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_INTEGER, got ")" in value "LINESTRING(34.23 -87, 45.3)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 26: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got ")" in value "LINESTRING(34.23 -87, 45.3)"
      */
     public function testParsingLineStringValueMissingCoordinate()
     {
         $value  = 'LINESTRING(34.23 -87, 45.3)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingPolygonValue()
     {
         $value    = 'POLYGON((0 0,10 0,10 10,0 10,0 0))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'POLYGON',
@@ -194,7 +194,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingPolygonValueWithSrid()
     {
         $value    = 'SRID=4326;POLYGON((0 0,10 0,10 10,0 10,0 0))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'POLYGON',
@@ -216,19 +216,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 8: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_OPEN_PARENTHESIS, got "0" in value "POLYGON(0 0,10 0,10 10,0 10,0 0)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 8: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_OPEN_PARENTHESIS, got "0" in value "POLYGON(0 0,10 0,10 10,0 10,0 0)"
      */
     public function testParsingPolygonValueMissingParenthesis()
     {
         $value  = 'POLYGON(0 0,10 0,10 10,0 10,0 0)';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingMultiRingPolygonValue()
     {
         $value    = 'POLYGON((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'POLYGON',
@@ -258,7 +258,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingMultiRingPolygonValueWithSrid()
     {
         $value    = 'SRID=4326;POLYGON((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'POLYGON',
@@ -287,19 +287,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 33: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_CLOSE_PARENTHESIS, got "(" in value "POLYGON((0 0,10 0,10 10,0 10,0 0)(5 5,7 5,7 7,5 7,5 5))"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 33: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_CLOSE_PARENTHESIS, got "(" in value "POLYGON((0 0,10 0,10 10,0 10,0 0)(5 5,7 5,7 7,5 7,5 5))"
      */
     public function testParsingMultiRingPolygonValueMissingComma()
     {
         $value  = 'POLYGON((0 0,10 0,10 10,0 10,0 0)(5 5,7 5,7 7,5 7,5 5))';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingMultiPointValue()
     {
         $value    = 'MULTIPOINT(0 0,10 0,10 10,0 10)';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'MULTIPOINT',
@@ -319,7 +319,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingMultiPointValueWithSrid()
     {
         $value    = 'SRID=4326;MULTIPOINT(0 0,10 0,10 10,0 10)';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'MULTIPOINT',
@@ -338,19 +338,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 11: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_INTEGER, got "(" in value "MULTIPOINT((0 0,10 0,10 10,0 10))"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 11: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got "(" in value "MULTIPOINT((0 0,10 0,10 10,0 10))"
      */
     public function testParsingMultiPointValueWithExtraParenthesis()
     {
         $value  = 'MULTIPOINT((0 0,10 0,10 10,0 10))';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingMultiLineStringValue()
     {
         $value    = 'MULTILINESTRING((0 0,10 0,10 10,0 10),(5 5,7 5,7 7,5 7))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'MULTILINESTRING',
@@ -378,7 +378,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingMultiLineStringValueWithSrid()
     {
         $value    = 'SRID=4326;MULTILINESTRING((0 0,10 0,10 10,0 10),(5 5,7 5,7 7,5 7))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'MULTILINESTRING',
@@ -405,19 +405,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 37: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_CLOSE_PARENTHESIS, got "(" in value "MULTILINESTRING((0 0,10 0,10 10,0 10)(5 5,7 5,7 7,5 7))"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 37: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_CLOSE_PARENTHESIS, got "(" in value "MULTILINESTRING((0 0,10 0,10 10,0 10)(5 5,7 5,7 7,5 7))"
      */
     public function testParsingMultiLineStringValueMissingComma()
     {
         $value  = 'MULTILINESTRING((0 0,10 0,10 10,0 10)(5 5,7 5,7 7,5 7))';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingMultiPolygonValue()
     {
         $value    = 'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5)),((1 1, 3 1, 3 3, 1 3, 1 1)))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'MULTIPOLYGON',
@@ -458,7 +458,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingMultiPolygonValueWithSrid()
     {
         $value    = 'SRID=4326;MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5)),((1 1, 3 1, 3 3, 1 3, 1 1)))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'MULTIPOLYGON',
@@ -498,19 +498,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 64: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_OPEN_PARENTHESIS, got "1" in value "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5)),(1 1, 3 1, 3 3, 1 3, 1 1))"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 64: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_OPEN_PARENTHESIS, got "1" in value "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5)),(1 1, 3 1, 3 3, 1 3, 1 1))"
      */
     public function testParsingMultiPolygonValueMissingParenthesis()
     {
         $value  = 'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5)),(1 1, 3 1, 3 3, 1 3, 1 1))';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 
     public function testParsingGeometryCollectionValue()
     {
         $value    = 'GEOMETRYCOLLECTION(POINT(10 10), POINT(30 30), LINESTRING(15 15, 20 20))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => null,
             'type'  => 'GEOMETRYCOLLECTION',
@@ -541,7 +541,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingGeometryCollectionValueWithSrid()
     {
         $value    = 'SRID=4326;GEOMETRYCOLLECTION(POINT(10 10), POINT(30 30), LINESTRING(15 15, 20 20))';
-        $parser   = new Parser($value);
+        $parser   = new StringParser($value);
         $expected = array(
             'srid'  => 4326,
             'type'  => 'GEOMETRYCOLLECTION',
@@ -571,12 +571,12 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 19: Error: Expected CrEOF\Spatial\DBAL\Types\Lexer::T_TYPE, got "PNT" in value "GEOMETRYCOLLECTION(PNT(10 10), POINT(30 30), LINESTRING(15 15, 20 20))"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 19: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_TYPE, got "PNT" in value "GEOMETRYCOLLECTION(PNT(10 10), POINT(30 30), LINESTRING(15 15, 20 20))"
      */
     public function testParsingGeometryCollectionValueWithBadType()
     {
         $value  = 'GEOMETRYCOLLECTION(PNT(10 10), POINT(30 30), LINESTRING(15 15, 20 20))';
-        $parser = new Parser($value);
+        $parser = new StringParser($value);
         $actual = $parser->parse();
     }
 }

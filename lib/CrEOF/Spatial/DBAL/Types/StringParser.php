@@ -31,7 +31,7 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Parser
+class StringParser
 {
     /**
      * @var string
@@ -49,7 +49,7 @@ class Parser
     private $srid;
 
     /**
-     * @var Lexer
+     * @var StringLexer
      */
     private $lexer;
 
@@ -59,7 +59,7 @@ class Parser
     public function __construct($input)
     {
         $this->input = $input;
-        $this->lexer = new Lexer($input);
+        $this->lexer = new StringLexer($input);
     }
 
     /**
@@ -69,7 +69,7 @@ class Parser
     {
         $this->lexer->moveNext();
 
-        if ($this->lexer->lookahead['type'] == Lexer::T_SRID) {
+        if ($this->lexer->lookahead['type'] == StringLexer::T_SRID) {
             $this->srid = $this->srid();
         }
 
@@ -84,13 +84,13 @@ class Parser
      */
     protected function srid()
     {
-        $this->match(Lexer::T_SRID);
-        $this->match(Lexer::T_EQUALS);
-        $this->match(Lexer::T_INTEGER);
+        $this->match(StringLexer::T_SRID);
+        $this->match(StringLexer::T_EQUALS);
+        $this->match(StringLexer::T_INTEGER);
 
         $srid = $this->lexer->token['value'];
 
-        $this->match(Lexer::T_SEMICOLON);
+        $this->match(StringLexer::T_SEMICOLON);
 
         return $srid;
     }
@@ -100,7 +100,7 @@ class Parser
      */
     protected function type()
     {
-        $this->match(Lexer::T_TYPE);
+        $this->match(StringLexer::T_TYPE);
 
         return $this->lexer->token['value'];
     }
@@ -121,7 +121,7 @@ class Parser
      */
     protected function coordinate()
     {
-        $this->match(($this->lexer->isNextToken(Lexer::T_FLOAT) ? Lexer::T_FLOAT : Lexer::T_INTEGER));
+        $this->match(($this->lexer->isNextToken(StringLexer::T_FLOAT) ? StringLexer::T_FLOAT : StringLexer::T_INTEGER));
 
         return $this->lexer->token['value'];
     }
@@ -143,8 +143,8 @@ class Parser
     {
         $points = array($this->point());
 
-        while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
-            $this->match(Lexer::T_COMMA);
+        while ($this->lexer->isNextToken(StringLexer::T_COMMA)) {
+            $this->match(StringLexer::T_COMMA);
 
             $points[] = $this->point();
         }
@@ -157,19 +157,19 @@ class Parser
      */
     protected function pointLists()
     {
-        $this->match(Lexer::T_OPEN_PARENTHESIS);
+        $this->match(StringLexer::T_OPEN_PARENTHESIS);
 
         $pointLists = array($this->pointList());
 
-        $this->match(Lexer::T_CLOSE_PARENTHESIS);
+        $this->match(StringLexer::T_CLOSE_PARENTHESIS);
 
-        while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
-            $this->match(Lexer::T_COMMA);
-            $this->match(Lexer::T_OPEN_PARENTHESIS);
+        while ($this->lexer->isNextToken(StringLexer::T_COMMA)) {
+            $this->match(StringLexer::T_COMMA);
+            $this->match(StringLexer::T_OPEN_PARENTHESIS);
 
             $pointLists[] = $this->pointList();
 
-            $this->match(Lexer::T_CLOSE_PARENTHESIS);
+            $this->match(StringLexer::T_CLOSE_PARENTHESIS);
         }
 
         return $pointLists;
@@ -180,19 +180,19 @@ class Parser
      */
     protected function multiPolygon()
     {
-        $this->match(Lexer::T_OPEN_PARENTHESIS);
+        $this->match(StringLexer::T_OPEN_PARENTHESIS);
 
         $polygons = array($this->polygon());
 
-        $this->match(Lexer::T_CLOSE_PARENTHESIS);
+        $this->match(StringLexer::T_CLOSE_PARENTHESIS);
 
-        while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
-            $this->match(Lexer::T_COMMA);
-            $this->match(Lexer::T_OPEN_PARENTHESIS);
+        while ($this->lexer->isNextToken(StringLexer::T_COMMA)) {
+            $this->match(StringLexer::T_COMMA);
+            $this->match(StringLexer::T_OPEN_PARENTHESIS);
 
             $polygons[] = $this->polygon();
 
-            $this->match(Lexer::T_CLOSE_PARENTHESIS);
+            $this->match(StringLexer::T_CLOSE_PARENTHESIS);
         }
 
         return $polygons;
@@ -221,11 +221,11 @@ class Parser
     {
         $type = $this->type();
 
-        $this->match(Lexer::T_OPEN_PARENTHESIS);
+        $this->match(StringLexer::T_OPEN_PARENTHESIS);
 
         $value = $this->$type();
 
-        $this->match(Lexer::T_CLOSE_PARENTHESIS);
+        $this->match(StringLexer::T_CLOSE_PARENTHESIS);
 
         return array(
             'type'  => $type,
@@ -240,8 +240,8 @@ class Parser
     {
         $collection = array($this->geometry());
 
-        while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
-            $this->match(Lexer::T_COMMA);
+        while ($this->lexer->isNextToken(StringLexer::T_COMMA)) {
+            $this->match(StringLexer::T_COMMA);
 
             $collection[] = $this->geometry();
         }
@@ -253,7 +253,7 @@ class Parser
     {
         $lookaheadType = $this->lexer->lookahead['type'];
 
-        if ($lookaheadType !== $token && ($token !== Lexer::T_TYPE || $lookaheadType <= Lexer::T_TYPE)) {
+        if ($lookaheadType !== $token && ($token !== StringLexer::T_TYPE || $lookaheadType <= StringLexer::T_TYPE)) {
             $this->syntaxError($this->lexer->getLiteral($token));
         }
 
