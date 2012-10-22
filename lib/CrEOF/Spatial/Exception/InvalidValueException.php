@@ -40,7 +40,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function invalidType($type, $value)
+    public static function invalidType($type, $value)
     {
         return new self(sprintf('Value needs to be of type "%s", is "%s".', $type, (is_object($value) ? get_class($value) : gettype($value))));
     }
@@ -50,7 +50,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function ringNotClosed(LineString $ring)
+    public static function ringNotClosed(LineString $ring)
     {
         return new self(sprintf('Ring "%s" is not closed.', $ring));
     }
@@ -60,7 +60,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function invalidByteOrder($order)
+    public static function invalidByteOrder($order)
     {
         return new self(sprintf('Invalid byte order "%d".', $order));
     }
@@ -70,7 +70,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function unsupportedWktType($type)
+    public static function unsupportedWktType($type)
     {
         return new self(sprintf('Unsupported WKT type "%s".', $type));
     }
@@ -80,7 +80,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function unsupportedWkbType($type)
+    public static function unsupportedWkbType($type)
     {
         return new self(sprintf('Unsupported WKB type "%d".', $type));
     }
@@ -90,7 +90,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function unsupportedEwktType($type)
+    public static function unsupportedEwktType($type)
     {
         return new self(sprintf('Unsupported EWKT type "%s".', $type));
     }
@@ -100,7 +100,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function invalidLatitude($value)
+    public static function invalidLatitude($value)
     {
         return new self(sprintf('Invalid latitude value "%s", must be in range -90 to 90.', $value));
     }
@@ -110,7 +110,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function invalidLongitude($value)
+    public static function invalidLongitude($value)
     {
         return new self(sprintf('Invalid longitude value "%s", must be in range -180 to 180.', $value));
     }
@@ -121,7 +121,7 @@ class InvalidValueException extends Exception
      *
      * @return InvalidValueException
      */
-    static public function syntaxError($message, $input)
+    public static function syntaxError($message, $input)
     {
         return new self(sprintf('[Syntax Error] %s in value "%s"', $message, $input));
     }
