@@ -98,14 +98,12 @@ class BinaryParser
      *
      * @return array
      */
-    private function unPack($format)
+    private function unpackInput($format)
     {
-        $data        = unpack($format . '/A*value', $this->input);
+        $data        = unpack($format . 'result/A*value', $this->input);
         $this->input = $data['value'];
 
-        unset($data['value']);
-
-        return $data;
+        return $data['result'];
     }
 
     /**
@@ -153,9 +151,7 @@ class BinaryParser
      */
     private function byte()
     {
-        $data = $this->unPack('Cbyte');
-
-        return $data['byte'];
+        return $this->unpackInput('C');
     }
 
     /**
@@ -164,12 +160,10 @@ class BinaryParser
     private function long()
     {
         if (self::WKB_XDR == $this->byteOrder) {
-            $data = $this->unPack('Nlong');
-        } else {
-            $data = $this->unPack('Vlong');
+            return $this->unpackInput('N');
         }
 
-        return $data['long'];
+        return $this->unpackInput('V');
     }
 
     /**
@@ -177,13 +171,15 @@ class BinaryParser
      */
     protected function double()
     {
-        $data = $this->unPack('ddouble');
+        $double = $this->unpackInput('d');
 
-        if (self::WKB_XDR == $this->byteOrder) {
-            $data = unpack('ddouble', strrev(pack('d', $data['double'])));
+        if (self::WKB_NDR == $this->byteOrder) {
+            return $double;
         }
 
-        return $data['double'];
+        $double = unpack('ddouble', strrev(pack('d', $double)));
+
+        return $double['double'];
     }
 
     /**
@@ -210,7 +206,9 @@ class BinaryParser
         return $this->long();
     }
 
-
+    /**
+     * @return float[]
+     */
     private function point()
     {
         return array(
@@ -219,27 +217,36 @@ class BinaryParser
         );
     }
 
+    /**
+     * @return array
+     */
     private function lineString()
     {
-        $numPoints = $this->long();
-        $points    = array();
-
-        for ($j = 0; $j < $numPoints; $j++) {
-            $points[] = $this->point();
-        }
-
-        return $points;
+        return $this->typeArray(AbstractGeometry::POINT);
     }
 
+    /**
+     * @return array[]
+     */
     private function polygon()
     {
-        $numRings = $this->long();
-        $rings    = array();
+        return $this->typeArray(AbstractGeometry::LINESTRING);
+    }
 
-        for ($i = 0; $i < $numRings; $i++) {
-            $rings[] = $this->lineString();
+    /**
+     * @param string $type
+     *
+     * @return array[]
+     */
+    private function typeArray($type)
+    {
+        $count  = $this->long();
+        $values = array();
+
+        for ($i = 0; $i < $count; $i++) {
+            $values[] = $this->$type();
         }
 
-        return $rings;
+        return $values;
     }
 }
