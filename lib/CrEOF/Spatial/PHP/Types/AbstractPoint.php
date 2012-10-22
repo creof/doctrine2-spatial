@@ -36,42 +36,74 @@ abstract class AbstractPoint extends AbstractGeometry
     /**
      * @var float $latitude
      */
-    protected $latitude;
+    protected $x;
 
     /**
      * @var float $longitude
      */
-    protected $longitude;
+    protected $y;
 
     /**
-     * @param mixed    $latitude
-     * @param mixed    $longitude
+     * @param mixed    $x
+     * @param mixed    $y
      * @param null|int $srid
      */
-    public function __construct($latitude, $longitude, $srid = null)
+    public function __construct($x, $y, $srid = null)
     {
-        $this->setLatitude($latitude)
-            ->setLongitude($longitude)
+        $this->setX($x)
+            ->setY($y)
             ->setSrid($srid);
     }
+
+    /**
+     * @param mixed $x
+     *
+     * @return self
+     */
+    public function setX($x)
+    {
+        $this->x = $this->toFloat($x);
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getX()
+    {
+        return $this->x;
+    }
+
+    /**
+     * @param mixed $y
+     *
+     * @return self
+     */
+    public function setY($y)
+    {
+        $this->y = $this->toFloat($y);
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getY()
+    {
+        return $this->y;
+    }
+
 
     /**
      * @param mixed $latitude
      *
      * @return self
-     * @throws InvalidValueException
      */
     public function setLatitude($latitude)
     {
-        $latitude = $this->toFloat($latitude);
-
-        if ($latitude < -90 || $latitude > 90) {
-            throw InvalidValueException::invalidLatitude($latitude);
-        }
-
-        $this->latitude = $latitude;
-
-        return $this;
+        return $this->setX($latitude);
     }
 
     /**
@@ -79,26 +111,17 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function getLatitude()
     {
-        return $this->latitude;
+        return $this->getX();
     }
 
     /**
      * @param mixed $longitude
      *
      * @return self
-     * @throws InvalidValueException
      */
     public function setLongitude($longitude)
     {
-        $longitude = $this->toFloat($longitude);
-
-        if ($longitude < -180 || $longitude > 180) {
-            throw InvalidValueException::invalidLongitude($longitude);
-        }
-
-        $this->longitude = $longitude;
-
-        return $this;
+        return $this->setY($longitude);
     }
 
     /**
@@ -106,7 +129,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function getLongitude()
     {
-        return $this->longitude;
+        return $this->getY();
     }
 
     /**
@@ -115,6 +138,14 @@ abstract class AbstractPoint extends AbstractGeometry
     public function getType()
     {
         return self::POINT;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array($this->x, $this->y);
     }
 
     /**
