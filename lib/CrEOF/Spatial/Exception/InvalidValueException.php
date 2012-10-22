@@ -62,7 +62,7 @@ class InvalidValueException extends Exception
      */
     public static function invalidByteOrder($order)
     {
-        return new self(sprintf('Invalid byte order "%d".', $order));
+        return new self(sprintf('Invalid byte order "%s"', $order));
     }
 
     /**
@@ -82,7 +82,7 @@ class InvalidValueException extends Exception
      */
     public static function unsupportedWkbType($type)
     {
-        return new self(sprintf('Unsupported WKB type "%d".', $type));
+        return new self(sprintf('Unsupported WKB type "%d"', $type));
     }
 
     /**
@@ -124,5 +124,15 @@ class InvalidValueException extends Exception
     public static function syntaxError($message, $input)
     {
         return new self(sprintf('[Syntax Error] %s in value "%s"', $message, $input));
+    }
+
+    /**
+     * @param int $srid
+     *
+     * @return InvalidValueException
+     */
+    public static function invalidSrid($srid)
+    {
+        return new self(sprintf('Invalid SRID "%d"', $srid));
     }
 }
