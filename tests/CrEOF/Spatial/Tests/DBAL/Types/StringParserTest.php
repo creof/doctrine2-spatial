@@ -43,7 +43,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'PNT(10 10)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingPointValue()
@@ -84,7 +85,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'SRID=432.6;POINT(34.23 -87)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     /**
@@ -95,7 +97,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'POINT(34.23)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
 
@@ -107,7 +110,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'POINT(10, 10)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingLineStringValue()
@@ -154,7 +158,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'LINESTRING(34.23 -87 45.3 -92)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     /**
@@ -165,7 +170,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'LINESTRING(34.23 -87, 45.3)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingPolygonValue()
@@ -222,7 +228,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'POLYGON(0 0,10 0,10 10,0 10,0 0)';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingMultiRingPolygonValue()
@@ -293,7 +300,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'POLYGON((0 0,10 0,10 10,0 10,0 0)(5 5,7 5,7 7,5 7,5 5))';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingMultiPointValue()
@@ -344,7 +352,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'MULTIPOINT((0 0,10 0,10 10,0 10))';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingMultiLineStringValue()
@@ -411,7 +420,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'MULTILINESTRING((0 0,10 0,10 10,0 10)(5 5,7 5,7 7,5 7))';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingMultiPolygonValue()
@@ -504,7 +514,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7,5 5)),(1 1, 3 1, 3 3, 1 3, 1 1))';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 
     public function testParsingGeometryCollectionValue()
@@ -577,6 +588,7 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
     {
         $value  = 'GEOMETRYCOLLECTION(PNT(10 10), POINT(30 30), LINESTRING(15 15, 20 20))';
         $parser = new StringParser($value);
-        $actual = $parser->parse();
+
+        $parser->parse();
     }
 }
