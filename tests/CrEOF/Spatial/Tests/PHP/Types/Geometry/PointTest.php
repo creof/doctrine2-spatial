@@ -31,7 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group php
  */
 class PointTest extends \PHPUnit_Framework_TestCase
 {
@@ -89,7 +89,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeDirection()
     {
-        $point = new Point('84:26:46Q', '100:56:55W');
+        new Point('84:26:46Q', '100:56:55W');
     }
 
     /**
@@ -100,7 +100,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeDegrees()
     {
-        $point = new Point('92:26:46N', '79:56:55W');
+        new Point('92:26:46N', '79:56:55W');
     }
 
     /**
@@ -111,7 +111,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeMinutes()
     {
-        $point = new Point('84:64:46N', '108:42:55W');
+        new Point('84:64:46N', '108:42:55W');
     }
 
     /**
@@ -122,7 +122,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeSeconds()
     {
-        $point = new Point('84:23:75N', '108:42:55W');
+        new Point('84:23:75N', '108:42:55W');
     }
 
     /**
@@ -133,7 +133,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeDirection()
     {
-        $point = new Point('84:26:46N', '100:56:55P');
+        new Point('84:26:46N', '100:56:55P');
     }
 
     /**
@@ -144,7 +144,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeDegrees()
     {
-        $point = new Point('84:26:46N', '190:56:55W');
+        new Point('84:26:46N', '190:56:55W');
     }
 
     /**
@@ -155,7 +155,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeMinutes()
     {
-        $point = new Point('84:26:46N', '108:62:55W');
+        new Point('84:26:46N', '108:62:55W');
     }
 
     /**
@@ -166,58 +166,31 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeSeconds()
     {
-        $point = new Point('84:26:46N', '108:53:94W');
+        new Point('84:26:46N', '108:53:94W');
     }
 
-    /**
-     * Test bad numeric parameters - latitude greater than 90
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid latitude value "190", must be in range -90 to 90.
-     */
-    public function testBadNumericGreaterThanLatitude()
+    public function testToArray()
     {
-        $point = new Point(190, 55);
+        $expected = array(10, 10);
+        $point    = new Point(10, 10);
+        $result   = $point->toArray();
+
+        $this->assertEquals($expected, $result);
     }
 
-    /**
-     * Test bad numeric parameters - latitude less than -90
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid latitude value "-90.00001", must be in range -90 to 90.
-     */
-    public function testBadNumericLessThanLatitude()
+    public function testPointWithSrid()
     {
-        $point = new Point(-90.00001, 55);
+        $point  = new Point(10, 10, 4326);
+        $result = $point->getSrid();
+
+        $this->assertEquals(4326, $result);
     }
 
-    /**
-     * Test bad numeric parameters - longitude greater than 180
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid longitude value "180.134", must be in range -180 to 180.
-     */
-    public function testBadNumericGreaterThanLongitude()
+    public function testGetType()
     {
-        $point = new Point(54, 180.134);
-    }
+        $point  = new Point(10, 10);
+        $result = $point->getType();
 
-    /**
-     * Test bad numeric parameters - longitude less than -180
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid longitude value "-230", must be in range -180 to 180.
-     */
-    public function testBadNumericLessThanLongitude()
-    {
-        $point = new Point(54, -230);
-    }
-
-    public function testToString()
-    {
-        $point  = new Point(42.6525793, -73.7562317);
-        $result = (string) $point;
-
-        $this->assertEquals('POINT(42.6525793 -73.7562317)', $result);
+        $this->assertEquals('point', $result);
     }
 }
