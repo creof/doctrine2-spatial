@@ -48,9 +48,14 @@ abstract class AbstractPoint extends AbstractGeometry
         $argc = func_num_args();
         $argv = func_get_args();
 
-        if (2 == $argc && is_array($argv[0]) && is_numeric($argv[1]) || is_null($argv[1])) {
-            $argv[0][] = $argv[1];
-            $argv = $argv[0];
+        switch (true) {
+            case (1 == $argc && is_array($argv[0])):
+                $argv = $argv[0];
+                break;
+            case (2 == $argc && is_array($argv[0]) && is_numeric($argv[1]) || is_null($argv[1])):
+                $argv[0][] = $argv[1];
+                $argv = $argv[0];
+                break;
         }
 
         call_user_func_array(array($this, 'construct'), $argv);
