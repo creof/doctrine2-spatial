@@ -171,7 +171,7 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
 
     public function testSolidPolygonFromArraysToString()
     {
-        $expected = 'POLYGON((0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0))';
+        $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
         $rings = array(
             array(
                 array(0, 0),

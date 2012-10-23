@@ -67,7 +67,7 @@ abstract class AbstractGeometry
         $type   = strtoupper($this->getType());
         $method = 'toString' . $type;
 
-        return sprintf('%s(%s)', $type, $this->$method($this->toArray()));
+        return $this->$method($this->toArray());
     }
 
     /**

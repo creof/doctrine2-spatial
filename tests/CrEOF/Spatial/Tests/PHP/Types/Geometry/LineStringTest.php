@@ -157,7 +157,7 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
 
     public function testLineStringFromArraysToString()
     {
-        $expected   = 'LINESTRING(0 0,0 5,5 0,0 0)';
+        $expected   = '0 0,0 5,5 0,0 0';
         $lineString = new LineString(
             array(
                 array(0, 0),

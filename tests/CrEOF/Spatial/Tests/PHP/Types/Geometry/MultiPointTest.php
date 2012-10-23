@@ -129,7 +129,7 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
 
     public function testMultiPointFromArraysToString()
     {
-        $expected   = 'MULTIPOINT(0 0,0 5,5 0,0 0)';
+        $expected   = '0 0,0 5,5 0,0 0';
         $multiPoint = new MultiPoint(
             array(
                 array(0, 0),

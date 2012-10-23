@@ -193,4 +193,13 @@ class PointTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('point', $result);
     }
+
+    public function testPointFromArrayToString()
+    {
+        $expected = '5 5';
+        $point    = new Point(array(5, 5));
+
+        $this->assertEquals($expected, (string) $point);
+    }
+
 }

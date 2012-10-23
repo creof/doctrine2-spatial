@@ -174,6 +174,6 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $point  = new Point(42.6525793, -73.7562317, 4326);
         $result = (string) $point;
 
-        $this->assertEquals('SRID=4326;POINT(42.6525793 -73.7562317)', $result);
+        $this->assertEquals('42.6525793 -73.7562317', $result);
     }
 }

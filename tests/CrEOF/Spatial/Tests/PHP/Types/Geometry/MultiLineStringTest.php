@@ -183,7 +183,7 @@ class MultiLineStringTest extends \PHPUnit_Framework_TestCase
 
     public function testMultiLineStringFromArraysToString()
     {
-        $expected = 'MULTILINESTRING((0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0))';
+        $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
         $lineStrings = array(
             array(
                 array(0, 0),
