@@ -34,11 +34,16 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
  */
 abstract class AbstractGeometry
 {
-    const GEOMETRY   = 'geometry';
-    const POINT      = 'point';
-    const LINESTRING = 'linestring';
-    const POLYGON    = 'polygon';
-    const MULTIPOINT = 'multipoint';
+    const TYPE               = 'geometry';
+
+    const GEOMETRY           = 'geometry';
+    const POINT              = 'point';
+    const LINESTRING         = 'linestring';
+    const POLYGON            = 'polygon';
+    const MULTIPOINT         = 'multipoint';
+    const MULTILINESTRING    = 'multilinestring';
+    const MULTIPOLYGON       = 'multipolygon';
+    const GEOMETRYCOLLECTION = 'geometrycollection';
 
     /**
      * @var int
@@ -51,6 +56,11 @@ abstract class AbstractGeometry
     abstract public function getType();
 
     /**
+     * @return array
+     */
+    abstract public function toArray();
+
+    /**
      * @return string
      */
     public function __toString()
@@ -58,11 +68,7 @@ abstract class AbstractGeometry
         $type   = strtoupper($this->getType());
         $method = 'toString' . $type;
 
-        if ($this instanceof GeographyInterface) {
-            return sprintf('SRID=%d;%s(%s)', $this->getSrid(), $type, $this->$method($this));
-        }
-
-        return sprintf('%s(%s)', $type, $this->$method($this));
+        return sprintf('%s(%s)', $type, $this->$method($this->toArray()));
     }
 
     /**
@@ -86,76 +92,128 @@ abstract class AbstractGeometry
     }
 
     /**
-     * @param AbstractPoint[] $points
+     * @param AbstractPoint|array $point
      *
+     * @return array
      * @throws InvalidValueException
      */
-    protected  function validateLineStringValue(array $points)
+    protected function validatePointValue($point)
     {
-        foreach ($points as $point) {
-            if ( ! ($point instanceof AbstractPoint)) {
-                throw InvalidValueException::invalidType('Point', $point);
-            }
+        switch (true) {
+            case ($point instanceof AbstractPoint):
+                return $point->toArray();
+                break;
+            case (is_array($point) && count($point) == 2 && is_numeric($point[0]) && is_numeric($point[1])):
+                return array_values($point);
+                break;
+            default:
+                throw InvalidValueException::invalidType($this, self::POINT, $point);
         }
     }
 
+    /**
+     * @param AbstractPoint[]|array[] $points
+     *
+     * @return array[]
+     */
+    protected function validateLineStringValue(array $points)
+    {
+        foreach ($points as &$point) {
+            $point = $this->validatePointValue($point);
+        }
+
+        return $points;
+    }
+
+    /**
+     * @param AbstractLineString|array[] $ring
+     *
+     * @return array[]
+     * @throws InvalidValueException
+     */
+    protected function validateRingValue($ring)
+    {
+        switch (true) {
+            case ($ring instanceof AbstractLineString):
+                $ring = $ring->toArray();
+                break;
+            case (is_array($ring)):
+                break;
+            default:
+                throw InvalidValueException::invalidType($this, SELF::LINESTRING, $ring);
+        }
+
+        $ring = $this->validateLineStringValue($ring);
+
+        if ($ring[0] !== end($ring)) {
+            throw InvalidValueException::ringNotClosed($this->toStringLineString($ring));
+        }
+
+        return $ring;
+    }
     /**
      * @param AbstractLineString[] $rings
      *
-     * @throws InvalidValueException
+     * @return array
      */
-    protected  function validatePolygonValue(array $rings)
+    protected function validatePolygonValue(array $rings)
     {
-        foreach ($rings as $ring) {
-            if ( ! ($ring instanceof AbstractLineString)) {
-                throw InvalidValueException::invalidType('LineString', $ring);
-            }
-
-            if ( ! $ring->isClosed()) {
-                throw InvalidValueException::ringNotClosed($ring);
-            }
+        foreach ($rings as &$ring) {
+            $ring = $this->validateRingValue($ring);
         }
+
+        return $rings;
     }
 
     /**
-     * @param AbstractPoint $point
+     * @return string
+     */
+    protected function getNamespace()
+    {
+        $class = get_class($this);
+
+        return substr($class, 0, strrpos($class, '\\') - strlen($class));
+    }
+
+    /**
+     * @param array $point
      *
      * @return string
      */
-    private function toStringPoint(AbstractPoint $point)
+    private function toStringPoint(array $point)
     {
-        return sprintf('%s %s', $point->getLatitude(), $point->getLongitude());
+        return vsprintf('%s %s', $point);
     }
 
     /**
-     * @param AbstractLineString $lineString
+     * @param array[] $lineString
      *
-     * @return null|string
+     * @return string
      */
-    private function toStringLineString(AbstractLineString $lineString)
+    private function toStringLineString(array $lineString)
     {
-        $string = null;
+        $strings = array();
 
-        foreach ($lineString->getPoints() as $point) {
-            $string .= ($string ? ',': null) . $this->toStringPoint($point);
+        foreach ($lineString as $point) {
+            $strings[] = $this->toStringPoint($point);
         }
 
-        return $string;
+        return implode(',', $strings);
     }
 
     /**
-     * @param AbstractPolygon $polygon
+     * @param array[] $polygon
      *
-     * @return null|string
+     * @return string
      */
-    private function toStringPolygon(AbstractPolygon $polygon)
+    private function toStringPolygon(array $polygon)
     {
-        $string = null;
+        $strings = null;
 
-        foreach ($polygon->getRings() as $lineString) {
-            $string .= ($string ? ',': null) . '(' . $this->toStringLineString($lineString) . ')';
+        foreach ($polygon as $ring) {
+            $strings[] = '(' . $this->toStringLineString($ring) . ')';
         }
 
-        return $string;
+        return implode(',', $strings);
     }
 }
