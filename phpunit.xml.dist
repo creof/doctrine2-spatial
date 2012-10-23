@@ -14,7 +14,11 @@
         <include>
             <group>common</group>
             <group>postgresql</group>
+            <group>php</group>
         </include>
+        <exclude>
+            <group>mysql</group>
+        </exclude>
     </groups>
 
     <php>
