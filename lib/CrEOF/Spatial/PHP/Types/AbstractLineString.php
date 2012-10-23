@@ -104,7 +104,6 @@ abstract class AbstractLineString extends AbstractGeometry
                 break;
         }
 
-        //$pointClass = sprintf('%s\%s\Point', __NAMESPACE__, self::TYPE);
         $pointClass = $this->getNamespace() . '\Point';
 
         return new $pointClass($point[0], $point[1], $this->srid);
