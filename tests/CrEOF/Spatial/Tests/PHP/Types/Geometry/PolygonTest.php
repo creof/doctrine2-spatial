@@ -38,9 +38,9 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
 {
     public function testEmptyPolygon()
     {
-        $rings = new Polygon(array());
+        $polygon = new Polygon(array());
 
-        $this->assertEmpty($rings->getRings());
+        $this->assertEmpty($polygon->getRings());
     }
 
     public function testSolidPolygonFromObjectsToArray()
@@ -119,8 +119,7 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
                 new Point(5, 5)
             )
         );
-        $rings   = array($ring1, $ring2);
-        $polygon = new Polygon($rings);
+        $polygon = new Polygon(array($ring1, $ring2));
 
         $this->assertEquals($ring1, $polygon->getRing(0));
     }
@@ -145,14 +144,13 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
                 new Point(5, 5)
             )
         );
-        $rings   = array($ring1, $ring2);
-        $polygon = new Polygon($rings);
+        $polygon = new Polygon(array($ring1, $ring2));
 
         $this->assertEquals($ring2, $polygon->getRing(-1));
     }
 
     /**
-     * Test polygon with open ring
+     * Test Polygon with open ring
      *
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
      * @expectedExceptionMessage Invalid polygon, ring "(0 0,10 0,10 10,0 10)" is not closed
