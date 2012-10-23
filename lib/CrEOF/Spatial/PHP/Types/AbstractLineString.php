@@ -23,6 +23,9 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\PHP\Types\AbstractPoint;
+
 /**
  * Abstract LineString object for LINESTRING spatial types
  *
@@ -32,13 +35,13 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractLineString extends AbstractGeometry
 {
     /**
-     * @var AbstractPoint[] $points
+     * @var array[] $points
      */
     protected $points = array();
 
     /**
-     * @param AbstractPoint[] $points
-     * @param null|int        $srid
+     * @param AbstractPoint[]|array[] $points
+     * @param null|int                $srid
      */
     public function __construct(array $points, $srid = null)
     {
@@ -47,13 +50,14 @@ abstract class AbstractLineString extends AbstractGeometry
     }
 
     /**
-     * @param AbstractPoint $point
+     * @param AbstractPoint|array $point
      *
      * @return self
+     * @throws InvalidValueException
      */
-    public function addPoint(AbstractPoint $point)
+    public function addPoint($point)
     {
-        $this->points[] = $point;
+        $this->points[] = $this->validatePointValue($point);
 
         return $this;
     }
@@ -63,7 +67,25 @@ abstract class AbstractLineString extends AbstractGeometry
      */
     public function getPoints()
     {
-        return $this->points;
+        $points = array();
+
+        for ($i = 0; $i < count($this->points); $i++) {
+            $points[] = $this->getPoint($i);
+        }
+
+        return $points;
+    }
+
+    /**
+     * @param AbstractPoint[]|array[] $points
+     *
+     * @return self
+     */
+    public function setPoints($points)
+    {
+        $this->points = $this->validateLineStringValue($points);
+
+        return $this;
     }
 
     /**
@@ -73,25 +95,19 @@ abstract class AbstractLineString extends AbstractGeometry
      */
     public function getPoint($index)
     {
-        if ($index == -1) {
-            return $this->points[count($this->points) - 1];
+        switch ($index) {
+            case -1:
+                $point = $this->points[count($this->points) - 1];
+                break;
+            default:
+                $point = $this->points[$index];
+                break;
         }
 
-        return $this->points[$index];
-    }
+        //$pointClass = sprintf('%s\%s\Point', __NAMESPACE__, self::TYPE);
+        $pointClass = $this->getNamespace() . '\Point';
 
-    /**
-     * @param AbstractPoint[] $points
-     *
-     * @return self
-     */
-    public function setPoints(array $points)
-    {
-        $this->validateLineStringValue($points);
-
-        $this->points = $points;
-
-        return $this;
+        return new $pointClass($point[0], $point[1], $this->srid);
     }
 
     /**
@@ -107,10 +123,18 @@ abstract class AbstractLineString extends AbstractGeometry
      */
     public function isClosed()
     {
-        if ($this->getPoint(0) != $this->getPoint(-1)) {
-            return false;
+        if ($this->points[0] === $this->points[count($this->points) - 1]) {
+            return true;
         }
 
-        return true;
+        return false;
+    }
+
+    /**
+     * @return array[]
+     */
+    public function toArray()
+    {
+        return $this->points;
     }
 }
