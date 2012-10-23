@@ -43,16 +43,30 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     protected $y;
 
-    /**
-     * @param mixed    $x
-     * @param mixed    $y
-     * @param null|int $srid
-     */
-    public function __construct($x, $y, $srid = null)
+    public function __construct()
     {
-        $this->setX($x)
-            ->setY($y)
-            ->setSrid($srid);
+        $argc = func_num_args();
+        $argv = func_get_args();
+
+//        switch ($argc) {
+//            case 2:
+//                if (is_array($argv[0]) && is_numeric($argv[1]) || is_null($argv[1])) {
+//                    $this->construct($argv[0][0], $argv[0][1], $argv[1]);
+//                } else {
+//                    $this->construct($argv[0], $argv[1]);
+//                }
+//                break;
+//            case 3:
+//                $this->construct($argv[0], $argv[1], $argv[2]);
+//                break;
+//        }
+
+        if (2 == $argc && is_array($argv[0]) && is_numeric($argv[1]) || is_null($argv[1])) {
+            $argv[0][] = $argv[1];
+            $argv = $argv[0];
+        }
+
+        call_user_func_array(array($this, 'construct'), $argv);
     }
 
     /**
@@ -146,6 +160,18 @@ abstract class AbstractPoint extends AbstractGeometry
     public function toArray()
     {
         return array($this->x, $this->y);
+    }
+
+    /**
+     * @param int      $x
+     * @param int      $y
+     * @param null|int $srid
+     */
+    private function construct($x, $y, $srid = null)
+    {
+        $this->setX($x)
+            ->setY($y)
+            ->setSrid($srid);
     }
 
     /**
