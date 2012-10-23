@@ -23,6 +23,9 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\PHP\Types\AbstractPoint;
+
 /**
  * Abstract Polygon object for POLYGON spatial types
  *
@@ -32,13 +35,13 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractPolygon extends AbstractGeometry
 {
     /**
-     * @var AbstractLineString[] $polygons
+     * @var array[] $polygons
      */
     protected $rings = array();
 
     /**
-     * @param AbstractLineString[] $rings
-     * @param null|int             $srid
+     * @param AbstractLineString[]|array[] $rings
+     * @param null|int                     $srid
      */
     public function __construct(array $rings, $srid = null)
     {
@@ -47,13 +50,13 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString $lineString
+     * @param AbstractLineString|array[] $ring
      *
      * @return self
      */
-    public function addRing(AbstractLineString $lineString)
+    public function addRing($ring)
     {
-        $this->rings[] = $lineString;
+        $this->rings[] = $this->validateRingValue($ring);
 
         return $this;
     }
@@ -63,7 +66,34 @@ abstract class AbstractPolygon extends AbstractGeometry
      */
     public function getRings()
     {
-        return $this->rings;
+        $rings = array();
+
+        for ($i = 0; $i < count($this->rings); $i++) {
+            $rings[] = $this->getRing($i);
+        }
+
+        return $rings;
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return AbstractLineString
+     */
+    public function getRing($index)
+    {
+        switch ($index) {
+            case -1:
+                $ring = $this->rings[count($this->rings) - 1];
+                break;
+            default:
+                $ring = $this->rings[$index];
+                break;
+        }
+
+        $lineStringClass = $this->getNamespace() . '\LineString';
+
+        return new $lineStringClass($ring, $this->srid);
     }
 
     /**
@@ -73,9 +103,7 @@ abstract class AbstractPolygon extends AbstractGeometry
      */
     public function setRings(array $rings)
     {
-        $this->validatePolygonValue($rings);
-
-        $this->rings = $rings;
+        $this->rings = $this->validatePolygonValue($rings);
 
         return $this;
     }
@@ -86,5 +114,13 @@ abstract class AbstractPolygon extends AbstractGeometry
     public function getType()
     {
         return self::POLYGON;
+    }
+
+    /**
+     * @return array[]
+     */
+    public function toArray()
+    {
+        return $this->rings;
     }
 }

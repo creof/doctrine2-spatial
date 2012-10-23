@@ -24,6 +24,7 @@
 namespace CrEOF\Spatial\Exception;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
+use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use Exception;
 
 /**
@@ -35,24 +36,25 @@ use Exception;
 class InvalidValueException extends Exception
 {
     /**
-     * @param string $type
-     * @param mixed  $value
+     * @param AbstractGeometry $object
+     * @param string           $type
+     * @param mixed            $value
      *
      * @return InvalidValueException
      */
-    public static function invalidType($type, $value)
+    public static function invalidType(AbstractGeometry $object, $type, $value)
     {
-        return new self(sprintf('Value needs to be of type "%s", is "%s".', $type, (is_object($value) ? get_class($value) : gettype($value))));
+        return new self(sprintf('Invalid %s %s value of type "%s"', $object->getType(), $type, (is_object($value) ? get_class($value) : gettype($value))));
     }
 
     /**
-     * @param LineString $ring
+     * @param string $ring
      *
      * @return InvalidValueException
      */
-    public static function ringNotClosed(LineString $ring)
+    public static function ringNotClosed($ring)
     {
-        return new self(sprintf('Ring "%s" is not closed.', $ring));
+        return new self(sprintf('Invalid polygon, ring "(%s)" is not closed', $ring));
     }
 
     /**
