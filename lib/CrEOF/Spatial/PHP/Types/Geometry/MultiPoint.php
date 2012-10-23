@@ -21,36 +21,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\PHP\Types;
+namespace CrEOF\Spatial\PHP\Types\Geometry;
 
-use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\AbstractPoint;
+use CrEOF\Spatial\PHP\Types\AbstractMultiPoint;
 
 /**
- * Abstract LineString object for LINESTRING spatial types
+ * MultiPoint object for MULTIPOINT geometry type
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractLineString extends AbstractMultiPoint
+class MultiPoint extends AbstractMultiPoint
 {
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::LINESTRING;
-    }
 
-    /**
-     * @return bool
-     */
-    public function isClosed()
-    {
-        if ($this->points[0] === $this->points[count($this->points) - 1]) {
-            return true;
-        }
-
-        return false;
-    }
 }

@@ -116,7 +116,7 @@ abstract class AbstractGeometry
      *
      * @return array[]
      */
-    protected function validateLineStringValue(array $points)
+    protected function validateMultiPointValue(array $points)
     {
         foreach ($points as &$point) {
             $point = $this->validatePointValue($point);
@@ -151,6 +151,7 @@ abstract class AbstractGeometry
 
         return $ring;
     }
+
     /**
      * @param AbstractLineString[] $rings
      *
@@ -163,6 +164,16 @@ abstract class AbstractGeometry
         }
 
         return $rings;
+    }
+
+    /**
+     * @param AbstractPoint[]|array[] $points
+     *
+     * @return array[]
+     */
+    protected function validateLineStringValue(array $points)
+    {
+        return $this->validateMultiPointValue($points);
     }
 
     /**
@@ -186,19 +197,29 @@ abstract class AbstractGeometry
     }
 
     /**
+     * @param array[] $multiPoint
+     *
+     * @return string
+     */
+    private function toStringMultiPoint(array $multiPoint)
+    {
+        $strings = array();
+
+        foreach ($multiPoint as $point) {
+            $strings[] = $this->toStringPoint($point);
+        }
+
+        return implode(',', $strings);
+    }
+
+    /**
      * @param array[] $lineString
      *
      * @return string
      */
     private function toStringLineString(array $lineString)
     {
-        $strings = array();
-
-        foreach ($lineString as $point) {
-            $strings[] = $this->toStringPoint($point);
-        }
-
-        return implode(',', $strings);
+        return $this->toStringMultiPoint($lineString);
     }
 
     /**
