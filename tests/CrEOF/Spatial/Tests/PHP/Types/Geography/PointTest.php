@@ -31,7 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geography\Point;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group php
  */
 class PointTest extends \PHPUnit_Framework_TestCase
 {
@@ -167,50 +167,6 @@ class PointTest extends \PHPUnit_Framework_TestCase
     public function testBadLongitudeSeconds()
     {
         $point = new Point('84:26:46N', '108:53:94W');
-    }
-
-    /**
-     * Test bad numeric parameters - latitude greater than 90
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid latitude value "190", must be in range -90 to 90.
-     */
-    public function testBadNumericGreaterThanLatitude()
-    {
-        $point = new Point(190, 55);
-    }
-
-    /**
-     * Test bad numeric parameters - latitude less than -90
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid latitude value "-90.00001", must be in range -90 to 90.
-     */
-    public function testBadNumericLessThanLatitude()
-    {
-        $point = new Point(-90.00001, 55);
-    }
-
-    /**
-     * Test bad numeric parameters - longitude greater than 180
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid longitude value "180.134", must be in range -180 to 180.
-     */
-    public function testBadNumericGreaterThanLongitude()
-    {
-        $point = new Point(54, 180.134);
-    }
-
-    /**
-     * Test bad numeric parameters - longitude less than -180
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid longitude value "-230", must be in range -180 to 180.
-     */
-    public function testBadNumericLessThanLongitude()
-    {
-        $point = new Point(54, -230);
     }
 
     public function testToString()
