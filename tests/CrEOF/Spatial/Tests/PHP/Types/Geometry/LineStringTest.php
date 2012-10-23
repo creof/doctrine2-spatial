@@ -43,7 +43,7 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($lineString->getPoints());
     }
 
-    public function testLineStringFromPointsToArray()
+    public function testLineStringFromObjectsToArray()
     {
         $expected = array(
             array(0, 0),
@@ -116,7 +116,6 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-
     public function testLineStringFromArraysIsOpen()
     {
         $lineString = new LineString(
@@ -154,5 +153,20 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
     public function testBadLineString()
     {
         new LineString(array(1, 2, 3 ,4));
+    }
+
+    public function testLineStringFromArraysToString()
+    {
+        $expected   = 'LINESTRING(0 0,0 5,5 0,0 0)';
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(0, 5),
+                array(5, 0),
+                array(0, 0)
+            )
+        );
+
+        $this->assertEquals($expected, (string) $lineString);
     }
 }
