@@ -31,6 +31,8 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group php
  */
 class LineStringTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,8 +43,14 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($lineString->getPoints());
     }
 
-    public function testGoodLineString()
+    public function testLineStringFromPointsToArray()
     {
+        $expected = array(
+            array(0, 0),
+            array(1, 1),
+            array(2, 2),
+            array(3, 3)
+        );
         $lineString = new LineString(array(
             new Point(0, 0),
             new Point(1, 1),
@@ -51,29 +59,100 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->assertCount(4, $lineString->getPoints());
+        $this->assertEquals($expected, $lineString->toArray());
+    }
+
+    public function testLineStringFromArraysGetPoints()
+    {
+        $expected = array(
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3)
+        );
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(1, 1),
+                array(2, 2),
+                array(3, 3)
+            )
+        );
+        $actual = $lineString->getPoints();
+
+        $this->assertCount(4, $actual);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLineStringFromArraysGetSinglePoint()
+    {
+        $expected = new Point(1, 1);
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(1, 1),
+                array(2, 2),
+                array(3, 3)
+            )
+        );
+        $actual = $lineString->getPoint(1);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLineStringFromArraysGetLastPoint()
+    {
+        $expected = new Point(3, 3);
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(1, 1),
+                array(2, 2),
+                array(3, 3)
+            )
+        );
+        $actual = $lineString->getPoint(-1);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    public function testLineStringFromArraysIsOpen()
+    {
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(1, 1),
+                array(2, 2),
+                array(3, 3)
+            )
+        );
+
+        $this->assertFalse($lineString->isClosed());
+    }
+
+    public function testLineStringFromArraysIsClosed()
+    {
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(0, 5),
+                array(5, 0),
+                array(0, 0)
+            )
+        );
+
+        $this->assertTrue($lineString->isClosed());
     }
 
     /**
      * Test LineString bad parameter
      *
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Value needs to be of type "Point", is "integer".
+     * @expectedExceptionMessage Invalid linestring point value of type "integer"
      */
     public function testBadLineString()
     {
-        $lineString = new LineString(array(1, 2, 3 ,4));
-    }
-
-    public function testToStringLineString()
-    {
-        $lineString = new LineString(array(
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10),
-            new Point(0, 10)
-        ));
-        $result = (string) $lineString;
-
-        $this->assertEquals('LINESTRING(0 0,10 0,10 10,0 10)', $result);
+        new LineString(array(1, 2, 3 ,4));
     }
 }
