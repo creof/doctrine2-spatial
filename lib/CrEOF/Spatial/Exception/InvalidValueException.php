@@ -137,4 +137,9 @@ class InvalidValueException extends Exception
     {
         return new self(sprintf('Invalid SRID "%d"', $srid));
     }
+
+    public static function invalidParamters($class, $method, array $parameters)
+    {
+        return new self(sprintf('Invalid parameters passed to %s::%s: "%s"', $class, $method, implode('", "', $parameters)));
+    }
 }
