@@ -24,7 +24,6 @@
 namespace CrEOF\Spatial\PHP\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
  * Abstract geometry object for spatial types
@@ -112,20 +111,6 @@ abstract class AbstractGeometry
     }
 
     /**
-     * @param AbstractPoint[]|array[] $points
-     *
-     * @return array[]
-     */
-    protected function validateMultiPointValue(array $points)
-    {
-        foreach ($points as &$point) {
-            $point = $this->validatePointValue($point);
-        }
-
-        return $points;
-    }
-
-    /**
      * @param AbstractLineString|array[] $ring
      *
      * @return array[]
@@ -153,6 +138,34 @@ abstract class AbstractGeometry
     }
 
     /**
+     * @param AbstractLineString|AbstractPoint[]|array[] $points
+     *
+     * @return array[]
+     */
+    protected function validateMultiPointValue($points)
+    {
+        if ($points instanceof AbstractGeometry) {
+            $points = $points->toArray();
+        }
+
+        foreach ($points as &$point) {
+            $point = $this->validatePointValue($point);
+        }
+
+        return $points;
+    }
+
+    /**
+     * @param AbstractLineString|AbstractPoint[]|array[] $lineString
+     *
+     * @return array[]
+     */
+    protected function validateLineStringValue($lineString)
+    {
+        return $this->validateMultiPointValue($lineString);
+    }
+
+    /**
      * @param AbstractLineString[] $rings
      *
      * @return array
@@ -167,13 +180,17 @@ abstract class AbstractGeometry
     }
 
     /**
-     * @param AbstractPoint[]|array[] $points
+     * @param AbstractLineString[] $lineStrings
      *
-     * @return array[]
+     * @return array
      */
-    protected function validateLineStringValue(array $points)
+    protected function validateMultiLineStringValue(array $lineStrings)
     {
-        return $this->validateMultiPointValue($points);
+        foreach ($lineStrings as &$lineString) {
+            $lineString = $this->validateLineStringValue($lineString);
+        }
+
+        return $lineStrings;
     }
 
     /**
@@ -223,18 +240,28 @@ abstract class AbstractGeometry
     }
 
     /**
+     * @param array[] $multiLineString
+     *
+     * @return string
+     */
+    private function toStringMultiLineString(array $multiLineString)
+    {
+        $strings = null;
+
+        foreach ($multiLineString as $lineString) {
+            $strings[] = '(' . $this->toStringLineString($lineString) . ')';
+        }
+
+        return implode(',', $strings);
+    }
+
+    /**
      * @param array[] $polygon
      *
      * @return string
      */
     private function toStringPolygon(array $polygon)
     {
-        $strings = null;
-
-        foreach ($polygon as $ring) {
-            $strings[] = '(' . $this->toStringLineString($ring) . ')';
-        }
-
-        return implode(',', $strings);
+        return $this->toStringMultiLineString($polygon);
     }
 }
