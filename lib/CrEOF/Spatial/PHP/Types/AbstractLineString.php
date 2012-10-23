@@ -24,7 +24,6 @@
 namespace CrEOF\Spatial\PHP\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\AbstractPoint;
 
 /**
  * Abstract LineString object for LINESTRING spatial types
