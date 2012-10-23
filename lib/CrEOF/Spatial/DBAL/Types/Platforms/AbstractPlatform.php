@@ -24,8 +24,8 @@
 namespace CrEOF\Spatial\DBAL\Types\Platforms;
 
 use CrEOF\Spatial\PHP\Types\AbstractGeometry;
-use CrEOF\Spatial\DBAL\Types\WkbValueParser;
-use CrEOF\Spatial\DBAL\Types\WktValueParser;
+use CrEOF\Spatial\DBAL\Types\StringParser;
+use CrEOF\Spatial\DBAL\Types\BinaryParser;
 
 /**
  * Abstract spatial platform
@@ -40,9 +40,13 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertStringToPHPValue($sqlExpr)
     {
-        $parser = new WktValueParser();
+        $parser = new StringParser($sqlExpr);
 
-        return $parser->parse($sqlExpr);
+        $value = $parser->parse();
+
+        $class = 'CrEOF\Spatial\PHP\Types\Geometry\\' . $value['type'];
+
+        return new $class($value['value'], $value['srid']);
     }
 
     /**
@@ -50,9 +54,13 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertBinaryToPHPValue($sqlExpr)
     {
-        $parser = new WkbValueParser();
+        $parser = new BinaryParser($sqlExpr);
 
-        return $parser->parse($sqlExpr);
+        $value = $parser->parse();
+
+        $class = 'CrEOF\Spatial\PHP\Types\Geometry\\' . $value['type'];
+
+        return new $class($value['value'], $value['srid']);
     }
 
     /**
