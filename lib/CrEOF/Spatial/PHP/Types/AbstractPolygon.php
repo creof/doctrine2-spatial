@@ -35,7 +35,7 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
 abstract class AbstractPolygon extends AbstractGeometry
 {
     /**
-     * @var array[] $polygons
+     * @var array[] $rings
      */
     protected $rings = array();
 
@@ -82,18 +82,13 @@ abstract class AbstractPolygon extends AbstractGeometry
      */
     public function getRing($index)
     {
-        switch ($index) {
-            case -1:
-                $ring = $this->rings[count($this->rings) - 1];
-                break;
-            default:
-                $ring = $this->rings[$index];
-                break;
+        if (-1 == $index) {
+            $index = count($this->rings) - 1;
         }
 
         $lineStringClass = $this->getNamespace() . '\LineString';
 
-        return new $lineStringClass($ring, $this->srid);
+        return new $lineStringClass($this->rings[$index], $this->srid);
     }
 
     /**
