@@ -33,7 +33,7 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class GeographyType extends AbstractGeometryType
 {
-    public function getBaseClass()
+    public function getBaseType()
     {
         return AbstractGeometry::GEOGRAPHY;
     }
