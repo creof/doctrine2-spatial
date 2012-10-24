@@ -194,7 +194,7 @@ abstract class AbstractPoint extends AbstractGeometry
             }
         }
 
-        throw InvalidValueException::invalidParamters(get_class($this), '__construct', $argv);
+        throw InvalidValueException::invalidParameters(get_class($this), '__construct', $argv);
     }
 
     /**

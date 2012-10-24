@@ -138,7 +138,14 @@ class InvalidValueException extends Exception
         return new self(sprintf('Invalid SRID "%d"', $srid));
     }
 
-    public static function invalidParamters($class, $method, array $parameters)
+    /**
+     * @param string $class
+     * @param string $method
+     * @param array  $parameters
+     *
+     * @return InvalidValueException
+     */
+    public static function invalidParameters($class, $method, array $parameters)
     {
         array_walk($parameters, function(&$value) {
                 if (is_array($value)) {
