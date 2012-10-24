@@ -29,6 +29,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\OrmTest;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
+use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
 
 /**
  * Doctrine GeometryType tests
@@ -123,12 +124,15 @@ class GeometryTypeTest extends OrmTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Geometry columns require Geometry values
      */
     public function testBadGeometryValue()
     {
-        $entity = new GeometryEntity();
+        $entity = new NoHintGeometryEntity();
 
         $entity->setGeometry('POINT(0 0)');
+        $this->_em->persist($entity);
+        $this->_em->flush();
     }
 }
