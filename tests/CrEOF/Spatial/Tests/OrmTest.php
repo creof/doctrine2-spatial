@@ -56,11 +56,12 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
      */
     protected $platformName;
 
-    const GEOMETRY_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeometryEntity';
-    const POINT_ENTITY      = 'CrEOF\Spatial\Tests\Fixtures\PointEntity';
-    const LINESTRING_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\LineStringEntity';
-    const POLYGON_ENTITY    = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
-    const GEOGRAPHY_ENTITY  = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
+    const GEOMETRY_ENTITY         = 'CrEOF\Spatial\Tests\Fixtures\GeometryEntity';
+    const NO_HINT_GEOMETRY_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity';
+    const POINT_ENTITY            = 'CrEOF\Spatial\Tests\Fixtures\PointEntity';
+    const LINESTRING_ENTITY       = 'CrEOF\Spatial\Tests\Fixtures\LineStringEntity';
+    const POLYGON_ENTITY          = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
+    const GEOGRAPHY_ENTITY        = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
 
     /**
      * @throws UnsupportedPlatformException
@@ -160,6 +161,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->_schemaTool->createSchema(
             array(
                 $this->_em->getClassMetadata(self::GEOMETRY_ENTITY),
+                $this->_em->getClassMetadata(self::NO_HINT_GEOMETRY_ENTITY),
                 $this->_em->getClassMetadata(self::POINT_ENTITY),
                 $this->_em->getClassMetadata(self::LINESTRING_ENTITY),
                 $this->_em->getClassMetadata(self::POLYGON_ENTITY),
@@ -187,6 +189,9 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
 
         $this->setupCommonTypes();
         \Doctrine\DBAL\Types\Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
+        \Doctrine\DBAL\Types\Type::addType('geographypoint', 'CrEOF\Spatial\DBAL\Types\Geography\PointType');
+        \Doctrine\DBAL\Types\Type::addType('geographylinestring', 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType');
+        \Doctrine\DBAL\Types\Type::addType('geographypolygon', 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType');
 
         $this->setupCommonFunctions();
 
@@ -211,11 +216,13 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->_em->getConfiguration()->addCustomNumericFunction('st_coveredby', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCoveredBy');
         $this->_em->getConfiguration()->addCustomNumericFunction('st_crosses', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCrosses');
         $this->_em->getConfiguration()->addCustomNumericFunction('st_disjoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDisjoint');
+        $this->_em->getConfiguration()->addCustomNumericFunction('st_distance', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistance');
         $this->_em->getConfiguration()->addCustomStringFunction('st_envelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STEnvelope');
         $this->_em->getConfiguration()->addCustomStringFunction('st_geomfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText');
         $this->_em->getConfiguration()->addCustomNumericFunction('st_length', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength');
         $this->_em->getConfiguration()->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
         $this->_em->getConfiguration()->addCustomStringFunction('st_startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STStartPoint');
+        $this->_em->getConfiguration()->addCustomStringFunction('st_summary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSummary');
     }
 
     protected function setUpMySqlFunctions()
