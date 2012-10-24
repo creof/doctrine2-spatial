@@ -69,7 +69,7 @@ abstract class AbstractPlatform implements PlatformInterface
     public function convertToDatabaseValue($value)
     {
         if ($value instanceof AbstractGeometry) {
-            return (string) $value;
+            return sprintf('%s(%s)', strtoupper($value->getType()), $value);
         }
 
         return $value;
