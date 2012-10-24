@@ -34,5 +34,8 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
  */
 class LineString extends AbstractLineString implements GeographyInterface
 {
-
+    /**
+     * @var int
+     */
+    protected $srid = 4326;
 }
