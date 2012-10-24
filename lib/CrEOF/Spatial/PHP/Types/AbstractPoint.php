@@ -117,7 +117,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setLatitude($latitude)
     {
-        return $this->setX($latitude);
+        return $this->setY($latitude);
     }
 
     /**
@@ -125,7 +125,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function getLatitude()
     {
-        return $this->getX();
+        return $this->getY();
     }
 
     /**
@@ -135,7 +135,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setLongitude($longitude)
     {
-        return $this->setY($longitude);
+        return $this->setX($longitude);
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function getLongitude()
     {
-        return $this->getY();
+        return $this->getX();
     }
 
     /**
