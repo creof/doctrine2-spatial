@@ -238,7 +238,7 @@ abstract class AbstractPoint extends AbstractGeometry
         |
         (?<degrees>180)(?::|°\s*)(?<minutes>0?0)(?::|(?:\'|\xe2\x80\xb2)\s*)(?<seconds>0?0)(?:(?:"|\xe2\x80\xb3)\s*)?
     )
-    (?<direction>[EeWw])                      # E or W for latitude
+    (?<direction>[EeWw])                      # E or W for longitude
 )
 $                                             # end of string
 /x
