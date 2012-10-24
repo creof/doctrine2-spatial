@@ -37,7 +37,7 @@ use Doctrine\DBAL\Types\Type;
  */
 abstract class AbstractGeometryType extends Type
 {
-    const GEOMETRY_TYPE = 'Geometry';
+    abstract public function getBaseClass();
 
     /**
      * {@inheritdoc}
@@ -103,7 +103,7 @@ abstract class AbstractGeometryType extends Type
      */
     protected function getSpatialPlatform(AbstractPlatform $platform)
     {
-        $spatialPlatformClass = sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', self::GEOMETRY_TYPE, $platform->getName());
+        $spatialPlatformClass = sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getBaseClass(), $platform->getName());
 
         if ( ! class_exists($spatialPlatformClass)) {
             throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
