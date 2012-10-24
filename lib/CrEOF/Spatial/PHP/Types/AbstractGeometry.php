@@ -87,7 +87,9 @@ abstract class AbstractGeometry
      */
     public function setSrid($srid)
     {
-        $this->srid = (int) $srid;
+        if ($srid !== null) {
+            $this->srid = (int) $srid;
+        }
 
         return $this;
     }
