@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\DBAL\Types\Platforms;
 use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use CrEOF\Spatial\DBAL\Types\StringParser;
 use CrEOF\Spatial\DBAL\Types\BinaryParser;
+use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
  * Abstract spatial platform
@@ -68,11 +69,15 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertToDatabaseValue($value)
     {
-        if ($value instanceof AbstractGeometry) {
-            return sprintf('%s(%s)', strtoupper($value->getType()), $value);
+        if ($value === null) {
+            return $value;
         }
 
-        return $value;
+        if ( ! ($value instanceof AbstractGeometry)) {
+            throw InvalidValueException::invalidValueNotGeometry();
+        }
+
+        return sprintf('%s(%s)', strtoupper($value->getType()), $value);
     }
 
     /**
