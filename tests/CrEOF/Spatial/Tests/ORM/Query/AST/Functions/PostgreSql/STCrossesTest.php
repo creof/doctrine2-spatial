@@ -75,7 +75,7 @@ class STCrossesTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l, ST_Crosses(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
 
-        $query->setParameter('p1', $lineString1);
+        $query->setParameter('p1', $lineString1, 'linestring');
 
         $result = $query->getResult();
 
@@ -122,7 +122,7 @@ class STCrossesTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', $lineString1);
+        $query->setParameter('p1', $lineString1, 'linestring');
 
         $result = $query->getResult();
 
@@ -132,7 +132,7 @@ class STCrossesTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', $lineString3);
+        $query->setParameter('p1', $lineString3, 'linestring');
 
         $result = $query->getResult();
 

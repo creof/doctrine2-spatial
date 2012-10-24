@@ -136,7 +136,7 @@ class EnvelopeTest extends OrmTest
         );
         $envelope = new Polygon(array($envelopeRing));
 
-        $query->setParameter('p1', $envelope);
+        $query->setParameter('p1', $envelope, 'polygon');
 
         $result = $query->getResult();
 

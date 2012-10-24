@@ -84,7 +84,7 @@ class STDisjointTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT p, ST_Disjoint(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
-        $query->setParameter('p1', new Polygon(array($lineString2)));
+        $query->setParameter('p1', new Polygon(array($lineString2)), 'polygon');
 
         $result = $query->getResult();
 
@@ -141,7 +141,7 @@ class STDisjointTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Disjoint(p.polygon, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', new Polygon(array($lineString2)));
+        $query->setParameter('p1', new Polygon(array($lineString2)), 'polygon');
 
         $result = $query->getResult();
 
@@ -151,7 +151,7 @@ class STDisjointTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Disjoint(p.polygon, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', new Polygon(array($lineString3)));
+        $query->setParameter('p1', new Polygon(array($lineString3)), 'polygon');
 
         $result = $query->getResult();
 

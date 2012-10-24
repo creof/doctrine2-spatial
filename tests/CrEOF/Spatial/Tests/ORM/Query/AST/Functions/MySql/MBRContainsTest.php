@@ -70,7 +70,7 @@ class MBRContainsTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT p, MBRContains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
-        $query->setParameter('p1', new Point(2, 2));
+        $query->setParameter('p1', new Point(2, 2), 'point');
 
         $result = $query->getResult();
 
@@ -111,7 +111,7 @@ class MBRContainsTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1');
 
-        $query->setParameter('p1', new Point(6, 6));
+        $query->setParameter('p1', new Point(6, 6), 'point');
 
         $result = $query->getResult();
 
@@ -122,7 +122,7 @@ class MBRContainsTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1');
 
-        $query->setParameter('p1', new Point(2, 2));
+        $query->setParameter('p1', new Point(2, 2), 'point');
 
         $result = $query->getResult();
 

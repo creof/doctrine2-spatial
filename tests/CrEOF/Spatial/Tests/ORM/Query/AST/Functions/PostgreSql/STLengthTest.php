@@ -88,7 +88,7 @@ class STLengthTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(ST_GeomFromText(:p1)) > ST_Length(l.lineString)');
 
-        $query->setParameter('p1', $lineString);
+        $query->setParameter('p1', $lineString, 'linestring');
 
         $result = $query->getResult();
 

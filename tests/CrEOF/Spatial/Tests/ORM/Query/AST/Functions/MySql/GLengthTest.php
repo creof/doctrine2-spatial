@@ -90,7 +90,7 @@ class GLengthTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE GLength(GeomFromText(:p1)) > GLength(l.lineString)');
 
-        $query->setParameter('p1', $lineString);
+        $query->setParameter('p1', $lineString, 'linestring');
 
         $result = $query->getResult();
 

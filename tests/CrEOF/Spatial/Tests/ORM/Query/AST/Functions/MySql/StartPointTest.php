@@ -86,7 +86,7 @@ class StartPointTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE StartPoint(l.lineString) = GeomFromText(:p1)');
 
-        $query->setParameter('p1', new Point(0, 0));
+        $query->setParameter('p1', new Point(0, 0), 'point');
 
         $result = $query->getResult();
 
@@ -120,7 +120,7 @@ class StartPointTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE StartPoint(l.lineString) = StartPoint(GeomFromText(:p1))');
 
-        $query->setParameter('p1', $lineString2);
+        $query->setParameter('p1', $lineString2, 'linestring');
 
         $result = $query->getResult();
 

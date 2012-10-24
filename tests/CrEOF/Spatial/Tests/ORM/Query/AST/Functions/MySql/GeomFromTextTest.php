@@ -50,7 +50,7 @@ class GeomFromTextTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:geometry)');
 
-        $query->setParameter('geometry', new Point(5, 5));
+        $query->setParameter('geometry', new Point(5, 5), 'point');
 
         $result = $query->getResult();
 
@@ -75,7 +75,7 @@ class GeomFromTextTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:geometry)');
 
-        $query->setParameter('geometry', new LineString($value));
+        $query->setParameter('geometry', new LineString($value), 'linestring');
 
         $result = $query->getResult();
 
