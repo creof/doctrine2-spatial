@@ -40,7 +40,7 @@ use Doctrine\ORM\Query;
  */
 class STAreaTest extends OrmTest
 {
-    public function testSelectArea()
+    public function testSelectSTArea()
     {
         $entity1 = new PolygonEntity();
         $rings1 = array(
@@ -117,7 +117,7 @@ class STAreaTest extends OrmTest
         $this->assertEquals(4, $result[3][1]);
     }
 
-    public function testAreaWhereParameter()
+    public function testSTAreaWhereParameter()
     {
         $entity1 = new PolygonEntity();
         $rings1 = array(
