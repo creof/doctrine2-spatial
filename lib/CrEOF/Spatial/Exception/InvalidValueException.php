@@ -137,4 +137,14 @@ class InvalidValueException extends Exception
 
         return new self(sprintf('Invalid parameters passed to %s::%s: %s', $class, $method, implode(', ', $parameters)));
     }
+
+    public static function invalidValueNotGeometry()
+    {
+        return new self('Geometry columns require Geometry values');
+    }
+
+    public static function invalidValueNotGeography()
+    {
+        return new self('Geography columns require Geography values');
+    }
 }
