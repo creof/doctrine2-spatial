@@ -202,4 +202,21 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, (string) $point);
     }
 
+    /**
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geometry\Point::__construct: "5", "5", "5", "5"
+     */
+    public function testPointTooManyArguments()
+    {
+        new Point(5, 5, 5, 5);
+    }
+
+    /**
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geometry\Point::__construct: Array, Array, "1234"
+     */
+    public function testPointWrongArgumentTypes()
+    {
+        new Point(array(), array(), '1234');
+    }
 }

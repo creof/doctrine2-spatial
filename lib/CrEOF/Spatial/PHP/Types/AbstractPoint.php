@@ -177,19 +177,21 @@ abstract class AbstractPoint extends AbstractGeometry
         }
 
         if (2 == $argc) {
-            if (is_array($argv[0]) && is_numeric($argv[1]) || is_null($argv[1])) {
+            if (is_array($argv[0]) && (is_numeric($argv[1]) || is_null($argv[1]) || is_string($argv[1]))) {
                 $argv[0][] = $argv[1];
 
                 return $argv[0];
             }
 
-            if (is_numeric($argv[0]) || is_string($argv[0]) && is_numeric($argv[1]) || is_string($argv[1])) {
+            if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1]))) {
                 return $argv;
             }
         }
 
         if (3 == $argc) {
-            return $argv;
+            if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1])) && (is_numeric($argv[2]) || is_null($argv[2]) || is_string($argv[2]))) {
+                return $argv;
+            }
         }
 
         throw InvalidValueException::invalidParamters(get_class($this), '__construct', $argv);

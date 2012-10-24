@@ -140,6 +140,14 @@ class InvalidValueException extends Exception
 
     public static function invalidParamters($class, $method, array $parameters)
     {
-        return new self(sprintf('Invalid parameters passed to %s::%s: "%s"', $class, $method, implode('", "', $parameters)));
+        array_walk($parameters, function(&$value) {
+                if (is_array($value)) {
+                    $value = 'Array';
+                } else {
+                    $value = sprintf('"%s"', $value);
+                }
+        });
+
+        return new self(sprintf('Invalid parameters passed to %s::%s: %s', $class, $method, implode(', ', $parameters)));
     }
 }
