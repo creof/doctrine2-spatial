@@ -45,25 +45,6 @@ abstract class AbstractPoint extends AbstractGeometry
 
     public function __construct()
     {
-//        $argc = func_num_args();
-//        $argv = func_get_args();
-//
-//        switch (true) {
-//            case (1 == $argc && is_array($argv[0])):
-//                $argv = $argv[0];
-//                break;
-//            case (2 == $argc && is_array($argv[0]) && is_numeric($argv[1]) || is_null($argv[1])):
-//                $argv[0][] = $argv[1];
-//                $argv = $argv[0];
-//                break;
-//            case (2 == $argc && is_numeric($argv[0]) || is_string($argv[0]) && is_numeric($argv[1]) || is_string($argv[1])):
-//                // no break
-//            case (3 == $argc):
-//                break;
-//            default:
-//                throw InvalidValueException::invalidParamters(get_class($this), __METHOD__, $argv);
-//        }
-
         $argv = $this->validateArguments(func_get_args());
 
         call_user_func_array(array($this, 'construct'), $argv);
@@ -168,7 +149,7 @@ abstract class AbstractPoint extends AbstractGeometry
      * @return array
      * @throws InvalidValueException
      */
-    private function validateArguments(array $argv = null)
+    protected function validateArguments(array $argv = null)
     {
         $argc = count($argv);
 
