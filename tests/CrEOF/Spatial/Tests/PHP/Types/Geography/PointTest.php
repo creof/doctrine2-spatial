@@ -37,7 +37,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
 {
     public function testGoodNumericPoint()
     {
-        $point1 = new Point(42.6525793, -73.7562317);
+        $point1 = new Point(-73.7562317, 42.6525793);
 
         $this->assertEquals(42.6525793, $point1->getLatitude());
         $this->assertEquals(-73.7562317, $point1->getLongitude());
@@ -45,37 +45,37 @@ class PointTest extends \PHPUnit_Framework_TestCase
 
     public function testGoodStringPoints()
     {
-        $point2 = new Point('40:26:46N', '79:56:55W');
+        $point2 = new Point('79:56:55W', '40:26:46N');
 
         $this->assertEquals(40.446111111111, $point2->getLatitude());
         $this->assertEquals(-79.948611111111, $point2->getLongitude());
 
-        $point3 = new Point('40°26\'46"N', '79°56\'55"W');
+        $point3 = new Point('79°56\'55"W', '40°26\'46"N');
 
         $this->assertEquals(40.446111111111, $point3->getLatitude());
         $this->assertEquals(-79.948611111111, $point3->getLongitude());
 
-        $point4 = new Point('40° 26\' 46" N', '79° 56\' 55" W');
+        $point4 = new Point('79° 56\' 55" W', '40° 26\' 46" N');
 
         $this->assertEquals(40.446111111111, $point4->getLatitude());
         $this->assertEquals(-79.948611111111, $point4->getLongitude());
 
-        $point5 = new Point('40°26′46″N', '79°56′55″W');
+        $point5 = new Point('79°56′55″W', '40°26′46″N');
 
         $this->assertEquals(40.446111111111, $point5->getLatitude());
         $this->assertEquals(-79.948611111111, $point5->getLongitude());
 
-        $point6 = new Point('40° 26′ 46″ N', '79° 56′ 55″ W');
+        $point6 = new Point('79° 56′ 55″ W', '40° 26′ 46″ N');
 
         $this->assertEquals(40.446111111111, $point6->getLatitude());
         $this->assertEquals(-79.948611111111, $point6->getLongitude());
 
-        $point7 = new Point('40:26:46.543N', '79:56:55.832W');
+        $point7 = new Point('79:56:55.832W', '40:26:46.543N');
 
         $this->assertEquals(40.446261944444, $point7->getLatitude());
         $this->assertEquals(-79.948842222222, $point7->getLongitude());
 
-        $point7 = new Point('33:27:0N', '112:4:0W');
+        $point7 = new Point('112:4:0W', '33:27:0N');
 
         $this->assertEquals(33.45, $point7->getLatitude());
         $this->assertEquals(-112.06666666667, $point7->getLongitude());
@@ -89,7 +89,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeDirection()
     {
-        $point = new Point('84:26:46Q', '100:56:55W');
+        new Point('100:56:55W', '84:26:46Q');
     }
 
     /**
@@ -100,7 +100,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeDegrees()
     {
-        $point = new Point('92:26:46N', '79:56:55W');
+        new Point('79:56:55W', '92:26:46N');
     }
 
     /**
@@ -111,7 +111,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeMinutes()
     {
-        $point = new Point('84:64:46N', '108:42:55W');
+        new Point('108:42:55W', '84:64:46N');
     }
 
     /**
@@ -122,7 +122,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLatitudeSeconds()
     {
-        $point = new Point('84:23:75N', '108:42:55W');
+        new Point('108:42:55W', '84:23:75N');
     }
 
     /**
@@ -133,7 +133,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeDirection()
     {
-        $point = new Point('84:26:46N', '100:56:55P');
+        new Point('100:56:55P', '84:26:46N');
     }
 
     /**
@@ -144,7 +144,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeDegrees()
     {
-        $point = new Point('84:26:46N', '190:56:55W');
+        new Point('190:56:55W', '84:26:46N');
     }
 
     /**
@@ -155,7 +155,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeMinutes()
     {
-        $point = new Point('84:26:46N', '108:62:55W');
+        new Point('108:62:55W', '84:26:46N');
     }
 
     /**
@@ -166,14 +166,57 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadLongitudeSeconds()
     {
-        $point = new Point('84:26:46N', '108:53:94W');
+        new Point('108:53:94W', '84:26:46N');
     }
 
-    public function testToString()
+    public function testToArray()
     {
-        $point  = new Point(42.6525793, -73.7562317, 4326);
-        $result = (string) $point;
+        $expected = array(10, 10);
+        $point    = new Point(10, 10);
+        $result   = $point->toArray();
 
-        $this->assertEquals('42.6525793 -73.7562317', $result);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testPointWithSrid()
+    {
+        $point  = new Point(10, 10, 4326);
+        $result = $point->getSrid();
+
+        $this->assertEquals(4326, $result);
+    }
+
+    public function testGetType()
+    {
+        $point  = new Point(10, 10);
+        $result = $point->getType();
+
+        $this->assertEquals('point', $result);
+    }
+
+    public function testPointFromArrayToString()
+    {
+        $expected = '5 5';
+        $point    = new Point(array(5, 5));
+
+        $this->assertEquals($expected, (string) $point);
+    }
+
+    /**
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geography\Point::__construct: "5", "5", "5", "5"
+     */
+    public function testPointTooManyArguments()
+    {
+        new Point(5, 5, 5, 5);
+    }
+
+    /**
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geography\Point::__construct: Array, Array, "1234"
+     */
+    public function testPointWrongArgumentTypes()
+    {
+        new Point(array(), array(), '1234');
     }
 }
