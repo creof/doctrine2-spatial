@@ -40,7 +40,7 @@ class GeometryWalkerTest extends OrmTest
     /**
      * @group mysql
      */
-    public function testGeometryWalkerWKBMySql()
+    public function testGeometryWalkerBinaryMySql()
     {
         $lineString1 = new LineString(array(
             new Point(0, 0),
@@ -82,7 +82,7 @@ class GeometryWalkerTest extends OrmTest
     /**
      * @group postgresql
      */
-    public function testGeometryWalkerWKBPostgreSql()
+    public function testGeometryWalkerBinaryPostgreSql()
     {
         $lineString1 = new LineString(array(
             new Point(0, 0),
@@ -124,7 +124,7 @@ class GeometryWalkerTest extends OrmTest
     /**
      * @group mysql
      */
-    public function testGeometryWalkerWKTMySql()
+    public function testGeometryWalkerTextMySql()
     {
         $lineString1 = new LineString(array(
             new Point(0, 0),
@@ -166,7 +166,7 @@ class GeometryWalkerTest extends OrmTest
     /**
      * @group postgresql
      */
-    public function testGeometryWalkerWKTPostgreSql()
+    public function testGeometryWalkerTextPostgreSql()
     {
         $lineString1 = new LineString(array(
             new Point(0, 0),
