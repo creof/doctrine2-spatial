@@ -102,6 +102,28 @@ class GeometryTypeTest extends OrmTest
     }
 
     /**
+     * @group srid
+     */
+    public function testPointGeometryWithZeroSrid()
+    {
+        $entity = new GeometryEntity();
+        $point  = new Point(1, 1);
+
+        $point->setSrid(0);
+        $entity->setGeometry($point);
+        $this->_em->persist($entity);
+        $this->_em->flush();
+
+        $id = $entity->getId();
+
+        $this->_em->clear();
+
+        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+
+        $this->assertEquals($entity, $queryEntity);
+    }
+
+    /**
      * @group common
      */
     public function testLineStringGeometry()
