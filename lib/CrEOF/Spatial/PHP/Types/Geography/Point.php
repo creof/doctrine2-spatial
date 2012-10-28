@@ -33,8 +33,4 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
  */
 class Point extends AbstractPoint implements GeographyInterface
 {
-    /**
-     * @var int
-     */
-    protected $srid = 4326;
 }

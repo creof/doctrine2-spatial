@@ -35,8 +35,4 @@ use CrEOF\Spatial\PHP\Types\AbstractPolygon;
  */
 class Polygon extends AbstractPolygon implements GeographyInterface
 {
-    /**
-     * @var int
-     */
-    protected $srid = 4326;
 }

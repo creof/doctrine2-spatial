@@ -37,6 +37,8 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
  */
 class PostgreSql extends AbstractPlatform
 {
+    const DEFAULT_SRID = 4326;
+
     /**
      * {@inheritdoc}
      */
@@ -56,6 +58,10 @@ class PostgreSql extends AbstractPlatform
     {
         if ( ! ($value instanceof GeographyInterface)) {
             throw InvalidValueException::invalidValueNotGeography();
+        }
+
+        if ($value->getSrid() === null) {
+            $value->setSrid(self::DEFAULT_SRID);
         }
 
         return sprintf(
