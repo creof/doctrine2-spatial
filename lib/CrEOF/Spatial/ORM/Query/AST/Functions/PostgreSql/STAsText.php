@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsWKTInterface;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
  * ST_AsText DQL function
@@ -32,7 +32,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsWKTInterface;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class STAsText extends AbstractSingleGeometryDQLFunction implements ReturnsWKTInterface
+class STAsText extends AbstractSingleGeometryDQLFunction implements ReturnsGeometryInterface
 {
     protected $platforms = array('postgresql');
 

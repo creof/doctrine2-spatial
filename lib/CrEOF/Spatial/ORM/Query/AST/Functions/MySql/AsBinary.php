@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsWKBInterface;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
  * AsBinary DQL function
@@ -32,7 +32,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsWKBInterface;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class AsBinary extends AbstractSingleGeometryDQLFunction implements ReturnsWKBInterface
+class AsBinary extends AbstractSingleGeometryDQLFunction implements ReturnsGeometryInterface
 {
     protected $platforms = array('mysql');
 

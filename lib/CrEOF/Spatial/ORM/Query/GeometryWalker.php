@@ -23,8 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsWKBInterface;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsWKTInterface;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 use Doctrine\ORM\Query\AST\SelectExpression;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\SqlWalker;
@@ -66,7 +65,7 @@ class GeometryWalker extends SqlWalker
         $expr = $selectExpression->expression;
         $sql  = parent::walkSelectExpression($selectExpression);
 
-        if (($expr instanceof ReturnsWKBInterface || $expr instanceof ReturnsWKTInterface) && !$selectExpression->hiddenAliasResultVariable) {
+        if ($expr instanceof ReturnsGeometryInterface && !$selectExpression->hiddenAliasResultVariable) {
             $alias = trim(strrchr($sql, ' '));
             $this->rsm->typeMappings[$alias] = 'geometry';
         }
