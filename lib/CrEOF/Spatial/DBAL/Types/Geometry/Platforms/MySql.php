@@ -24,8 +24,6 @@
 namespace CrEOF\Spatial\DBAL\Types\Geometry\Platforms;
 
 use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
-use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 
 /**
  * MySql spatial platform
