@@ -48,11 +48,11 @@ interface PlatformInterface
     public function convertStringToPHPValue($sqlExpr);
 
     /**
-     * @param null|AbstractGeometry $value
+     * @param AbstractGeometry $value
      *
-     * @return null|string
+     * @return string
      */
-    public function convertToDatabaseValue($value);
+    public function convertToDatabaseValue(AbstractGeometry $value);
 
     /**
      * @param string $sqlExpr
@@ -60,13 +60,6 @@ interface PlatformInterface
      * @return string
      */
     public function convertToDatabaseValueSQL($sqlExpr);
-
-    /**
-     * @param null|string $value
-     *
-     * @return null|AbstractGeometry
-     */
-    public function convertToPHPValue($value);
 
     /**
      * @param string $sqlExpr

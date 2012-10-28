@@ -52,21 +52,15 @@ class PostgreSql extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue($value)
+    public function convertToDatabaseValue(AbstractGeometry $value)
     {
-        if ($value === null) {
-            return $value;
-        }
-
         if ( ! ($value instanceof GeographyInterface)) {
             throw InvalidValueException::invalidValueNotGeography();
         }
 
-        $srid = $value->getSrid();
-
         return sprintf(
-            '%s%s(%s)',
-            ($srid === null ? null : 'SRID=' . $srid . ';'),
+            'SRID=%d;%s(%s)',
+            $value->getSrid(),
             strtoupper($value->getType()),
             $value
         );

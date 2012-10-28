@@ -35,6 +35,8 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class PostgreSql extends AbstractPlatform
 {
+    const DEFAULT_SRID = 4326;
+
     /**
      * {@inheritdoc}
      */
@@ -52,7 +54,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToPHPValueSQL($sqlExpr)
     {
-        return sprintf('ST_AsBinary(%s)', $sqlExpr);
+        return sprintf('ST_AsEWKB(%s)', $sqlExpr);
     }
 
     /**
@@ -75,5 +77,22 @@ class PostgreSql extends AbstractPlatform
         $sqlExpr = stream_get_contents($sqlExpr);
 
         return parent::convertBinaryToPHPValue($sqlExpr);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertToDatabaseValue(AbstractGeometry $value)
+    {
+        if ($value->getSrid() === null) {
+            $value->setSrid(self::DEFAULT_SRID);
+        }
+
+        return sprintf(
+            'SRID=%d;%s(%s)',
+            $value->getSrid(),
+            strtoupper($value->getType()),
+            $value
+        );
     }
 }

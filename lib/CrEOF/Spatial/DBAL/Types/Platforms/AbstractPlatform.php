@@ -67,32 +67,8 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue($value)
+    public function convertToDatabaseValue(AbstractGeometry $value)
     {
-        if ($value === null) {
-            return $value;
-        }
-
-        if ( ! ($value instanceof AbstractGeometry)) {
-            throw InvalidValueException::invalidValueNotGeometry();
-        }
-
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToPHPValue($value)
-    {
-        if (null === $value) {
-            return null;
-        }
-
-        if (gettype($value) == 'string' && ord($value) > 31) {
-            return $this->convertStringToPHPValue($value);
-        }
-
-        return $this->convertBinaryToPHPValue($value);
     }
 }

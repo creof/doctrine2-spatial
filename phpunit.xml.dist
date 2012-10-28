@@ -15,6 +15,7 @@
             <group>common</group>
             <group>postgresql</group>
             <group>php</group>
+            <group>srid</group>
         </include>
         <exclude>
             <group>mysql</group>

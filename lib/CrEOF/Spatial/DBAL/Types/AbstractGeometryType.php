@@ -23,6 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\DBAL\Types\Platforms\PlatformInterface;
 use CrEOF\Spatial\PHP\Types\AbstractGeometry;
@@ -50,11 +51,25 @@ abstract class AbstractGeometryType extends Type
     /**
      * {@inheritdoc}
      */
+    public function getBindingType()
+    {
+        return \PDO::PARAM_BOOL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        $spatialPlatform = $this->getSpatialPlatform($platform);
+        if ($value === null) {
+            return $value;
+        }
 
-        return $spatialPlatform->convertToDatabaseValue($value);
+        if ( ! ($value instanceof AbstractGeometry)) {
+            throw InvalidValueException::invalidValueNotGeometry();
+        }
+
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValue($value);
     }
 
     /**
@@ -72,9 +87,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        $spatialPlatform = $this->getSpatialPlatform($platform);
-
-        return $spatialPlatform->convertToDatabaseValueSQL($sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($sqlExpr);
     }
 
     /**
@@ -82,9 +95,16 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        $spatialPlatform = $this->getSpatialPlatform($platform);
+        if (null === $value) {
+            return null;
+        }
 
-        return $spatialPlatform->convertToPHPValue($value);
+//        if (gettype($value) == 'string' && ord($value) > 31) {
+        if (ctype_alpha($value[0])) {
+            return $this->getSpatialPlatform($platform)->convertStringToPHPValue($value);
+        }
+
+        return $this->getSpatialPlatform($platform)->convertBinaryToPHPValue($value);
     }
 
     /**
@@ -117,8 +137,6 @@ abstract class AbstractGeometryType extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $spatialPlatform = $this->getSpatialPlatform($platform);
-
-        return $spatialPlatform->getSQLDeclaration($fieldDeclaration);
+        return $this->getSpatialPlatform($platform)->getSQLDeclaration($fieldDeclaration);
     }
 }
