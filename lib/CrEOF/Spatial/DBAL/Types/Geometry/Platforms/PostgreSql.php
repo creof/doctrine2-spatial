@@ -35,8 +35,6 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class PostgreSql extends AbstractPlatform
 {
-    const DEFAULT_SRID = 4326;
-
     /**
      * {@inheritdoc}
      */
@@ -62,7 +60,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToDatabaseValueSQL($sqlExpr)
     {
-        return sprintf('ST_GeomFromText(%s)', $sqlExpr);
+        return sprintf('ST_GeomFromEWKT(%s)', $sqlExpr);
     }
 
     /**
@@ -84,13 +82,15 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToDatabaseValue(AbstractGeometry $value)
     {
-        if ($value->getSrid() === null) {
-            $value->setSrid(self::DEFAULT_SRID);
+        $sridSQL = null;
+
+        if (($srid = $value->getSrid()) !== null) {
+            $sridSQL = sprintf('SRID=%d;', $srid);
         }
 
         return sprintf(
-            'SRID=%d;%s(%s)',
-            $value->getSrid(),
+            '%s%s(%s)',
+            $sridSQL,
             strtoupper($value->getType()),
             $value
         );
