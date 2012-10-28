@@ -48,14 +48,6 @@ abstract class AbstractGeometryType extends Type
         return true;
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function getBindingType()
-//    {
-//        return \PDO::PARAM_BOOL;
-//    }
-
     /**
      * {@inheritdoc}
      */
