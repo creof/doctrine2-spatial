@@ -48,13 +48,13 @@ abstract class AbstractGeometryType extends Type
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBindingType()
-    {
-        return \PDO::PARAM_BOOL;
-    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function getBindingType()
+//    {
+//        return \PDO::PARAM_BOOL;
+//    }
 
     /**
      * {@inheritdoc}
@@ -77,9 +77,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToPHPValueSQL($sqlExpr, $platform)
     {
-        $spatialPlatform = $this->getSpatialPlatform($platform);
-
-        return $spatialPlatform->convertToPHPValueSQL($sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($sqlExpr);
     }
 
     /**
