@@ -67,11 +67,8 @@ class GeometryWalker extends SqlWalker
         $sql  = parent::walkSelectExpression($selectExpression);
 
         if (($expr instanceof ReturnsWKBInterface || $expr instanceof ReturnsWKTInterface) && !$selectExpression->hiddenAliasResultVariable) {
-            $pattern = '/.+AS ((\w+)(\d+))$/';
-
-            preg_match($pattern, $sql, $match);
-
-            $this->rsm->typeMappings[$match[1]] = 'geometry';
+            $alias = trim(strrchr($sql, ' '));
+            $this->rsm->typeMappings[$alias] = 'geometry';
         }
 
         return $sql;
