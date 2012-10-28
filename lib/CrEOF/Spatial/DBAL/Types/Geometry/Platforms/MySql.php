@@ -35,8 +35,6 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class MySql extends AbstractPlatform
 {
-    const DEFAULT_SRID = 0;
-
     /**
      * {@inheritdoc}
      */
@@ -51,7 +49,6 @@ class MySql extends AbstractPlatform
     public function convertToPHPValueSQL($sqlExpr)
     {
         return sprintf('AsBinary(%s)', $sqlExpr);
-        //return sprintf('CONCAT(\'SRID=\', SRID(%s), \';\', AsText(%s))', $sqlExpr, $sqlExpr);
     }
 
     /**
@@ -61,21 +58,4 @@ class MySql extends AbstractPlatform
     {
         return sprintf('GeomFromText(%s)', $sqlExpr);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-//    public function convertToDatabaseValue(AbstractGeometry $value)
-//    {
-//        if ($value->getSrid() === null) {
-//            $value->setSrid(self::DEFAULT_SRID);
-//        }
-//
-//        return sprintf(
-//            "'%s(%s)',%d",
-//            strtoupper($value->getType()),
-//            $value,
-//            $value->getSrid()
-//        );
-//    }
 }
