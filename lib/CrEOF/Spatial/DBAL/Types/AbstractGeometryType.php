@@ -99,7 +99,6 @@ abstract class AbstractGeometryType extends Type
             return null;
         }
 
-//        if (gettype($value) == 'string' && ord($value) > 31) {
         if (ctype_alpha($value[0])) {
             return $this->getSpatialPlatform($platform)->convertStringToPHPValue($value);
         }
