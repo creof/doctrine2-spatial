@@ -183,7 +183,7 @@ abstract class AbstractPoint extends AbstractGeometry
      * @param int      $y
      * @param null|int $srid
      */
-    private function construct($x, $y, $srid = null)
+    protected function construct($x, $y, $srid = null)
     {
         $this->setX($x)
             ->setY($y)
@@ -195,7 +195,7 @@ abstract class AbstractPoint extends AbstractGeometry
      *
      * @return float
      */
-    private function toFloat($value)
+    protected function toFloat($value)
     {
         if (is_numeric($value)) {
             return (float) $value;

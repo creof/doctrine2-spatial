@@ -219,4 +219,48 @@ class PointTest extends \PHPUnit_Framework_TestCase
     {
         new Point(array(), array(), '1234');
     }
+
+    /**
+     * Test bad numeric parameters - latitude greater than 90
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid latitude value "190", must be in range -90 to 90.
+     */
+    public function testBadNumericGreaterThanLatitude()
+    {
+        $point = new Point(55, 190);
+    }
+
+    /**
+     * Test bad numeric parameters - latitude less than -90
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid latitude value "-90.00001", must be in range -90 to 90.
+     */
+    public function testBadNumericLessThanLatitude()
+    {
+        $point = new Point(55, -90.00001);
+    }
+
+    /**
+     * Test bad numeric parameters - longitude greater than 180
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid longitude value "180.134", must be in range -180 to 180.
+     */
+    public function testBadNumericGreaterThanLongitude()
+    {
+        $point = new Point(180.134, 54);
+    }
+
+    /**
+     * Test bad numeric parameters - longitude less than -180
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid longitude value "-230", must be in range -180 to 180.
+     */
+    public function testBadNumericLessThanLongitude()
+    {
+        $point = new Point(-230, 54);
+    }
 }

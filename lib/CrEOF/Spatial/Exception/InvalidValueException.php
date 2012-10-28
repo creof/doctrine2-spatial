@@ -147,4 +147,24 @@ class InvalidValueException extends Exception
     {
         return new self('Geography columns require Geography values');
     }
+
+    /**
+     * @param mixed $value
+     *
+     * @return InvalidValueException
+     */
+    public static function invalidLatitude($value)
+    {
+        return new self(sprintf('Invalid latitude value "%s", must be in range -90 to 90.', $value));
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return InvalidValueException
+     */
+    public static function invalidLongitude($value)
+    {
+        return new self(sprintf('Invalid longitude value "%s", must be in range -180 to 180.', $value));
+    }
 }
