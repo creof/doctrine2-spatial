@@ -44,8 +44,6 @@ abstract class AbstractGeometry
     const MULTIPOLYGON       = 'multipolygon';
     const GEOMETRYCOLLECTION = 'geometrycollection';
 
-    const GEOGRAPHY          = 'geography';
-
     /**
      * @var int
      */
