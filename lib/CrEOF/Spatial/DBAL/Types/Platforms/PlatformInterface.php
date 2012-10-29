@@ -69,6 +69,11 @@ interface PlatformInterface
     public function convertToPHPValueSQL($sqlExpr);
 
     /**
+     * @return string
+     */
+    public function getBaseType();
+
+    /**
      * Gets the SQL declaration snippet for a field of this type.
      *
      * @param array $fieldDeclaration

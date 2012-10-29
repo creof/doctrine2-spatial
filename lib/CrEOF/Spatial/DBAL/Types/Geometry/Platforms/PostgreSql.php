@@ -38,6 +38,14 @@ class PostgreSql extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
+    public function getBaseType()
+    {
+        return AbstractGeometry::GEOMETRY;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
         if ($fieldDeclaration['type']->getName() == AbstractGeometry::GEOMETRY) {
