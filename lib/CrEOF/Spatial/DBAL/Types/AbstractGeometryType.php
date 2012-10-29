@@ -38,6 +38,9 @@ use Doctrine\DBAL\Types\Type;
  */
 abstract class AbstractGeometryType extends Type
 {
+    /**
+     * @return string
+     */
     abstract public function getBaseType();
 
     /**

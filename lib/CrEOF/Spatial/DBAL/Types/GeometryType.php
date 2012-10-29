@@ -33,6 +33,9 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class GeometryType extends AbstractGeometryType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getBaseType()
     {
         return AbstractGeometry::GEOMETRY;
