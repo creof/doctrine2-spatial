@@ -23,7 +23,6 @@
 
 namespace CrEOF\Spatial\DBAL\Types\Geography\Platforms;
 
-use CrEOF\Spatial\DBAL\Types\StringParser;
 use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\AbstractGeometry;
@@ -42,10 +41,22 @@ class PostgreSql extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
+    public function getBaseType()
+    {
+        return GeographyInterface::GEOGRAPHY;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        if ($fieldDeclaration['type']->getName() == AbstractGeometry::GEOMETRY) {
-            return 'geography';
+        if ($fieldDeclaration['type']->getName() == GeographyInterface::GEOGRAPHY) {
+            return 'geography()';
+        }
+
+        if (isset($fieldDeclaration['customSchemaOptions']['srid'])) {
+            return sprintf('geography(%s,%d)', strtoupper($fieldDeclaration['type']->getName()), $fieldDeclaration['customSchemaOptions']['srid']);
         }
 
         return sprintf('geography(%s)', strtoupper($fieldDeclaration['type']->getName()));
@@ -86,19 +97,5 @@ class PostgreSql extends AbstractPlatform
     public function convertToDatabaseValueSQL($sqlExpr)
     {
         return sprintf('ST_GeographyFromText(%s)', $sqlExpr);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function convertStringToPHPValue($sqlExpr)
-    {
-        $parser = new StringParser($sqlExpr);
-
-        $value = $parser->parse();
-
-        $class = 'CrEOF\Spatial\PHP\Types\Geography\\' . $value['type'];
-
-        return new $class($value['value'], $value['srid']);
     }
 }
