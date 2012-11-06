@@ -33,8 +33,6 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  */
 abstract class AbstractGeometry
 {
-    const TYPE               = 'geometry';
-
     const GEOMETRY           = 'geometry';
     const POINT              = 'point';
     const LINESTRING         = 'linestring';
