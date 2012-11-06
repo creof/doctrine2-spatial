@@ -36,12 +36,16 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group common
  */
 class STDistanceTest extends OrmTest
 {
     public function testSelectSTDistanceGeometryCartesian()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $newYork   = new Point(-73.938611, 40.664167);
         $losAngles = new Point(-118.2430, 34.0522);
         $dallas    = new Point(-96.803889, 32.782778);
@@ -81,6 +85,10 @@ class STDistanceTest extends OrmTest
 
     public function testSelectSTDistanceGeographySpheroid()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
         $losAngles = new GeographyPoint(-118.2430, 34.0522);
         $dallas    = new GeographyPoint(-96.803889, 32.782778);
@@ -120,6 +128,10 @@ class STDistanceTest extends OrmTest
 
     public function testSelectSTDistanceGeographyCartesian()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
         $losAngles = new GeographyPoint(-118.2430, 34.0522);
         $dallas    = new GeographyPoint(-96.803889, 32.782778);

@@ -36,12 +36,16 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group common
  */
 class STEnvelopeTest extends OrmTest
 {
     public function testSelectSTEnvelope()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $entity1 = new PolygonEntity();
         $rings1 = array(
             new LineString(array(
@@ -88,6 +92,10 @@ class STEnvelopeTest extends OrmTest
 
     public function testSTEnvelopeWhereParameter()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $entity1 = new PolygonEntity();
         $rings1 = array(
             new LineString(array(

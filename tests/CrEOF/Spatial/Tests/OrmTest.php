@@ -239,4 +239,12 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
     {
 
     }
+
+    /**
+     * @return AbstractPlatform
+     */
+    protected function getPlatform()
+    {
+        return $this->_em->getConnection()->getDatabasePlatform();
+    }
 }

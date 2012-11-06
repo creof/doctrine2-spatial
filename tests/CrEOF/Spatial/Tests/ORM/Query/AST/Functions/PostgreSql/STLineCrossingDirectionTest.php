@@ -37,12 +37,16 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group common
  */
 class STLineCrossingDirectionTest extends OrmTest
 {
     public function testSelectSTLineCrossingDirection()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $lineString1 = new LineString(array(
             new Point(8, 15),
             new Point(4, 8)
@@ -99,6 +103,10 @@ class STLineCrossingDirectionTest extends OrmTest
 
     public function testSTLineCrossingDirectionWhereParameter()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $lineString1 = new LineString(array(
             new Point(8, 15),
             new Point(4, 8)

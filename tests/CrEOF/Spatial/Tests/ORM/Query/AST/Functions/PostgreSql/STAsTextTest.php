@@ -35,12 +35,16 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group common
  */
 class STAsTextTest extends OrmTest
 {
     public function testSTAsText()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $lineString1 = array(
             new Point(0, 0),
             new Point(2, 2),

@@ -36,12 +36,16 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group common
  */
 class STClosestPointTest extends OrmTest
 {
     public function testSelectSTClosestPoint()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $ring1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),

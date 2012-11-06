@@ -37,12 +37,16 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
+ * @group common
  */
 class STCrossesTest extends OrmTest
 {
     public function testSelectSTCrosses()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 10)
@@ -90,6 +94,10 @@ class STCrossesTest extends OrmTest
 
     public function testSTCrossesWhereParameter()
     {
+        if ($this->getPlatform()->getName() == 'mysql') {
+            $this->markTestSkipped('Function not supported on mssql.');
+        }
+
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 10)
