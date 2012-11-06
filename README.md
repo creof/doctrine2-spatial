@@ -42,13 +42,16 @@ Currently the following SQL functions are supported in DQL (more coming):
 * ST_Contains
 * ST_ContainsProperly
 * ST_CoveredBy
+* ST_Covers
 * ST_Crosses
 * ST_Disjoint
+* ST_Distance
 * ST_Envelope
 * ST_GeomFromText
 * ST_Length
 * ST_LineCrossingDirection
 * ST_StartPoint
+* ST_Summary
 
 ### MySQL
 * Area
