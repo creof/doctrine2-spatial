@@ -48,7 +48,7 @@ abstract class AbstractDualGeometryDQLFunction extends AbstractSingleGeometryDQL
      */
     public function getSql(SqlWalker $sqlWalker)
     {
-        $this->validatePlatform($sqlWalker);
+        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
         return sprintf(
             '%s(%s, %s)',

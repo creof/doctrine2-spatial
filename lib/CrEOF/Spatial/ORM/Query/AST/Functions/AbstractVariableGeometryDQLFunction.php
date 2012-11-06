@@ -69,7 +69,7 @@ abstract class AbstractVariableGeometryDQLFunction extends AbstractSingleGeometr
      */
     public function getSql(SqlWalker $sqlWalker)
     {
-        $this->validatePlatform($sqlWalker);
+        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
         $result = sprintf(
             '%s(%s, ',

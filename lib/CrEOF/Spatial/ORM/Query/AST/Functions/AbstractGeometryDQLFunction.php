@@ -24,8 +24,8 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * Abstract geometry DQL function
@@ -46,13 +46,13 @@ abstract class AbstractGeometryDQLFunction extends FunctionNode
     protected $platforms;
 
     /**
-     * @param SqlWalker $sqlWalker
+     * @param AbstractPlatform $platform
      *
      * @throws UnsupportedPlatformException
      */
-    protected function validatePlatform(SqlWalker $sqlWalker)
+    protected function validatePlatform(AbstractPlatform $platform)
     {
-        $platformName = $sqlWalker->getConnection()->getDatabasePlatform()->getName();
+        $platformName = $platform->getName();
 
         if (isset($this->platforms) && ! in_array($platformName, $this->platforms)) {
             throw UnsupportedPlatformException::unsupportedPlatform($platformName);

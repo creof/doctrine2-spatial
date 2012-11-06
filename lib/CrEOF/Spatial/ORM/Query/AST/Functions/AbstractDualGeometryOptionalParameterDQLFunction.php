@@ -53,7 +53,7 @@ abstract class AbstractDualGeometryOptionalParameterDQLFunction extends Abstract
      */
     public function getSql(SqlWalker $sqlWalker)
     {
-        $this->validatePlatform($sqlWalker);
+        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
         if ($this->optionalExpression) {
             return sprintf(
