@@ -99,8 +99,6 @@ class STSummaryTest extends OrmTest
         $entity1 = new GeographyEntity();
         $point1  = new GeographyPoint(5, 5);
 
-        $point1->setSrid(748);
-
         $entity1->setGeography($point1);
         $this->_em->persist($entity1);
 
