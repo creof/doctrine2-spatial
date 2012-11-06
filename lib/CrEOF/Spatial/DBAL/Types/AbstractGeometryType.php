@@ -108,16 +108,22 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    {
+        return $this->getSpatialPlatform($platform)->getSQLDeclaration($fieldDeclaration);
+    }
+
+    /**
      * @param AbstractPlatform $platform
      *
      * @return PlatformInterface
      * @throws UnsupportedPlatformException
      */
-    protected function getSpatialPlatform(AbstractPlatform $platform)
+    private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        $spatialPlatformClass = sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getBaseType(), $platform->getName());
-
-        if ( ! class_exists($spatialPlatformClass)) {
+        if ( ! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
             throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
         }
 
@@ -125,10 +131,30 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * @param AbstractPlatform $platform
+     *
+     * @return string
+     * @throws UnsupportedPlatformException
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    private function getPlatformName(AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->getSQLDeclaration($fieldDeclaration);
+        switch ($name = $platform->getName()) {
+            case 'mysql':
+                return 'MySql';
+            case 'postgresql':
+                return 'PostgreSql';
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($name);
+        }
+    }
+
+    /**
+     * @param AbstractPlatform $platform
+     *
+     * @return string
+     */
+    private function getSpatialPlatformClass(AbstractPlatform $platform)
+    {
+        return sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getBaseType(), $this->getPlatformName($platform));
     }
 }
