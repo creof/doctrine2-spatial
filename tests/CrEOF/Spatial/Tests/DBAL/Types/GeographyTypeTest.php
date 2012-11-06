@@ -24,9 +24,9 @@
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
 use Doctrine\ORM\Query;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\Geography\LineString;
+use CrEOF\Spatial\PHP\Types\Geography\Point;
+use CrEOF\Spatial\PHP\Types\Geography\Polygon;
 use CrEOF\Spatial\Tests\OrmTest;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
 
@@ -40,7 +40,7 @@ use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
  */
 class GeographyTypeTest extends OrmTest
 {
-    public function testNullGeometry()
+    public function testNullGeography()
     {
         $entity = new GeographyEntity();
 
@@ -56,7 +56,7 @@ class GeographyTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    public function testPointGeometry()
+    public function testPointGeography()
     {
         $entity = new GeographyEntity();
 
@@ -73,7 +73,7 @@ class GeographyTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    public function testLineStringGeometry()
+    public function testLineStringGeography()
     {
         $entity = new GeographyEntity();
 
@@ -95,7 +95,7 @@ class GeographyTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    public function testPolygonGeometry()
+    public function testPolygonGeography()
     {
         $entity = new GeographyEntity();
 
@@ -123,9 +123,9 @@ class GeographyTypeTest extends OrmTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit_Framework_Error
      */
-    public function testBadGeometryValue()
+    public function testBadGeographyValue()
     {
         $entity = new GeographyEntity();
 
