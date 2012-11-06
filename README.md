@@ -1,26 +1,29 @@
 # doctrine2-spatial
 
-Doctrine2 multi-platform support for spatial types and functions.
+Doctrine2 multi-platform support for spatial types and functions. Currently MySQL and PostgreSQL with PostGIS are supported. Could potentially add support for other platforms if an interest is expressed.
 
 This package is a refactor/continuation of my [doctrine2-mysql-spatial](https://github.com/djlambert/doctrine2-mysql-spatial) package.
 
 ## Types
-The following SQL types have been implemented as PHP objects and Doctrine types:
+The following SQL/OpenGIS types have been implemented as PHP objects and accompanying Doctrine types:
 
 ### Geometry
 * Point
 * LineString
 * Polygon
+* MultiPoint
+* MultiLineString
+* MultiPolygon
 
-### Geography (PostgreSQL/PostGIS)
+### Geography
+Similar to Geometry but SRID value is always used (SRID supported in PostGIS only), and accepts only valid "geographic" coordinates.
+
 * Point
 * LineString
 * Polygon
 
 ### Planned
-* MultiPoint
-* MultiLineString
-* MultiPolygon
+
 * GeometryCollection
 * 3D/4D geometries ??
 * Rasters ??????
