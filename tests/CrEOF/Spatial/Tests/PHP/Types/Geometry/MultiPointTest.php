@@ -120,7 +120,7 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
      * Test MultiPoint bad parameter
      *
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid multipoint point value of type "integer"
+     * @expectedExceptionMessage Invalid MultiPoint Point value of type "integer"
      */
     public function testBadLineString()
     {

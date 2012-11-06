@@ -148,7 +148,7 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
      * Test LineString bad parameter
      *
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid linestring point value of type "integer"
+     * @expectedExceptionMessage Invalid LineString Point value of type "integer"
      */
     public function testBadLineString()
     {

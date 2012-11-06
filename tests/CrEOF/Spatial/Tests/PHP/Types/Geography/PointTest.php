@@ -191,7 +191,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $point  = new Point(10, 10);
         $result = $point->getType();
 
-        $this->assertEquals('point', $result);
+        $this->assertEquals('Point', $result);
     }
 
     public function testPointFromArrayToString()

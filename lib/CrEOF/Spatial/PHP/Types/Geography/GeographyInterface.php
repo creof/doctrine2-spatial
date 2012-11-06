@@ -31,7 +31,7 @@ namespace CrEOF\Spatial\PHP\Types\Geography;
  */
 interface GeographyInterface
 {
-    const GEOGRAPHY = 'geography';
+    const GEOGRAPHY = 'Geography';
 
     /**
      * @return int

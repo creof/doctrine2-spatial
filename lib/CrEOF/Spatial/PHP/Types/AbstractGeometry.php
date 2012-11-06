@@ -33,14 +33,14 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  */
 abstract class AbstractGeometry
 {
-    const GEOMETRY           = 'geometry';
-    const POINT              = 'point';
-    const LINESTRING         = 'linestring';
-    const POLYGON            = 'polygon';
-    const MULTIPOINT         = 'multipoint';
-    const MULTILINESTRING    = 'multilinestring';
-    const MULTIPOLYGON       = 'multipolygon';
-    const GEOMETRYCOLLECTION = 'geometrycollection';
+    const GEOMETRY           = 'Geometry';
+    const POINT              = 'Point';
+    const LINESTRING         = 'LineString';
+    const POLYGON            = 'Polygon';
+    const MULTIPOINT         = 'MultiPoint';
+    const MULTILINESTRING    = 'MultiLineString';
+    const MULTIPOLYGON       = 'MultiPolygon';
+    const GEOMETRYCOLLECTION = 'GeometryCollection';
 
     /**
      * @var int
