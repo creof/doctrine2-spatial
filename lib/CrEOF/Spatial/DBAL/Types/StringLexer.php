@@ -75,14 +75,13 @@ class StringLexer extends \Doctrine\Common\Lexer
                 }
 
                 $value = (int) $value;
+
                 return self::T_INTEGER;
             case (ctype_alpha($value)):
                 $name = __CLASS__ . '::T_' . strtoupper($value);
 
                 if (defined($name)) {
-                    $type = constant($name);
-
-                    return $type;
+                    return constant($name);
                 }
 
                 return self::T_STRING;
