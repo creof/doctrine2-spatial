@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
  * Geography entity
@@ -32,7 +32,6 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  * @license http://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table(options={"engine"="MyISAM"})
  */
 class GeographyEntity
 {
@@ -46,7 +45,7 @@ class GeographyEntity
     protected $id;
 
     /**
-     * @var AbstractGeometry $geography
+     * @var GeographyInterface $geography
      *
      * @Column(type="geography", nullable=true)
      */
@@ -65,11 +64,11 @@ class GeographyEntity
     /**
      * Set geography
      *
-     * @param AbstractGeometry $geography
+     * @param GeographyInterface $geography
      *
      * @return self
      */
-    public function setGeography(AbstractGeometry $geography)
+    public function setGeography(GeographyInterface $geography)
     {
         $this->geography = $geography;
 
@@ -79,7 +78,7 @@ class GeographyEntity
     /**
      * Get geography
      *
-     * @return AbstractGeometry
+     * @return GeographyInterface
      */
     public function getGeography()
     {
