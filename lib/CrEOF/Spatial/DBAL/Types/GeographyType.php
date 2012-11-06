@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
  * Doctrine GEOGRAPHY type
@@ -33,8 +33,11 @@ use CrEOF\Spatial\PHP\Types\AbstractGeometry;
  */
 class GeographyType extends AbstractGeometryType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getBaseType()
     {
-        return AbstractGeometry::GEOGRAPHY;
+        return GeographyInterface::GEOGRAPHY;
     }
 }
