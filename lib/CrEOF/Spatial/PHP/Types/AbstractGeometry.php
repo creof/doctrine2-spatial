@@ -125,7 +125,7 @@ abstract class AbstractGeometry
             case (is_array($ring)):
                 break;
             default:
-                throw InvalidValueException::invalidType($this, SELF::LINESTRING, $ring);
+                throw InvalidValueException::invalidType($this, self::LINESTRING, $ring);
         }
 
         $ring = $this->validateLineStringValue($ring);
