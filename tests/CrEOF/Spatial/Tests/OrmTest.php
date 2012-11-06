@@ -144,6 +144,10 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         \Doctrine\DBAL\Types\Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
         \Doctrine\DBAL\Types\Type::addType('linestring', 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType');
         \Doctrine\DBAL\Types\Type::addType('polygon', 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
+        \Doctrine\DBAL\Types\Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
+        \Doctrine\DBAL\Types\Type::addType('geographypoint', 'CrEOF\Spatial\DBAL\Types\Geography\PointType');
+        \Doctrine\DBAL\Types\Type::addType('geographylinestring', 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType');
+        \Doctrine\DBAL\Types\Type::addType('geographypolygon', 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType');
     }
 
     /**
@@ -165,6 +169,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
                 $this->_em->getClassMetadata(self::POINT_ENTITY),
                 $this->_em->getClassMetadata(self::LINESTRING_ENTITY),
                 $this->_em->getClassMetadata(self::POLYGON_ENTITY),
+                $this->_em->getClassMetadata(self::GEOGRAPHY_ENTITY)
             )
         );
     }
@@ -175,6 +180,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->conn->executeUpdate('DELETE FROM PointEntity');
         $this->conn->executeUpdate('DELETE FROM LineStringEntity');
         $this->conn->executeUpdate('DELETE FROM PolygonEntity');
+        $this->conn->executeUpdate('DELETE FROM GeographyEntity');
     }
 
     protected function setUpMySql()
@@ -188,19 +194,8 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->conn->exec('CREATE EXTENSION postgis');
 
         $this->setupCommonTypes();
-        \Doctrine\DBAL\Types\Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
-        \Doctrine\DBAL\Types\Type::addType('geographypoint', 'CrEOF\Spatial\DBAL\Types\Geography\PointType');
-        \Doctrine\DBAL\Types\Type::addType('geographylinestring', 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType');
-        \Doctrine\DBAL\Types\Type::addType('geographypolygon', 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType');
-
         $this->setupCommonFunctions();
-
         $this->setupCommonEntities();
-        $this->_schemaTool->createSchema(
-            array(
-                $this->_em->getClassMetadata(self::GEOGRAPHY_ENTITY)
-            )
-        );
     }
 
     protected function setUpPostgreSqlFunctions()
@@ -242,6 +237,6 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
 
     protected function tearDownPostgreSql()
     {
-        $this->conn->executeUpdate('DELETE FROM GeographyEntity');
+
     }
 }

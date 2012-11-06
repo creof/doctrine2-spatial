@@ -36,8 +36,7 @@ use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * group postgresql
- * @group skip
+ * @group common
  */
 class GeographyTypeTest extends OrmTest
 {
