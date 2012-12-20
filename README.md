@@ -1,6 +1,6 @@
 # doctrine2-spatial
 
-This is a fork of [doctrine2-mysql-spatial](https://github.com/djlambert/doctrine2-spatial)
+This is a fork of [doctrine2-spatial](https://github.com/djlambert/doctrine2-spatial)
 
 
 ## Changes
