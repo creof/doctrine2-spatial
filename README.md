@@ -20,6 +20,7 @@ The original package lacks install instructions. Here's how to add it to Symfony
         "creof/doctrine2-spatial": "dev-master"
 
 You will also have to change the version requirement of doctrine:
+
         "doctrine/orm": "dev-master",
 
 
