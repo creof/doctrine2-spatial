@@ -14,8 +14,8 @@
         "doctrine/orm": ">=2.2"
     },
     "require-dev": {
-        "doctrine/common": ">=2.2",
-        "doctrine/dbal": ">=2.2"
+        "doctrine/common": "dev-master",
+        "doctrine/dbal": "dev-master"
     },
     "autoload": {
         "psr-0": {
