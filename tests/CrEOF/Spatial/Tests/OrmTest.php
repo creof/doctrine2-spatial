@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\Tests;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 
 /**
@@ -140,14 +141,14 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
      */
     protected function setupCommonTypes()
     {
-        \Doctrine\DBAL\Types\Type::addType('geometry', 'CrEOF\Spatial\DBAL\Types\GeometryType');
-        \Doctrine\DBAL\Types\Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
-        \Doctrine\DBAL\Types\Type::addType('linestring', 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType');
-        \Doctrine\DBAL\Types\Type::addType('polygon', 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
-        \Doctrine\DBAL\Types\Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
-        \Doctrine\DBAL\Types\Type::addType('geographypoint', 'CrEOF\Spatial\DBAL\Types\Geography\PointType');
-        \Doctrine\DBAL\Types\Type::addType('geographylinestring', 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType');
-        \Doctrine\DBAL\Types\Type::addType('geographypolygon', 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType');
+        Type::addType('geometry', 'CrEOF\Spatial\DBAL\Types\GeometryType');
+        Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
+        Type::addType('linestring', 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType');
+        Type::addType('polygon', 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
+        Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
+        Type::addType('geographypoint', 'CrEOF\Spatial\DBAL\Types\Geography\PointType');
+        Type::addType('geographylinestring', 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType');
+        Type::addType('geographypolygon', 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType');
     }
 
     /**
