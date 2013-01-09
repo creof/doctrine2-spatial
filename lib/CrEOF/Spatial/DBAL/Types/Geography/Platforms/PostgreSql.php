@@ -55,8 +55,8 @@ class PostgreSql extends AbstractPlatform
             return 'geography()';
         }
 
-        if (isset($fieldDeclaration['customSchemaOptions']['srid'])) {
-            return sprintf('geography(%s,%d)', strtoupper($fieldDeclaration['type']->getName()), $fieldDeclaration['customSchemaOptions']['srid']);
+        if (isset($fieldDeclaration['srid'])) {
+            return sprintf('geography(%s,%d)', strtoupper($fieldDeclaration['type']->getName()), $fieldDeclaration['srid']);
         }
 
         return sprintf('geography(%s)', strtoupper($fieldDeclaration['type']->getName()));
