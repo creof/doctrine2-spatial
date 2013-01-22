@@ -5,7 +5,9 @@ This is a fork of [doctrine2-spatial](https://github.com/djlambert/doctrine2-spa
 
 ## Changes
 * Hack in AbstractPlatform which fails on my PostGIS installation due to a different binary format
-* added ST_Line_Interpolate_Point (PostGIS)
+* Fix in AbstractPlatform for case-sensitive file systems
+* added a number of ST_* PostGIS functions
+
 
 ## Symfony2 Install
 The original package lacks install instructions. Here's how to add it to Symfony2:
@@ -22,6 +24,9 @@ The original package lacks install instructions. Here's how to add it to Symfony
 You will also have to change the version requirement of doctrine:
 
         "doctrine/orm": "dev-master",
+
+These two changes have been made in various forks and versions, so check first.
+
 
 
 ### config.yml
