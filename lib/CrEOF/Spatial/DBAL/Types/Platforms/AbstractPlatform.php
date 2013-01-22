@@ -60,9 +60,32 @@ abstract class AbstractPlatform implements PlatformInterface
 
         $value = $parser->parse();
 
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getBaseType(), $value['type']);
+        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getBaseType(), $this->getUnqualifiedClassForGeometryType($value['type']));
 
         return new $class($value['value'], $value['srid']);
+    }
+
+    /**
+     * Get the unqualified classname for a Geometry type
+     *
+     * @see \CrEOF\Spatial\PHP\Types\AbstractGeometry
+     * @link http://php.net/manual/en/reflectionclass.getconstants.php
+     * @param string $type The Geometry type, for example: 'MULTILINESTRING'
+     * @return string The unqualified class name, for example: 'MultiLineString'
+     * @throws \Exception
+     */
+    public function getUnqualifiedClassForGeometryType($type)
+    {
+        $r = new \ReflectionClass('\CrEOF\Spatial\PHP\Types\AbstractGeometry');
+
+        //Iterate over the associative array label -> value
+        foreach ($r->getConstants() as $label => $value) {
+            if ($label == $type) {
+                return $value;
+            }
+        }
+
+        throw new \Exception("Unsupported Geometry type used: '$type'");
     }
 
     /**
