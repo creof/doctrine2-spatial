@@ -11,11 +11,11 @@
     ],
     "license": "MIT",
     "require": {
-        "doctrine/orm": ">=2.2"
+        "doctrine/orm": ">=2.1"
     },
     "require-dev": {
-        "doctrine/common": "dev-master",
-        "doctrine/dbal": "dev-master"
+        "doctrine/common": ">=2.1",
+        "doctrine/dbal": ">=2.1"
     },
     "autoload": {
         "psr-0": {
