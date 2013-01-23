@@ -26,7 +26,7 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
 
 /**
- * ST_Line_Interpolate_Point DQL function
+ * ST_Azimuth DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @license MIT

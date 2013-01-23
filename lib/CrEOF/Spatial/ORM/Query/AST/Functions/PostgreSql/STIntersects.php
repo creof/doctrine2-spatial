@@ -26,7 +26,7 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
 
 /**
- * ST_Intersection DQL function
+ * ST_Intersects DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @license MIT
