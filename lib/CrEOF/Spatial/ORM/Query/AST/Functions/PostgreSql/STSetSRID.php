@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2012 Tom Vogt
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +26,14 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
 
 /**
- * ST_MakePoint DQL function
+ * ST_SetSRID DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @license MIT
  */
-class STMakePoint extends AbstractDualGeometryDQLFunction
+class STSetSRID extends AbstractDualGeometryDQLFunction
 {
     protected $platforms = array('postgresql');
 
-    protected $functionName = 'ST_MakePoint';
+    protected $functionName = 'ST_SetSRID';
 }
