@@ -55,7 +55,7 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertBinaryToPHPValue($sqlExpr)
     {
-        if ($sqlExpr[0]=='x') $sqlExpr=substr($sqlExpr, 1); // FIXME: this is a hack, at least PostGIS seems to prefix binary values with x
+        if ($sqlExpr[0]=='x') $sqlExpr=substr($sqlExpr, 1); // some versions of PostgreSQL/PostGIS prefix hex values with an x
         $parser = new BinaryParser($sqlExpr);
 
         $value = $parser->parse();
