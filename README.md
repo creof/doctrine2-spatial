@@ -1,49 +1,88 @@
 # doctrine2-spatial
 
-This is a fork of [doctrine2-spatial](https://github.com/djlambert/doctrine2-spatial)
+Doctrine2 multi-platform support for spatial types and functions. Currently MySQL and PostgreSQL with PostGIS are supported. Could potentially add support for other platforms if an interest is expressed.
+
+This package is a refactor/continuation of my [doctrine2-mysql-spatial](https://github.com/djlambert/doctrine2-mysql-spatial) package.
+
+## Types
+The following SQL/OpenGIS types have been implemented as PHP objects and accompanying Doctrine types:
+
+### Geometry
+* Point
+* LineString
+* Polygon
+* MultiPoint
+* MultiLineString
+* MultiPolygon
+
+### Geography
+Similar to Geometry but SRID value is always used (SRID supported in PostGIS only), and accepts only valid "geographic" coordinates.
+
+* Point
+* LineString
+* Polygon
+
+### Planned
+
+* GeometryCollection
+* 3D/4D geometries ??
+* Rasters ??????
+
+There is support for both WKB/WKT and EWKB/EWKT return values. Currently only WKT/EWKT is used in statements.
+
+## Functions
+Currently the following SQL functions are supported in DQL (more coming):
+
+### PostgreSQL
+* ST_Area
+* ST_AsBinary
+* ST_AsText
+* ST_Centroid
+* ST_ClosestPoint
+* ST_Contains
+* ST_ContainsProperly
+* ST_CoveredBy
+* ST_Covers
+* ST_Crosses
+* ST_Disjoint
+* ST_Distance
+* ST_Envelope
+* ST_GeomFromText
+* ST_Length
+* ST_LineCrossingDirection
+* ST_StartPoint
+* ST_Summary
+
+### MySQL
+* Area
+* AsBinary
+* AsText
+* Contains
+* Disjoint
+* Envelope
+* GeomFromText
+* GLength
+* MBRContains
+* MBRDisjoint
+* StartPoint
+
+## DQL AST Walker
+A DQL AST walker is included which when used with the following DQL functions will return the appropriate Geometry type object from queries instead of strings:
+
+* AsText
+* ST_AsText
+* AsBinary
+* ST_AsBinary
+
+EWKT/EWKB function support planned.
+
+### Example:
+        $query = $this->em->createQuery('SELECT AsText(StartPoint(l.lineString)) MyLineStringEntity l');
+
+        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
+
+        $result = $query->getResult();
+
+```$result[n][1]``` will now be of type ```Point``` instead of the string ```'POINT(X Y)'```
 
 
-## Changes
-* Hack in AbstractPlatform which fails on my PostGIS installation due to a different binary format
-* Fix in AbstractPlatform for case-sensitive file systems
-* added a number of ST_* PostGIS functions
-
-
-## Symfony2 Install
-The original package lacks install instructions. Here's how to add it to Symfony2:
-
-
-### composer.json
-    "repositories": [
-        { "type": "vcs", "url": "https://github.com/tvogt/doctrine2-spatial" }
-    ],
-    "require": {
-    	...
-        "creof/doctrine2-spatial": "dev-master"
-
-You will also have to change the version requirement of doctrine:
-
-        "doctrine/orm": "dev-master",
-
-These two changes have been made in various forks and versions, so check first.
-
-
-
-### config.yml
-You need to manually add the types and functions you use:
-
-	doctrine:
-	    dbal:
-	        types:
-	            geometry:   CrEOF\Spatial\DBAL\Types\GeometryType
-	            point:      CrEOF\Spatial\DBAL\Types\Geometry\PointType
-	            polygon:    CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
-	            linestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
-	    orm:
-	        dql:
-	            numeric_functions:
-	                st_contains:        CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContains
-	                st_distance:        CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistance
-	                st_area:            CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
-	                st_length:          CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength
-	                st_geomfromtext:    CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText
