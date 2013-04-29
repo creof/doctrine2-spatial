@@ -45,7 +45,7 @@ abstract class AbstractPlatform implements PlatformInterface
 
         $value = $parser->parse();
 
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getBaseType(), $value['type']);
+        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), $value['type']);
 
         return new $class($value['value'], $value['srid']);
     }
@@ -59,7 +59,7 @@ abstract class AbstractPlatform implements PlatformInterface
 
         $value = $parser->parse();
 
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getBaseType(), $value['type']);
+        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), $value['type']);
 
         return new $class($value['value'], $value['srid']);
     }

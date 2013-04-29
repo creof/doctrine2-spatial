@@ -41,7 +41,7 @@ class PostgreSql extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    public function getBaseType()
+    public function getTypeFamily()
     {
         return GeographyInterface::GEOGRAPHY;
     }

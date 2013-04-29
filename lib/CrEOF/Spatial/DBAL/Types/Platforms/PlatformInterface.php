@@ -69,9 +69,11 @@ interface PlatformInterface
     public function convertToPHPValueSQL($sqlExpr);
 
     /**
+     * Get the type family for this interface (i.e. geometry or geography)
+     *
      * @return string
      */
-    public function getBaseType();
+    public function getTypeFamily();
 
     /**
      * Gets the SQL declaration snippet for a field of this type.

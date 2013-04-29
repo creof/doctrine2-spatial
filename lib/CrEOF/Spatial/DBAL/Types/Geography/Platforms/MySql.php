@@ -36,7 +36,7 @@ class MySql extends \CrEOF\Spatial\DBAL\Types\Geometry\Platforms\MySql
     /**
      * {@inheritdoc}
      */
-    public function getBaseType()
+    public function getTypeFamily()
     {
         return GeographyInterface::GEOGRAPHY;
     }
