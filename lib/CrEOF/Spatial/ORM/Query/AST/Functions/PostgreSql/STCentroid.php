@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_Centroid DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class STCentroid extends AbstractSingleGeometryDQLFunction
+class STCentroid extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_Centroid';
+
+    protected $minGeomExpr = 1;
+
+    protected $maxGeomExpr = 1;
 }

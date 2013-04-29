@@ -23,70 +23,23 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
-use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\Lexer;
-use Doctrine\ORM\Query\Parser;
-use Doctrine\ORM\Query\SqlWalker;
-
 /**
  * Abstract DQL function with variable geometry parameters
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author     Derek J. Lambert <dlambert@dereklambert.com>
+ * @license    http://dlambert.mit-license.org MIT
+ * @see        AbstractSpatialDQLFunction
+ * @deprecated No longer used by internal code and not recommended - will be removed soon
  */
-abstract class AbstractVariableGeometryDQLFunction extends AbstractSingleGeometryDQLFunction
+abstract class AbstractVariableGeometryDQLFunction extends AbstractSpatialDQLFunction
 {
     /**
-     * @var Node[]
+     * @var int
      */
-    protected $geomExpressions = array();
+    protected $minGeomExpr = 1;
 
     /**
-     * @param Parser $parser
+     * @var int
      */
-    public function parse(Parser $parser)
-    {
-        $lexer = $parser->getLexer();
-
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
-
-        $this->firstGeomExpression = $parser->ArithmeticPrimary();
-
-        while (count($this->geomExpressions) < 1 || $lexer->lookahead['type'] != Lexer::T_CLOSE_PARENTHESIS) {
-            $parser->match(Lexer::T_COMMA);
-
-            $this->geomExpressions[] = $parser->ArithmeticPrimary();
-        }
-
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
-    }
-
-    /**
-     * @param SqlWalker $sqlWalker
-     *
-     * @return string
-     */
-    public function getSql(SqlWalker $sqlWalker)
-    {
-        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
-
-        $result = sprintf(
-            '%s(%s, ',
-            $this->functionName,
-            $this->firstGeomExpression->dispatch($sqlWalker)
-        );
-
-        for ($i = 0, $size = count($this->geomExpressions); $i < $size; $i++) {
-            if ($i > 0) {
-                $result .= ', ';
-            }
-
-            $result .= $this->geomExpressions[$i]->dispatch($sqlWalker);
-        }
-
-        $result .= ')';
-
-        return $result;
-    }
+    protected $maxGeomExpr = null;
 }

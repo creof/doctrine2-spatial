@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_Covers DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class STCovers extends AbstractDualGeometryDQLFunction
+class STCovers extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_Covers';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }

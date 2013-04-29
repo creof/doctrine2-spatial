@@ -23,39 +23,15 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
-use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-
 /**
  * Abstract geometry DQL function
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author     Derek J. Lambert <dlambert@dereklambert.com>
+ * @license    http://dlambert.mit-license.org MIT
+ * @see        AbstractSpatialDQLFunction
+ * @deprecated No longer used by internal code and not recommended - will be removed soon
  */
-abstract class AbstractGeometryDQLFunction extends FunctionNode
+abstract class AbstractGeometryDQLFunction extends AbstractSpatialDQLFunction
 {
-    /**
-     * @var string
-     */
-    protected $functionName;
 
-    /**
-     * @var array
-     */
-    protected $platforms;
-
-    /**
-     * @param AbstractPlatform $platform
-     *
-     * @throws UnsupportedPlatformException
-     */
-    protected function validatePlatform(AbstractPlatform $platform)
-    {
-        $platformName = $platform->getName();
-
-        if (isset($this->platforms) && ! in_array($platformName, $this->platforms)) {
-            throw UnsupportedPlatformException::unsupportedPlatform($platformName);
-        }
-    }
 }

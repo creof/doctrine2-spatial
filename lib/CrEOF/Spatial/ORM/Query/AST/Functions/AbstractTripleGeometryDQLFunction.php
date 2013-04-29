@@ -23,67 +23,21 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
-use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\Lexer;
-use Doctrine\ORM\Query\Parser;
-use Doctrine\ORM\Query\SqlWalker;
-
 /**
  * Abstract DQL function requiring 3 parameters
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @license http://mit-license.org MIT
  */
-abstract class AbstractTripleGeometryDQLFunction extends AbstractSingleGeometryDQLFunction
+abstract class AbstractTripleGeometryDQLFunction extends AbstractSpatialDQLFunction
 {
     /**
-     * @var Node
+     * @var int
      */
-    protected $secondGeomExpression;
+    protected $minGeomExpr = 3;
 
     /**
-     * @var Node
+     * @var int
      */
-    protected $thirdGeomExpression;
-
-    /**
-     * @param SqlWalker $sqlWalker
-     *
-     * @return string
-     */
-    public function getSql(SqlWalker $sqlWalker)
-    {
-        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
-
-        return sprintf(
-            '%s(%s, %s, %s)',
-            $this->functionName,
-            $this->firstGeomExpression->dispatch($sqlWalker),
-            $this->secondGeomExpression->dispatch($sqlWalker),
-            $this->thirdGeomExpression->dispatch($sqlWalker)
-        );
-    }
-
-    /**
-     * @param Parser $parser
-     */
-    public function parse(Parser $parser)
-    {
-        $lexer = $parser->getLexer();
-
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
-
-        $this->firstGeomExpression = $parser->ArithmeticPrimary();
-
-        $parser->match(Lexer::T_COMMA);
-
-        $this->secondGeomExpression = $parser->ArithmeticPrimary();
-
-        $parser->match(Lexer::T_COMMA);
-
-        $this->thirdGeomExpression = $parser->ArithmeticPrimary();
-
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
-    }
+    protected $maxGeomExpr = 3;
 }

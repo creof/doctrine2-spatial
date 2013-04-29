@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * Disjoint DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Disjoint extends AbstractDualGeometryDQLFunction
+class Disjoint extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
     protected $functionName = 'Disjoint';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }

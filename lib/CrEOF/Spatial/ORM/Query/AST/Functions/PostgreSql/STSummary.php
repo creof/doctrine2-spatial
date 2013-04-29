@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_Summary DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class STSummary extends AbstractSingleGeometryDQLFunction
+class STSummary extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_Summary';
+
+    protected $minGeomExpr = 1;
+
+    protected $maxGeomExpr = 1;
 }

@@ -23,46 +23,23 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
-use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\Lexer;
-use Doctrine\ORM\Query\Parser;
-use Doctrine\ORM\Query\SqlWalker;
-
 /**
  * Abstract DQL function requiring 1 geometry parameter
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author     Derek J. Lambert <dlambert@dereklambert.com>
+ * @license    http://dlambert.mit-license.org MIT
+ * @see        AbstractSpatialDQLFunction
+ * @deprecated No longer used by internal code and not recommended - will be removed soon
  */
-abstract class AbstractSingleGeometryDQLFunction extends AbstractGeometryDQLFunction
+abstract class AbstractSingleGeometryDQLFunction extends AbstractSpatialDQLFunction
 {
     /**
-     * @var Node
+     * @var int
      */
-    protected $firstGeomExpression;
+    protected $minGeomExpr = 1;
 
     /**
-     * @param Parser $parser
+     * @var int
      */
-    public function parse(Parser $parser)
-    {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
-
-        $this->firstGeomExpression = $parser->ArithmeticPrimary();
-
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
-    }
-
-    /**
-     * @param SqlWalker $sqlWalker
-     *
-     * @return string
-     */
-    public function getSql(SqlWalker $sqlWalker)
-    {
-        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
-
-        return sprintf('%s(%s)', $this->functionName, $this->firstGeomExpression->dispatch($sqlWalker));
-    }
+    protected $maxGeomExpr = 1;
 }

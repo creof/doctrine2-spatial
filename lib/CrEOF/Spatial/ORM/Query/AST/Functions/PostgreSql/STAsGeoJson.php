@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
@@ -32,9 +32,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * @author  Tom Vogt <tom@lemuria.org>
  * @license http://mit-license.org MIT
  */
-class STAsGeoJson extends AbstractSingleGeometryDQLFunction implements ReturnsGeometryInterface
+class STAsGeoJson extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_AsGeoJson';
+
+    protected $minGeomExpr = 1;
+
+    protected $maxGeomExpr = 1;
 }

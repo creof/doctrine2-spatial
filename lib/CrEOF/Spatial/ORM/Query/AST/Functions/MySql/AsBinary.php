@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
@@ -32,9 +32,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class AsBinary extends AbstractSingleGeometryDQLFunction implements ReturnsGeometryInterface
+class AsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     protected $platforms = array('mysql');
 
     protected $functionName = 'AsBinary';
+
+    protected $minGeomExpr = 1;
+
+    protected $maxGeomExpr = 1;
 }

@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryOptionalParameterDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_Contains DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryOptionalParameterD
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class STDistance extends AbstractDualGeometryOptionalParameterDQLFunction
+class STDistance extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_Distance';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 3;
 }

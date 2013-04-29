@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_Crosses DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class STCrosses extends AbstractDualGeometryDQLFunction
+class STCrosses extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_Crosses';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }

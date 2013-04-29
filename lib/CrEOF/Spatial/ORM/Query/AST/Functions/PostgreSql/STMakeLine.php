@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_MakeLine DQL function
@@ -33,9 +33,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * @author  Tom Vogt <tom@lemuria.org>
  * @license http://mit-license.org MIT
  */
-class STMakeLine extends AbstractDualGeometryDQLFunction
+class STMakeLine extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_MakeLine';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }

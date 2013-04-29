@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * ST_Touches DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * @author  Tom Vogt <tom@lemuria.org>
  * @license http://mit-license.org MIT
  */
-class STTouches extends AbstractDualGeometryDQLFunction
+class STTouches extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
     protected $functionName = 'ST_Touches';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }

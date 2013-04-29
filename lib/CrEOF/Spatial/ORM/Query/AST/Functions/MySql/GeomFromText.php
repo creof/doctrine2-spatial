@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * GeomFromText DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class GeomFromText extends AbstractSingleGeometryDQLFunction
+class GeomFromText extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
     protected $functionName = 'GeomFromText';
+
+    protected $minGeomExpr = 1;
+
+    protected $maxGeomExpr = 1;
 }

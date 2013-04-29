@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * Area DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSingleGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Area extends AbstractSingleGeometryDQLFunction
+class Area extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
     protected $functionName = 'Area';
+
+    protected $minGeomExpr = 1;
+
+    protected $maxGeomExpr = 1;
 }

@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * Contains DQL function
@@ -31,9 +31,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Contains extends AbstractDualGeometryDQLFunction
+class Contains extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
     protected $functionName = 'Contains';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }
