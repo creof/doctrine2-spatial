@@ -36,7 +36,7 @@ class GeometryType extends AbstractGeometryType
     /**
      * {@inheritdoc}
      */
-    public function getBaseType()
+    public function getTypeFamily()
     {
         return AbstractGeometry::GEOMETRY;
     }

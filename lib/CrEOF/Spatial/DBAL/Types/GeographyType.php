@@ -36,7 +36,7 @@ class GeographyType extends AbstractGeometryType
     /**
      * {@inheritdoc}
      */
-    public function getBaseType()
+    public function getTypeFamily()
     {
         return GeographyInterface::GEOGRAPHY;
     }

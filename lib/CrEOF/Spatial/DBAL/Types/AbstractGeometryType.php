@@ -44,7 +44,7 @@ abstract class AbstractGeometryType extends Type
     /**
      * @return string
      */
-    abstract public function getBaseType();
+    abstract public function getTypeFamily();
 
     /**
      * {@inheritdoc}
@@ -157,6 +157,6 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatformClass(AbstractPlatform $platform)
     {
-        return sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getBaseType(), $this->getPlatformName($platform));
+        return sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getTypeFamily(), $this->getPlatformName($platform));
     }
 }
