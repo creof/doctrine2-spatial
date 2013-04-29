@@ -43,11 +43,7 @@ abstract class AbstractPlatform implements PlatformInterface
     {
         $parser = new StringParser($sqlExpr);
 
-        $value = $parser->parse();
-
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), $value['type']);
-
-        return new $class($value['value'], $value['srid']);
+        return $this->newObjectFromValue($parser->parse());
     }
 
     /**
@@ -57,11 +53,7 @@ abstract class AbstractPlatform implements PlatformInterface
     {
         $parser = new BinaryParser($sqlExpr);
 
-        $value = $parser->parse();
-
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), $value['type']);
-
-        return new $class($value['value'], $value['srid']);
+        return $this->newObjectFromValue($parser->parse());
     }
 
     /**
@@ -70,5 +62,26 @@ abstract class AbstractPlatform implements PlatformInterface
     public function convertToDatabaseValue(GeometryInterface $value)
     {
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
+    }
+
+    /**
+     * Create spatial object from parsed value
+     *
+     * @param array $value
+     *
+     * @return GeometryInterface
+     * @throws \CrEOF\Spatial\Exception\InvalidValueException
+     */
+    private function newObjectFromValue($value)
+    {
+        $constName = 'CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::' . strtoupper($value['type']);
+
+        if ( ! defined($constName)) {
+            throw InvalidValueException::unsupportedType($this->getTypeFamily(), strtoupper($value['type']));
+        }
+
+        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), constant($constName));
+
+        return new $class($value['value'], $value['srid']);
     }
 }
