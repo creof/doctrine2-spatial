@@ -157,6 +157,9 @@ class InvalidValueException extends Exception
         return new self('Geometry column values must implement GeometryInterface');
     }
 
+    /**
+     * @return InvalidValueException
+     */
     public static function invalidValueNotGeography()
     {
         return new self('Geography columns require Geography values');
