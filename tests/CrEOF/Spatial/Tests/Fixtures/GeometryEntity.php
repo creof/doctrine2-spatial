@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Geometry entity
@@ -46,7 +46,7 @@ class GeometryEntity
     protected $id;
 
     /**
-     * @var AbstractGeometry $geometry
+     * @var GeometryInterface $geometry
      *
      * @Column(type="geometry", nullable=true)
      */
@@ -65,11 +65,11 @@ class GeometryEntity
     /**
      * Set geometry
      *
-     * @param AbstractGeometry $geometry
+     * @param GeometryInterface $geometry
      *
      * @return self
      */
-    public function setGeometry(AbstractGeometry $geometry)
+    public function setGeometry(GeometryInterface $geometry)
     {
         $this->geometry = $geometry;
 
@@ -79,7 +79,7 @@ class GeometryEntity
     /**
      * Get geometry
      *
-     * @return AbstractGeometry
+     * @return GeometryInterface
      */
     public function getGeometry()
     {

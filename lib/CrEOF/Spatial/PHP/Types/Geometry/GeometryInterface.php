@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,66 +21,32 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Platforms;
-
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+namespace CrEOF\Spatial\PHP\Types\Geometry;
 
 /**
- * Spatial platform interface
+ * Geometry interface for Geometry objects
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-interface PlatformInterface
+interface GeometryInterface
 {
-    /**
-     * @param string $sqlExpr
-     *
-     * @return GeometryInterface
-     */
-    public function convertBinaryToPHPValue($sqlExpr);
+    const GEOMETRY           = 'Geometry';
+    const POINT              = 'Point';
+    const LINESTRING         = 'LineString';
+    const POLYGON            = 'Polygon';
+    const MULTIPOINT         = 'MultiPoint';
+    const MULTILINESTRING    = 'MultiLineString';
+    const MULTIPOLYGON       = 'MultiPolygon';
+    const GEOMETRYCOLLECTION = 'GeometryCollection';
 
     /**
-     * @param string $sqlExpr
-     *
-     * @return GeometryInterface
-     */
-    public function convertStringToPHPValue($sqlExpr);
-
-    /**
-     * @param GeometryInterface $value
-     *
      * @return string
      */
-    public function convertToDatabaseValue(GeometryInterface $value);
+    public function getType();
 
     /**
-     * @param string $sqlExpr
-     *
-     * @return string
+     * @return array
      */
-    public function convertToDatabaseValueSQL($sqlExpr);
-
-    /**
-     * @param string $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToPHPValueSQL($sqlExpr);
-
-    /**
-     * Get the type family for this interface (i.e. geometry or geography)
-     *
-     * @return string
-     */
-    public function getTypeFamily();
-
-    /**
-     * Gets the SQL declaration snippet for a field of this type.
-     *
-     * @param array $fieldDeclaration
-     *
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration);
+    public function toArray();
 }

@@ -23,10 +23,10 @@
 
 namespace CrEOF\Spatial\DBAL\Types\Platforms;
 
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
 use CrEOF\Spatial\DBAL\Types\StringParser;
 use CrEOF\Spatial\DBAL\Types\BinaryParser;
 use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Abstract spatial platform
@@ -67,7 +67,7 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue(AbstractGeometry $value)
+    public function convertToDatabaseValue(GeometryInterface $value)
     {
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
     }

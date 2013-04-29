@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Types\Geography;
 
 use CrEOF\Spatial\DBAL\Types\GeographyType;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Doctrine POINT type
@@ -41,6 +41,6 @@ class PointType extends GeographyType
      */
     public function getName()
     {
-        return AbstractGeometry::POINT;
+        return GeometryInterface::POINT;
     }
 }

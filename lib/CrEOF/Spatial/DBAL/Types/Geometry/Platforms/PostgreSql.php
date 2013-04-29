@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\DBAL\Types\Geometry\Platforms;
 
 use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * PostgreSql spatial platform
@@ -40,7 +40,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function getTypeFamily()
     {
-        return AbstractGeometry::GEOMETRY;
+        return GeometryInterface::GEOMETRY;
     }
 
     /**
@@ -48,7 +48,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        if ($fieldDeclaration['type']->getName() == AbstractGeometry::GEOMETRY) {
+        if ($fieldDeclaration['type']->getName() == GeometryInterface::GEOMETRY) {
             return 'geometry';
         }
 
@@ -88,7 +88,7 @@ class PostgreSql extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue(AbstractGeometry $value)
+    public function convertToDatabaseValue(GeometryInterface $value)
     {
         $sridSQL = null;
 

@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\DBAL\Types\Geography\Platforms;
 
 use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
@@ -65,7 +65,7 @@ class PostgreSql extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue(AbstractGeometry $value)
+    public function convertToDatabaseValue(GeometryInterface $value)
     {
         if ( ! ($value instanceof GeographyInterface)) {
             throw InvalidValueException::invalidValueNotGeography();

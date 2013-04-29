@@ -26,7 +26,7 @@ namespace CrEOF\Spatial\DBAL\Types;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\DBAL\Types\Platforms\PlatformInterface;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -63,8 +63,8 @@ abstract class AbstractGeometryType extends Type
             return $value;
         }
 
-        if ( ! ($value instanceof AbstractGeometry)) {
-            throw InvalidValueException::invalidValueNotGeometry();
+        if ( ! ($value instanceof GeometryInterface)) {
+            throw InvalidValueException::invalidValueNoGeometryInterface();
         }
 
         return $this->getSpatialPlatform($platform)->convertToDatabaseValue($value);
@@ -107,7 +107,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function getName()
     {
-        return AbstractGeometry::GEOMETRY;
+        return GeometryInterface::GEOMETRY;
     }
 
     /**

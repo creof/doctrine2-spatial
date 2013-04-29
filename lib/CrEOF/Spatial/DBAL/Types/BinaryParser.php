@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Parse spatial WKB values
@@ -120,25 +120,25 @@ class BinaryParser
 
         switch ($this->type) {
             case (self::WKB_POINT):
-                $type = AbstractGeometry::POINT;
+                $type = GeometryInterface::POINT;
                 break;
             case (self::WKB_LINESTRING):
-                $type = AbstractGeometry::LINESTRING;
+                $type = GeometryInterface::LINESTRING;
                 break;
             case (self::WKB_POLYGON):
-                $type = AbstractGeometry::POLYGON;
+                $type = GeometryInterface::POLYGON;
                 break;
             case (self::WKB_MULTIPOINT):
-                $type = AbstractGeometry::MULTIPOINT;
+                $type = GeometryInterface::MULTIPOINT;
                 break;
             case (self::WKB_MULTILINESTRING):
-                $type = AbstractGeometry::MULTILINESTRING;
+                $type = GeometryInterface::MULTILINESTRING;
                 break;
             case (self::WKB_MULTIPOLYGON):
-                $type = AbstractGeometry::MULTIPOLYGON;
+                $type = GeometryInterface::MULTIPOLYGON;
                 break;
             case (self::WKB_GEOMETRYCOLLECTION):
-                $type = AbstractGeometry::GEOMETRYCOLLECTION;
+                $type = GeometryInterface::GEOMETRYCOLLECTION;
                 break;
             default:
                 throw InvalidValueException::unsupportedWkbType($this->type);
@@ -191,7 +191,7 @@ class BinaryParser
      */
     private function lineString()
     {
-        return $this->valueArray(AbstractGeometry::POINT);
+        return $this->valueArray(GeometryInterface::POINT);
     }
 
     /**
@@ -199,7 +199,7 @@ class BinaryParser
      */
     private function polygon()
     {
-        return $this->valueArray(AbstractGeometry::LINESTRING);
+        return $this->valueArray(GeometryInterface::LINESTRING);
     }
 
     /**
@@ -207,7 +207,7 @@ class BinaryParser
      */
     private function multiPoint()
     {
-        return $this->valueArrayValues(AbstractGeometry::GEOMETRY);
+        return $this->valueArrayValues(GeometryInterface::GEOMETRY);
     }
 
     /**
@@ -215,7 +215,7 @@ class BinaryParser
      */
     private function multiLineString()
     {
-        return $this->valueArrayValues(AbstractGeometry::GEOMETRY);
+        return $this->valueArrayValues(GeometryInterface::GEOMETRY);
     }
 
     /**
@@ -223,7 +223,7 @@ class BinaryParser
      */
     private function multiPolygon()
     {
-        return $this->valueArrayValues(AbstractGeometry::GEOMETRY);
+        return $this->valueArrayValues(GeometryInterface::GEOMETRY);
     }
 
     /**
@@ -231,7 +231,7 @@ class BinaryParser
      */
     private function geometryCollection()
     {
-        return $this->valueArray(AbstractGeometry::GEOMETRY);
+        return $this->valueArray(GeometryInterface::GEOMETRY);
     }
 
     /**

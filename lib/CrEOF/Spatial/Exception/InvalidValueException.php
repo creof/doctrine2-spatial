@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\Exception;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Exception;
 
 /**
@@ -36,13 +36,13 @@ use Exception;
 class InvalidValueException extends Exception
 {
     /**
-     * @param AbstractGeometry $object
-     * @param string           $type
-     * @param mixed            $value
+     * @param GeometryInterface $object
+     * @param string            $type
+     * @param mixed             $value
      *
      * @return InvalidValueException
      */
-    public static function invalidType(AbstractGeometry $object, $type, $value)
+    public static function invalidType(GeometryInterface $object, $type, $value)
     {
         return new self(sprintf('Invalid %s %s value of type "%s"', $object->getType(), $type, (is_object($value) ? get_class($value) : gettype($value))));
     }
@@ -149,9 +149,12 @@ class InvalidValueException extends Exception
         return new self(sprintf('Invalid parameters passed to %s::%s: %s', $class, $method, implode(', ', $parameters)));
     }
 
-    public static function invalidValueNotGeometry()
+    /**
+     * @return InvalidValueException
+     */
+    public static function invalidValueNoGeometryInterface()
     {
-        return new self('Geometry columns require Geometry values');
+        return new self('Geometry column values must implement GeometryInterface');
     }
 
     public static function invalidValueNotGeography()

@@ -180,7 +180,7 @@ class GeometryTypeTest extends OrmTest
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Geometry columns require Geometry values
+     * @expectedExceptionMessage Geometry column values must implement GeometryInterface
      * @group                    common
      */
     public function testBadGeometryValue()

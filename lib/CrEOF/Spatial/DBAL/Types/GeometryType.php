@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Doctrine GEOMETRY type
@@ -38,6 +38,6 @@ class GeometryType extends AbstractGeometryType
      */
     public function getTypeFamily()
     {
-        return AbstractGeometry::GEOMETRY;
+        return GeometryInterface::GEOMETRY;
     }
 }

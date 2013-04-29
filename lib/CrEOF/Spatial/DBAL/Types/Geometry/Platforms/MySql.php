@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Types\Geometry\Platforms;
 
 use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * MySql spatial platform
@@ -39,7 +39,7 @@ class MySql extends AbstractPlatform
      */
     public function getTypeFamily()
     {
-        return AbstractGeometry::GEOMETRY;
+        return GeometryInterface::GEOMETRY;
     }
 
     /**

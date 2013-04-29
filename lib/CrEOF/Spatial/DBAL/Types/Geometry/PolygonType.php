@@ -24,7 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Types\Geometry;
 
 use CrEOF\Spatial\DBAL\Types\GeometryType;
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Doctrine POLYGON type
@@ -41,6 +41,6 @@ class PolygonType extends GeometryType
      */
     public function getName()
     {
-        return AbstractGeometry::POLYGON;
+        return GeometryInterface::POLYGON;
     }
 }

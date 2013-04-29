@@ -23,8 +23,6 @@
 
 namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\PHP\Types\AbstractGeometry;
-
 /**
  * Geometry entity without type hint
  *

@@ -24,6 +24,7 @@
 namespace CrEOF\Spatial\PHP\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Abstract geometry object for spatial types
@@ -31,31 +32,12 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractGeometry
+abstract class AbstractGeometry implements GeometryInterface
 {
-    const GEOMETRY           = 'Geometry';
-    const POINT              = 'Point';
-    const LINESTRING         = 'LineString';
-    const POLYGON            = 'Polygon';
-    const MULTIPOINT         = 'MultiPoint';
-    const MULTILINESTRING    = 'MultiLineString';
-    const MULTIPOLYGON       = 'MultiPolygon';
-    const GEOMETRYCOLLECTION = 'GeometryCollection';
-
     /**
      * @var int
      */
     protected $srid;
-
-    /**
-     * @return string
-     */
-    abstract public function getType();
-
-    /**
-     * @return array
-     */
-    abstract public function toArray();
 
     /**
      * @return string
@@ -106,7 +88,7 @@ abstract class AbstractGeometry
                 return array_values($point);
                 break;
             default:
-                throw InvalidValueException::invalidType($this, self::POINT, $point);
+                throw InvalidValueException::invalidType($this, GeometryInterface::POINT, $point);
         }
     }
 
@@ -125,7 +107,7 @@ abstract class AbstractGeometry
             case (is_array($ring)):
                 break;
             default:
-                throw InvalidValueException::invalidType($this, self::LINESTRING, $ring);
+                throw InvalidValueException::invalidType($this, GeometryInterface::LINESTRING, $ring);
         }
 
         $ring = $this->validateLineStringValue($ring);
@@ -144,7 +126,7 @@ abstract class AbstractGeometry
      */
     protected function validateMultiPointValue($points)
     {
-        if ($points instanceof AbstractGeometry) {
+        if ($points instanceof GeometryInterface) {
             $points = $points->toArray();
         }
 
