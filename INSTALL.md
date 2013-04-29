@@ -1,19 +1,13 @@
 # Symfony2 Install
 
 ## composer.json
-    "repositories": [
-        { "type": "vcs", "url": "https://github.com/tvogt/doctrine2-spatial" }
-    ],
     "require": {
     	...
         "creof/doctrine2-spatial": "dev-master"
 
-You will also have to change the version requirement of doctrine:
+You will also have to change the version requirement of doctrine to at least 2.1:
 
-        "doctrine/orm": "dev-master",
-
-These two changes have been made in various forks and versions, so check first.
-
+        "doctrine/orm": ">=2.1",
 
 
 ## config.yml
