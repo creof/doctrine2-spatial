@@ -40,6 +40,11 @@ abstract class AbstractGeometry implements GeometryInterface
     protected $srid;
 
     /**
+     * @return array
+     */
+    abstract public function toArray();
+
+    /**
      * @return string
      */
     public function __toString()
