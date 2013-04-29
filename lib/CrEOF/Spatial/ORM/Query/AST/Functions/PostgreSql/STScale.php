@@ -29,7 +29,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractTripleGeometryDQLFunction;
  * ST_Scale DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license MIT
+ * @license http://mit-license.org MIT
  */
 class STScale extends AbstractTripleGeometryDQLFunction
 {

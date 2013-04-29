@@ -32,7 +32,7 @@ use Doctrine\ORM\Query\SqlWalker;
  * Abstract DQL function requiring 3 parameters
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license MIT
+ * @license http://mit-license.org MIT
  */
 abstract class AbstractTripleGeometryDQLFunction extends AbstractSingleGeometryDQLFunction
 {

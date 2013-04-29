@@ -30,7 +30,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * ST_AsGeoJSON DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license MIT
+ * @license http://mit-license.org MIT
  */
 class STAsGeoJson extends AbstractSingleGeometryDQLFunction implements ReturnsGeometryInterface
 {

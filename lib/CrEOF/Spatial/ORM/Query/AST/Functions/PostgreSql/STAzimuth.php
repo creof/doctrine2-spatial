@@ -29,7 +29,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryDQLFunction;
  * ST_Azimuth DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license MIT
+ * @license http:// mit-license.org MIT
  */
 class STAzimuth extends AbstractDualGeometryDQLFunction
 {
