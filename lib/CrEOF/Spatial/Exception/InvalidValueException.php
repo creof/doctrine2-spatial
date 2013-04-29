@@ -74,7 +74,7 @@ class InvalidValueException extends Exception
      */
     public static function unsupportedWktType($type)
     {
-        return new self(sprintf('Unsupported WKT type "%s".', $type));
+        return self::unsupportedType('WKT', $type);
     }
 
     /**
@@ -84,7 +84,7 @@ class InvalidValueException extends Exception
      */
     public static function unsupportedWkbType($type)
     {
-        return new self(sprintf('Unsupported WKB type "%d"', $type));
+        return self::unsupportedType('WKB', $type);
     }
 
     /**
@@ -94,7 +94,18 @@ class InvalidValueException extends Exception
      */
     public static function unsupportedEwktType($type)
     {
-        return new self(sprintf('Unsupported EWKT type "%s".', $type));
+        return self::unsupportedType('EWKT', $type);
+    }
+
+    /**
+     * @param string $typeFamily
+     * @param string $type
+     *
+     * @return InvalidValueException
+     */
+    public static function unsupportedType($typeFamily, $type)
+    {
+        return new self(sprintf('Unsupported %s type "%s".', $typeFamily, $type));
     }
 
     /**
