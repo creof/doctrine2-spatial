@@ -65,6 +65,11 @@ Currently the following SQL functions are supported in DQL (more coming):
 * MBRContains
 * MBRDisjoint
 * StartPoint
+* LineString
+* LineStringFromWKB
+* PointFromWKB
+* Point
+
 
 ## DQL AST Walker
 A DQL AST walker is included which when used with the following DQL functions will return the appropriate Geometry type object from queries instead of strings:
