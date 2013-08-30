@@ -32,9 +32,9 @@ namespace CrEOF\Spatial\PHP\Types\Geometry;
 interface GeometryInterface
 {
     const GEOMETRY           = 'Geometry';
-    const POINT              = 'Point';
+    const POINT              = 'point';
     const LINESTRING         = 'LineString';
-    const POLYGON            = 'Polygon';
+    const POLYGON            = 'polygon';
     const MULTIPOINT         = 'MultiPoint';
     const MULTILINESTRING    = 'MultiLineString';
     const MULTIPOLYGON       = 'MultiPolygon';
