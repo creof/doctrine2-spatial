@@ -41,6 +41,6 @@ class PointType extends GeometryType
      */
     public function getName()
     {
-        return GeometryInterface::POINT;
+        return strtolower(GeometryInterface::POINT);
     }
 }
