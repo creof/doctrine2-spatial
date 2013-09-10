@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 luca capra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,14 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 /**
  * Contains DQL function
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  luca capra <luca.capra@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Contains extends AbstractSpatialDQLFunction
+class Crosses extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
-    protected $functionName = 'Contains';
+    protected $functionName = 'Crosses';
 
     protected $minGeomExpr = 2;
 
