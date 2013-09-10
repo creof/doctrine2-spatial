@@ -31,11 +31,11 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  luca capra <luca.capra@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class Crosses extends AbstractSpatialDQLFunction
+class Contains extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
-    protected $functionName = 'Crosses';
+    protected $functionName = 'Contains';
 
     protected $minGeomExpr = 2;
 
