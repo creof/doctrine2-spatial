@@ -34,12 +34,12 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 abstract class AbstractPoint extends AbstractGeometry
 {
     /**
-     * @var float $latitude
+     * @var float $longitude
      */
     protected $x;
 
     /**
-     * @var float $longitude
+     * @var float $latitude
      */
     protected $y;
 
@@ -179,9 +179,9 @@ abstract class AbstractPoint extends AbstractGeometry
     }
 
     /**
-     * @param int      $x
-     * @param int      $y
-     * @param null|int $srid
+     * @param int      $x      Longitude
+     * @param int      $y      Latitude
+     * @param null|int $srid   Spatial Reference System Identifier
      */
     protected function construct($x, $y, $srid = null)
     {
