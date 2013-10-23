@@ -28,6 +28,9 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 /**
  * Abstract point object for POINT spatial types
  *
+ * http://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
+ * http://docs.geotools.org/latest/userguide/library/referencing/order.html
+ *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
