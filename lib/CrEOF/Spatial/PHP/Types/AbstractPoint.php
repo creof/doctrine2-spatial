@@ -34,12 +34,12 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 abstract class AbstractPoint extends AbstractGeometry
 {
     /**
-     * @var float $latitude
+     * @var float $x
      */
     protected $x;
 
     /**
-     * @var float $longitude
+     * @var float $y
      */
     protected $y;
 
