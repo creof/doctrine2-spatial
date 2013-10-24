@@ -32,6 +32,7 @@ use CrEOF\Spatial\DBAL\Types\StringLexer;
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
+ * @group result_processing
  */
 class StringLexerTest extends \PHPUnit_Framework_TestCase
 {

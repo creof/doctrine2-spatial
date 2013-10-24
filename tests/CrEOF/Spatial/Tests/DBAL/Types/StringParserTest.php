@@ -32,6 +32,7 @@ use CrEOF\Spatial\DBAL\Types\StringParser;
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
+ * @group result_processing
  */
 class StringParserTest extends \PHPUnit_Framework_TestCase
 {

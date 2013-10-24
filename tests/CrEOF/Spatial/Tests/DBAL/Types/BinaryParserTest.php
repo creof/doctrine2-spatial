@@ -32,6 +32,7 @@ use CrEOF\Spatial\DBAL\Types\BinaryParser;
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
+ * @group result_processing
  */
 class BinaryParserTest extends \PHPUnit_Framework_TestCase
 {

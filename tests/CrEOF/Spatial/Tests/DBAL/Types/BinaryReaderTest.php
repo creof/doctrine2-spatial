@@ -32,6 +32,7 @@ use CrEOF\Spatial\DBAL\Types\BinaryReader;
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
+ * @group result_processing
  */
 class BinaryReaderTest extends \PHPUnit_Framework_TestCase
 {
