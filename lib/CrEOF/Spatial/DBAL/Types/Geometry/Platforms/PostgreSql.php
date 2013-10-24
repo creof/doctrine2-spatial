@@ -48,11 +48,11 @@ class PostgreSql extends AbstractPlatform
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        if ($fieldDeclaration['type']->getName() == GeometryInterface::GEOMETRY) {
+        if ($fieldDeclaration['type']->getSQLType() == GeometryInterface::GEOMETRY) {
             return 'geometry';
         }
 
-        return sprintf('geometry(%s)', strtoupper($fieldDeclaration['type']->getName()));
+        return sprintf('geometry(%s)', strtoupper($fieldDeclaration['type']->getSQLType()));
     }
 
     /**
