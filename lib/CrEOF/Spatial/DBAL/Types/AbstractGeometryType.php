@@ -47,6 +47,13 @@ abstract class AbstractGeometryType extends Type
     abstract public function getTypeFamily();
 
     /**
+     * Gets the SQL name of this type.
+     *
+     * @return string
+     */
+    abstract public function getSQLType();
+
+    /**
      * {@inheritdoc}
      */
     public function canRequireSQLConversion()
