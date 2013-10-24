@@ -52,14 +52,14 @@ class PostgreSql extends AbstractPlatform
     public function getSQLDeclaration(array $fieldDeclaration)
     {
         if ($fieldDeclaration['type']->getSQLType() == GeographyInterface::GEOGRAPHY) {
-            return 'geography()';
+            return 'GEOGRAPHY';
         }
 
         if (isset($fieldDeclaration['srid'])) {
-            return sprintf('geography(%s,%d)', strtoupper($fieldDeclaration['type']->getSQLType()), $fieldDeclaration['srid']);
+            return sprintf('GEOGRAPHY(%s,%d)', strtoupper($fieldDeclaration['type']->getSQLType()), $fieldDeclaration['srid']);
         }
 
-        return sprintf('geography(%s)', strtoupper($fieldDeclaration['type']->getSQLType()));
+        return sprintf('GEOGRAPHY(%s)', strtoupper($fieldDeclaration['type']->getSQLType()));
     }
 
     /**
