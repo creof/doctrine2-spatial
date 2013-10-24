@@ -15,7 +15,8 @@
     },
     "require-dev": {
         "doctrine/common": ">=2.1",
-        "doctrine/dbal": ">=2.1"
+        "doctrine/dbal": ">=2.1",
+        "phpunit/phpunit": ">=3.7"
     },
     "autoload": {
         "psr-0": {
