@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class STClosestPointTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTClosestPoint()
     {
         $ring1 = new LineString(array(

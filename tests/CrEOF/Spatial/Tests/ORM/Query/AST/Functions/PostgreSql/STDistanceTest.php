@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class STDistanceTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTDistanceGeometryCartesian()
     {
         $newYork   = new Point(-73.938611, 40.664167);
@@ -80,6 +83,9 @@ class STDistanceTest extends OrmTest
         $this->assertEquals(12.6718564262953, $result[2][1]);
     }
 
+    /**
+     * @group geography
+     */
     public function testSelectSTDistanceGeographySpheroid()
     {
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
@@ -119,6 +125,9 @@ class STDistanceTest extends OrmTest
         $this->assertEquals(1312731.61416563, $result[2][1]);
     }
 
+    /**
+     * @group geography
+     */
     public function testSelectSTDistanceGeographyCartesian()
     {
         $newYork   = new GeographyPoint(-73.938611, 40.664167);

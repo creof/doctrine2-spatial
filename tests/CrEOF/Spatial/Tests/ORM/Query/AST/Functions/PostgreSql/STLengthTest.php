@@ -40,6 +40,9 @@ use Doctrine\ORM\Query;
  */
 class STLengthTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTLength()
     {
         $entity = new LineStringEntity();
@@ -65,6 +68,9 @@ class STLengthTest extends OrmTest
         $this->assertEquals(2.82842712474619, $result[0][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTLengthWhereParameter()
     {
         $lineString = new LineString(array(

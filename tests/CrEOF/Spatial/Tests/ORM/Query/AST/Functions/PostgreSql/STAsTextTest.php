@@ -40,6 +40,9 @@ use Doctrine\ORM\Query;
  */
 class STAsTextTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSTAsText()
     {
         $lineString1 = array(

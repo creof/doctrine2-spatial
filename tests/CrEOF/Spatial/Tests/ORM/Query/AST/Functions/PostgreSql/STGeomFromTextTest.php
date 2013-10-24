@@ -40,6 +40,9 @@ use Doctrine\ORM\Query;
  */
 class STGeomFromTextTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testPoint()
     {
         $entity1 = new GeometryEntity();
@@ -59,6 +62,9 @@ class STGeomFromTextTest extends OrmTest
         $this->assertEquals($entity1, $result[0]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testLineString()
     {
         $value = array(

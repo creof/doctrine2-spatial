@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class MBRContainsTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectMBRContains()
     {
         $lineString1 = new LineString(array(
@@ -82,6 +85,9 @@ class MBRContainsTest extends OrmTest
         $this->assertEquals(0, $result[1][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testMBRContainsWhereParameter()
     {
         $lineString1 = new LineString(array(

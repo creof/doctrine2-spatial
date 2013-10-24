@@ -40,6 +40,9 @@ use Doctrine\ORM\Query;
  */
 class AsBinaryTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testAsBinary()
     {
         $lineString1 = array(

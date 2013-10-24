@@ -42,6 +42,9 @@ use Doctrine\ORM\Query;
  */
 class STLineCrossingDirectionTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTLineCrossingDirection()
     {
         $lineString1 = new LineString(array(
@@ -98,6 +101,9 @@ class STLineCrossingDirectionTest extends OrmTest
         $this->assertEquals(-1, $result[2][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTLineCrossingDirectionWhereParameter()
     {
         $lineString1 = new LineString(array(

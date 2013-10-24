@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class STCoveredByTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTCoveredBy()
     {
         $lineString1 = new LineString(array(
@@ -82,6 +85,9 @@ class STCoveredByTest extends OrmTest
         $this->assertTrue($result[1][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTCoveredByWhereParameter()
     {
         $lineString1 = new LineString(array(

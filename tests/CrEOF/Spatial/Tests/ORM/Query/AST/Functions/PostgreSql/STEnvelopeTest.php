@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class STEnvelopeTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTEnvelope()
     {
         $entity1 = new PolygonEntity();
@@ -87,6 +90,9 @@ class STEnvelopeTest extends OrmTest
         $this->assertEquals('POLYGON((0 0,0 10,10 10,10 0,0 0))', $result[1][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTEnvelopeWhereParameter()
     {
         $entity1 = new PolygonEntity();

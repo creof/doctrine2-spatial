@@ -41,6 +41,7 @@ class GeometryWalkerTest extends OrmTest
 {
     /**
      * @group mysql
+     * @group geometry
      */
     public function testGeometryWalkerBinaryMySql()
     {
@@ -83,6 +84,7 @@ class GeometryWalkerTest extends OrmTest
 
     /**
      * @group postgresql
+     * @group geometry
      */
     public function testGeometryWalkerBinaryPostgreSql()
     {
@@ -125,6 +127,7 @@ class GeometryWalkerTest extends OrmTest
 
     /**
      * @group mysql
+     * @group geometry
      */
     public function testGeometryWalkerTextMySql()
     {
@@ -167,6 +170,7 @@ class GeometryWalkerTest extends OrmTest
 
     /**
      * @group postgresql
+     * @group geometry
      */
     public function testGeometryWalkerTextPostgreSql()
     {

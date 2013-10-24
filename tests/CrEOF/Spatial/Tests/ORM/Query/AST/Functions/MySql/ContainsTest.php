@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class ContainsTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectContains()
     {
         $lineString1 = new LineString(array(
@@ -82,6 +85,9 @@ class ContainsTest extends OrmTest
         $this->assertEquals(0, $result[1][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testContainsWhereParameter()
     {
         $lineString1 = new LineString(array(

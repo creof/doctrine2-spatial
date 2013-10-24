@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class DisjointTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectDisjoint()
     {
         $lineString1 = new LineString(array(
@@ -98,6 +101,9 @@ class DisjointTest extends OrmTest
         $this->assertEquals(1, $result[2][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testDisjointWhereParameter()
     {
         $lineString1 = new LineString(array(

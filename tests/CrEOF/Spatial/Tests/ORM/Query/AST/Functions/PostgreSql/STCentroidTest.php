@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class STCentroidTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTCentroid()
     {
         $lineString1 = new LineString(array(

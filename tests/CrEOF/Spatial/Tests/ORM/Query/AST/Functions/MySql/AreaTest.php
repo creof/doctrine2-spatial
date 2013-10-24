@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class AreaTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectArea()
     {
         $entity1 = new PolygonEntity();
@@ -118,6 +121,9 @@ class AreaTest extends OrmTest
         $this->assertEquals(4, $result[3][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testAreaWhereParameter()
     {
         $entity1 = new PolygonEntity();

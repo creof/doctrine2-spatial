@@ -40,6 +40,9 @@ use Doctrine\ORM\Query;
  */
 class StartPointTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testStartPointSelect()
     {
         $lineString1 = new LineString(array(
@@ -61,6 +64,9 @@ class StartPointTest extends OrmTest
         $this->assertEquals('POINT(0 0)', $result[0][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testStartPointWhereComparePoint()
     {
         $lineString1 = new LineString(array(
@@ -95,6 +101,9 @@ class StartPointTest extends OrmTest
         $this->assertEquals($entity1, $result[0]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testStartPointWhereCompareLineString()
     {
         $lineString1 = new LineString(array(

@@ -41,6 +41,9 @@ use Doctrine\ORM\Query;
  */
 class STCoversTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTCovers()
     {
         $lineString1 = new LineString(array(
@@ -82,6 +85,9 @@ class STCoversTest extends OrmTest
         $this->assertTrue($result[1][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTCoversWhereParameter()
     {
         $lineString1 = new LineString(array(

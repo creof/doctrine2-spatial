@@ -45,6 +45,9 @@ use Doctrine\ORM\Query;
  */
 class STSummaryTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTSummaryGeometry()
     {
         $entity1 = new GeometryEntity();
@@ -95,6 +98,9 @@ class STSummaryTest extends OrmTest
         $this->assertRegExp('/^Polygon\[[^G]*\]/', $result[2][1]);
     }
 
+    /**
+     * @group geography
+     */
     public function testSelectSTSummaryGeography()
     {
         $entity1 = new GeographyEntity();

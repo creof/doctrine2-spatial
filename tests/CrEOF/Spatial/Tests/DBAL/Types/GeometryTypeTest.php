@@ -36,6 +36,8 @@ use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group geometry
  */
 class GeometryTypeTest extends OrmTest
 {
@@ -63,7 +65,6 @@ class GeometryTypeTest extends OrmTest
      */
     public function testPointGeometry()
     {
-        $this->_em->getConnection()->getConfiguration()->setSQLLogger(new \CrEOF\Spatial\Tests\FileSQLLogger('/Users/dlambert/Development/doctrine2-spatial/logger.log'));
         $entity = new GeometryEntity();
 
         $entity->setGeometry(new Point(1, 1));

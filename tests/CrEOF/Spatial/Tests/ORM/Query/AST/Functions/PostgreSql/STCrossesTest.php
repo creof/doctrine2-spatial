@@ -42,6 +42,9 @@ use Doctrine\ORM\Query;
  */
 class STCrossesTest extends OrmTest
 {
+    /**
+     * @group geometry
+     */
     public function testSelectSTCrosses()
     {
         $lineString1 = new LineString(array(
@@ -89,6 +92,9 @@ class STCrossesTest extends OrmTest
         $this->assertFalse($result[2][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTCrossesWhereParameter()
     {
         $lineString1 = new LineString(array(
