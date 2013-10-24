@@ -107,7 +107,9 @@ abstract class AbstractGeometryType extends Type
      */
     public function getName()
     {
-        return GeometryInterface::GEOMETRY;
+        $name = array_search(get_class($this), $this->getTypesMap());
+
+        return $name;
     }
 
     /**
