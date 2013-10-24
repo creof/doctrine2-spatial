@@ -36,17 +36,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
  * @group dql
  */
 class STCoversTest extends OrmTest
 {
     public function testSelectSTCovers()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(6, 6),
             new Point(10, 6),
@@ -88,10 +84,6 @@ class STCoversTest extends OrmTest
 
     public function testSTCoversWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(6, 6),
             new Point(10, 6),

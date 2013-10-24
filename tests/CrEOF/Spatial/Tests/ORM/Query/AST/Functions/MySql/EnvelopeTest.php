@@ -36,17 +36,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group mysql
  * @group dql
  */
 class EnvelopeTest extends OrmTest
 {
     public function testSelectEnvelope()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $entity1 = new PolygonEntity();
         $rings1 = array(
             new LineString(array(
@@ -93,10 +89,6 @@ class EnvelopeTest extends OrmTest
 
     public function testEnvelopeWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $entity1 = new PolygonEntity();
         $rings1 = array(
             new LineString(array(

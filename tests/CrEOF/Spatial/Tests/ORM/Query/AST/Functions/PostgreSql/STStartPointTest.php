@@ -35,17 +35,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
  * @group dql
  */
 class STStartPointTest extends OrmTest
 {
     public function testSTStartPointSelect()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(2, 2),
@@ -67,10 +63,6 @@ class STStartPointTest extends OrmTest
 
     public function testSTStartPointWhereComparePoint()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(2, 2),
@@ -105,10 +97,6 @@ class STStartPointTest extends OrmTest
 
     public function testSTStartPointWhereCompareLineString()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(2, 2),

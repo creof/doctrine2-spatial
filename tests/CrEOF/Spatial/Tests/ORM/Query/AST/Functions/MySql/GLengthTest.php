@@ -35,17 +35,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group mysql
  * @group dql
  */
 class GLengthTest extends OrmTest
 {
     public function testSelectGLength()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $entity = new LineStringEntity();
 
         $entity->setLineString(new LineString(
@@ -71,10 +67,6 @@ class GLengthTest extends OrmTest
 
     public function testGLengthWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $lineString = new LineString(array(
             new Point(0, 0),
             new Point(1, 1),

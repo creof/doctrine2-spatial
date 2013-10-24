@@ -36,17 +36,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
  * @group dql
  */
 class STContainsTest extends OrmTest
 {
     public function testSelectSTContains()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),
@@ -88,10 +84,6 @@ class STContainsTest extends OrmTest
 
     public function testSTContainsWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),

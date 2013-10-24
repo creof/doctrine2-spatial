@@ -36,17 +36,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group mysql
  * @group dql
  */
 class MBRDisjointTest extends OrmTest
 {
     public function testSelectMBRDisjoint()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),
@@ -104,10 +100,6 @@ class MBRDisjointTest extends OrmTest
 
     public function testMBRDisjointWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),

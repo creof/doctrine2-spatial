@@ -35,17 +35,13 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
  * @group dql
  */
 class STLengthTest extends OrmTest
 {
     public function testSelectSTLength()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $entity = new LineStringEntity();
 
         $entity->setLineString(new LineString(
@@ -71,10 +67,6 @@ class STLengthTest extends OrmTest
 
     public function testSTLengthWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString = new LineString(array(
             new Point(0, 0),
             new Point(1, 1),
