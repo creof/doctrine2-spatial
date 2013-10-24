@@ -36,6 +36,7 @@ use Doctrine\ORM\Query;
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
+ * @group dql
  */
 class AsTextTest extends OrmTest
 {

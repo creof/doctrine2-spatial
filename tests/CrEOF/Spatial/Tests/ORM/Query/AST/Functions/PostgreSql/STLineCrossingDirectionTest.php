@@ -38,6 +38,7 @@ use Doctrine\ORM\Query;
  * @license http://dlambert.mit-license.org MIT
  *
  * @group common
+ * @group dql
  */
 class STLineCrossingDirectionTest extends OrmTest
 {
