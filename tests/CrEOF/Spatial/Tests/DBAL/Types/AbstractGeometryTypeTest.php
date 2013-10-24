@@ -33,7 +33,7 @@ use CrEOF\Spatial\Tests\OrmTest;
  *
  * @group common
  */
-class AbstractGeometryType extends OrmTest
+class AbstractGeometryTypeTest extends OrmTest
 {
 
 }
