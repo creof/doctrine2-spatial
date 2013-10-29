@@ -128,6 +128,14 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getMappedDatabaseTypes(AbstractPlatform $platform)
+    {
+        return array(strtolower($this->getSQLType()));
+    }
+
+    /**
      * @param AbstractPlatform $platform
      *
      * @return PlatformInterface
