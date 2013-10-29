@@ -64,9 +64,6 @@ class GeometryTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    /**
-     * @group common
-     */
     public function testPointGeometry()
     {
         $entity = new GeometryEntity();
@@ -128,9 +125,6 @@ class GeometryTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    /**
-     * @group common
-     */
     public function testLineStringGeometry()
     {
         $entity = new GeometryEntity();
@@ -153,9 +147,6 @@ class GeometryTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    /**
-     * @group common
-     */
     public function testPolygonGeometry()
     {
         $entity = new GeometryEntity();
@@ -186,7 +177,6 @@ class GeometryTypeTest extends OrmTest
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
      * @expectedExceptionMessage Geometry column values must implement GeometryInterface
-     * @group                    common
      */
     public function testBadGeometryValue()
     {
