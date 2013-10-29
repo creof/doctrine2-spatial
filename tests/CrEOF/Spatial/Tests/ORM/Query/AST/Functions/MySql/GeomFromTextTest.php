@@ -43,6 +43,7 @@ class GeomFromTextTest extends OrmTest
     protected function setUp()
     {
         $this->useEntity('geometry');
+        $this->useType('point');
         parent::setUp();
     }
 

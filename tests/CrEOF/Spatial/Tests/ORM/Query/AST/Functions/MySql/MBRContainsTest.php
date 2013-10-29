@@ -44,6 +44,7 @@ class MBRContainsTest extends OrmTest
     protected function setUp()
     {
         $this->useEntity('polygon');
+        $this->useType('point');
         parent::setUp();
     }
 

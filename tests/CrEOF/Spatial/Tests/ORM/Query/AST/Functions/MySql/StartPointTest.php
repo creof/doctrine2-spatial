@@ -43,6 +43,7 @@ class StartPointTest extends OrmTest
     protected function setUp()
     {
         $this->useEntity('linestring');
+        $this->useType('point');
         parent::setUp();
     }
 
