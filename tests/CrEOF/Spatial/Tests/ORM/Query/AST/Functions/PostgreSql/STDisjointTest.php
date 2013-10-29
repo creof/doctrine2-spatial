@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSqlSql;
+namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
