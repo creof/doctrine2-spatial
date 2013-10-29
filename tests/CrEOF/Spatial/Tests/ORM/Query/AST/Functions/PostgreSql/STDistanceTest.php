@@ -120,7 +120,7 @@ class STDistanceTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT g, ST_Distance(g.geography, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
-        $query->setParameter('p1', $madison, 'geographypoint');
+        $query->setParameter('p1', $madison, 'geopoint');
 
         $result = $query->getResult();
 
@@ -162,7 +162,7 @@ class STDistanceTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT g, ST_Distance(g.geography, ST_GeomFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
-        $query->setParameter('p1', $madison, 'geographypoint');
+        $query->setParameter('p1', $madison, 'geopoint');
 
         $result = $query->getResult();
 
