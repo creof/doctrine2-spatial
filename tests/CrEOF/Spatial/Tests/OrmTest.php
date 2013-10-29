@@ -37,21 +37,6 @@ use Doctrine\ORM\Query;
  */
 abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
 {
-    /**
-     * @var bool
-     */
-    protected static $_setup = false;
-
-    /**
-     * @var Connection
-     */
-    protected static $_sharedConn;
-
-    /**
-     * @var Connection
-     */
-    protected $conn;
-
     const GEOMETRY_ENTITY         = 'CrEOF\Spatial\Tests\Fixtures\GeometryEntity';
     const NO_HINT_GEOMETRY_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity';
     const POINT_ENTITY            = 'CrEOF\Spatial\Tests\Fixtures\PointEntity';
@@ -60,25 +45,160 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
     const GEOGRAPHY_ENTITY        = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
 
     /**
+     * @var bool
+     */
+    protected static $_setup = false;
+
+    /**
+     * @var bool
+     */
+    protected static $_platformSetup = false;
+
+    /**
+     * @var Connection
+     */
+    protected static $_sharedConn;
+
+    /**
+     * @var array
+     */
+    protected static $_entities = array(
+        'geometry' => array(
+            'class' => self::GEOMETRY_ENTITY,
+            'types' => array('geometry'),
+            'table' => 'GeometryEntity'
+        ),
+        'no_hint_geometry' => array(
+            'class' => self::NO_HINT_GEOMETRY_ENTITY,
+            'types' => array('geometry'),
+            'table' => 'NoHintGeometryEntity'
+        ),
+        'point' => array(
+            'class' => self::POINT_ENTITY,
+            'types' => array('point'),
+            'table' => 'PointEntity'
+        ),
+        'linestring' => array(
+            'class' => self::LINESTRING_ENTITY,
+            'types' => array('linestring'),
+            'table' => 'LineStringEntity'
+        ),
+        'polygon' => array(
+            'class' => self::POLYGON_ENTITY,
+            'types' => array('polygon'),
+            'table' => 'PolygonEntity'
+        ),
+        'geography' => array(
+            'class' => self::GEOGRAPHY_ENTITY,
+            'types' => array('geography'),
+            'table' => 'GeographyEntity'
+        )
+    );
+
+    /**
+     * @var array
+     */
+    protected static $_types = array(
+        'geometry'      => 'CrEOF\Spatial\DBAL\Types\GeometryType',
+        'point'         => 'CrEOF\Spatial\DBAL\Types\Geometry\PointType',
+        'linestring'    => 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType',
+        'polygon'       => 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType',
+        'geography'     => 'CrEOF\Spatial\DBAL\Types\GeographyType',
+        'geopoint'      => 'CrEOF\Spatial\DBAL\Types\Geography\PointType',
+        'geolinestring' => 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType',
+        'geopolygon'    => 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType'
+    );
+
+    /**
+     * @var array
+     */
+    protected static $_entitiesCreated = array();
+
+    /**
+     * @var array
+     */
+    protected static $_typesAdded = array();
+
+    /**
+     * @var array
+     */
+    protected $_usedEntities = array();
+
+    /**
+     * @var array
+     */
+    protected $_usedTypes = array();
+
+    /**
+     * @param string $typeName
+     */
+    protected function useType($typeName)
+    {
+        $this->_usedTypes[$typeName] = true;
+    }
+
+    /**
+     * @param string $entityName
+     */
+    protected function useEntity($entityName)
+    {
+        $this->_usedEntities[$entityName] = true;
+
+        foreach (static::$_entities[$entityName]['types'] as $type) {
+            $this->useType($type);
+        }
+    }
+
+    /**
      * @throws UnsupportedPlatformException
      */
     protected function setUp()
     {
         parent::setUp();
 
-        $this->conn = static::$_sharedConn;
-
-        if ( ! static::$_setup) {
-            $this->conn->getConfiguration()->setSQLLogger(new \CrEOF\Spatial\Tests\FileSQLLogger('/Users/dlambert/Development/doctrine2-spatial/logger.log'));
-
-            static::$_setup = true;
+        if ( ! static::$_platformSetup) {
+            static::$_platformSetup = true;
 
             $this->setupPlatform();
-            $this->setupTypes();
-            $this->setupEntities();
         }
 
+        $this->setUpTypes();
+        $this->setUpEntities();
         $this->setupFunctions();
+    }
+
+    /**
+     * Add types used by test to DBAL
+     */
+    protected function setUpTypes()
+    {
+        foreach ($this->_usedTypes as $typeName => $bool) {
+            if ( ! isset(static::$_typesAdded[$typeName])) {
+                Type::addType($typeName, static::$_types[$typeName]);
+
+                static::$_typesAdded[$typeName] = true;
+            }
+        }
+    }
+
+    /**
+     * Create entities used by tests
+     */
+    protected function setUpEntities()
+    {
+        $classes = array();
+
+        foreach ($this->_usedEntities as $entityName => $bool) {
+            if ( ! isset(static::$_entitiesCreated[$entityName])) {
+                $classes[] = $this->_em->getClassMetadata(static::$_entities[$entityName]['class']);
+
+                static::$_entitiesCreated[$entityName] = true;
+            }
+        }
+
+        if ($classes) {
+            $this->_schemaTool->createSchema($classes);
+        }
     }
 
     /**
@@ -92,7 +212,7 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
     {
         switch ($this->getPlatform()->getName()) {
             case 'postgresql':
-                $this->conn->exec('CREATE EXTENSION postgis');
+                static::$_sharedConn->exec('CREATE EXTENSION postgis');
                 break;
             case 'mysql':
                 break;
@@ -100,44 +220,6 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
                 throw UnsupportedPlatformException::unsupportedPlatform($this->getPlatform()->getName());
                 break;
         }
-    }
-
-    /**
-     * Add types to DBAL
-     */
-    protected function setupTypes()
-    {
-        // Geometry
-        Type::addType('geometry', 'CrEOF\Spatial\DBAL\Types\GeometryType');
-        Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
-        Type::addType('linestring', 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType');
-        Type::addType('polygon', 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType');
-
-        // Geography
-        Type::addType('geography', 'CrEOF\Spatial\DBAL\Types\GeographyType');
-        Type::addType('geographypoint', 'CrEOF\Spatial\DBAL\Types\Geography\PointType');
-        Type::addType('geographylinestring', 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType');
-        Type::addType('geographypolygon', 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType');
-    }
-
-    /**
-     * Setup fixtures
-     */
-    protected function setupEntities()
-    {
-        $this->_schemaTool->createSchema(
-            array(
-                // Geometry
-                $this->_em->getClassMetadata(self::GEOMETRY_ENTITY),
-                $this->_em->getClassMetadata(self::NO_HINT_GEOMETRY_ENTITY),
-                $this->_em->getClassMetadata(self::POINT_ENTITY),
-                $this->_em->getClassMetadata(self::LINESTRING_ENTITY),
-                $this->_em->getClassMetadata(self::POLYGON_ENTITY),
-
-                // Geography
-                $this->_em->getClassMetadata(self::GEOGRAPHY_ENTITY)
-            )
-        );
     }
 
     /**
@@ -186,28 +268,15 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
      */
     protected function tearDown()
     {
-        parent::tearDown();
+        $conn = static::$_sharedConn;
 
         $this->_sqlLoggerStack->enabled = false;
 
-        $this->tearDownEntities();
+        foreach ($this->_usedEntities as $entityName => $bool) {
+            $conn->executeUpdate(sprintf('DELETE FROM %s', static::$_entities[$entityName]['table']));
+        }
+
         $this->_em->clear();
-    }
-
-    /**
-     * Teardown entities
-     */
-    protected function tearDownEntities()
-    {
-        // Geometry
-        $this->conn->executeUpdate('DELETE FROM GeometryEntity');
-        $this->conn->executeUpdate('DELETE FROM NoHintGeometryEntity');
-        $this->conn->executeUpdate('DELETE FROM PointEntity');
-        $this->conn->executeUpdate('DELETE FROM LineStringEntity');
-        $this->conn->executeUpdate('DELETE FROM PolygonEntity');
-
-        // Geography
-        $this->conn->executeUpdate('DELETE FROM GeographyEntity');
     }
 
     /**
@@ -215,6 +284,6 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
      */
     protected function getPlatform()
     {
-        return $this->_em->getConnection()->getDatabasePlatform();
+        return static::$_sharedConn->getDatabasePlatform();
     }
 }
