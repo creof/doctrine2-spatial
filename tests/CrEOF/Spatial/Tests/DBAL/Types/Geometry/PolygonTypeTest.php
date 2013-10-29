@@ -40,6 +40,12 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
  */
 class PolygonTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        parent::setUp();
+    }
+
     public function testNullPolygon()
     {
         $entity = new PolygonEntity();

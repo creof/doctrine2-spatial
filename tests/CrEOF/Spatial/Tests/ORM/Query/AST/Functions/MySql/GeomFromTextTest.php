@@ -40,6 +40,12 @@ use Doctrine\ORM\Query;
  */
 class GeomFromTextTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('geometry');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

@@ -40,6 +40,12 @@ use Doctrine\ORM\Query;
  */
 class AsBinaryTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

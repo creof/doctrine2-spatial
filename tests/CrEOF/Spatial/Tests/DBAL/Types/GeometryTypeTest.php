@@ -41,9 +41,13 @@ use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
  */
 class GeometryTypeTest extends OrmTest
 {
-    /**
-     * @group common
-     */
+    protected function setUp()
+    {
+        $this->useEntity('geometry');
+        $this->useEntity('no_hint_geometry');
+        parent::setUp();
+    }
+
     public function testNullGeometry()
     {
         $entity = new GeometryEntity();

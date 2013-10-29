@@ -42,6 +42,12 @@ use Doctrine\ORM\Query;
  */
 class STCrossesTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

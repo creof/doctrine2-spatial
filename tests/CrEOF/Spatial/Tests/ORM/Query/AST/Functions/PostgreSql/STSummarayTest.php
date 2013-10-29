@@ -45,6 +45,13 @@ use Doctrine\ORM\Query;
  */
 class STSummaryTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('geometry');
+        $this->useEntity('geography');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

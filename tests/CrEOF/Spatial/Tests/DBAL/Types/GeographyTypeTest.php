@@ -40,6 +40,12 @@ use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
  */
 class GeographyTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('geography');
+        parent::setUp();
+    }
+
     public function testNullGeography()
     {
         $entity = new GeographyEntity();

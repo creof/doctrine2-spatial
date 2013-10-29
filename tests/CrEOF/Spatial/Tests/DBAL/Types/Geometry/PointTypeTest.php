@@ -38,6 +38,12 @@ use CrEOF\Spatial\Tests\Fixtures\PointEntity;
  */
 class PointTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('point');
+        parent::setUp();
+    }
+
     public function testNullPoint()
     {
         $entity = new PointEntity();

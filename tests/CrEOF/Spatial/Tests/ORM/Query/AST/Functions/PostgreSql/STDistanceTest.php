@@ -41,6 +41,14 @@ use Doctrine\ORM\Query;
  */
 class STDistanceTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('point');
+        $this->useEntity('geography');
+        $this->useType('geopoint');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

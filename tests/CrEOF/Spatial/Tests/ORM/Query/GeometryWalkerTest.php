@@ -39,6 +39,12 @@ use Doctrine\ORM\Query;
  */
 class GeometryWalkerTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     /**
      * @group mysql
      * @group geometry

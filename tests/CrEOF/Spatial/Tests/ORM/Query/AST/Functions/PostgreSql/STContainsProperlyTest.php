@@ -41,6 +41,12 @@ use Doctrine\ORM\Query;
  */
 class STContainsProperlyTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

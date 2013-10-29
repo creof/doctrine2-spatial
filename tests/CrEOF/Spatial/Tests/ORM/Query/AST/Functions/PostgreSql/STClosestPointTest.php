@@ -41,6 +41,13 @@ use Doctrine\ORM\Query;
  */
 class STClosestPointTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        $this->useType('point');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

@@ -40,6 +40,12 @@ use Doctrine\ORM\Query;
  */
 class AsTextTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */

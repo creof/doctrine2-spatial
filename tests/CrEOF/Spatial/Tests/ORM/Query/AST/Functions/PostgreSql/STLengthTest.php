@@ -40,6 +40,12 @@ use Doctrine\ORM\Query;
  */
 class STLengthTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     /**
      * @group geometry
      */
