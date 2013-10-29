@@ -149,6 +149,11 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
         }
     }
 
+    protected function getEntityClasses()
+    {
+        return array_column(array_intersect_key(static::$_entities, static::$_entitiesCreated), 'class');
+    }
+
     /**
      * @throws UnsupportedPlatformException
      */
