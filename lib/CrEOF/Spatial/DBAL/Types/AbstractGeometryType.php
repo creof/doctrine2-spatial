@@ -136,6 +136,14 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
+
+    /**
      * @param AbstractPlatform $platform
      *
      * @return PlatformInterface
