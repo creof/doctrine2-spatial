@@ -39,6 +39,6 @@ class PolygonType extends GeometryType
      */
     public function getSQLType()
     {
-        return GeometryInterface::POLYGON;
+        return strtolower(GeometryInterface::POLYGON);
     }
 }

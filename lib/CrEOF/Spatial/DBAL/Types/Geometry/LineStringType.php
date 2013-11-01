@@ -39,6 +39,6 @@ class LineStringType extends GeometryType
      */
     public function getSQLType()
     {
-        return GeometryInterface::LINESTRING;
+        return strtolower(GeometryInterface::LINESTRING);
     }
 }

@@ -39,6 +39,6 @@ class PointType extends GeometryType
      */
     public function getSQLType()
     {
-        return GeometryInterface::POINT;
+        return strtolower(GeometryInterface::POINT);
     }
 }
