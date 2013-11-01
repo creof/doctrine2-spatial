@@ -181,6 +181,11 @@ abstract class OrmTest extends \Doctrine\Tests\OrmFunctionalTestCase
             if ( ! isset(static::$_typesAdded[$typeName])) {
                 Type::addType($typeName, static::$_types[$typeName]);
 
+                // Since doctrineTypeComments may already be initialized check if added type requires comment
+                if (Type::getType($typeName)->requiresSQLCommentHint($this->getPlatform())) {
+                    $this->getPlatform()->markDoctrineTypeCommented($typeName);
+                }
+
                 static::$_typesAdded[$typeName] = true;
             }
         }
