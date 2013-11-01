@@ -39,14 +39,34 @@ class SchemaTest extends OrmTest
 {
     public function testDoctrineTypeMapping()
     {
-        foreach ($this->getEntityClasses() as $entityClass) {
-            $metadata = $this->_em->getClassMetadata($entityClass);
-
+        foreach ($this->getAllClassMetadata() as $metadata) {
             foreach ($metadata->getFieldNames() as $fieldName) {
                 $fieldType = $metadata->getTypeOfField($fieldName);
 
+                // Throws exception if mapping does not exist
                 $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($fieldType);
             }
         }
+    }
+
+    public function testSchemaReverseMapping()
+    {
+        $result = $this->_schemaTool->getUpdateSchemaSql($this->getAllClassMetadata(), true);
+
+        $this->assertCount(0, $result);
+    }
+
+    /**
+     * @return \Doctrine\ORM\Mapping\ClassMetadata[]
+     */
+    private function getAllClassMetadata()
+    {
+        $metadata = array();
+
+        foreach ($this->getEntityClasses() as $entityClass) {
+            $metadata[] = $this->_em->getClassMetadata($entityClass);
+        }
+
+        return $metadata;
     }
 }
