@@ -140,6 +140,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
+        // TODO onSchemaColumnDefinition event listener?
         return true;
     }
 
