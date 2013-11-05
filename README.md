@@ -62,6 +62,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 * Envelope
 * GeomFromText
 * GLength
+* LineString
 * MBRContains
 * MBRDisjoint
 * StartPoint
