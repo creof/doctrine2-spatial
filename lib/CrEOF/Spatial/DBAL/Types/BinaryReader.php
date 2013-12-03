@@ -125,7 +125,7 @@ class BinaryReader
                 $this->input = $input;
                 break;
             case true:
-                $this->input = pack('H*', $input);
+                $this->input = $this->toBinary($input);
                 break;
         }
     }
