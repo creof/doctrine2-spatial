@@ -23,6 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
+use CrEOF\Spatial\DBAL\Types\Utils;
 use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
@@ -120,14 +121,7 @@ class BinaryReader
      */
     private function setInput($input)
     {
-        switch (ord($input) > 31) {
-            case false:
-                $this->input = $input;
-                break;
-            case true:
-                $this->input = $this->toBinary($input);
-                break;
-        }
+        $this->input = Utils::toBinary($input);
     }
 
     private function checkByteOrder()
@@ -135,23 +129,5 @@ class BinaryReader
         if ( ! isset($this->byteOrder)) {
             throw InvalidValueException::invalidByteOrder('unset');
         }
-    }
-
-    /**
-     * Convert hex string to binary
-     *
-     * @param $value string
-     *
-     * @return string
-     */
-    private function toBinary($value)
-    {
-        $position = strpos($value, 'x');
-
-        if (false !== $position) {
-            $value = substr($value, $position + 1);
-        }
-
-        return pack('H*', $value);
     }
 }
