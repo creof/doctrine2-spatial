@@ -136,4 +136,22 @@ class BinaryReader
             throw InvalidValueException::invalidByteOrder('unset');
         }
     }
+
+    /**
+     * Convert hex string to binary
+     *
+     * @param $value string
+     *
+     * @return string
+     */
+    private function toBinary($value)
+    {
+        $position = strpos($value, 'x');
+
+        if (false !== $position) {
+            $value = substr($value, $position + 1);
+        }
+
+        return pack('H*', $value);
+    }
 }
