@@ -21,13 +21,11 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTest;
 use Doctrine\ORM\Query;
 
@@ -37,16 +35,22 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STLineCrossingDirectionTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSelectSTLineCrossingDirection()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(8, 15),
             new Point(4, 8)
@@ -101,12 +105,11 @@ class STLineCrossingDirectionTest extends OrmTest
         $this->assertEquals(-1, $result[2][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTLineCrossingDirectionWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(8, 15),
             new Point(4, 8)

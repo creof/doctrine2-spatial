@@ -34,10 +34,16 @@ use CrEOF\Spatial\Tests\Fixtures\PointEntity;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group geometry
  */
 class PointTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('point');
+        parent::setUp();
+    }
+
     public function testNullPoint()
     {
         $entity = new PointEntity();

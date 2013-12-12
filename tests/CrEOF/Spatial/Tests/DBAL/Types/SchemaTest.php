@@ -21,24 +21,52 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Geography;
+namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use CrEOF\Spatial\DBAL\Types\GeographyType;
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Query;
+use CrEOF\Spatial\Tests\OrmTest;
 
 /**
- * Doctrine POLYGON type
+ * Doctrine schema related tests
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group result_processing
  */
-class PolygonType extends GeographyType
+class SchemaTest extends OrmTest
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getSQLType()
+    public function testDoctrineTypeMapping()
     {
-        return GeometryInterface::POLYGON;
+        foreach ($this->getAllClassMetadata() as $metadata) {
+            foreach ($metadata->getFieldNames() as $fieldName) {
+                $fieldType = $metadata->getTypeOfField($fieldName);
+
+                // Throws exception if mapping does not exist
+                $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($fieldType);
+            }
+        }
+    }
+
+    public function testSchemaReverseMapping()
+    {
+        $result = $this->_schemaTool->getUpdateSchemaSql($this->getAllClassMetadata(), true);
+
+        $this->assertCount(0, $result);
+    }
+
+    /**
+     * @return \Doctrine\ORM\Mapping\ClassMetadata[]
+     */
+    private function getAllClassMetadata()
+    {
+        $metadata = array();
+
+        foreach ($this->getEntityClasses() as $entityClass) {
+            $metadata[] = $this->_em->getClassMetadata($entityClass);
+        }
+
+        return $metadata;
     }
 }

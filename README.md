@@ -71,6 +71,10 @@ Currently the following SQL functions are supported in DQL (more coming):
 * Point
 
 
+## Setup/Installation
+
+If you're using Doctrine with Symfony2 take a look at INSTALL.md, otherwise the OrmTest.php test class shows their use with Doctrine alone.
+
 ## DQL AST Walker
 A DQL AST walker is included which when used with the following DQL functions will return the appropriate Geometry type object from queries instead of strings:
 

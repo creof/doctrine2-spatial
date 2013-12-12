@@ -36,16 +36,22 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STAreaTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSelectSTArea()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $entity1 = new PolygonEntity();
         $rings1 = array(
             new LineString(array(
@@ -121,12 +127,11 @@ class STAreaTest extends OrmTest
         $this->assertEquals(4, $result[3][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTAreaWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $entity1 = new PolygonEntity();
         $rings1 = array(
             new LineString(array(
