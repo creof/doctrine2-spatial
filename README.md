@@ -56,7 +56,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 ### MySQL
 * Area
 * AsBinary
-* ASText
+* AsText
 * Contains
 * Crosses
 * Disjoint
