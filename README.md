@@ -64,8 +64,8 @@ Currently the following SQL functions are supported in DQL (more coming):
 * GeomFromText
 * GLength
 * Intersects
-* LineSTringFromWKB
-* LineSTring
+* LineStringFromWKB
+* LineString
 * MBRContains
 * MBRDisjoint
 * MBREqual
