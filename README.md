@@ -56,7 +56,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 ### MySQL
 * Area
 * AsBinary
-* AsText
+* ASText
 * Contains
 * Crosses
 * Disjoint
@@ -64,8 +64,8 @@ Currently the following SQL functions are supported in DQL (more coming):
 * GeomFromText
 * GLength
 * Intersects
-* LineStringFromWKB
-* LineString
+* LineSTringFromWKB
+* LineSTring
 * MBRContains
 * MBRDisjoint
 * MBREqual
@@ -76,18 +76,17 @@ Currently the following SQL functions are supported in DQL (more coming):
 * Overlaps
 * PointFromWKB
 * Point
-* StartPoint
-* STContains
-* STCrosses
-* STDisjoint
-* STEquals
-* STIntersects
-* STOverlaps
-* STTouches
-* STWithin
+* STartPoint
+* ST_Contains
+* ST_Crosses
+* ST_Disjoint
+* ST_Equals
+* ST_Intersects
+* ST_Overlaps
+* ST_Touches
+* ST_Within
 * Touches
 * Within
-
 
 ## Setup/Installation
 
