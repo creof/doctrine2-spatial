@@ -57,6 +57,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 * Area
 * AsBinary
 * AsText
+* Buffer
 * Contains
 * Crosses
 * Disjoint
