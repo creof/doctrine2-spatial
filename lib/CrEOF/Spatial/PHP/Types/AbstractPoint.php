@@ -25,6 +25,7 @@ namespace CrEOF\Spatial\PHP\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 
+use JMS\Serializer\Annotation\Groups;
 /**
  * Abstract point object for POINT spatial types
  *
@@ -34,14 +35,16 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 abstract class AbstractPoint extends AbstractGeometry
 {
     /**
+     * @Groups({"specialist_list", "details"})
      * @var float $latitude
      */
-    protected $x;
+    public $x;
 
     /**
+     * @Groups({"specialist_list", "details"})
      * @var float $longitude
      */
-    protected $y;
+    public $y;
 
     public function __construct()
     {
@@ -274,4 +277,5 @@ EOD;
                 break;
         }
     }
+
 }
