@@ -23,7 +23,6 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\DBAL\Types\Utils;
 use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
@@ -34,8 +33,8 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  */
 class BinaryReader
 {
-    const WKB_XDR                = 0;
-    const WKB_NDR                = 1;
+    const WKB_XDR = 0;
+    const WKB_NDR = 1;
 
     /**
      * @var int
