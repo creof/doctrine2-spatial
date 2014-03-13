@@ -61,7 +61,13 @@ class BinaryReader
      */
     public function unpackInput($format)
     {
-        $result      = unpack($format . 'result/A*input', $this->input);
+        if (version_compare(PHP_VERSION, '5.5.0-dev', '>=')) {
+            $code = 'a';
+        } else {
+            $code = 'A';
+        }
+
+        $result      = unpack(sprintf('%sresult/%s*input', $format, $code), $this->input);
         $this->input = $result['input'];
 
         return $result['result'];
