@@ -30,7 +30,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * ST_Translate DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license http:// mit-license.org MIT
+ * @license http://mit-license.org MIT
  */
 class STTranslate extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {

@@ -30,7 +30,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * ST_GeometryN DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license http:// mit-license.org MIT
+ * @license http://mit-license.org MIT
  */
 class STGeometryN extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {

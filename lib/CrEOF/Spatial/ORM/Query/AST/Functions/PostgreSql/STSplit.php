@@ -30,7 +30,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * ST_Split DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license http:// mit-license.org MIT
+ * @license http://mit-license.org MIT
  */
 class STSplit extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {

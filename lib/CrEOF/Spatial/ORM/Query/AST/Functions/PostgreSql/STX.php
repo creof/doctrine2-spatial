@@ -29,7 +29,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * ST_X DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license http:// mit-license.org MIT
+ * @license http://mit-license.org MIT
  */
 class STX extends AbstractSpatialDQLFunction
 {

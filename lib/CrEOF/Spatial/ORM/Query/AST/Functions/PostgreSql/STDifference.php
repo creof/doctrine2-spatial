@@ -30,7 +30,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * ST_Difference DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
- * @license http:// mit-license.org MIT
+ * @license http://mit-license.org MIT
  */
 class STDifference extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
