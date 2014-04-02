@@ -40,16 +40,23 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STSummaryTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('geometry');
+        $this->useEntity('geography');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSelectSTSummaryGeometry()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $entity1 = new GeometryEntity();
         $point1  = new Point(5, 5);
 
@@ -98,12 +105,11 @@ class STSummaryTest extends OrmTest
         $this->assertRegExp('/^Polygon\[[^G]*\]/', $result[2][1]);
     }
 
+    /**
+     * @group geography
+     */
     public function testSelectSTSummaryGeography()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $entity1 = new GeographyEntity();
         $point1  = new GeographyPoint(5, 5);
 

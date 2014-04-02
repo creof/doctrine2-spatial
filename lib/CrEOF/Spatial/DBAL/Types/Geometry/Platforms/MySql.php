@@ -47,7 +47,7 @@ class MySql extends AbstractPlatform
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        return strtoupper($fieldDeclaration['type']->getName());
+        return strtoupper($fieldDeclaration['type']->getSQLType());
     }
 
     /**

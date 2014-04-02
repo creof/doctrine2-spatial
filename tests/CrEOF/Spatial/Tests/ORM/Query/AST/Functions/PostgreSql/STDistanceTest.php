@@ -36,16 +36,24 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STDistanceTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('point');
+        $this->useEntity('geography');
+        $this->useType('geopoint');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSelectSTDistanceGeometryCartesian()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $newYork   = new Point(-73.938611, 40.664167);
         $losAngles = new Point(-118.2430, 34.0522);
         $dallas    = new Point(-96.803889, 32.782778);
@@ -83,12 +91,11 @@ class STDistanceTest extends OrmTest
         $this->assertEquals(12.6718564262953, $result[2][1]);
     }
 
+    /**
+     * @group geography
+     */
     public function testSelectSTDistanceGeographySpheroid()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
         $losAngles = new GeographyPoint(-118.2430, 34.0522);
         $dallas    = new GeographyPoint(-96.803889, 32.782778);
@@ -113,7 +120,7 @@ class STDistanceTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT g, ST_Distance(g.geography, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
-        $query->setParameter('p1', $madison, 'geographypoint');
+        $query->setParameter('p1', $madison, 'geopoint');
 
         $result = $query->getResult();
 
@@ -126,12 +133,11 @@ class STDistanceTest extends OrmTest
         $this->assertEquals(1312731.61416563, $result[2][1]);
     }
 
+    /**
+     * @group geography
+     */
     public function testSelectSTDistanceGeographyCartesian()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
         $losAngles = new GeographyPoint(-118.2430, 34.0522);
         $dallas    = new GeographyPoint(-96.803889, 32.782778);
@@ -156,7 +162,7 @@ class STDistanceTest extends OrmTest
 
         $query = $this->_em->createQuery('SELECT g, ST_Distance(g.geography, ST_GeomFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
-        $query->setParameter('p1', $madison, 'geographypoint');
+        $query->setParameter('p1', $madison, 'geopoint');
 
         $result = $query->getResult();
 

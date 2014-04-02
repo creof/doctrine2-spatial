@@ -36,12 +36,18 @@ use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group geometry
  */
 class GeometryTypeTest extends OrmTest
 {
-    /**
-     * @group common
-     */
+    protected function setUp()
+    {
+        $this->useEntity('geometry');
+        $this->useEntity('no_hint_geometry');
+        parent::setUp();
+    }
+
     public function testNullGeometry()
     {
         $entity = new GeometryEntity();
@@ -58,12 +64,8 @@ class GeometryTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    /**
-     * @group common
-     */
     public function testPointGeometry()
     {
-        $this->_em->getConnection()->getConfiguration()->setSQLLogger(new \CrEOF\Spatial\Tests\FileSQLLogger('/Users/dlambert/Development/doctrine2-spatial/logger.log'));
         $entity = new GeometryEntity();
 
         $entity->setGeometry(new Point(1, 1));
@@ -123,9 +125,6 @@ class GeometryTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    /**
-     * @group common
-     */
     public function testLineStringGeometry()
     {
         $entity = new GeometryEntity();
@@ -148,9 +147,6 @@ class GeometryTypeTest extends OrmTest
         $this->assertEquals($entity, $queryEntity);
     }
 
-    /**
-     * @group common
-     */
     public function testPolygonGeometry()
     {
         $entity = new GeometryEntity();
@@ -181,7 +177,6 @@ class GeometryTypeTest extends OrmTest
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
      * @expectedExceptionMessage Geometry column values must implement GeometryInterface
-     * @group                    common
      */
     public function testBadGeometryValue()
     {

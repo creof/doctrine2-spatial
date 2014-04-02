@@ -36,16 +36,22 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group mysql
+ * @group dql
  */
 class DisjointTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSelectDisjoint()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),
@@ -101,12 +107,11 @@ class DisjointTest extends OrmTest
         $this->assertEquals(1, $result[2][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testDisjointWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),

@@ -36,10 +36,16 @@ use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group geography
  */
 class GeographyTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('geography');
+        parent::setUp();
+    }
+
     public function testNullGeography()
     {
         $entity = new GeographyEntity();

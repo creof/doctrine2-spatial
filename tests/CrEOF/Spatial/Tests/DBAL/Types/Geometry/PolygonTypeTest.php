@@ -36,10 +36,16 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group geometry
  */
 class PolygonTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        parent::setUp();
+    }
+
     public function testNullPolygon()
     {
         $entity = new PolygonEntity();

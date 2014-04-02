@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,38 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractDualGeometryOptionalParameterDQLFunction;
+use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
- * ST_ClosestPoint DQL function
+ * Utility functions
  *
- * @author  Tom Vogt <tom@lemuria.org>
- * @license http://mit-license.org MIT
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @license http://dlambert.mit-license.org MIT
  */
-class STClosestPoint extends AbstractDualGeometryDQLFunction
+class Utils
 {
-    protected $platforms = array('postgresql');
+    /**
+     * Convert hex string to binary
+     *
+     * @param $value string
+     *
+     * @return string
+     */
+    static public function toBinary($value)
+    {
+        switch (ord($value) < 31) {
+            case true:
+                return $value;
+            default:
+                $position = strpos($value, 'x');
 
-    protected $functionName = 'ST_ClosestPoint';
+                if (false !== $position) {
+                    $value = substr($value, $position + 1);
+                }
+
+                return pack('H*', $value);
+        }
+    }
 }

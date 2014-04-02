@@ -35,11 +35,9 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 class PointType extends GeometryType
 {
     /**
-     * Gets the name of this type.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName()
+    public function getSQLType()
     {
         return GeometryInterface::POINT;
     }

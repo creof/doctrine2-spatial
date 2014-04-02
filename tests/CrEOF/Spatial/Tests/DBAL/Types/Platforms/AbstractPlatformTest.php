@@ -30,8 +30,6 @@ use CrEOF\Spatial\Tests\OrmTest;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
- *
- * @group common
  */
 class AbstractPlatformTest extends OrmTest
 {

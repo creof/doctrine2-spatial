@@ -47,6 +47,13 @@ abstract class AbstractGeometryType extends Type
     abstract public function getTypeFamily();
 
     /**
+     * Gets the SQL name of this type.
+     *
+     * @return string
+     */
+    abstract public function getSQLType();
+
+    /**
      * {@inheritdoc}
      */
     public function canRequireSQLConversion()
@@ -107,7 +114,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function getName()
     {
-        return GeometryInterface::GEOMETRY;
+        return array_search(get_class($this), $this->getTypesMap());
     }
 
     /**
@@ -116,6 +123,23 @@ abstract class AbstractGeometryType extends Type
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return $this->getSpatialPlatform($platform)->getSQLDeclaration($fieldDeclaration);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappedDatabaseTypes(AbstractPlatform $platform)
+    {
+        return array(strtolower($this->getSQLType()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        // TODO onSchemaColumnDefinition event listener?
+        return true;
     }
 
     /**

@@ -34,11 +34,20 @@ use Doctrine\ORM\Query;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group dql
  */
 class GeometryWalkerTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     /**
      * @group mysql
+     * @group geometry
      */
     public function testGeometryWalkerBinaryMySql()
     {
@@ -81,6 +90,7 @@ class GeometryWalkerTest extends OrmTest
 
     /**
      * @group postgresql
+     * @group geometry
      */
     public function testGeometryWalkerBinaryPostgreSql()
     {
@@ -123,6 +133,7 @@ class GeometryWalkerTest extends OrmTest
 
     /**
      * @group mysql
+     * @group geometry
      */
     public function testGeometryWalkerTextMySql()
     {
@@ -165,6 +176,7 @@ class GeometryWalkerTest extends OrmTest
 
     /**
      * @group postgresql
+     * @group geometry
      */
     public function testGeometryWalkerTextPostgreSql()
     {
