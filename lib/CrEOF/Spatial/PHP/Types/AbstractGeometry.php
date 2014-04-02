@@ -174,7 +174,7 @@ abstract class AbstractGeometry implements GeometryInterface
         protected function validateMultiPolygonValue(array $polygons)
     {
         foreach ($polygons as &$polygon) {
-            $polygon = $this->validatePolygonValue($poygon);
+            $polygon = $this->validatePolygonValue($polygon);
         }
 
         return $polygons;
