@@ -12,13 +12,16 @@
 
     <groups>
         <include>
-            <group>common</group>
-            <group>postgresql</group>
-            <group>php</group>
-            <group>srid</group>
+            <group>postgresql</group>        <!-- Tests specific to PostgreSQL -->
+            <group>php</group>               <!-- Tests for PHP type objects -->
+            <group>result_processing</group> <!-- Tests for lexer/parser/reader -->
+            <group>geometry</group>          <!-- Tests for geometry types -->
+            <group>dql</group>               <!-- Tests for DQL functions -->
+            <group>geography</group>         <!-- Tests for geography types -->
+            <group>srid</group>              <!-- Tests for SRID functionality -->
         </include>
         <exclude>
-            <group>mysql</group>
+            <group>mysql</group>             <!-- Test specific to MySQL -->
         </exclude>
     </groups>
 

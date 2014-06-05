@@ -35,16 +35,22 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STStartPointTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSTStartPointSelect()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(2, 2),
@@ -64,12 +70,11 @@ class STStartPointTest extends OrmTest
         $this->assertEquals('POINT(0 0)', $result[0][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTStartPointWhereComparePoint()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(2, 2),
@@ -102,12 +107,11 @@ class STStartPointTest extends OrmTest
         $this->assertEquals($entity1, $result[0]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTStartPointWhereCompareLineString()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(2, 2),

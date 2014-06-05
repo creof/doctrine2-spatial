@@ -40,4 +40,17 @@ class MySql extends \CrEOF\Spatial\DBAL\Types\Geometry\Platforms\MySql
     {
         return GeographyInterface::GEOGRAPHY;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSQLDeclaration(array $fieldDeclaration)
+    {
+        if ($fieldDeclaration['type']->getSQLType() == GeographyInterface::GEOGRAPHY) {
+            return 'GEOMETRY';
+        }
+
+        return parent::getSQLDeclaration($fieldDeclaration);
+    }
+
 }

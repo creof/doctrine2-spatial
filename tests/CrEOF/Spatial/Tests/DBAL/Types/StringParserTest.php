@@ -31,7 +31,7 @@ use CrEOF\Spatial\DBAL\Types\StringParser;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group result_processing
  */
 class StringParserTest extends \PHPUnit_Framework_TestCase
 {

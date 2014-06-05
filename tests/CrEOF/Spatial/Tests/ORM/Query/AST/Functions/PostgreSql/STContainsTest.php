@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -36,16 +36,23 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STContainsTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('polygon');
+        $this->useType('point');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSelectSTContains()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),
@@ -85,12 +92,11 @@ class STContainsTest extends OrmTest
         $this->assertFalse($result[1][1]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testSTContainsWhereParameter()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = new LineString(array(
             new Point(0, 0),
             new Point(10, 0),

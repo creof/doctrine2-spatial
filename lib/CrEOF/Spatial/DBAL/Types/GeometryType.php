@@ -36,6 +36,14 @@ class GeometryType extends AbstractGeometryType
     /**
      * {@inheritdoc}
      */
+    public function getSQLType()
+    {
+        return GeometryInterface::GEOMETRY;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTypeFamily()
     {
         return GeometryInterface::GEOMETRY;

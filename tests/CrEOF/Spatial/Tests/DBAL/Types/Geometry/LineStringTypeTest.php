@@ -35,10 +35,16 @@ use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group geometry
  */
 class LineStringTypeTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
     public function testNullLineStringType()
     {
         $entity = new LineStringEntity();

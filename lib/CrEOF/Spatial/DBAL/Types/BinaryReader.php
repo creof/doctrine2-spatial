@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2012, 2014 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,8 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  */
 class BinaryReader
 {
-    const WKB_XDR                = 0;
-    const WKB_NDR                = 1;
+    const WKB_XDR = 0;
+    const WKB_NDR = 1;
 
     /**
      * @var int
@@ -61,7 +61,13 @@ class BinaryReader
      */
     public function unpackInput($format)
     {
-        $result      = unpack($format . 'result/A*input', $this->input);
+        if (version_compare(PHP_VERSION, '5.5.0-dev', '>=')) {
+            $code = 'a';
+        } else {
+            $code = 'A';
+        }
+
+        $result      = unpack(sprintf('%sresult/%s*input', $format, $code), $this->input);
         $this->input = $result['input'];
 
         return $result['result'];
@@ -120,14 +126,7 @@ class BinaryReader
      */
     private function setInput($input)
     {
-        switch (ord($input) > 31) {
-            case false:
-                $this->input = $input;
-                break;
-            case true:
-                $this->input = pack('H*', $input);
-                break;
-        }
+        $this->input = Utils::toBinary($input);
     }
 
     private function checkByteOrder()

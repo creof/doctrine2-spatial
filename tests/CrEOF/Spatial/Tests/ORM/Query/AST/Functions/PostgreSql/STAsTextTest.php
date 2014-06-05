@@ -35,16 +35,22 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group postgresql
+ * @group dql
  */
 class STAsTextTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('linestring');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testSTAsText()
     {
-        if ($this->getPlatform()->getName() == 'mysql') {
-            $this->markTestSkipped('Function not supported on mssql.');
-        }
-
         $lineString1 = array(
             new Point(0, 0),
             new Point(2, 2),

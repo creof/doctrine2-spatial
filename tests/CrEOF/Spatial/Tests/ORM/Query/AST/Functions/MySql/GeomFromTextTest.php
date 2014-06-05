@@ -35,16 +35,23 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group common
+ * @group mysql
+ * @group dql
  */
 class GeomFromTextTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->useEntity('geometry');
+        $this->useType('point');
+        parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
     public function testPoint()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $entity1 = new GeometryEntity();
 
         $entity1->setGeometry(new Point(5, 5));
@@ -62,12 +69,11 @@ class GeomFromTextTest extends OrmTest
         $this->assertEquals($entity1, $result[0]);
     }
 
+    /**
+     * @group geometry
+     */
     public function testLineString()
     {
-        if ($this->getPlatform()->getName() == 'postgresql') {
-            $this->markTestSkipped('Function not supported on postgresql.');
-        }
-
         $value = array(
             new Point(0, 0),
             new Point(5, 5),
