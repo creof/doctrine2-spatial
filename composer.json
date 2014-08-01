@@ -1,5 +1,5 @@
 {
-    "name": "bphilippot/doctrine2-spatial",
+    "name": "creof/doctrine2-spatial",
     "type": "library",
     "description": "Doctrine2 multi-platform support for spatial types and functions",
     "keywords": ["orm", "dbal", "database", "postgresql", "mysql", "opengis", "postgis", "gis", "spatial", "geometry", "geography"],
@@ -7,10 +7,6 @@
         {
             "name": "Derek Lambert",
             "email": "dlambert@dereklambert.com"
-        },
-        {
-            "name":"Barbara Philippot",
-            "email": "bphilippot@bphilippot.com
         }
     ],
     "license": "MIT",
