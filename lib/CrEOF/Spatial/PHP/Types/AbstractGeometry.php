@@ -92,6 +92,9 @@ abstract class AbstractGeometry implements GeometryInterface
             case (is_array($point) && count($point) == 2 && is_numeric($point[0]) && is_numeric($point[1])):
                 return array_values($point);
                 break;
+            case (is_array($point) && count($point) > 2 && is_array($point[0])):
+                return array_values($point);
+                break;
             default:
                 throw InvalidValueException::invalidType($this, GeometryInterface::POINT, $point);
         }
