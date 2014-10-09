@@ -59,7 +59,9 @@ Currently the following SQL functions are supported in DQL (more coming):
 * AsBinary
 * AsText
 * Contains
+* ST_Contains
 * Disjoint
+* ST_Disjoint
 * Envelope
 * GeomFromText
 * GLength
