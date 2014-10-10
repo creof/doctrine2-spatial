@@ -3,7 +3,7 @@
 ## composer.json
     "require": {
     	...
-        "creof/doctrine2-spatial": "dev-master"
+        "slavenin/doctrine2-spatial": "dev-master"
 
 You will also have to change the version requirement of doctrine to at least 2.1:
 
@@ -24,8 +24,9 @@ Add the types and functions you need to your Symfony configuration. The doctrine
 	    orm:
 	        dql:
 	            numeric_functions:
-	                st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContains
-	                st_distance:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistance
-	                st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
-	                st_length:       CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength
-	                st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText
+	                numeric_functions:
+					st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
+					contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
+					st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
+					st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
+					point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
