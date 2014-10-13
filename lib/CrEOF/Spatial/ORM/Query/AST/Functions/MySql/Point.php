@@ -20,7 +20,7 @@ class Point extends AbstractSpatialDQLFunction
 
     protected $functionName = 'Point';
 
-    protected $minGeomExpr = 1;
+    protected $minGeomExpr = 2;
 
-    protected $maxGeomExpr = 1;
+    protected $maxGeomExpr = 2;
 }
