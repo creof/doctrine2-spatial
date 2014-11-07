@@ -39,5 +39,5 @@ class STGeomFromText extends AbstractSpatialDQLFunction
 
     protected $minGeomExpr = 1;
 
-    protected $maxGeomExpr = 1;
+    protected $maxGeomExpr = 2;
 }
