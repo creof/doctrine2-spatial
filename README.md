@@ -68,6 +68,8 @@ Currently the following SQL functions are supported in DQL (more coming):
 * MBRContains
 * MBRDisjoint
 * StartPoint
+* geodist_pt //see [wiki](https://github.com/Slavenin/doctrine2-spatial/wiki/Mysql-Function)
+* distance_from_multyline //see [wiki](https://github.com/Slavenin/doctrine2-spatial/wiki/Mysql-Function)
 
 ## Setup/Installation
 
@@ -91,4 +93,5 @@ EWKT/EWKB function support planned.
         $result = $query->getResult();
 
 ```$result[n][1]``` will now be of type ```Point``` instead of the string ```'POINT(X Y)'```
+
 
