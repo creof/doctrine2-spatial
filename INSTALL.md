@@ -30,6 +30,8 @@ Add the types and functions you need to your Symfony configuration. The doctrine
 					st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
 					st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
 					point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
+					geodist_pt: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeodistPt
+                	distance_from_multyline: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\DistanceFromMultyLine
 
 ## Add new function in dql
 Simply add new class in vendor\slavenin\doctrine2-spatial\lib\CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ with need function name and config.yml.
