@@ -29,8 +29,8 @@ Add the types and functions you need to your Symfony configuration. The doctrine
 					contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
 					st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
 					st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
-					st_intersects:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Intersects
-                	st_buffer:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Buffer
+					st_intersects:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
+                	st_buffer:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
 					point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
 					geodist_pt: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeodistPt
                 	distance_from_multyline: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\DistanceFromMultyLine
