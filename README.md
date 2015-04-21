@@ -60,6 +60,8 @@ Currently the following SQL functions are supported in DQL (more coming):
 * AsText
 * Contains
 * ST_Contains
+* ST_Intersects
+* ST_Buffer
 * Disjoint
 * ST_Disjoint
 * Envelope
