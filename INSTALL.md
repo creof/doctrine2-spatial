@@ -3,7 +3,7 @@
 ## composer.json
     "require": {
     	...
-        "creof/doctrine2-spatial": "dev-master"
+        "slavenin/doctrine2-spatial": "dev-master"
 
 You will also have to change the version requirement of doctrine to at least 2.1:
 
@@ -24,8 +24,29 @@ Add the types and functions you need to your Symfony configuration. The doctrine
 	    orm:
 	        dql:
 	            numeric_functions:
-	                st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContains
-	                st_distance:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistance
-	                st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
-	                st_length:       CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength
-	                st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText
+	                numeric_functions:
+					st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
+					contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
+					st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
+					st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
+					st_intersects:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
+                	st_buffer:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
+					point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
+					geodist_pt: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeodistPt
+                	distance_from_multyline: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\DistanceFromMultyLine
+
+## Add new function in dql
+Simply add new class in vendor\slavenin\doctrine2-spatial\lib\CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ with need function name and config.yml.
+
+Example:
+
+	class Point extends AbstractSpatialDQLFunction
+	{
+		protected $platforms = array('mysql');
+		/*function name in dql*/
+		protected $functionName = 'Point';
+		/*min params count*/
+	    protected $minGeomExpr = 2;
+		/*max params  count*/
+		protected $maxGeomExpr = 2;
+	}

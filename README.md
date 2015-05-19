@@ -52,6 +52,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 * ST_LineCrossingDirection
 * ST_StartPoint
 * ST_Summary
+* ST_Perimeter
 
 ### MySQL
 * Area
@@ -61,6 +62,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 * Contains
 * Crosses
 * Disjoint
+* ST_Disjoint
 * Envelope
 * GeomFromText
 * GLength
@@ -88,6 +90,9 @@ Currently the following SQL functions are supported in DQL (more coming):
 * ST_Within
 * Touches
 * Within
+* StartPoint
+* geodist_pt //see [wiki](https://github.com/Slavenin/doctrine2-spatial/wiki/Mysql-Function)
+* distance_from_multyline //see [wiki](https://github.com/Slavenin/doctrine2-spatial/wiki/Mysql-Function)
 
 ## Setup/Installation
 
@@ -111,4 +116,5 @@ EWKT/EWKB function support planned.
         $result = $query->getResult();
 
 ```$result[n][1]``` will now be of type ```Point``` instead of the string ```'POINT(X Y)'```
+
 
