@@ -35,12 +35,12 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
 abstract class AbstractMultiPolygon extends AbstractGeometry
 {
     /**
-     * @var array[] $rings
+     * @var AbstractPolygon[]
      */
     protected $polygons = array();
 
     /**
-     * @param AbstractLineString[]|array[] $rings
+     * @param AbstractPolygon[]|array[] $polygons
      * @param null|int                     $srid
      */
     public function __construct(array $polygons, $srid = null)
@@ -50,7 +50,7 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString|array[] $polygon
+     * @param AbstractPolygon|array[] $polygon
      *
      * @return self
      */
@@ -62,7 +62,7 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @return AbstractLineString[]
+     * @return AbstractPolygon[]
      */
     public function getPolygons()
     {
@@ -78,7 +78,7 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     /**
      * @param int $index
      *
-     * @return AbstractLineString
+     * @return AbstractPolygon
      */
     public function getPolygon($index)
     {
@@ -92,7 +92,7 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString[] $rings
+     * @param AbstractPolygon[] $polygons
      *
      * @return self
      */
