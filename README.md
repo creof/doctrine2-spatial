@@ -36,7 +36,11 @@ Currently the following SQL functions are supported in DQL (more coming):
 ### PostgreSQL
 * ST_Area
 * ST_AsBinary
+* ST_AsGeoJson
 * ST_AsText
+* ST_Azimuth
+* ST_Boundary
+* ST_Buffer
 * ST_Centroid
 * ST_ClosestPoint
 * ST_Contains
@@ -47,12 +51,25 @@ Currently the following SQL functions are supported in DQL (more coming):
 * ST_Disjoint
 * ST_Distance
 * ST_Envelope
+* ST_Expand
+* ST_Extent
 * ST_GeomFromText
+* ST_Intersection
+* ST_Intersects
 * ST_Length
 * ST_LineCrossingDirection
+* ST_LineInterpolatePoint
+* ST_MakeBox2D
+* ST_MakeLine
+* ST_Point
+* ST_Scale
+* ST_SetSRID
+* ST_Simplify
 * ST_StartPoint
 * ST_Summary
 * ST_Perimeter
+* ST_Touches
+* ST_Transform
 
 ### MySQL
 * Area
