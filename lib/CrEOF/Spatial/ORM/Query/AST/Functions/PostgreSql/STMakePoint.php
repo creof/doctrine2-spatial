@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2014 David Pacheco
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Contains DQL function
+ * ST_MakePoint DQL function
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  David Pacheco
  * @license http://dlambert.mit-license.org MIT
  */
 class STMakePoint extends AbstractSpatialDQLFunction
