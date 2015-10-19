@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2014 Tiago Brito
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * GPerimeter DQL function
+ * ST_Perimeter DQL function
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Tiago Brito
  * @license http://dlambert.mit-license.org MIT
  */
-class ST_Perimeter extends AbstractSpatialDQLFunction
+class STPerimeter extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
