@@ -52,6 +52,7 @@ Currently the following SQL functions are supported in DQL (more coming):
 * ST_LineCrossingDirection
 * ST_StartPoint
 * ST_Summary
+* ST_Perimeter
 
 ### MySQL
 * Area
