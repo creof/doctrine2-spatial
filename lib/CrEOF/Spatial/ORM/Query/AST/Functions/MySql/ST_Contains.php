@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013 luca capra
  *
@@ -31,13 +32,11 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  luca capra <luca.capra@create-net.org>
  * @license http://dlambert.mit-license.org MIT
  */
-class STContains extends AbstractSpatialDQLFunction
-{
+class ST_Contains extends AbstractSpatialDQLFunction {
+
     protected $platforms = array('mysql');
-
     protected $functionName = 'ST_Contains';
-
     protected $minGeomExpr = 2;
-
     protected $maxGeomExpr = 2;
+
 }

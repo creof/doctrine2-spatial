@@ -31,13 +31,11 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  *
  * @author Maximilian
  */
-class ST_Buffer extends AbstractSpatialDQLFunction
-{
-	 protected $platforms = array('mysql');
+class ST_Buffer extends AbstractSpatialDQLFunction {
 
+    protected $platforms = array('mysql');
     protected $functionName = 'ST_Buffer';
-
     protected $minGeomExpr = 2;
-
     protected $maxGeomExpr = 2;
+
 }

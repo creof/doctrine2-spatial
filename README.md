@@ -116,16 +116,14 @@ Currently the following SQL functions are supported in DQL (more coming):
  * SRID
  * StartPoint
  * ST_Buffer
- * STBuffer
- * STContains
- * STCrosses
- * STDisjoint
- * STEquals
+ * ST_Contains
+ * ST_Crosses
+ * ST_Disjoint
+ * ST_Equals
  * ST_Intersects
- * STIntersects
- * STOverlaps
- * STTouches
- * STWithin
+ * ST_Overlaps
+ * ST_Touches
+ * ST_Within
  * Touches
  * Within
  * X
