@@ -167,6 +167,23 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
+     * @param AbstractPolygon[] $polygons
+     *
+     * @return array
+     */
+    protected function validateMultiPolygonValue(array $polygons)
+    {
+        foreach ($polygons as &$polygon) {
+            if ($polygon instanceof GeometryInterface) {
+                $polygon = $polygon->toArray();
+            }
+            $polygon = $this->validatePolygonValue($polygon);
+        }
+
+        return $polygons;
+    }
+
+    /**
      * @param AbstractLineString[] $lineStrings
      *
      * @return array
@@ -250,5 +267,21 @@ abstract class AbstractGeometry implements GeometryInterface
     private function toStringPolygon(array $polygon)
     {
         return $this->toStringMultiLineString($polygon);
+    }
+
+    /**
+     * @param array[] $multiPolygon
+     *
+     * @return string
+     */
+    private function toStringMultiPolygon(array $multiPolygon)
+    {
+        $strings = null;
+
+        foreach ($multiPolygon as $polygon) {
+            $strings[] = '(' . $this->toStringPolygon($polygon) . ')';
+        }
+
+        return implode(',', $strings);
     }
 }
