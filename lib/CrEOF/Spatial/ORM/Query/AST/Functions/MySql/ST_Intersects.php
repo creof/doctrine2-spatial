@@ -1,6 +1,6 @@
 <?php
+
 /**
- * Copyright (C) 2015 Mohammad Heydari
  * Copyright (C) 2012 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,17 +27,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Touches DQL function
- * 
- * @deprecated since MySQL 5.7.6
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
- * @license http://mdhheydari.mit-license.org MIT
+ * Description of ST_Intersects
+ *
+ * @author Maximilian
  */
-class Touches extends AbstractSpatialDQLFunction
+class ST_Intersects extends AbstractSpatialDQLFunction
 {
-    protected $platforms = array('mysql');
+	 protected $platforms = array('mysql');
 
-    protected $functionName = 'Touches';
+    protected $functionName = 'ST_Intersects';
 
     protected $minGeomExpr = 2;
 

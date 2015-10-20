@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (C) 2015 Mohammad Heydari
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 luca capra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,17 +26,16 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Touches DQL function
- * 
- * @deprecated since MySQL 5.7.6
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
- * @license http://mdhheydari.mit-license.org MIT
+ * MBREqual DQL function
+ *
+ * @author  luca capra <luca.capra@gmail.com>
+ * @license http://dlambert.mit-license.org MIT
  */
-class Touches extends AbstractSpatialDQLFunction
+class MBREqual extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
-    protected $functionName = 'Touches';
+    protected $functionName = 'MBREqual';
 
     protected $minGeomExpr = 2;
 
