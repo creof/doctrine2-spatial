@@ -83,6 +83,7 @@ Currently the following SQL functions are supported in DQL (more coming):
  * Contains
  * Crosses
  * Dimension
+ * Distance
  * Disjoint
  * DistanceFromMultyLine
  * EndPoint
