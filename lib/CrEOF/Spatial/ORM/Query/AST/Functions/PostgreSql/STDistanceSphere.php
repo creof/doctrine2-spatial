@@ -39,5 +39,5 @@ class STDistanceSphere extends AbstractSpatialDQLFunction
 
     protected $minGeomExpr = 2;
 
-    protected $maxGeomExpr = 3;
+    protected $maxGeomExpr = 2;
 }
