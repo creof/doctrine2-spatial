@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013 luca capra
+ * Copyright (C) 2012 Tom Vogt
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Disjoint DQL function
+ * STTouches DQL function
  *
- * @author  luca capra <luca.capra@create-net.org>
- * @license http://dlambert.mit-license.org MIT
+ * @author  Tom Vogt <tom@lemuria.org>
+ * @license http://mit-license.org MIT
  */
-class ST_Disjoint extends AbstractSpatialDQLFunction {
+class STTouches extends AbstractSpatialDQLFunction {
 
     protected $platforms = array('mysql');
-    protected $functionName = 'ST_Disjoint';
+    protected $functionName = 'ST_Touches';
     protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
 

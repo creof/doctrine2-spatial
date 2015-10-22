@@ -27,15 +27,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Crosses DQL function
+ * STEquals DQL function
  *
  * @author  luca capra <luca.capra@create-net.org>
  * @license http://dlambert.mit-license.org MIT
  */
-class ST_Crosses extends AbstractSpatialDQLFunction {
+class STEquals extends AbstractSpatialDQLFunction {
 
     protected $platforms = array('mysql');
-    protected $functionName = 'ST_Crosses';
+    protected $functionName = 'STEquals';
     protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
 

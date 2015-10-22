@@ -107,15 +107,15 @@ Add the types and functions you need to your Symfony configuration. The doctrine
                         point:                  CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
                         srid:                   CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SRID
                         startpoint:             CrEOF\Spatial\ORM\Query\AST\Functions\MySql\StartPoint
-                        st_buffer:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Buffer
-                        st_contains:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Contains
-                        st_crosses:             CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Crosses
-                        st_disjoint:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Disjoint
-                        st_equals:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Equals
-                        st_intersects:          CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Intersects
-                        st_overlaps:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Overlaps
-                        st_touches:             CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Touches
-                        st_within:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ST_Within
+                        st_buffer:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
+                        st_contains:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
+                        st_crosses:             CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STCrosses
+                        st_disjoint:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STDisjoint
+                        st_equals:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STEquals
+                        st_intersects:          CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
+                        st_overlaps:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STOverlaps
+                        st_touches:             CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STTouches
+                        st_within:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STWithin
                         touches:                CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Touches
                         within:                 CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Within
                         x:                      CrEOF\Spatial\ORM\Query\AST\Functions\MySql\X

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 luca capra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Description of ST_Intersects
+ * STWithin DQL function
  *
- * @author Maximilian
+ * @author  luca capra <luca.capra@create-net.org>
+ * @license http://dlambert.mit-license.org MIT
  */
-class ST_Buffer extends AbstractSpatialDQLFunction {
+class STWithin extends AbstractSpatialDQLFunction {
 
     protected $platforms = array('mysql');
-    protected $functionName = 'ST_Buffer';
+    protected $functionName = 'ST_Within';
     protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
 
