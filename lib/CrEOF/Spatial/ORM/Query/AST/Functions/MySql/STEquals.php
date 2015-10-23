@@ -35,7 +35,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 class STEquals extends AbstractSpatialDQLFunction {
 
     protected $platforms = array('mysql');
-    protected $functionName = 'STEquals';
+    protected $functionName = 'ST_Equals';
     protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
 
