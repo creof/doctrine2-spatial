@@ -244,7 +244,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
 
                 // Since doctrineTypeComments may already be initialized check if added type requires comment
                 if (Type::getType($typeName)->requiresSQLCommentHint($this->getPlatform())) {
-                    $this->getPlatform()->markDoctrineTypeCommented($typeName);
+                    $this->getPlatform()->markDoctrineTypeCommented(Type::getType($typeName));
                 }
 
                 static::$addedTypes[$typeName] = true;
