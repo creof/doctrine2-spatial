@@ -43,7 +43,7 @@ class STAreaTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('polygon');
+        $this->usesEntity('polygon');
         parent::setUp();
     }
 
@@ -64,7 +64,7 @@ class STAreaTest extends OrmTest
         );
 
         $entity1->setPolygon(new Polygon($rings1));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PolygonEntity();
         $rings2 = array(
@@ -85,7 +85,7 @@ class STAreaTest extends OrmTest
         );
 
         $entity2->setPolygon(new Polygon($rings2));
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 = new PolygonEntity();
         $rings3 = array(
@@ -100,7 +100,7 @@ class STAreaTest extends OrmTest
         );
 
         $entity3->setPolygon(new Polygon($rings3));
-        $this->_em->persist($entity3);
+        $this->getEntityManager()->persist($entity3);
 
         $entity4 = new PolygonEntity();
         $rings4 = array(
@@ -114,11 +114,11 @@ class STAreaTest extends OrmTest
         );
 
         $entity4->setPolygon(new Polygon($rings4));
-        $this->_em->persist($entity4);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity4);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query  = $this->_em->createQuery('SELECT ST_Area(p.polygon) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query  = $this->getEntityManager()->createQuery('SELECT ST_Area(p.polygon) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
         $result = $query->getResult();
 
         $this->assertEquals(100, $result[0][1]);
@@ -144,7 +144,7 @@ class STAreaTest extends OrmTest
         );
 
         $entity1->setPolygon(new Polygon($rings1));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PolygonEntity();
         $rings2 = array(
@@ -165,7 +165,7 @@ class STAreaTest extends OrmTest
         );
 
         $entity2->setPolygon(new Polygon($rings2));
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 = new PolygonEntity();
         $rings3 = array(
@@ -180,7 +180,7 @@ class STAreaTest extends OrmTest
         );
 
         $entity3->setPolygon(new Polygon($rings3));
-        $this->_em->persist($entity3);
+        $this->getEntityManager()->persist($entity3);
 
         $entity4 = new PolygonEntity();
         $rings4 = array(
@@ -194,11 +194,11 @@ class STAreaTest extends OrmTest
         );
 
         $entity4->setPolygon(new Polygon($rings4));
-        $this->_em->persist($entity4);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity4);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query  = $this->_em->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Area(p.polygon) < 50');
+        $query  = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Area(p.polygon) < 50');
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
