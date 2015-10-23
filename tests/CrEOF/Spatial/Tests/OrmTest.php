@@ -159,7 +159,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
         $this->schemaTool    = $this->getSchemaTool();
 
         if (true) {
-            static::getConnection()->executeQuery('SELECT 1 /*' . get_class($this) . '*/');
+            static::getConnection()->executeQuery(sprintf('SELECT 1 /*%s*//*%s*/', get_class($this), $this->getName()));
         }
 
         $this->sqlLoggerStack->enabled = true;
@@ -261,6 +261,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
 
         foreach (array_keys($this->usedEntities) as $entityName) {
             if (! isset(static::$createdEntities[$entityName])) {
+                //TODO: getClassMetadata marked internal in 2.5
                 $classes[] = $this->getEntityManager()->getClassMetadata(static::$entities[$entityName]['class']);
 
                 static::$createdEntities[$entityName] = true;
