@@ -76,7 +76,7 @@ class STDistanceTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance(p.point, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
         $query->setParameter('p1', $madison, 'point');
 
@@ -118,7 +118,7 @@ class STDistanceTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, :p1) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
         $query->setParameter('p1', $madison, 'geopoint');
 
@@ -160,7 +160,7 @@ class STDistanceTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, ST_GeomFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, :p1, false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
         $query->setParameter('p1', $madison, 'geopoint');
 

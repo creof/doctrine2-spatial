@@ -90,7 +90,7 @@ class STLineCrossingDirectionTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l, ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT l, ST_LineCrossingDirection(l.lineString, :p1) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
 
         $query->setParameter('p1', $lineString4, 'linestring');
 
@@ -149,7 +149,7 @@ class STLineCrossingDirectionTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_LineCrossingDirection(l.lineString, :p1) = 1');
 
         $query->setParameter('p1', $lineString4, 'linestring');
 

@@ -79,7 +79,7 @@ class STClosestPointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, ST_GeomFromText(:p1))) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, :p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
         $query->setParameter('p1', new Point(2, 2), 'point');
 

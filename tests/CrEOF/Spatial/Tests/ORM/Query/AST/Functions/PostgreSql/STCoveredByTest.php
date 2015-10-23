@@ -78,7 +78,7 @@ class STCoveredByTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_CoveredBy(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_CoveredBy(p.polygon, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
         $query->setParameter('p1', new Polygon(array($lineString2)), 'polygon');
 
@@ -122,7 +122,7 @@ class STCoveredByTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_CoveredBy(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_CoveredBy(p.polygon, :p1) = true');
 
         $query->setParameter('p1', new Polygon(array($lineString2)), 'polygon');
 

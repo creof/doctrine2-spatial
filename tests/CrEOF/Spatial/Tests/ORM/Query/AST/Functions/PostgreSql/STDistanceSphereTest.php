@@ -74,7 +74,7 @@ class STDistanceSphereTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
         $query->setParameter('p1', $madison, 'point');
 
