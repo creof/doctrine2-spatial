@@ -42,7 +42,7 @@ class STLineCrossingDirectionTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
         parent::setUp();
     }
 
@@ -76,21 +76,21 @@ class STLineCrossingDirectionTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 =  new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 =  new LineStringEntity();
 
         $entity3->setLineString($lineString3);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT l, ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT l, ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
 
         $query->setParameter('p1', $lineString4, 'linestring');
 
@@ -135,21 +135,21 @@ class STLineCrossingDirectionTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 =  new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 =  new LineStringEntity();
 
         $entity3->setLineString($lineString3);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1');
 
         $query->setParameter('p1', $lineString4, 'linestring');
 

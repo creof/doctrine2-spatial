@@ -43,7 +43,7 @@ class STDistanceSphereTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('point');
+        $this->usesEntity('point');
         parent::setUp();
     }
 
@@ -60,21 +60,21 @@ class STDistanceSphereTest extends OrmTest
         $entity1 = new PointEntity();
 
         $entity1->setPoint($newYork);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PointEntity();
 
         $entity2->setPoint($losAngles);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 = new PointEntity();
 
         $entity3->setPoint($dallas);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
         $query->setParameter('p1', $madison, 'point');
 

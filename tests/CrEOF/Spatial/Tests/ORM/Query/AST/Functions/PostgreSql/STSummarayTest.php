@@ -47,8 +47,8 @@ class STSummaryTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('geometry');
-        $this->useEntity('geography');
+        $this->usesEntity('geometry');
+        $this->usesEntity('geography');
         parent::setUp();
     }
 
@@ -61,7 +61,7 @@ class STSummaryTest extends OrmTest
         $point1  = new Point(5, 5);
 
         $entity1->setGeometry($point1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2     = new GeometryEntity();
         $lineString2 = new LineString(
@@ -73,7 +73,7 @@ class STSummaryTest extends OrmTest
         );
 
         $entity2->setGeometry($lineString2);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3  = new GeometryEntity();
         $polygon3 = new Polygon(
@@ -89,11 +89,11 @@ class STSummaryTest extends OrmTest
         );
 
         $entity3->setGeometry($polygon3);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query  = $this->_em->createQuery('SELECT g, ST_Summary(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g');
+        $query  = $this->getEntityManager()->createQuery('SELECT g, ST_Summary(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g');
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
@@ -114,7 +114,7 @@ class STSummaryTest extends OrmTest
         $point1  = new GeographyPoint(5, 5);
 
         $entity1->setGeography($point1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2     = new GeographyEntity();
         $lineString2 = new GeographyLineString(
@@ -126,7 +126,7 @@ class STSummaryTest extends OrmTest
         );
 
         $entity2->setGeography($lineString2);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3  = new GeographyEntity();
         $polygon3 = new GeographyPolygon(
@@ -142,11 +142,11 @@ class STSummaryTest extends OrmTest
         );
 
         $entity3->setGeography($polygon3);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query  = $this->_em->createQuery('SELECT g, ST_Summary(g.geography) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query  = $this->getEntityManager()->createQuery('SELECT g, ST_Summary(g.geography) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
