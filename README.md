@@ -103,11 +103,12 @@ A DQL AST walker is included which when used with the following DQL functions wi
 EWKT/EWKB function support planned.
 
 ### Example:
-        $query = $this->em->createQuery('SELECT AsText(StartPoint(l.lineString)) MyLineStringEntity l');
+```php
+$query = $this->em->createQuery('SELECT AsText(StartPoint(l.lineString)) MyLineStringEntity l');
 
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
+$query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
-        $result = $query->getResult();
-
+$result = $query->getResult();
+```
 ```$result[n][1]``` will now be of type ```Point``` instead of the string ```'POINT(X Y)'```
 
