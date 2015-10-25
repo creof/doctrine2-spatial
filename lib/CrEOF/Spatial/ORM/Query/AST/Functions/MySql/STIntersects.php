@@ -27,11 +27,11 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Description of ST_Intersects
+ * Description of STIntersects
  *
  * @author Maximilian
  */
-class ST_Intersects extends AbstractSpatialDQLFunction
+class STIntersects extends AbstractSpatialDQLFunction
 {
 	 protected $platforms = array('mysql');
 
