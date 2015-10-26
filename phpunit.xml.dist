@@ -32,13 +32,5 @@
         <var name="db_password" value="" />
         <var name="db_name" value="spatial_tests" />
         <var name="db_port" value="5432" />
-
-        <!-- Database for temporary connections (i.e. to drop/create the main database) -->
-        <var name="tmpdb_type" value="pdo_pgsql"/>
-        <var name="tmpdb_host" value="localhost"/>
-        <var name="tmpdb_username" value="postgres"/>
-        <var name="tmpdb_password" value=""/>
-        <var name="tmpdb_name" value="doctrine_tests_tmp"/>
-        <var name="tmpdb_port" value="5432"/>
     </php>
 </phpunit>
