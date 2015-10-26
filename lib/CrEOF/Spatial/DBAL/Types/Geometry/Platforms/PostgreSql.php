@@ -60,7 +60,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToPHPValueSQL($sqlExpr)
     {
-        return sprintf('ST_AsEWKB(%s)', $sqlExpr);
+        return sprintf('ST_AsBinary(%s)', $sqlExpr);
     }
 
     /**
