@@ -167,7 +167,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
         $this->entityManager = $this->getEntityManager();
         $this->schemaTool    = $this->getSchemaTool();
 
-        if (true) {
+        if ($GLOBALS['opt_mark_sql']) {
             static::getConnection()->executeQuery(sprintf('SELECT 1 /*%s*//*%s*/', get_class($this), $this->getName()));
         }
 

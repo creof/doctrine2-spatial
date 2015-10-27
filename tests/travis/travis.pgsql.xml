@@ -31,5 +31,6 @@
         <var name="db_password" value="" />
         <var name="db_name" value="spatial_tests" />
         <var name="db_port" value="5432" />
+        <var name="opt_mark_sql" value="false" /> <!-- Execute dummy SELECT statement before each test to mark DB query log -->
     </php>
 </phpunit>
