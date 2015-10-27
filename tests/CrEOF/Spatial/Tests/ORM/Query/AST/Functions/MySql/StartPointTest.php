@@ -35,7 +35,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class StartPointTest extends OrmTest
@@ -44,6 +43,8 @@ class StartPointTest extends OrmTest
     {
         $this->usesEntity('linestring');
         $this->usesType('point');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 
@@ -98,7 +99,7 @@ class StartPointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE StartPoint(l.lineString) = GeomFromText(:p1)');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE StartPoint(l.lineString) = :p1');
 
         $query->setParameter('p1', new Point(0, 0), 'point');
 
@@ -135,7 +136,7 @@ class StartPointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE StartPoint(l.lineString) = StartPoint(GeomFromText(:p1))');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE StartPoint(l.lineString) = StartPoint(:p1)');
 
         $query->setParameter('p1', $lineString2, 'linestring');
 

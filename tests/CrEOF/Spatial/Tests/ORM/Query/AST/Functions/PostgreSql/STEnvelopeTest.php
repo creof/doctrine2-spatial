@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STEnvelopeTest extends OrmTest
@@ -44,6 +43,8 @@ class STEnvelopeTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('polygon');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -138,7 +139,7 @@ class STEnvelopeTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query        = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Envelope(p.polygon) = ST_GeomFromText(:p1)');
+        $query        = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Envelope(p.polygon) = :p1');
         $envelopeRing = new LineString(array(
                 new Point(0, 0),
                 new Point(10, 0),

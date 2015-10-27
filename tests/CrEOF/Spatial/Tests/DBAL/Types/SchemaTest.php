@@ -45,6 +45,8 @@ class SchemaTest extends OrmTest
 
                 // Throws exception if mapping does not exist
                 $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($fieldType);
+
+                $this->assertNotEmpty($typeMapping);
             }
         }
     }

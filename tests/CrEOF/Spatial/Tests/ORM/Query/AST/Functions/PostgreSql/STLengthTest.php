@@ -35,7 +35,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STLengthTest extends OrmTest
@@ -43,6 +42,8 @@ class STLengthTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('linestring');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -99,7 +100,7 @@ class STLengthTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(ST_GeomFromText(:p1)) > ST_Length(l.lineString)');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(:p1) > ST_Length(l.lineString)');
 
         $query->setParameter('p1', $lineString, 'linestring');
 

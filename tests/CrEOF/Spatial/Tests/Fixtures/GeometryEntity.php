@@ -32,7 +32,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
  * @license http://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table(options={"engine"="MyISAM"})
+ * @Table()
  */
 class GeometryEntity
 {

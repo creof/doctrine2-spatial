@@ -68,6 +68,11 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     /**
      * @var bool[]
      */
+    protected $supportedPlatforms = array();
+
+    /**
+     * @var bool[]
+     */
     protected static $createdEntities = array();
 
     /**
@@ -155,11 +160,15 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        if (count($this->supportedPlatforms) && ! in_array($this->getPlatform()->getName(), $this->supportedPlatforms, true)) {
+            $this->markTestSkipped(sprintf('No support for platform %s in test class %s.', $this->getPlatform()->getName(), get_class($this)));
+        }
+
         $this->entityManager = $this->getEntityManager();
         $this->schemaTool    = $this->getSchemaTool();
 
         if (true) {
-            static::getConnection()->executeQuery('SELECT 1 /*' . get_class($this) . '*/');
+            static::getConnection()->executeQuery(sprintf('SELECT 1 /*%s*//*%s*/', get_class($this), $this->getName()));
         }
 
         $this->sqlLoggerStack->enabled = true;
@@ -214,6 +223,14 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $platform
+     */
+    protected function supportsPlatform($platform)
+    {
+        $this->supportedPlatforms[$platform] = true;
+    }
+
+    /**
      * @param string $entityName
      */
     protected function usesEntity($entityName)
@@ -244,7 +261,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
 
                 // Since doctrineTypeComments may already be initialized check if added type requires comment
                 if (Type::getType($typeName)->requiresSQLCommentHint($this->getPlatform())) {
-                    $this->getPlatform()->markDoctrineTypeCommented($typeName);
+                    $this->getPlatform()->markDoctrineTypeCommented(Type::getType($typeName));
                 }
 
                 static::$addedTypes[$typeName] = true;
@@ -261,6 +278,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
 
         foreach (array_keys($this->usedEntities) as $entityName) {
             if (! isset(static::$createdEntities[$entityName])) {
+                //TODO: getClassMetadata marked internal in 2.5
                 $classes[] = $this->getEntityManager()->getClassMetadata(static::$entities[$entityName]['class']);
 
                 static::$createdEntities[$entityName] = true;
