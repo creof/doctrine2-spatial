@@ -2,6 +2,9 @@
 <phpunit backupGlobals="false"
          colors="true"
          bootstrap="./tests/CrEOF/Spatial/Tests/TestInit.php"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
         >
 
     <testsuites>
