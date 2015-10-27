@@ -37,56 +37,102 @@ There is support for both WKB/WKT and EWKB/EWKT return values. Currently only WK
 Currently the following SQL functions are supported in DQL (more coming):
 
 ### PostgreSQL
-* ST_Area
-* ST_AsBinary
-* ST_AsGeoJson
-* ST_AsText
-* ST_Azimuth
-* ST_Boundary
-* ST_Buffer
-* ST_Centroid
-* ST_ClosestPoint
-* ST_Contains
-* ST_ContainsProperly
-* ST_CoveredBy
-* ST_Covers
-* ST_Crosses
-* ST_Disjoint
-* ST_Distance
-* ST_Envelope
-* ST_Expand
-* ST_Extent
-* ST_GeomFromText
-* ST_Intersection
-* ST_Intersects
-* ST_Length
-* ST_LineCrossingDirection
-* ST_LineInterpolatePoint
-* ST_MakeBox2D
-* ST_MakeLine
-* ST_Point
-* ST_Scale
-* ST_SetSRID
-* ST_Simplify
-* ST_StartPoint
-* ST_Summary
-* ST_Perimeter
-* ST_Touches
-* ST_Transform
+ * STArea
+ * STAsBinary
+ * STAsGeoJson
+ * STAsText
+ * STAzimuth
+ * STBoundary
+ * STBuffer
+ * STCentroid
+ * STClosestPoint
+ * STContains
+ * STContainsProperly
+ * STCoveredBy
+ * STCovers
+ * STCrosses
+ * STDisjoint
+ * STDistance
+ * STDistanceSphere
+ * STDWithin
+ * STEnvelope
+ * STExpand
+ * STExtent
+ * STGeomFromText
+ * STIntersection
+ * STIntersects
+ * STLength
+ * STLineCrossingDirection
+ * STLineInterpolatePoint
+ * STMakeBox2D
+ * STMakeLine
+ * STMakePoint
+ * STPerimeter
+ * STPoint
+ * STScale
+ * STSetSRID
+ * STSimplify
+ * STStartPoint
+ * STSummary
+ * STTouches
+ * STTransform
 
 ### MySQL
-* Area
-* AsBinary
-* AsText
-* Contains
-* Disjoint
-* Envelope
-* GeomFromText
-* GLength
-* LineString
-* MBRContains
-* MBRDisjoint
-* StartPoint
+ * Area
+ * AsBinary
+ * AsText
+ * Buffer
+ * Centroid
+ * Contains
+ * Crosses
+ * Dimension
+ * Distance
+ * Disjoint
+ * DistanceFromMultyLine
+ * EndPoint
+ * Envelope
+ * Equals
+ * ExteriorRing
+ * GeodistPt
+ * GeometryType
+ * GeomFromText
+ * GLength
+ * InteriorRingN
+ * Intersects
+ * IsClosed
+ * IsEmpty
+ * IsSimple
+ * LineStringFromWKB
+ * LineString
+ * MBRContains
+ * MBRDisjoint
+ * MBREqual
+ * MBRIntersects
+ * MBROverlaps
+ * MBRTouches
+ * MBRWithin
+ * NumInteriorRings
+ * NumPoints
+ * Overlaps
+ * PointFromWKB
+ * PointN
+ * Point
+ * SRID
+ * StartPoint
+ * ST_Buffer
+ * ST_Contains
+ * ST_Crosses
+ * ST_Disjoint
+ * ST_Equals
+ * ST_Intersects
+ * ST_Overlaps
+ * ST_Touches
+ * ST_Within
+ * Touches
+ * Within
+ * X
+ * Y
+
 
 ## Setup/Installation
 

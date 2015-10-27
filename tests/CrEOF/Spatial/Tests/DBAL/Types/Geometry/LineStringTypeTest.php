@@ -41,7 +41,7 @@ class LineStringTypeTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
         parent::setUp();
     }
 
@@ -49,14 +49,14 @@ class LineStringTypeTest extends OrmTest
     {
         $entity = new LineStringEntity();
 
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::LINESTRING_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -72,14 +72,14 @@ class LineStringTypeTest extends OrmTest
         $entity = new LineStringEntity();
 
         $entity->setLineString($lineString);
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::LINESTRING_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -95,12 +95,12 @@ class LineStringTypeTest extends OrmTest
         $entity = new LineStringEntity();
 
         $entity->setLineString($lineString);
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $result = $this->_em->getRepository(self::LINESTRING_ENTITY)->findByLineString($lineString);
+        $result = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->findByLineString($lineString);
 
         $this->assertEquals($entity, $result[0]);
     }

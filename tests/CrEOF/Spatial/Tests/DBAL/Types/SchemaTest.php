@@ -51,7 +51,7 @@ class SchemaTest extends OrmTest
 
     public function testSchemaReverseMapping()
     {
-        $result = $this->_schemaTool->getUpdateSchemaSql($this->getAllClassMetadata(), true);
+        $result = $this->getSchemaTool()->getUpdateSchemaSql($this->getAllClassMetadata(), true);
 
         $this->assertCount(0, $result);
     }
@@ -64,7 +64,7 @@ class SchemaTest extends OrmTest
         $metadata = array();
 
         foreach ($this->getEntityClasses() as $entityClass) {
-            $metadata[] = $this->_em->getClassMetadata($entityClass);
+            $metadata[] = $this->getEntityManager()->getClassMetadata($entityClass);
         }
 
         return $metadata;

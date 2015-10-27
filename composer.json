@@ -16,8 +16,8 @@
     "require-dev": {
         "doctrine/common": ">=2.1",
         "doctrine/dbal": ">=2.1",
-        "phpunit/phpunit": ">=3.7",
-        "rhumsaa/array_column": "~1.1"
+        "phpunit/phpunit": ">=4.8",
+        "ramsey/array_column": "~1.1"
     },
     "autoload": {
         "psr-0": {

@@ -40,7 +40,7 @@ class PointTypeTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('point');
+        $this->usesEntity('point');
         parent::setUp();
     }
 
@@ -48,14 +48,14 @@ class PointTypeTest extends OrmTest
     {
         $entity = new PointEntity();
 
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::POINT_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -66,14 +66,14 @@ class PointTypeTest extends OrmTest
         $entity = new PointEntity();
 
         $entity->setPoint($point);
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::POINT_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -84,12 +84,12 @@ class PointTypeTest extends OrmTest
         $entity = new PointEntity();
 
         $entity->setPoint($point);
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $result = $this->_em->getRepository(self::POINT_ENTITY)->findByPoint($point);
+        $result = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->findByPoint($point);
 
         $this->assertEquals($entity, $result[0]);
     }

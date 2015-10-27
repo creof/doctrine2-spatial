@@ -28,7 +28,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * Touches DQL function
- *
+ * 
+ * @deprecated since MySQL 5.7.6
  * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @license http://mdhheydari.mit-license.org MIT
  */

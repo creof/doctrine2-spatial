@@ -41,7 +41,7 @@ class GeometryWalkerTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
         parent::setUp();
     }
 
@@ -64,23 +64,23 @@ class GeometryWalkerTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT AsBinary(StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT AsBinary(StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
         $this->assertEquals(new Point(0, 0), $result[0][1]);
         $this->assertEquals(new Point(3, 3), $result[1][1]);
 
-        $query = $this->_em->createQuery('SELECT AsBinary(Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT AsBinary(Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
@@ -107,23 +107,23 @@ class GeometryWalkerTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT ST_AsBinary(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT ST_AsBinary(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
         $this->assertEquals(new Point(0, 0), $result[0][1]);
         $this->assertEquals(new Point(3, 3), $result[1][1]);
 
-        $query = $this->_em->createQuery('SELECT ST_AsBinary(ST_Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT ST_AsBinary(ST_Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
@@ -150,23 +150,23 @@ class GeometryWalkerTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT AsText(StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT AsText(StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
         $this->assertEquals(new Point(0, 0), $result[0][1]);
         $this->assertEquals(new Point(3, 3), $result[1][1]);
 
-        $query = $this->_em->createQuery('SELECT AsText(Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT AsText(Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
@@ -193,23 +193,23 @@ class GeometryWalkerTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT ST_AsText(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
         $this->assertEquals(new Point(0, 0), $result[0][1]);
         $this->assertEquals(new Point(3, 3), $result[1][1]);
 
-        $query = $this->_em->createQuery('SELECT ST_AsText(ST_Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_Envelope(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();

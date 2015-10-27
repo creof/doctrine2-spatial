@@ -43,8 +43,8 @@ class GeometryTypeTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('geometry');
-        $this->useEntity('no_hint_geometry');
+        $this->usesEntity('geometry');
+        $this->usesEntity('no_hint_geometry');
         parent::setUp();
     }
 
@@ -52,14 +52,14 @@ class GeometryTypeTest extends OrmTest
     {
         $entity = new GeometryEntity();
 
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -69,14 +69,14 @@ class GeometryTypeTest extends OrmTest
         $entity = new GeometryEntity();
 
         $entity->setGeometry(new Point(1, 1));
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -91,14 +91,14 @@ class GeometryTypeTest extends OrmTest
 
         $point->setSrid(200);
         $entity->setGeometry($point);
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -113,14 +113,14 @@ class GeometryTypeTest extends OrmTest
 
         $point->setSrid(0);
         $entity->setGeometry($point);
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -135,14 +135,14 @@ class GeometryTypeTest extends OrmTest
                  new Point(1, 1)
             ))
         );
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -162,14 +162,14 @@ class GeometryTypeTest extends OrmTest
         );
 
         $entity->setGeometry(new Polygon($rings));
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
 
         $id = $entity->getId();
 
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $queryEntity = $this->_em->getRepository(self::GEOMETRY_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -183,7 +183,7 @@ class GeometryTypeTest extends OrmTest
         $entity = new NoHintGeometryEntity();
 
         $entity->setGeometry('POINT(0 0)');
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
     }
 }
