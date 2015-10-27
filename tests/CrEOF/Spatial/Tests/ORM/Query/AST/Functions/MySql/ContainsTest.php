@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class ContainsTest extends OrmTest
@@ -45,6 +44,8 @@ class ContainsTest extends OrmTest
     {
         $this->usesEntity('polygon');
         $this->usesType('point');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 

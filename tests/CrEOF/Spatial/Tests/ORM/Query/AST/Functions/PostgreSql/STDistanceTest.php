@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STDistanceTest extends OrmTest
@@ -46,6 +45,8 @@ class STDistanceTest extends OrmTest
         $this->usesEntity('point');
         $this->usesEntity('geography');
         $this->usesType('geopoint');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 

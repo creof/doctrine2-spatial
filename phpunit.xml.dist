@@ -12,7 +12,6 @@
 
     <groups>
         <include>
-            <group>postgresql</group>        <!-- Tests specific to PostgreSQL -->
             <group>php</group>               <!-- Tests for PHP type objects -->
             <group>result_processing</group> <!-- Tests for lexer/parser/reader -->
             <group>geometry</group>          <!-- Tests for geometry types -->
@@ -20,9 +19,6 @@
             <group>geography</group>         <!-- Tests for geography types -->
             <group>srid</group>              <!-- Tests for SRID functionality -->
         </include>
-        <exclude>
-            <group>mysql</group>             <!-- Test specific to MySQL -->
-        </exclude>
     </groups>
 
     <php>

@@ -35,7 +35,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STGeomFromTextTest extends OrmTest
@@ -43,6 +42,8 @@ class STGeomFromTextTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('geometry');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 

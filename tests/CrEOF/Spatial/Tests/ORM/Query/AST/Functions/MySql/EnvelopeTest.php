@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class EnvelopeTest extends OrmTest
@@ -44,6 +43,8 @@ class EnvelopeTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('polygon');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 

@@ -68,6 +68,11 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     /**
      * @var bool[]
      */
+    protected $supportedPlatforms = array();
+
+    /**
+     * @var bool[]
+     */
     protected static $createdEntities = array();
 
     /**
@@ -155,6 +160,10 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        if (count($this->supportedPlatforms) && ! in_array($this->getPlatform()->getName(), $this->supportedPlatforms, true)) {
+            $this->markTestSkipped();
+        }
+
         $this->entityManager = $this->getEntityManager();
         $this->schemaTool    = $this->getSchemaTool();
 
@@ -211,6 +220,14 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     protected function usesType($typeName)
     {
         $this->usedTypes[$typeName] = true;
+    }
+
+    /**
+     * @param string $platform
+     */
+    protected function supportsPlatform($platform)
+    {
+        $this->supportedPlatforms[$platform] = true;
     }
 
     /**

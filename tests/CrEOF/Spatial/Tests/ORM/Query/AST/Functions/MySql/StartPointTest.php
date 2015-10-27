@@ -35,7 +35,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class StartPointTest extends OrmTest
@@ -44,6 +43,8 @@ class StartPointTest extends OrmTest
     {
         $this->usesEntity('linestring');
         $this->usesType('point');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 

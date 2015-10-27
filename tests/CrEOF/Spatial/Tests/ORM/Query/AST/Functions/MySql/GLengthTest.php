@@ -35,7 +35,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class GLengthTest extends OrmTest
@@ -43,6 +42,8 @@ class GLengthTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('linestring');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 
