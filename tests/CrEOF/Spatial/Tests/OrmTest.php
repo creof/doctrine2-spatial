@@ -161,7 +161,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         if (count($this->supportedPlatforms) && ! in_array($this->getPlatform()->getName(), $this->supportedPlatforms, true)) {
-            $this->markTestSkipped();
+            $this->markTestSkipped(sprintf('No support for platform %s in test class %s.', $this->getPlatform()->getName(), get_class($this)));
         }
 
         $this->entityManager = $this->getEntityManager();
