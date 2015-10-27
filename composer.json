@@ -11,11 +11,9 @@
     ],
     "license": "MIT",
     "require": {
-        "doctrine/orm": ">=2.1"
+        "doctrine/orm": ">=2.3"
     },
     "require-dev": {
-        "doctrine/common": ">=2.1",
-        "doctrine/dbal": ">=2.1",
         "phpunit/phpunit": ">=4.8",
         "ramsey/array_column": "~1.1"
     },
