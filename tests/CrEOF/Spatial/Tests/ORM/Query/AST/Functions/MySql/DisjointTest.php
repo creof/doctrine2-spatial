@@ -92,7 +92,7 @@ class DisjointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, Disjoint(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, Disjoint(p.polygon, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
         $query->setParameter('p1', new Polygon(array($lineString2)), 'polygon');
 
@@ -152,7 +152,7 @@ class DisjointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Disjoint(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Disjoint(p.polygon, :p1) = 1');
 
         $query->setParameter('p1', new Polygon(array($lineString2)), 'polygon');
 
@@ -162,7 +162,7 @@ class DisjointTest extends OrmTest
         $this->assertEquals($entity3, $result[0]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Disjoint(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Disjoint(p.polygon, :p1) = 1');
 
         $query->setParameter('p1', new Polygon(array($lineString3)), 'polygon');
 
