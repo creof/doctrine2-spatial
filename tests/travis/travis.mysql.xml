@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit backupGlobals="false"
+         colors="true"
+         bootstrap="../CrEOF/Spatial/Tests/TestInit.php"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+        >
+
+    <testsuites>
+        <testsuite>
+            <directory>./tests/CrEOF/Spatial/Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <groups>
+        <include>
+            <group>php</group>               <!-- Tests for PHP type objects -->
+            <group>result_processing</group> <!-- Tests for lexer/parser/reader -->
+            <group>geometry</group>          <!-- Tests for geometry types -->
+            <group>dql</group>               <!-- Tests for DQL functions -->
+            <group>geography</group>         <!-- Tests for geography types -->
+        </include>
+        <exclude>
+            <group>srid</group>              <!-- Tests for SRID functionality -->
+        </exclude>
+    </groups>
+
+    <php>
+        <var name="db_type" value="pdo_mysql"/>
+        <var name="db_host" value="127.0.0.1" />
+        <var name="db_username" value="root" />
+        <var name="db_password" value="" />
+        <var name="db_name" value="spatial_tests" />
+        <var name="db_port" value="3306" />
+    </php>
+</phpunit>
