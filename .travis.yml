@@ -9,11 +9,16 @@ php:
   - hhvm
 
 env:
-  - DB=mysql
-  - DB=pgsql
+  - DB=mysql ORM=2.3
+  - DB=mysql ORM=2.4
+  - DB=mysql ORM=2.5
+  - DB=pgsql ORM=2.3
+  - DB=pgsql ORM=2.4
+  - DB=pgsql ORM=2.5
 
 before_script:
   - composer self-update
+  - cp tests/travis/orm$ORM/composer.json .
   - composer install --prefer-source
 
 script:
@@ -21,8 +26,16 @@ script:
 
 matrix:
   exclude:
+    - php: 7.0               # PHP 7 requires PHPUnit 5, work needed to support the later
     - php: hhvm
-      env: DB=pgsql  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-    - php: 7.0       # PHP 7 requires PHPUnit 5, work needed to support the later
+      env: DB=pgsql ORM=2.3  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: hhvm
+      env: DB=pgsql ORM=2.4  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: hhvm
+      env: DB=pgsql ORM=2.5  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: 5.3
+      env: DB=mysql ORM=2.5  # ORM >=2.5 requires PHP >=5.4
+    - php: 5.3
+      env: DB=pgsql ORM=2.5  # ORM >=2.5 requires PHP >=5.4
 
 sudo: false
