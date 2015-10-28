@@ -9,7 +9,7 @@
 
     <testsuites>
         <testsuite>
-            <directory>./tests/CrEOF/Spatial/Tests</directory>
+            <directory>../CrEOF/Spatial/Tests</directory>
         </testsuite>
     </testsuites>
 

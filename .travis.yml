@@ -23,5 +23,6 @@ matrix:
   exclude:
     - php: hhvm
       env: DB=pgsql  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: 7.0       # PHP 7 requires PHPUnit 5, work needed to support the later
 
 sudo: false
