@@ -1,5 +1,6 @@
 # doctrine2-spatial
 
+[![Build Status](https://travis-ci.org/creof/doctrine2-spatial.svg?branch=master)](https://travis-ci.org/creof/doctrine2-spatial)
 [![Code Climate](https://codeclimate.com/github/creof/doctrine2-spatial/badges/gpa.svg)](https://codeclimate.com/github/creof/doctrine2-spatial)
 [![Test Coverage](https://codeclimate.com/github/creof/doctrine2-spatial/badges/coverage.svg)](https://codeclimate.com/github/creof/doctrine2-spatial/coverage)
 
