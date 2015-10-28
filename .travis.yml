@@ -18,7 +18,7 @@ env:
 
 before_script:
   - composer self-update
-  - cp tests/travis/orm$ORM/composer.json .
+  - cp ./tests/travis/composer.orm$ORM.json ./composer.json
   - composer install --prefer-source
 
 script:
