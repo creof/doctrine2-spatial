@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STAsBinaryTest extends OrmTest
@@ -44,6 +43,8 @@ class STAsBinaryTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('linestring');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 

@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class MBRContainsTest extends OrmTest
@@ -45,6 +44,8 @@ class MBRContainsTest extends OrmTest
     {
         $this->usesEntity('polygon');
         $this->usesType('point');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 
@@ -79,7 +80,7 @@ class MBRContainsTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, MBRContains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, MBRContains(p.polygon, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
         $query->setParameter('p1', new Point(2, 2), 'point');
 
@@ -123,7 +124,7 @@ class MBRContainsTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, :p1) = 1');
 
         $query->setParameter('p1', new Point(6, 6), 'point');
 
@@ -134,7 +135,7 @@ class MBRContainsTest extends OrmTest
         $this->assertEquals($entity2, $result[1]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, :p1) = 1');
 
         $query->setParameter('p1', new Point(2, 2), 'point');
 

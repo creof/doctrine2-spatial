@@ -35,7 +35,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STGeomFromTextTest extends OrmTest
@@ -43,6 +42,8 @@ class STGeomFromTextTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('geometry');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -60,7 +61,7 @@ class STGeomFromTextTest extends OrmTest
 
         $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
 
-        $query->setParameter('geometry', new Point(5, 5), 'point');
+        $query->setParameter('geometry', 'POINT(5 5)', 'string');
 
         $result = $query->getResult();
 
@@ -88,7 +89,7 @@ class STGeomFromTextTest extends OrmTest
 
         $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
 
-        $query->setParameter('geometry', new LineString($value), 'linestring');
+        $query->setParameter('geometry', 'LINESTRING(0 0,5 5,10 10)', 'string');
 
         $result = $query->getResult();
 

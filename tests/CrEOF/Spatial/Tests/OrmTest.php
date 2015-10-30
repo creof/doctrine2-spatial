@@ -68,6 +68,11 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     /**
      * @var bool[]
      */
+    protected $supportedPlatforms = array();
+
+    /**
+     * @var bool[]
+     */
     protected static $createdEntities = array();
 
     /**
@@ -155,14 +160,18 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        if (count($this->supportedPlatforms) && ! isset($this->supportedPlatforms[$this->getPlatform()->getName()])) {
+            $this->markTestSkipped(sprintf('No support for platform %s in test class %s.', $this->getPlatform()->getName(), get_class($this)));
+        }
+
         $this->entityManager = $this->getEntityManager();
         $this->schemaTool    = $this->getSchemaTool();
 
-        if (true) {
-            static::getConnection()->executeQuery('SELECT 1 /*' . get_class($this) . '*/');
+        if ($GLOBALS['opt_mark_sql']) {
+            static::getConnection()->executeQuery(sprintf('SELECT 1 /*%s*//*%s*/', get_class($this), $this->getName()));
         }
 
-        $this->sqlLoggerStack->enabled = true;
+        $this->sqlLoggerStack->enabled = $GLOBALS['opt_use_debug_stack'];
 
         $this->setUpTypes();
         $this->setUpEntities();
@@ -214,6 +223,14 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $platform
+     */
+    protected function supportsPlatform($platform)
+    {
+        $this->supportedPlatforms[$platform] = true;
+    }
+
+    /**
      * @param string $entityName
      */
     protected function usesEntity($entityName)
@@ -244,7 +261,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
 
                 // Since doctrineTypeComments may already be initialized check if added type requires comment
                 if (Type::getType($typeName)->requiresSQLCommentHint($this->getPlatform())) {
-                    $this->getPlatform()->markDoctrineTypeCommented($typeName);
+                    $this->getPlatform()->markDoctrineTypeCommented(Type::getType($typeName));
                 }
 
                 static::$addedTypes[$typeName] = true;
@@ -261,6 +278,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
 
         foreach (array_keys($this->usedEntities) as $entityName) {
             if (! isset(static::$createdEntities[$entityName])) {
+                //TODO: getClassMetadata marked internal in 2.5
                 $classes[] = $this->getEntityManager()->getClassMetadata(static::$entities[$entityName]['class']);
 
                 static::$createdEntities[$entityName] = true;
@@ -346,46 +364,54 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @throws \Exception
+     * @todo: This needs cleanup
      */
-//    protected function onNotSuccessfulTest(\Exception $e)
-//    {
-//        if ($e instanceof \PHPUnit_Framework_AssertionFailedError) {
-//            throw $e;
-//        }
-//
-//        if (isset($this->sqlLoggerStack->queries) && count($this->sqlLoggerStack->queries)) {
-//            $queries = "";
-//            for ($i = count($this->sqlLoggerStack->queries)-1; $i > max(count($this->sqlLoggerStack->queries)-25, 0) && isset($this->sqlLoggerStack->queries[$i]); $i--) {
-//                $query = $this->sqlLoggerStack->queries[$i];
-//                $params = array_map(function ($p) {
-//                    if (is_object($p)) {
-//                        return get_class($p);
-//                    }
-//
-//                    return "'".$p."'";
-//                }, $query['params'] ?: array());
-//                $queries .= ($i+1).". SQL: '".$query['sql']."' Params: ".implode(", ", $params).PHP_EOL;
-//            }
-//
-//            $trace = $e->getTrace();
-//            $traceMsg = "";
-//            foreach ($trace as $part) {
-//                if (isset($part['file'])) {
-//                    if (strpos($part['file'], "PHPUnit/") !== false) {
-//                        // Beginning with PHPUnit files we don't print the trace anymore.
-//                        break;
-//                    }
-//
-//                    $traceMsg .= $part['file'].":".$part['line'].PHP_EOL;
-//                }
-//            }
-//
-//            $message = "[".get_class($e)."] ".$e->getMessage().PHP_EOL.PHP_EOL."With queries:".PHP_EOL.$queries.PHP_EOL."Trace:".PHP_EOL.$traceMsg;
-//
-//            throw new \Exception($message, (int)$e->getCode(), $e);
-//        }
-//        throw $e;
-//    }
+    protected function onNotSuccessfulTest(\Exception $e)
+    {
+        if (! $GLOBALS['opt_use_debug_stack'] || $e instanceof \PHPUnit_Framework_AssertionFailedError) {
+            throw $e;
+        }
+
+        if (isset($this->sqlLoggerStack->queries) && count($this->sqlLoggerStack->queries)) {
+            $queries = "";
+            $count   = count($this->sqlLoggerStack->queries) - 1;
+            $max     = max(count($this->sqlLoggerStack->queries) - 25, 0);
+
+            for ($i = $count; $i > $max && isset($this->sqlLoggerStack->queries[$i]); $i--) {
+                $query = $this->sqlLoggerStack->queries[$i];
+                $params = array_map(function ($param) {
+                    if (is_object($param)) {
+                        return get_class($param);
+                    }
+
+                    return sprintf("'%s'", $param);
+                }, $query['params'] ?: array());
+
+                $queries .= sprintf("%2d. SQL: '%s' Params: %s\n", $i, $query['sql'], implode(", ", $params));
+            }
+
+            $trace    = $e->getTrace();
+            $traceMsg = "";
+
+            foreach ($trace as $part) {
+                if (isset($part['file'])) {
+                    if (strpos($part['file'], "PHPUnit/") !== false) {
+                        // Beginning with PHPUnit files we don't print the trace anymore.
+                        break;
+                    }
+
+                    $traceMsg .= sprintf("%s:%s\n", $part['file'], $part['line']);
+                }
+            }
+
+            $message = sprintf("[%s] %s\n\n", get_class($e), $e->getMessage());
+            $message .= sprintf("With queries:\n%s\nTrace:\n%s", $queries, $traceMsg);
+
+            throw new \Exception($message, (int)$e->getCode(), $e);
+        }
+
+        throw $e;
+    }
 
     /**
      * Using the SQL Logger Stack this method retrieves the current query count executed in this test.

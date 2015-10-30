@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STDistanceSphereTest extends OrmTest
@@ -44,6 +43,8 @@ class STDistanceSphereTest extends OrmTest
     protected function setUp()
     {
         $this->usesEntity('point');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -74,7 +75,7 @@ class STDistanceSphereTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
         $query->setParameter('p1', $madison, 'point');
 

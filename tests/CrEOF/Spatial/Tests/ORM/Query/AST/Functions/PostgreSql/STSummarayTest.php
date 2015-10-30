@@ -40,7 +40,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STSummaryTest extends OrmTest
@@ -49,6 +48,8 @@ class STSummaryTest extends OrmTest
     {
         $this->usesEntity('geometry');
         $this->usesEntity('geography');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 

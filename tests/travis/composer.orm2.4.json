@@ -11,7 +11,7 @@
     ],
     "license": "MIT",
     "require": {
-        "doctrine/orm": ">=2.3"
+        "doctrine/orm": "<2.5"
     },
     "require-dev": {
         "phpunit/phpunit": ">=4.8",

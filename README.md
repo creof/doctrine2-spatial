@@ -127,6 +127,7 @@ Currently the following SQL functions are supported in DQL (more coming):
  * ST_Contains
  * ST_Crosses
  * ST_Disjoint
+ * ST_Distance
  * ST_Equals
  * ST_Intersects
  * ST_Overlaps

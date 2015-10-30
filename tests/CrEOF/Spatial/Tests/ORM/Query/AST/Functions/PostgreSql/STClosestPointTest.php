@@ -36,7 +36,6 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STClosestPointTest extends OrmTest
@@ -45,6 +44,8 @@ class STClosestPointTest extends OrmTest
     {
         $this->usesEntity('polygon');
         $this->usesType('point');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -79,7 +80,7 @@ class STClosestPointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, ST_GeomFromText(:p1))) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, :p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
         $query->setParameter('p1', new Point(2, 2), 'point');
 
