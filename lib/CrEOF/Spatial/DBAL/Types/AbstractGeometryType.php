@@ -38,7 +38,7 @@ use Doctrine\DBAL\Types\Type;
  */
 abstract class AbstractGeometryType extends Type
 {
-    const PLATFORM_MYSQL = 'MySql';
+    const PLATFORM_MYSQL      = 'MySql';
     const PLATFORM_POSTGRESQL = 'PostgreSql';
 
     /**
@@ -150,7 +150,7 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        if ( ! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
+        if (! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
             throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
         }
 
@@ -167,7 +167,7 @@ abstract class AbstractGeometryType extends Type
     {
         $name = __CLASS__ . '::PLATFORM_' . strtoupper($platform->getName());
 
-        if ( ! defined($name)) {
+        if (! defined($name)) {
             throw UnsupportedPlatformException::unsupportedPlatform($name);
         }
 
