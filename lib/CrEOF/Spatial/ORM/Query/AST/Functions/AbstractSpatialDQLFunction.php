@@ -24,16 +24,12 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-use Doctrine\ORM\Query\AST\InputParameter;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Version;
 
 /**
  * Abstract spatial DQL function
@@ -98,20 +94,12 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     {
         $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
-        $paramNum = 0;
-        $result   = sprintf('%s(', $this->functionName);
+        $result = sprintf('%s(', $this->functionName);
 
-        for ($i = 0, $size = count($this->geomExpr); $i < $size; $i++) {
-            $expr = $this->geomExpr[$i]->dispatch($sqlWalker);
+        for ($i = 0, $size = count($this->geomExpr); $i < $size;) {
+            $result .= $this->geomExpr[$i]->dispatch($sqlWalker);
 
-            if (! Version::compare('2.5') !== -1 && $this->geomExpr[$i] instanceof InputParameter && $sqlWalker->getQuery()->getParameter($paramNum)->getValue() instanceof GeometryInterface) {
-                $expr = Type::getType($sqlWalker->getQuery()->getParameter($paramNum)->getType())->convertToDatabaseValueSQL($expr, $sqlWalker->getConnection()->getDatabasePlatform());
-                $paramNum++;
-            }
-
-            $result .= $expr;
-
-            if ($i < $size - 1) {
+            if (++$i < $size) {
                 $result .= ', ';
             }
         }
