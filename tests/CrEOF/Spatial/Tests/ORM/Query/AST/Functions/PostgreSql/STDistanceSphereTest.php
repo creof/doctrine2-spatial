@@ -56,7 +56,6 @@ class STDistanceSphereTest extends OrmTest
         $newYork   = new Point(-73.938611, 40.664167);
         $losAngles = new Point(-118.2430, 34.0522);
         $dallas    = new Point(-96.803889, 32.782778);
-        $madison   = new Point(-89.4, 43.066667);
 
         $entity1 = new PointEntity();
 
@@ -75,9 +74,9 @@ class STDistanceSphereTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
-        $query->setParameter('p1', $madison, 'point');
+        $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 

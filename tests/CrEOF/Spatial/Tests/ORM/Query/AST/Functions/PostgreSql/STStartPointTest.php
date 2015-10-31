@@ -98,9 +98,9 @@ class STStartPointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = :p1');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_GeomFromText(:p1)');
 
-        $query->setParameter('p1', new Point(0, 0), 'point');
+        $query->setParameter('p1', 'POINT(0 0)', 'string');
 
         $result = $query->getResult();
 
@@ -135,9 +135,9 @@ class STStartPointTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_StartPoint(:p1)');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_StartPoint(ST_GeomFromText(:p1))');
 
-        $query->setParameter('p1', $lineString2, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(3 3, 4 15, 5 22)', 'string');
 
         $result = $query->getResult();
 

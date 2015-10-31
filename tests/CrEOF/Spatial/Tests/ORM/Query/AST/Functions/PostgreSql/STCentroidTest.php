@@ -79,8 +79,7 @@ class STCentroidTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
-
+        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
         $result = $query->getResult();
 
         $this->assertCount(2, $result);

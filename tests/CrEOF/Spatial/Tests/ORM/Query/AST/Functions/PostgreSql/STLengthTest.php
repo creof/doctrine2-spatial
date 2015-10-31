@@ -66,8 +66,7 @@ class STLengthTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l, ST_Length(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
-
+        $query  = $this->getEntityManager()->createQuery('SELECT l, ST_Length(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
@@ -80,13 +79,7 @@ class STLengthTest extends OrmTest
      */
     public function testSTLengthWhereParameter()
     {
-        $lineString = new LineString(array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3)
-        ));
-        $entity     = new LineStringEntity();
+        $entity = new LineStringEntity();
 
         $entity->setLineString(new LineString(
             array(
@@ -100,9 +93,9 @@ class STLengthTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(:p1) > ST_Length(l.lineString)');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(ST_GeomFromText(:p1)) > ST_Length(l.lineString)');
 
-        $query->setParameter('p1', $lineString, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(0 0,1 1,2 2,3 3)', 'string');
 
         $result = $query->getResult();
 

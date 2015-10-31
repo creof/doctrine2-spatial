@@ -131,7 +131,7 @@ class AreaTest extends OrmTest
     /**
      * @group geometry
      */
-    public function testAreaWhereParameter()
+    public function testAreaWhere()
     {
         $entity1 = new PolygonEntity();
         $rings1 = array(

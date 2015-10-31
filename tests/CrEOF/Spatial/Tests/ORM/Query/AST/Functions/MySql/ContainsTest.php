@@ -80,9 +80,9 @@ class ContainsTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, Contains(p.polygon, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query  = $this->getEntityManager()->createQuery('SELECT p, Contains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
-        $query->setParameter('p1', new Point(2, 2), 'point');
+        $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
@@ -124,9 +124,9 @@ class ContainsTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, :p1) = 1');
+        $query  = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, GeomFromText(:p1)) = 1');
 
-        $query->setParameter('p1', new Point(6, 6), 'point');
+        $query->setParameter('p1', 'POINT(6 6)', 'string');
 
         $result = $query->getResult();
 
@@ -135,9 +135,9 @@ class ContainsTest extends OrmTest
         $this->assertEquals($entity2, $result[1]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, :p1) = 1');
+        $query  = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, GeomFromText(:p1)) = 1');
 
-        $query->setParameter('p1', new Point(2, 2), 'point');
+        $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 

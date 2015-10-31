@@ -131,7 +131,7 @@ class STAreaTest extends OrmTest
     /**
      * @group geometry
      */
-    public function testSTAreaWhereParameter()
+    public function testSTAreaWhere()
     {
         $entity1 = new PolygonEntity();
         $rings1 = array(
