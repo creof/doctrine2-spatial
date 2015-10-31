@@ -21,9 +21,11 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\PHP\Types;
+namespace CrEOF\Spatial\PHP\Types\Geography;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\PHP\Types\AbstractGeometry;
+use CrEOF\Spatial\PHP\Types\AbstractLineString;
 use CrEOF\Spatial\PHP\Types\AbstractPoint;
 
 /**
