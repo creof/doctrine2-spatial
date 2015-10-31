@@ -2,7 +2,7 @@
 
 ## composer.json
     "require": {
-    	...
+        ...
         "creof/doctrine2-spatial": "dev-master"
 
 You will also have to change the version requirement of doctrine to at least 2.1:
@@ -13,13 +13,14 @@ You will also have to change the version requirement of doctrine to at least 2.1
 ## config.yml
 Add the types and functions you need to your Symfony configuration. The doctrine type names are not hardcoded.
 
-	doctrine:
-	    dbal:
-	        types:
-	            geometry:   CrEOF\Spatial\DBAL\Types\GeometryType
-	            point:      CrEOF\Spatial\DBAL\Types\Geometry\PointType
-	            polygon:    CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
-	            linestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
+```yaml
+doctrine:
+    dbal:
+        types:
+            geometry:   CrEOF\Spatial\DBAL\Types\GeometryType
+            point:      CrEOF\Spatial\DBAL\Types\Geometry\PointType
+            polygon:    CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
+            linestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
 
 	    orm:
 	        dql:
@@ -125,14 +126,16 @@ Add the types and functions you need to your Symfony configuration. The doctrine
 Simply add new class in vendor\slavenin\doctrine2-spatial\lib\CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ with need function name and config.yml.
 
 Example:
+```php
+class Point extends AbstractSpatialDQLFunction
+{
+	protected $platforms = array('mysql');
+	/*function name in dql*/
+	protected $functionName = 'Point';
+	/*min params count*/
+    protected $minGeomExpr = 2;
+	/*max params  count*/
+	protected $maxGeomExpr = 2;
+}
+```
 
-	class Point extends AbstractSpatialDQLFunction
-	{
-		protected $platforms = array('mysql');
-		/*function name in dql*/
-		protected $functionName = 'Point';
-		/*min params count*/
-	    protected $minGeomExpr = 2;
-		/*max params  count*/
-		protected $maxGeomExpr = 2;
-	}
