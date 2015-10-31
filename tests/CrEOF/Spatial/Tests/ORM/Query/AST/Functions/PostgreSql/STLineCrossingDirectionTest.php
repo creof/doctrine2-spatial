@@ -95,7 +95,7 @@ class STLineCrossingDirectionTest extends OrmTest
 
         $query->setParameter('p1', $lineString4, 'linestring');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(3, $result);
         $this->assertEquals($entity1, $result[0][0]);
@@ -154,7 +154,7 @@ class STLineCrossingDirectionTest extends OrmTest
 
         $query->setParameter('p1', $lineString4, 'linestring');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity2, $result[0]);

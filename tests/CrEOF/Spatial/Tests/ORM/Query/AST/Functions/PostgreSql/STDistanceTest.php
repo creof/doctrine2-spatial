@@ -81,7 +81,7 @@ class STDistanceTest extends OrmTest
 
         $query->setParameter('p1', $madison, 'point');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(3, $result);
         $this->assertEquals($entity1, $result[0][0]);
@@ -123,7 +123,7 @@ class STDistanceTest extends OrmTest
 
         $query->setParameter('p1', $madison, 'geopoint');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(3, $result);
         $this->assertEquals($entity1, $result[0][0]);
@@ -165,7 +165,7 @@ class STDistanceTest extends OrmTest
 
         $query->setParameter('p1', $madison, 'geopoint');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(3, $result);
         $this->assertEquals($entity1, $result[0][0]);
