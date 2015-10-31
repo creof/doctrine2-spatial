@@ -5,7 +5,8 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
-        >
+         processUncoveredFilesFromWhitelist="true"
+>
 
     <testsuites>
         <testsuite>
@@ -25,6 +26,13 @@
             <group>srid</group>              <!-- Tests for SRID functionality -->
         </exclude>
     </groups>
+
+    <filter>
+        <whitelist>
+            <file>../../tests/CrEOF/Spatial/Tests/OrmTest.php</file>
+            <directory>../../lib</directory>
+        </whitelist>
+    </filter>
 
     <php>
         <var name="db_type" value="pdo_mysql"/>
