@@ -24,6 +24,7 @@
 namespace CrEOF\Spatial\Tests;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -34,6 +35,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\ORM\Version;
 
 /**
  * Abstract ORM test class
@@ -421,6 +423,35 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     protected function getCurrentQueryCount()
     {
         return count($this->sqlLoggerStack->queries);
+    }
+
+    /**
+     * On older ORM <2.5.1 call convertToDatabaseValueSQL() on parameters
+     *
+     * @param Query $query
+     *
+     * @return Query
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    protected function fixupQuery(Query $query) {
+        if (Version::compare('2.5.1') === 1) {
+            $queryDQL   = $query->getDQL();
+            $parameters = $query->getParameters();
+
+            for ($i = 0, $size = count($parameters); $i < $size; $i++) {
+                $parameter = $parameters[$i];
+
+                if ($parameter->getValue() instanceof GeometryInterface) {
+                    $parameterDQL   = sprintf(':%s', $parameter->getName());
+                    $parameterFixed = Type::getType($parameter->getType())->convertToDatabaseValueSQL($parameterDQL, $this->getPlatform());
+                    $queryDQL       = str_replace($parameterDQL, $parameterFixed, $queryDQL);
+                }
+            }
+
+            $query->setDQL($queryDQL);
+        }
+
+        return $query;
     }
 
     /**
