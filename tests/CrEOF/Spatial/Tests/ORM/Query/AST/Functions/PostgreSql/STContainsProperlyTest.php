@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -79,9 +79,9 @@ class STContainsProperlyTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_ContainsProperly(p.polygon, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
-        $query->setParameter('p1', $lineString2, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
         $result = $query->getResult();
 
@@ -123,9 +123,9 @@ class STContainsProperlyTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_ContainsProperly(p.polygon, :p1) = true');
+        $query  = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', $lineString2, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
         $result = $query->getResult();
 

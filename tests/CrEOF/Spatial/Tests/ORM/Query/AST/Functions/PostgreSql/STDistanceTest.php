@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geography\Point as GeographyPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -58,7 +58,6 @@ class STDistanceTest extends OrmTest
         $newYork   = new Point(-73.938611, 40.664167);
         $losAngles = new Point(-118.2430, 34.0522);
         $dallas    = new Point(-96.803889, 32.782778);
-        $madison   = new Point(-89.4, 43.066667);
 
         $entity1 = new PointEntity();
 
@@ -77,9 +76,9 @@ class STDistanceTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance(p.point, :p1) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_Distance(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
-        $query->setParameter('p1', $madison, 'point');
+        $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 
@@ -100,7 +99,6 @@ class STDistanceTest extends OrmTest
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
         $losAngles = new GeographyPoint(-118.2430, 34.0522);
         $dallas    = new GeographyPoint(-96.803889, 32.782778);
-        $madison   = new GeographyPoint(-89.4, 43.066667);
 
         $entity1 = new GeographyEntity();
 
@@ -119,9 +117,9 @@ class STDistanceTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, :p1) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query  = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
-        $query->setParameter('p1', $madison, 'geopoint');
+        $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 
@@ -142,7 +140,6 @@ class STDistanceTest extends OrmTest
         $newYork   = new GeographyPoint(-73.938611, 40.664167);
         $losAngles = new GeographyPoint(-118.2430, 34.0522);
         $dallas    = new GeographyPoint(-96.803889, 32.782778);
-        $madison   = new GeographyPoint(-89.4, 43.066667);
 
         $entity1 = new GeographyEntity();
 
@@ -161,9 +158,9 @@ class STDistanceTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, :p1, false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query  = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
 
-        $query->setParameter('p1', $madison, 'geopoint');
+        $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 

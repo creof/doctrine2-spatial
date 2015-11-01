@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -131,7 +131,7 @@ class AreaTest extends OrmTest
     /**
      * @group geometry
      */
-    public function testAreaWhereParameter()
+    public function testAreaWhere()
     {
         $entity1 = new PolygonEntity();
         $rings1 = array(

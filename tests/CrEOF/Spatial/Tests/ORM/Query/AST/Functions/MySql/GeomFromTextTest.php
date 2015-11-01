@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -60,9 +60,9 @@ class GeomFromTextTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:geometry)');
+        $query  = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)');
 
-        $query->setParameter('geometry', 'POINT(5 5)', 'string');
+        $query->setParameter('p1', 'POINT(5 5)', 'string');
 
         $result = $query->getResult();
 
@@ -88,9 +88,9 @@ class GeomFromTextTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:geometry)');
+        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)');
 
-        $query->setParameter('geometry', 'LINESTRING(0 0,5 5,10 10)', 'string');
+        $query->setParameter('p1', 'LINESTRING(0 0,5 5,10 10)', 'string');
 
         $result = $query->getResult();
 

@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -131,7 +131,7 @@ class STAreaTest extends OrmTest
     /**
      * @group geometry
      */
-    public function testSTAreaWhereParameter()
+    public function testSTAreaWhere()
     {
         $entity1 = new PolygonEntity();
         $rings1 = array(

@@ -94,14 +94,14 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     {
         $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
-        $result = sprintf(
-            '%s(%s',
-            $this->functionName,
-            $this->geomExpr[0]->dispatch($sqlWalker)
-        );
+        $result = sprintf('%s(', $this->functionName);
 
-        for ($i = 1, $size = count($this->geomExpr); $i < $size; $i++) {
-            $result .= ', ' . $this->geomExpr[$i]->dispatch($sqlWalker);
+        for ($i = 0, $size = count($this->geomExpr); $i < $size;) {
+            $result .= $this->geomExpr[$i]->dispatch($sqlWalker);
+
+            if (++$i < $size) {
+                $result .= ', ';
+            }
         }
 
         $result .= ')';
