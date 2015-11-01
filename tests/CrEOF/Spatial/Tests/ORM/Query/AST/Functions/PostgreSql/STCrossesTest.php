@@ -86,7 +86,7 @@ class STCrossesTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(3, $result);
         $this->assertEquals($entity1, $result[0][0]);
@@ -136,7 +136,7 @@ class STCrossesTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity2, $result[0]);
@@ -146,7 +146,7 @@ class STCrossesTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(2 0, 12 10)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity2, $result[0]);

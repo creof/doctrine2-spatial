@@ -93,7 +93,7 @@ class GLengthTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(0 0,1 1,2 2,3 3,4 4,5 5)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity, $result[0]);

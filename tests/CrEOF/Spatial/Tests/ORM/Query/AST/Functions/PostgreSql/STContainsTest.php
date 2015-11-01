@@ -84,7 +84,7 @@ class STContainsTest extends OrmTest
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(2, $result);
         $this->assertEquals($entity1, $result[0][0]);
@@ -128,7 +128,7 @@ class STContainsTest extends OrmTest
 
         $query->setParameter('p1', 'POINT(6 6)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity1, $result[0]);
@@ -138,7 +138,7 @@ class STContainsTest extends OrmTest
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(2, $result);
         $this->assertEquals($entity1, $result[0]);

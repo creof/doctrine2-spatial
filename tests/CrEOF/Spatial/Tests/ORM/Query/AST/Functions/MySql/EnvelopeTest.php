@@ -143,7 +143,7 @@ class EnvelopeTest extends OrmTest
 
         $query->setParameter('p1', 'POLYGON((0 0,10 0,10 10,0 10,0 0))', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity1, $result[0]);

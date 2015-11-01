@@ -102,7 +102,7 @@ class STStartPointTest extends OrmTest
 
         $query->setParameter('p1', 'POINT(0 0)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity1, $result[0]);
@@ -139,7 +139,7 @@ class STStartPointTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(3 3, 4 15, 5 22)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity2, $result[0]);

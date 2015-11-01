@@ -83,7 +83,7 @@ class STContainsProperlyTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(2, $result);
         $this->assertEquals($entity1, $result[0][0]);
@@ -127,7 +127,7 @@ class STContainsProperlyTest extends OrmTest
 
         $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
-        $result = $query->getResult();
+        $result = $this->fixupQuery($query)->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity1, $result[0]);
