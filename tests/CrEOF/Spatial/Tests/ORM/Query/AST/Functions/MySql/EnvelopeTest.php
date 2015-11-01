@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -139,18 +139,9 @@ class EnvelopeTest extends OrmTest
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query        = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Envelope(p.polygon) = :p1');
-        $envelopeRing = new LineString(array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            )
-        );
-        $envelope = new Polygon(array($envelopeRing));
+        $query  = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Envelope(p.polygon) = GeomFromText(:p1)');
 
-        $query->setParameter('p1', $envelope, 'polygon');
+        $query->setParameter('p1', 'POLYGON((0 0,10 0,10 10,0 10,0 0))', 'string');
 
         $result = $query->getResult();
 

@@ -38,7 +38,7 @@ use Doctrine\DBAL\Types\Type;
  */
 abstract class AbstractGeometryType extends Type
 {
-    const PLATFORM_MYSQL = 'MySql';
+    const PLATFORM_MYSQL      = 'MySql';
     const PLATFORM_POSTGRESQL = 'PostgreSql';
 
     /**
@@ -62,7 +62,14 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Converts a value from its PHP representation to its database representation of this type.
+     *
+     * @param mixed            $value
+     * @param AbstractPlatform $platform
+     *
+     * @return mixed
+     * @throws InvalidValueException
+     * @throws UnsupportedPlatformException
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
@@ -70,7 +77,7 @@ abstract class AbstractGeometryType extends Type
             return $value;
         }
 
-        if ( ! ($value instanceof GeometryInterface)) {
+        if (! ($value instanceof GeometryInterface)) {
             throw InvalidValueException::invalidValueNoGeometryInterface();
         }
 
@@ -78,7 +85,12 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Modifies the SQL expression (identifier, parameter) to convert to a PHP value.
+     *
+     * @param string           $sqlExpr
+     * @param AbstractPlatform $platform
+     *
+     * @return string
      */
     public function convertToPHPValueSQL($sqlExpr, $platform)
     {
@@ -86,7 +98,12 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Modifies the SQL expression (identifier, parameter) to convert to a database value.
+     *
+     * @param string           $sqlExpr
+     * @param AbstractPlatform $platform
+     *
+     * @return string
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
@@ -94,7 +111,12 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Converts a value from its database representation to its PHP representation of this type.
+     *
+     * @param mixed            $value
+     * @param AbstractPlatform $platform
+     *
+     * @return mixed
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -110,7 +132,9 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the name of this type.
+     *
+     * @return string
      */
     public function getName()
     {
@@ -118,7 +142,12 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array            $fieldDeclaration
+     * @param AbstractPlatform $platform
+     *
+     * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -126,7 +155,11 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractPlatform $platform
+     *
+     * @return array
      */
     public function getMappedDatabaseTypes(AbstractPlatform $platform)
     {
@@ -134,7 +167,14 @@ abstract class AbstractGeometryType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * If this Doctrine Type maps to an already mapped database type,
+     * reverse schema engineering can't take them apart. You need to mark
+     * one of those types as commented, which will have Doctrine use an SQL
+     * comment to typehint the actual Doctrine Type.
+     *
+     * @param AbstractPlatform $platform
+     *
+     * @return bool
      */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
@@ -150,7 +190,7 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        if ( ! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
+        if (! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
             throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
         }
 
@@ -167,7 +207,7 @@ abstract class AbstractGeometryType extends Type
     {
         $name = __CLASS__ . '::PLATFORM_' . strtoupper($platform->getName());
 
-        if ( ! defined($name)) {
+        if (! defined($name)) {
             throw UnsupportedPlatformException::unsupportedPlatform($name);
         }
 
