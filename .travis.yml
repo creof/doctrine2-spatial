@@ -20,11 +20,11 @@ before_script:
   - composer install --prefer-source
 
 script:
-  - DB=mysql ./vendor/bin/phpunit -v -c tests/travis/travis.mysql.xml --coverage-clover build/logs/clover-mysql.xml
-  - DB=pgsql ./vendor/bin/phpunit -v -c tests/travis/travis.pgsql.xml --coverage-clover build/logs/clover-pgsql.xml
+  - DB=mysql ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-clover ./build/logs/clover-mysql.xml
+  - DB=pgsql ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-clover ./build/logs/clover-pgsql.xml
 
 after_script:
-  - ./vendor/bin/test-reporter --coverage-report build/logs/clover-mysql.xml --coverage-report build/logs/clover-pgsql.xml
+  - ./vendor/bin/test-reporter --coverage-report ./build/logs/clover-mysql.xml --coverage-report ./build/logs/clover-pgsql.xml
 
 matrix:
   allow_failures:
