@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -36,14 +36,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STContainsProperlyTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('polygon');
+        $this->usesEntity('polygon');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -69,18 +70,18 @@ class STContainsProperlyTest extends OrmTest
         $entity1 = new PolygonEntity();
 
         $entity1->setPolygon(new Polygon(array($lineString1)));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PolygonEntity();
 
         $entity2->setPolygon(new Polygon(array($lineString2)));
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT p, ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
 
-        $query->setParameter('p1', $lineString2, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
         $result = $query->getResult();
 
@@ -113,18 +114,18 @@ class STContainsProperlyTest extends OrmTest
         $entity1 = new PolygonEntity();
 
         $entity1->setPolygon(new Polygon(array($lineString1)));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PolygonEntity();
 
         $entity2->setPolygon(new Polygon(array($lineString2)));
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query  = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', $lineString2, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
         $result = $query->getResult();
 

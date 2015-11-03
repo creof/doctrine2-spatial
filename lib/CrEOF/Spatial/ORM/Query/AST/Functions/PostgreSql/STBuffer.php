@@ -24,15 +24,11 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
  * ST_Buffer DQL function
- *
- * @author  Tom Vogt <tom@lemuria.org>
- * @license http://mit-license.org MIT
  */
-class STBuffer extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class STBuffer extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 

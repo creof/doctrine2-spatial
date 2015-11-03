@@ -45,13 +45,15 @@ class SchemaTest extends OrmTest
 
                 // Throws exception if mapping does not exist
                 $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($fieldType);
+
+                $this->assertNotEmpty($typeMapping);
             }
         }
     }
 
     public function testSchemaReverseMapping()
     {
-        $result = $this->_schemaTool->getUpdateSchemaSql($this->getAllClassMetadata(), true);
+        $result = $this->getSchemaTool()->getUpdateSchemaSql($this->getAllClassMetadata(), true);
 
         $this->assertCount(0, $result);
     }
@@ -64,7 +66,7 @@ class SchemaTest extends OrmTest
         $metadata = array();
 
         foreach ($this->getEntityClasses() as $entityClass) {
-            $metadata[] = $this->_em->getClassMetadata($entityClass);
+            $metadata[] = $this->getEntityManager()->getClassMetadata($entityClass);
         }
 
         return $metadata;

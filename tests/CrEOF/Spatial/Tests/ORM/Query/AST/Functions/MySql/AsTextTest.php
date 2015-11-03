@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -35,14 +35,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class AsTextTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 
@@ -64,17 +65,16 @@ class AsTextTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString(new LineString($lineString1));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString(new LineString($lineString2));
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
-
+        $query  = $this->getEntityManager()->createQuery('SELECT AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $result = $query->getResult();
 
         $this->assertEquals('LINESTRING(0 0,2 2,5 5)', $result[0][1]);

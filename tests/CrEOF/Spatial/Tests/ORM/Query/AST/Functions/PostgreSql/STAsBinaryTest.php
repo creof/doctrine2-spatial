@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\DBAL\Types\Utils;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
@@ -36,14 +36,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STAsBinaryTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -65,17 +66,16 @@ class STAsBinaryTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString(new LineString($lineString1));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString(new LineString($lineString2));
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT ST_AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
-
+        $query  = $this->getEntityManager()->createQuery('SELECT ST_AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $result = $query->getResult();
 
         $this->assertEquals('010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440', bin2hex(Utils::toBinary(stream_get_contents($result[0][1]))));

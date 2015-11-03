@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 luca capra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +22,21 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
+
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Abstract DQL function requiring 2 geometry parameters and an third optional parameter
+ * STWithin DQL function
  *
- * @author     Derek J. Lambert <dlambert@dereklambert.com>
- * @license    http://dlambert.mit-license.org MIT
- * @see        AbstractSpatialDQLFunction
- * @deprecated No longer used by internal code and not recommended - will be removed soon
+ * @author  luca capra <luca.capra@create-net.org>
+ * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractDualGeometryOptionalParameterDQLFunction extends AbstractSpatialDQLFunction
-{
-    /**
-     * @var int
-     */
-    protected $minGeomExpr = 2;
+class STWithin extends AbstractSpatialDQLFunction {
 
-    /**
-     * @var int
-     */
-    protected $maxGeomExpr = 3;
+    protected $platforms = array('mysql');
+    protected $functionName = 'ST_Within';
+    protected $minGeomExpr = 2;
+    protected $maxGeomExpr = 2;
+
 }

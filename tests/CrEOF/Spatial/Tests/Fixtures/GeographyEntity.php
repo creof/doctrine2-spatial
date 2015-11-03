@@ -47,7 +47,7 @@ class GeographyEntity
     /**
      * @var GeographyInterface $geography
      *
-     * @Column(type="geography", nullable=true, options={"srid"="4326"})
+     * @Column(type="geography", nullable=true)
      */
     protected $geography;
 

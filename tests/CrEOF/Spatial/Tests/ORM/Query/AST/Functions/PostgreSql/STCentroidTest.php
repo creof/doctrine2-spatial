@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -36,14 +36,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STCentroidTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('polygon');
+        $this->usesEntity('polygon');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -69,17 +70,16 @@ class STCentroidTest extends OrmTest
         $entity1 = new PolygonEntity();
 
         $entity1->setPolygon(new Polygon(array($lineString1)));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PolygonEntity();
 
         $entity2->setPolygon(new Polygon(array($lineString2)));
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
-
+        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
         $result = $query->getResult();
 
         $this->assertCount(2, $result);

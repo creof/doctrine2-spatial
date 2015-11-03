@@ -126,8 +126,8 @@ class BinaryParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        \PHPUnit_Framework_Error
-     * @expectedExceptionMessage unpack(): Type d: not enough input, need 8, have 4
+     * @expectedException              \PHPUnit_Framework_Error
+     * @expectedExceptionMessageRegExp /Type d: not enough input, need 8, have 4$/
      */
     public function testParsingShortNDRPointValue()
     {

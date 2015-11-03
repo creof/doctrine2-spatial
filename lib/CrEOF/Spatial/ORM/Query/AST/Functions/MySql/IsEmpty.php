@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2015 Mohammad Heydari
  * Copyright (C) 2012 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,25 +22,23 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
+
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Abstract DQL function with variable geometry parameters
+ * IsEmpty DQL function
  *
- * @author     Derek J. Lambert <dlambert@dereklambert.com>
- * @license    http://dlambert.mit-license.org MIT
- * @see        AbstractSpatialDQLFunction
- * @deprecated No longer used by internal code and not recommended - will be removed soon
+ * @author  Mohammad Heydari <mdh.heydari@gmail.com>
+ * @license http://mdhheydari.mit-license.org MIT
  */
-abstract class AbstractVariableGeometryDQLFunction extends AbstractSpatialDQLFunction
+class IsEmpty extends AbstractSpatialDQLFunction
 {
-    /**
-     * @var int
-     */
+    protected $platforms = array('mysql');
+
+    protected $functionName = 'IsEmpty';
+
     protected $minGeomExpr = 1;
 
-    /**
-     * @var int
-     */
-    protected $maxGeomExpr = null;
+    protected $maxGeomExpr = 1;
 }

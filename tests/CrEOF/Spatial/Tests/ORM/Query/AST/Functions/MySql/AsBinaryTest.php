@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -35,14 +35,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group mysql
  * @group dql
  */
 class AsBinaryTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 
@@ -64,16 +65,16 @@ class AsBinaryTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString(new LineString($lineString1));
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 = new LineStringEntity();
 
         $entity2->setLineString(new LineString($lineString2));
-        $this->_em->persist($entity2);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity2);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query   = $this->_em->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query   = $this->getEntityManager()->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $result  = $query->getResult();
         $string1 = '010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440';
         $string2 = '0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640';

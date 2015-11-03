@@ -1,4 +1,4 @@
-# doctrine2-spatial
+# Doctrine2-Spatial
 
 This is a fork of https://github.com/djlambert/doctrine2-spatial with additional functions for PostGIS:
 
@@ -15,4 +15,3 @@ This is a fork of https://github.com/djlambert/doctrine2-spatial with additional
 * ST_Y
 
 refer to the parent repository for all other instructions
-

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2014 David Pacheco
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 /**
  * ST_DWithin DQL function
  *
- * @author  Tom Vogt <tom@lemuria.org>
- * @license http://mit-license.org MIT
+ * @author  David Pacheco
+ * @license http://dlambert.mit-license.org MIT
  */
 class STDWithin extends AbstractSpatialDQLFunction
 {
@@ -37,7 +37,7 @@ class STDWithin extends AbstractSpatialDQLFunction
 
     protected $functionName = 'ST_DWithin';
 
-    protected $minGeomExpr = 3;
+    protected $minGeomExpr = 2;
 
     protected $maxGeomExpr = 3;
 }

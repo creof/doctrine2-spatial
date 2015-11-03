@@ -1,0 +1,36 @@
+language: php
+sudo: false
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+env:
+  - ORM=2.3
+  - ORM=2.4
+  - ORM=2.5
+
+before_script:
+  - composer self-update
+  - cp ./tests/travis/composer.orm$ORM.json ./composer.json
+  - composer install --prefer-source
+
+script:
+  - DB=mysql ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-clover ./build/logs/clover-mysql.xml
+  - DB=pgsql ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-clover ./build/logs/clover-pgsql.xml
+
+after_script:
+  - ./vendor/bin/test-reporter --coverage-report ./build/logs/clover-mysql.xml --coverage-report ./build/logs/clover-pgsql.xml
+
+matrix:
+  allow_failures:
+    - php: hhvm   # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: 7.0    # PHP 7 requires PHPUnit 5, work needed to support the later
+
+  exclude:
+    - php: 5.3
+      env: ORM=2.5  # ORM >=2.5 requires PHP >=5.4

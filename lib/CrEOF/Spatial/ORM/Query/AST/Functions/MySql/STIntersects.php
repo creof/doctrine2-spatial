@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2012 Derek J. Lambert
  *
@@ -21,25 +22,22 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
+
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Abstract DQL function requiring 1 geometry parameter
+ * Description of STIntersects
  *
- * @author     Derek J. Lambert <dlambert@dereklambert.com>
- * @license    http://dlambert.mit-license.org MIT
- * @see        AbstractSpatialDQLFunction
- * @deprecated No longer used by internal code and not recommended - will be removed soon
+ * @author Maximilian
  */
-abstract class AbstractSingleGeometryDQLFunction extends AbstractSpatialDQLFunction
+class STIntersects extends AbstractSpatialDQLFunction
 {
-    /**
-     * @var int
-     */
-    protected $minGeomExpr = 1;
+	 protected $platforms = array('mysql');
 
-    /**
-     * @var int
-     */
-    protected $maxGeomExpr = 1;
+    protected $functionName = 'ST_Intersects';
+
+    protected $minGeomExpr = 2;
+
+    protected $maxGeomExpr = 2;
 }

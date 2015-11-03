@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 luca capra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +22,21 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
+
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Abstract geometry DQL function
+ * STDistance DQL function
  *
- * @author     Derek J. Lambert <dlambert@dereklambert.com>
- * @license    http://dlambert.mit-license.org MIT
- * @see        AbstractSpatialDQLFunction
- * @deprecated No longer used by internal code and not recommended - will be removed soon
+ * @author  luca capra <luca.capra@create-net.org>
+ * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractGeometryDQLFunction extends AbstractSpatialDQLFunction
-{
+class STDistance extends AbstractSpatialDQLFunction {
+
+    protected $platforms = array('mysql');
+    protected $functionName = 'ST_Distance';
+    protected $minGeomExpr = 2;
+    protected $maxGeomExpr = 2;
 
 }

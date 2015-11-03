@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -35,14 +35,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STCrossesTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('linestring');
+        $this->usesEntity('linestring');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -67,23 +68,23 @@ class STCrossesTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 =  new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 =  new LineStringEntity();
 
         $entity3->setLineString($lineString3);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT l, ST_Crosses(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query  = $this->getEntityManager()->createQuery('SELECT l, ST_Crosses(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
 
-        $query->setParameter('p1', $lineString1, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
 
         $result = $query->getResult();
 
@@ -117,33 +118,33 @@ class STCrossesTest extends OrmTest
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
-        $this->_em->persist($entity1);
+        $this->getEntityManager()->persist($entity1);
 
         $entity2 =  new LineStringEntity();
 
         $entity2->setLineString($lineString2);
-        $this->_em->persist($entity2);
+        $this->getEntityManager()->persist($entity2);
 
         $entity3 =  new LineStringEntity();
 
         $entity3->setLineString($lineString3);
-        $this->_em->persist($entity3);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
+        $query  = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', $lineString1, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity2, $result[0]);
-        $this->_em->clear();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
+        $query  = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
 
-        $query->setParameter('p1', $lineString3, 'linestring');
+        $query->setParameter('p1', 'LINESTRING(2 0, 12 10)', 'string');
 
         $result = $query->getResult();
 

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2013 luca capra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +22,21 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
+
+use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Abstract DQL function requiring 3 parameters
+ * STOverlaps DQL function
  *
- * @author  Tom Vogt <tom@lemuria.org>
+ * @author  luca capra <luca.capra@create-net.org>
  * @license http://mit-license.org MIT
  */
-abstract class AbstractTripleGeometryDQLFunction extends AbstractSpatialDQLFunction
-{
-    /**
-     * @var int
-     */
-    protected $minGeomExpr = 3;
+class STOverlaps extends AbstractSpatialDQLFunction {
 
-    /**
-     * @var int
-     */
-    protected $maxGeomExpr = 3;
+    protected $platforms = array('mysql');
+    protected $functionName = 'ST_Overlaps';
+    protected $minGeomExpr = 2;
+    protected $maxGeomExpr = 2;
+
 }

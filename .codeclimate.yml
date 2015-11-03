@@ -1,0 +1,10 @@
+---
+engines:
+  phpcodesniffer:
+    enabled: true
+  phpmd:
+    enabled: true
+ratings:
+  paths:
+  - "**.php"
+exclude_paths: []

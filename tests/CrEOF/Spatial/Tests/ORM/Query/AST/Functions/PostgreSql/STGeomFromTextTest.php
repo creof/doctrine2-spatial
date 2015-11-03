@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -35,14 +35,15 @@ use Doctrine\ORM\Query;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group postgresql
  * @group dql
  */
 class STGeomFromTextTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->useEntity('geometry');
+        $this->usesEntity('geometry');
+        $this->supportsPlatform('postgresql');
+
         parent::setUp();
     }
 
@@ -54,13 +55,13 @@ class STGeomFromTextTest extends OrmTest
         $entity1 = new GeometryEntity();
 
         $entity1->setGeometry(new Point(5, 5));
-        $this->_em->persist($entity1);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity1);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
+        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
 
-        $query->setParameter('geometry', new Point(5, 5), 'point');
+        $query->setParameter('geometry', 'POINT(5 5)', 'string');
 
         $result = $query->getResult();
 
@@ -82,13 +83,13 @@ class STGeomFromTextTest extends OrmTest
         $entity1 = new GeometryEntity();
 
         $entity1->setGeometry(new LineString($value));
-        $this->_em->persist($entity1);
-        $this->_em->flush();
-        $this->_em->clear();
+        $this->getEntityManager()->persist($entity1);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
-        $query = $this->_em->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
+        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
 
-        $query->setParameter('geometry', new LineString($value), 'linestring');
+        $query->setParameter('geometry', 'LINESTRING(0 0,5 5,10 10)', 'string');
 
         $result = $query->getResult();
 
