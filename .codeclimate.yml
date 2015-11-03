@@ -1,8 +1,9 @@
----
 engines:
   phpcodesniffer:
     enabled: true
   phpmd:
+    enabled: true
+  codeclimate-fixme
     enabled: true
 ratings:
   paths:
