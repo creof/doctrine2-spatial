@@ -28,6 +28,9 @@ script:
 after_script:
   - ./vendor/bin/coveralls -v
 
+notifications:
+  webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
+
 matrix:
   exclude:
     - php: 7.0               # PHP 7 requires PHPUnit 5, work needed to support the later
