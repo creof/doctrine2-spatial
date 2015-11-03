@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2012 Tom Vogt
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,15 +26,18 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Buffer DQL function
+ * ST_Line_Locate_Point DQL function
+ *
+ * @author  Tom Vogt <tom@lemuria.org>
+ * @license http://mit-license.org MIT
  */
-class STBuffer extends AbstractSpatialDQLFunction
+class STLineLocatePoint extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
-    protected $functionName = 'ST_Buffer';
+    protected $functionName = 'ST_Line_Locate_Point';
 
     protected $minGeomExpr = 2;
 
-    protected $maxGeomExpr = 3;
+    protected $maxGeomExpr = 2;
 }

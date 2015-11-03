@@ -1,22 +1,17 @@
 # Doctrine2-Spatial
 
-[![Build Status](https://travis-ci.org/creof/doctrine2-spatial.svg?branch=master)](https://travis-ci.org/creof/doctrine2-spatial)
-[![Code Climate](https://codeclimate.com/github/creof/doctrine2-spatial/badges/gpa.svg)](https://codeclimate.com/github/creof/doctrine2-spatial)
-[![Test Coverage](https://codeclimate.com/github/creof/doctrine2-spatial/badges/coverage.svg)](https://codeclimate.com/github/creof/doctrine2-spatial/coverage)
-[![Test Coverage](https://img.shields.io/packagist/dm/creof/doctrine2-spatial.svg)](https://packagist.org/packages/creof/doctrine2-spatial)
+This is a fork of https://github.com/djlambert/doctrine2-spatial with additional functions for PostGIS:
 
+* ST_Buffer
+* ST_Difference
+* ST_EndPoint
+* ST_GeometryN
+* ST_Line_Locate_Point
+* ST_Line_Substring
+* ST_Split
+* ST_Translate
+* ST_Union
+* ST_X
+* ST_Y
 
-
-Doctrine2 multi-platform support for spatial types and functions. Currently MySQL and PostgreSQL with PostGIS are supported. Could potentially add support for other platforms if an interest is expressed.
-
-Documentation can be found at [here](./doc/index.md)
-
-## composer.json
-
-    "require": {
-    	...
-        "creof/doctrine2-spatial": ">=0.1"
-
-You will also have to change the version requirement of doctrine to at least 2.3:
-
-        "doctrine/orm": ">=2.3",
+refer to the parent repository for all other instructions

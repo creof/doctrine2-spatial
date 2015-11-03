@@ -24,17 +24,21 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_Buffer DQL function
+ * ST_Line_Substring DQL function
+ *
+ * @author  Tom Vogt <tom@lemuria.org>
+ * @license http://mit-license.org MIT
  */
-class STBuffer extends AbstractSpatialDQLFunction
+class STLineSubstring extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     protected $platforms = array('postgresql');
 
-    protected $functionName = 'ST_Buffer';
+    protected $functionName = 'ST_Line_Substring';
 
-    protected $minGeomExpr = 2;
+    protected $minGeomExpr = 3;
 
     protected $maxGeomExpr = 3;
 }

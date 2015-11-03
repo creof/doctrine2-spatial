@@ -26,15 +26,22 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Buffer DQL function
+ * ST_X DQL function
+ *
+ * @author  Tom Vogt <tom@lemuria.org>
+<<<<<<< HEAD
+ * @license http:// mit-license.org MIT
+=======
+ * @license http://mit-license.org MIT
+>>>>>>> 1fc2da005968a4dc8e6034916680308014e3d174
  */
-class STBuffer extends AbstractSpatialDQLFunction
+class STX extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('postgresql');
 
-    protected $functionName = 'ST_Buffer';
+    protected $functionName = 'ST_X';
 
-    protected $minGeomExpr = 2;
+    protected $minGeomExpr = 1;
 
-    protected $maxGeomExpr = 3;
+    protected $maxGeomExpr = 1;
 }
