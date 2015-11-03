@@ -10,9 +10,12 @@ php:
   - hhvm
 
 env:
-  - ORM=2.3
-  - ORM=2.4
-  - ORM=2.5
+  - DB=mysql ORM=2.3
+  - DB=mysql ORM=2.4
+  - DB=mysql ORM=2.5
+  - DB=pgsql ORM=2.3
+  - DB=pgsql ORM=2.4
+  - DB=pgsql ORM=2.5
 
 before_script:
   - composer self-update
@@ -20,17 +23,21 @@ before_script:
   - composer install --prefer-source
 
 script:
-  - DB=mysql ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-clover ./build/logs/clover-mysql.xml
-  - DB=pgsql ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-clover ./build/logs/clover-pgsql.xml
+  - ./vendor/bin/phpunit -v -c ./tests/travis/travis.$DB.xml --coverage-clover ./build/logs/clover-$TRAVIS_PHP_VERSION-$ORM-$DB.xml
 
 after_script:
-  - ./vendor/bin/test-reporter --coverage-report ./build/logs/clover-mysql.xml --coverage-report ./build/logs/clover-pgsql.xml
+  - ./vendor/bin/coveralls -v
 
 matrix:
-  allow_failures:
-    - php: hhvm   # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-    - php: 7.0    # PHP 7 requires PHPUnit 5, work needed to support the later
-
   exclude:
+    - php: 7.0               # PHP 7 requires PHPUnit 5, work needed to support the later
+    - php: hhvm
+      env: DB=pgsql ORM=2.3  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: hhvm
+      env: DB=pgsql ORM=2.4  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
+    - php: hhvm
+      env: DB=pgsql ORM=2.5  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
     - php: 5.3
-      env: ORM=2.5  # ORM >=2.5 requires PHP >=5.4
+      env: DB=mysql ORM=2.5  # ORM >=2.5 requires PHP >=5.4
+    - php: 5.3
+      env: DB=pgsql ORM=2.5  # ORM >=2.5 requires PHP >=5.4
