@@ -29,7 +29,7 @@ after_script:
   - ./vendor/bin/coveralls -v
 
 notifications:
-  webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
+  webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
 
 matrix:
   exclude:
