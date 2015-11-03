@@ -29,7 +29,11 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * ST_Y DQL function
  *
  * @author  Tom Vogt <tom@lemuria.org>
+<<<<<<< HEAD
  * @license http:// mit-license.org MIT
+=======
+ * @license http://mit-license.org MIT
+>>>>>>> 1fc2da005968a4dc8e6034916680308014e3d174
  */
 class STY extends AbstractSpatialDQLFunction
 {

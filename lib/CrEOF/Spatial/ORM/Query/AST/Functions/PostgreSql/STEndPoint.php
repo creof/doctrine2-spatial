@@ -28,8 +28,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 /**
  * ST_EndPoint DQL function
  *
+<<<<<<< HEAD
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+=======
+ * @author  Tom Vogt <tom@lemuria.org>
+ * @license http://mit-license.org MIT
+>>>>>>> 1fc2da005968a4dc8e6034916680308014e3d174
  */
 class STEndPoint extends AbstractSpatialDQLFunction
 {
