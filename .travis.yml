@@ -1,4 +1,5 @@
 language: php
+
 sudo: false
 
 php:
@@ -10,37 +11,31 @@ php:
   - hhvm
 
 env:
-  - DB=mysql ORM=2.3
-  - DB=mysql ORM=2.4
-  - DB=mysql ORM=2.5
-  - DB=pgsql ORM=2.3
-  - DB=pgsql ORM=2.4
-  - DB=pgsql ORM=2.5
+  - ORM=2.3
+  - ORM=2.4
+  - ORM=2.5
 
 before_script:
   - composer self-update
   - cp ./tests/travis/composer.orm$ORM.json ./composer.json
   - composer install --prefer-source
+  - mkdir -p ./build/coverage
 
 script:
-  - ./vendor/bin/phpunit -v -c ./tests/travis/travis.$DB.xml --coverage-clover ./build/logs/clover-$TRAVIS_PHP_VERSION-$ORM-$DB.xml
+  - ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-php ./build/coverage/coverage-pgsql-$TRAVIS_PHP_VERSION-$ORM.cov
+  - ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-php ./build/coverage/coverage-mysql-$TRAVIS_PHP_VERSION-$ORM.cov
 
 after_script:
+  - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
   - ./vendor/bin/coveralls -v --exclude-no-stmt
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
 
 matrix:
+  allow_failures:
+    - php: 7.0      # PHP 7 requires PHPUnit 5, work needed to support the later
+    - php: hhvm     # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
   exclude:
-    - php: 7.0               # PHP 7 requires PHPUnit 5, work needed to support the later
-    - php: hhvm
-      env: DB=pgsql ORM=2.3  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-    - php: hhvm
-      env: DB=pgsql ORM=2.4  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-    - php: hhvm
-      env: DB=pgsql ORM=2.5  # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
     - php: 5.3
-      env: DB=mysql ORM=2.5  # ORM >=2.5 requires PHP >=5.4
-    - php: 5.3
-      env: DB=pgsql ORM=2.5  # ORM >=2.5 requires PHP >=5.4
+      env: ORM=2.5  # ORM >=2.5 requires PHP >=5.4
