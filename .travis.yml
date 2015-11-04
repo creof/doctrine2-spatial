@@ -26,7 +26,7 @@ script:
   - ./vendor/bin/phpunit -v -c ./tests/travis/travis.$DB.xml --coverage-clover ./build/logs/clover-$TRAVIS_PHP_VERSION-$ORM-$DB.xml
 
 after_script:
-  - ./vendor/bin/coveralls -v
+  - ./vendor/bin/coveralls -v --exclude-no-stmt
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK

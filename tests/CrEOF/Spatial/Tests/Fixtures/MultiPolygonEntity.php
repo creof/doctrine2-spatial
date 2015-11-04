@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,68 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\PHP\Types\Geometry;
+namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\PHP\Types\AbstractMultiPolygon;
+use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
 
 /**
- * MultiPolygon object for MULTIPOLYGON geometry type
+ * Polygon entity
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @Entity
+ * @Table()
  */
-class MultiPolygon extends AbstractMultiPolygon
+class MultiPolygonEntity
 {
+    /**
+     * @var int $id
+     *
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer")
+     */
+    protected $id;
 
+    /**
+     * @var MultiPolygon $multiPolygon
+     *
+     * @Column(type="multipolygon", nullable=true)
+     */
+    protected $multiPolygon;
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set multipolygon
+     *
+     * @param MultiPolygon $multiPolygon
+     *
+     * @return self
+     */
+    public function setMultiPolygon(MultiPolygon $multiPolygon)
+    {
+        $this->multiPolygon = $multiPolygon;
+
+        return $this;
+    }
+
+    /**
+     * Get multipolygon
+     *
+     * @return MultiPolygon
+     */
+    public function getMultiPolygon()
+    {
+        return $this->multiPolygon;
+    }
 }

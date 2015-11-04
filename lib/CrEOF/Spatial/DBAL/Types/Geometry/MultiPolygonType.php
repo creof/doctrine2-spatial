@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,24 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\PHP\Types\Geometry;
+namespace CrEOF\Spatial\DBAL\Types\Geometry;
 
-use CrEOF\Spatial\PHP\Types\AbstractMultiPolygon;
+use CrEOF\Spatial\DBAL\Types\GeometryType;
+use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
- * MultiPolygon object for MULTIPOLYGON geometry type
+ * Doctrine MULTIPOLYGON type
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class MultiPolygon extends AbstractMultiPolygon
+class MultiPolygonType extends GeometryType
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public function getSQLType()
+    {
+        return GeometryInterface::MULTIPOLYGON;
+    }
 }

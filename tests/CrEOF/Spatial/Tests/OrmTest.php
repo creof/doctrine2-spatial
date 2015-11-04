@@ -48,6 +48,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     const POINT_ENTITY            = 'CrEOF\Spatial\Tests\Fixtures\PointEntity';
     const LINESTRING_ENTITY       = 'CrEOF\Spatial\Tests\Fixtures\LineStringEntity';
     const POLYGON_ENTITY          = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
+    const MULTIPOLYGON_ENTITY     = 'CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity';
     const GEOGRAPHY_ENTITY        = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
 
     /**
@@ -114,6 +115,11 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
             'types' => array('polygon'),
             'table' => 'PolygonEntity'
         ),
+        'multipolygon' => array(
+            'class' => self::MULTIPOLYGON_ENTITY,
+            'types' => array('multipolygon'),
+            'table' => 'MultiPolygonEntity'
+        ),
         'geography' => array(
             'class' => self::GEOGRAPHY_ENTITY,
             'types' => array('geography'),
@@ -129,6 +135,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
         'point'         => 'CrEOF\Spatial\DBAL\Types\Geometry\PointType',
         'linestring'    => 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType',
         'polygon'       => 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType',
+        'multipolygon'  => 'CrEOF\Spatial\DBAL\Types\Geometry\MultiPolygonType',
         'geography'     => 'CrEOF\Spatial\DBAL\Types\GeographyType',
         'geopoint'      => 'CrEOF\Spatial\DBAL\Types\Geography\PointType',
         'geolinestring' => 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType',
