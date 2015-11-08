@@ -18,7 +18,9 @@ Documentation can be found at [here](./doc/index.md)
     	...
         "creof/doctrine2-spatial": ">=0.1"
 ```
+
 You will also have to change the version requirement of doctrine to at least 2.3:
-´´´javascript
+```javascript
+
         "doctrine/orm": ">=2.3",
 ```
