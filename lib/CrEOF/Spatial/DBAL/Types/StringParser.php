@@ -121,8 +121,21 @@ class StringParser
      */
     protected function coordinate()
     {
-        $this->match(($this->lexer->isNextToken(StringLexer::T_FLOAT) ? StringLexer::T_FLOAT : StringLexer::T_INTEGER));
+        //$this->match(($this->lexer->isNextToken(StringLexer::T_FLOAT) ? StringLexer::T_FLOAT : StringLexer::T_INTEGER));
+        if($this->lexer->isNextToken(StringLexer::T_FLOAT)){
+            $this->match(StringLexer::T_FLOAT);
 
+            if($this->lexer->isNextToken(StringLexer::T_STRING)){
+                $number = $this->lexer->token['value'];
+                $this->match(StringLexer::T_STRING);
+                $this->match(StringLexer::T_INTEGER);
+                return $number*pow(10,$this->lexer->token['value']);
+            }
+        }
+        else{
+            $this->match(StringLexer::T_INTEGER);
+        }
+        
         return $this->lexer->token['value'];
     }
 
