@@ -100,8 +100,8 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
 
         $parser->parse();
     }
-	
-	 public function testParsingPointScientificValueWithSrid()
+
+    public function testParsingPointScientificValueWithSrid()
     {
         $value    = 'SRID=4326;POINT(4.23e-005 -8E-003)';
         $parser   = new StringParser($value);

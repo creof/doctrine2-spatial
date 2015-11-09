@@ -181,7 +181,7 @@ class StringLexerTest extends \PHPUnit_Framework_TestCase
 
     public function testScannerTokenizesGeometryValueCorrectly()
     {
-        $value  = 'SRID=4326;LINESTRING(0 0.0, 10.1 -10.025, 20.5 25.9, 50 60)';
+        $value  = 'SRID=4326;LINESTRING(0 0.0, 10.1 -10.025, 20.5 25.9, 53E-003 60)';
         $tokens = array(
             array(
                 'value'    => 'SRID',
@@ -259,19 +259,29 @@ class StringLexerTest extends \PHPUnit_Framework_TestCase
                 'position' => 51
             ),
             array(
-                'value'    => 50,
+                'value'    => 53,
                 'type'     => StringLexer::T_INTEGER,
                 'position' => 53
             ),
             array(
-                'value'    => 60,
+                'value'    => 'E',
+                'type'     => StringLexer::T_E,
+                'position' => 55
+            ),
+            array(
+                'value'    => -3,
                 'type'     => StringLexer::T_INTEGER,
                 'position' => 56
             ),
             array(
+                'value'    => 60,
+                'type'     => StringLexer::T_INTEGER,
+                'position' => 61
+            ),
+            array(
                 'value'    => ')',
                 'type'     => StringLexer::T_CLOSE_PARENTHESIS,
-                'position' => 58
+                'position' => 63
             )
         );
 
