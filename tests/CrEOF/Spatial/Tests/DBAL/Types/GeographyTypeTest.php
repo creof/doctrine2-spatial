@@ -135,6 +135,10 @@ class GeographyTypeTest extends OrmTest
     {
         $entity = new GeographyEntity();
 
-        $entity->setGeography('POINT(0 0)');
+        try {
+            $entity->setGeography('POINT(0 0)');
+        } catch (\TypeError $exception) {
+            throw new \PHPUnit_Framework_Error($exception->getMessage(), $exception->getCode());
+        }
     }
 }
