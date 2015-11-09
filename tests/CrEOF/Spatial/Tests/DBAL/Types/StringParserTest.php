@@ -118,7 +118,7 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 5: Error: Expected 'e', got "test" in value "SRID=4326;POINT(4.23test-005 -8e-003)"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 20: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got "test" in value "SRID=4326;POINT(4.23test-005 -8e-003)"
      */
     public function testParsingWrongPointScientificValueWithSrid()
     {

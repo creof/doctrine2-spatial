@@ -34,6 +34,7 @@ class StringLexer extends \Doctrine\Common\Lexer
     const T_NONE               = 1;
     const T_INTEGER            = 2;
     const T_STRING             = 3;
+    const T_E                  = 4;
     const T_FLOAT              = 5;
     const T_CLOSE_PARENTHESIS  = 6;
     const T_OPEN_PARENTHESIS   = 7;
@@ -77,6 +78,8 @@ class StringLexer extends \Doctrine\Common\Lexer
                 $value = (int) $value;
 
                 return self::T_INTEGER;
+            case ($value === 'e'):
+                return self::T_E;
             case (ctype_alpha($value)):
                 $name = __CLASS__ . '::T_' . strtoupper($value);
 
