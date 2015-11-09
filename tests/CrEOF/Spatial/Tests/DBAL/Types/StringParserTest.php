@@ -100,6 +100,33 @@ class StringParserTest extends \PHPUnit_Framework_TestCase
 
         $parser->parse();
     }
+	
+	 public function testParsingPointScientificValueWithSrid()
+    {
+        $value    = 'SRID=4326;POINT(4.23e-005 -8e-003)';
+        $parser   = new StringParser($value);
+        $expected = array(
+            'srid'  => 4326,
+            'type'  => 'POINT',
+            'value' => array(0.0000423, -0.008)
+        );
+
+        $actual = $parser->parse();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage [Syntax Error] line 0, col 20: Error: Expected CrEOF\Spatial\DBAL\Types\StringLexer::T_INTEGER, got "test" in value "SRID=4326;POINT(4.23test-005 -8e-003)"
+     */
+    public function testParsingWrongPointScientificValueWithSrid()
+    {
+        $value    = 'SRID=4326;POINT(4.23test-005 -8e-003)';
+        $parser   = new StringParser($value);
+
+        $parser->parse();
+    }
 
 
     /**
