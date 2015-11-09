@@ -123,7 +123,7 @@ class StringParser
     {
         $this->match(($this->lexer->isNextToken(StringLexer::T_FLOAT) ? StringLexer::T_FLOAT : StringLexer::T_INTEGER));
 		
-		if($this->lexer->isNextToken(StringLexer::T_E)){
+        if($this->lexer->isNextToken(StringLexer::T_E)){
             $number = $this->lexer->token['value'];
             $this->match(StringLexer::T_E);
             $this->match(StringLexer::T_INTEGER);

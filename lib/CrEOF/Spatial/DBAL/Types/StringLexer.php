@@ -78,7 +78,7 @@ class StringLexer extends \Doctrine\Common\Lexer
                 $value = (int) $value;
 
                 return self::T_INTEGER;
-            case ($value === 'e'):
+            case (strtoupper($value) === 'E'):
                 return self::T_E;
             case (ctype_alpha($value)):
                 $name = __CLASS__ . '::T_' . strtoupper($value);
