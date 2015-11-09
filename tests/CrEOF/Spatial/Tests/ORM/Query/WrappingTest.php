@@ -23,8 +23,12 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query;
 
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
+use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTest;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
@@ -45,6 +49,57 @@ class WrappingTest extends OrmTest
         $this->usesEntity('geometry');
         $this->usesType('point');
         parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
+    public function testTypeWrappingSelect()
+    {
+        $lineString = new LineString(array(
+            new Point(0, 0),
+            new Point(10, 0),
+            new Point(10, 10),
+            new Point(0, 10),
+            new Point(0, 0)
+        ));
+        $entity = new PolygonEntity();
+
+        $entity->setPolygon(new Polygon(array($lineString)));
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $dql = 'SELECT p, %s(p.polygon, :geometry) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p';
+
+        switch ($this->getPlatform()->getName()) {
+            case 'postgresql':
+                $function = 'ST_Contains';
+                break;
+            case 'mysql':
+                $function = 'Contains';
+                break;
+            default:
+                throw UnsupportedPlatformException::unsupportedPlatform($this->getPlatform()->getName());
+        }
+
+        $dql = sprintf($dql, $function);
+
+        $query = $this->getEntityManager()->createQuery($dql);
+
+        $query->setParameter('geometry', new Point(2, 2), 'point');
+        $query->processParameterValue('geometry');
+
+        $result    = $query->getSQL();
+        $parameter = '?';
+
+        if (Version::compare('2.5') <= 0) {
+            $parameter = Type::getType('point')->convertToDatabaseValueSQL($parameter, $this->getPlatform());
+        }
+
+        $regex = preg_quote(sprintf('/.polygon, %s)/', $parameter));
+
+        $this->assertRegExp($regex, $result);
     }
 
     /**
