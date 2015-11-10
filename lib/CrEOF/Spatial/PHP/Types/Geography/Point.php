@@ -23,6 +23,9 @@
 
 namespace CrEOF\Spatial\PHP\Types\Geography;
 
+use CrEOF\Geo\Exception\RangeException;
+use CrEOF\Geo\Exception\UnexpectedValueException;
+use CrEOF\Geo\Parser;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\AbstractPoint;
 
@@ -35,11 +38,22 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
 class Point extends AbstractPoint implements GeographyInterface
 {
     /**
-     * {@inheritdoc}
+     * @param mixed $x
+     *
+     * @return self
+     * @throws InvalidValueException
      */
     public function setX($x)
     {
-        $x = $this->toFloat($x);
+        $parser = new Parser($x);
+
+        try {
+            $x = (float) $parser->parse();
+        } catch (RangeException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        } catch (UnexpectedValueException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
 
         if ($x < -180 || $x > 180) {
             throw InvalidValueException::invalidLongitude($x);
@@ -51,11 +65,22 @@ class Point extends AbstractPoint implements GeographyInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $y
+     *
+     * @return self
+     * @throws InvalidValueException
      */
     public function setY($y)
     {
-        $y = $this->toFloat($y);
+        $parser = new Parser($y);
+
+        try {
+            $y = (float) $parser->parse();
+        } catch (RangeException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        } catch (UnexpectedValueException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
 
         if ($y < -90 || $y > 90) {
             throw InvalidValueException::invalidLatitude($y);
