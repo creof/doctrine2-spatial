@@ -75,10 +75,10 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(40.446261944444, $point7->getLatitude());
         $this->assertEquals(-79.948842222222, $point7->getLongitude());
 
-        $point7 = new Point('112:4:0W', '33:27:0N');
+        $point8 = new Point('112:4:0W', '33:27:0N');
 
-        $this->assertEquals(33.45, $point7->getLatitude());
-        $this->assertEquals(-112.06666666667, $point7->getLongitude());
+        $this->assertEquals(33.45, $point8->getLatitude());
+        $this->assertEquals(-112.06666666667, $point8->getLongitude());
     }
 
     /**
