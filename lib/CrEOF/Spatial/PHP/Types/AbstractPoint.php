@@ -23,6 +23,9 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Geo\Exception\RangeException;
+use CrEOF\Geo\Exception\UnexpectedValueException;
+use CrEOF\Geo\Parser;
 use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
@@ -57,10 +60,19 @@ abstract class AbstractPoint extends AbstractGeometry
      * @param mixed $x
      *
      * @return self
+     * @throws InvalidValueException
      */
     public function setX($x)
     {
-        $this->x = $this->toFloat($x);
+        $parser = new Parser($x);
+
+        try {
+            $this->x = (float) $parser->parse();
+        } catch (RangeException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        } catch (UnexpectedValueException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
 
         return $this;
     }
@@ -77,10 +89,19 @@ abstract class AbstractPoint extends AbstractGeometry
      * @param mixed $y
      *
      * @return self
+     * @throws InvalidValueException
      */
     public function setY($y)
     {
-        $this->y = $this->toFloat($y);
+        $parser = new Parser($y);
+
+        try {
+            $this->y = (float) $parser->parse();
+        } catch (RangeException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        } catch (UnexpectedValueException $e) {
+            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
 
         return $this;
     }
@@ -191,90 +212,5 @@ abstract class AbstractPoint extends AbstractGeometry
         $this->setX($x)
             ->setY($y)
             ->setSrid($srid);
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return float
-     */
-    protected function toFloat($value)
-    {
-        if (is_numeric($value)) {
-            return (float) $value;
-        }
-
-        return $this->convertStringToFloat($value);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return float
-     * @throws InvalidValueException
-     */
-    private function convertStringToFloat($value)
-    {
-        $regex = <<<EOD
-/
-^                                         # beginning of string
-(?|
-    (?|
-        (?<degrees>[0-8]?[0-9])           # degrees 0-89
-        (?::|°\s*)                        # colon or degree and optional spaces
-        (?<minutes>[0-5]?[0-9])           # minutes 0-59
-        (?::|(?:\'|\xe2\x80\xb2)\s*)      # colon or minute or apostrophe and optional spaces
-        (?<seconds>[0-5]?[0-9](?:\.\d+)?) # seconds 0-59 and optional decimal
-        (?:(?:"|\xe2\x80\xb3)\s*)?        # quote or double prime and optional spaces
-        |
-        (?<degrees>90)(?::|°\s*)(?<minutes>0?0)(?::|(?:\'|\xe2\x80\xb2)\s*)(?<seconds>0?0)(?:(?:"|\xe2\x80\xb3)\s*)?
-    )
-    (?<direction>[NnSs])                  # N or S for latitude
-    |
-    (?|
-        (?<degrees>0?[0-9]?[0-9]|1[0-7][0-9]) # degrees 0-179
-        (?::|°\s*)                            # colon or degree and optional spaces
-        (?<minutes>[0-5]?[0-9])               # minutes 0-59
-        (?::|(?:\'|\xe2\x80\xb2)\s*)          # colon or minute or apostrophe and optional spaces
-        (?<seconds>[0-5]?[0-9](?:\.\d+)?)     # seconds 0-59 and optional decimal
-        (?:(?:"|\xe2\x80\xb3)\s*)?            # quote or double prime and optional spaces
-        |
-        (?<degrees>180)(?::|°\s*)(?<minutes>0?0)(?::|(?:\'|\xe2\x80\xb2)\s*)(?<seconds>0?0)(?:(?:"|\xe2\x80\xb3)\s*)?
-    )
-    (?<direction>[EeWw])                      # E or W for longitude
-)
-$                                             # end of string
-/x
-EOD;
-
-        switch (1) {
-            case preg_match_all($regex, $value, $matches, PREG_SET_ORDER):
-                break;
-            default:
-                throw new InvalidValueException($value . ' is not a valid coordinate value.');
-        }
-
-        $p = $matches[0];
-
-        return ($p['degrees'] + ((($p['minutes'] * 60) + $p['seconds']) / 3600)) * (float) $this->getDirectionSign($p['direction']);
-    }
-
-    /**
-     * @param string $direction
-     *
-     * @return int
-     */
-    private function getDirectionSign($direction)
-    {
-        switch (strtolower($direction)) {
-            case 's':
-            case 'w':
-                return -1;
-                break;
-            case 'n':
-            case 'e':
-                return 1;
-                break;
-        }
     }
 }
