@@ -23,7 +23,6 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\DBAL\Types\Utils;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
@@ -78,7 +77,7 @@ class STAsBinaryTest extends OrmTest
         $query  = $this->getEntityManager()->createQuery('SELECT ST_AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $result = $query->getResult();
 
-        $this->assertEquals('010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440', bin2hex(Utils::toBinary(stream_get_contents($result[0][1]))));
-        $this->assertEquals('0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640', bin2hex(Utils::toBinary(stream_get_contents($result[1][1]))));
+        $this->assertEquals('010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440', bin2hex(stream_get_contents($result[0][1])));
+        $this->assertEquals('0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640', bin2hex(stream_get_contents($result[1][1])));
     }
 }

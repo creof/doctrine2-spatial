@@ -13,7 +13,8 @@
     "require": {
         "doctrine/orm": "<2.5",
         "creof/geo-parser": "~1.0",
-        "creof/wkt-parser": "~1.0"
+        "creof/wkt-parser": "~1.0",
+        "creof/wkb-parser": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "<5.0",

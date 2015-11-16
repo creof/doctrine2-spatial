@@ -23,8 +23,8 @@
 
 namespace CrEOF\Spatial\DBAL\Types\Platforms;
 
-use CrEOF\WKT\Parser;
-use CrEOF\Spatial\DBAL\Types\BinaryParser;
+use CrEOF\WKT\Parser as StringParser;
+use CrEOF\WKB\Parser as BinaryParser;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
@@ -41,7 +41,7 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertStringToPHPValue($sqlExpr)
     {
-        $parser = new Parser($sqlExpr);
+        $parser = new StringParser($sqlExpr);
 
         return $this->newObjectFromValue($parser->parse());
     }
