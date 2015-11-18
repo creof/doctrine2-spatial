@@ -85,7 +85,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      * Test bad string parameters - invalid latitude direction
      *
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 8: Error: Expected CrEOF\Geo\Lexer::T_INTEGER or CrEOF\Geo\Lexer::T_FLOAT, got "Q" in value "84:26:46Q"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 8: Error: Expected CrEOF\Geo\String\Lexer::T_INTEGER or CrEOF\Geo\String\Lexer::T_FLOAT, got "Q" in value "84:26:46Q"
      */
     public function testBadLatitudeDirection()
     {
@@ -129,7 +129,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      * Test bad string parameters - invalid longitude direction
      *
      * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage [Syntax Error] line 0, col 9: Error: Expected CrEOF\Geo\Lexer::T_INTEGER or CrEOF\Geo\Lexer::T_FLOAT, got "P" in value "100:56:55P"
+     * @expectedExceptionMessage [Syntax Error] line 0, col 9: Error: Expected CrEOF\Geo\String\Lexer::T_INTEGER or CrEOF\Geo\String\Lexer::T_FLOAT, got "P" in value "100:56:55P"
      */
     public function testBadLongitudeDirection()
     {
