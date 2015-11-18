@@ -23,9 +23,9 @@
 
 namespace CrEOF\Spatial\PHP\Types\Geography;
 
-use CrEOF\Geo\Exception\RangeException;
-use CrEOF\Geo\Exception\UnexpectedValueException;
-use CrEOF\Geo\Parser;
+use CrEOF\Geo\String\Exception\RangeException;
+use CrEOF\Geo\String\Exception\UnexpectedValueException;
+use CrEOF\Geo\String\Parser;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\AbstractPoint;
 

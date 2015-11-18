@@ -23,8 +23,8 @@
 
 namespace CrEOF\Spatial\DBAL\Types\Platforms;
 
-use CrEOF\WKT\Parser as StringParser;
-use CrEOF\WKB\Parser as BinaryParser;
+use CrEOF\Geo\WKT\Parser as StringParser;
+use CrEOF\Geo\WKB\Parser as BinaryParser;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
