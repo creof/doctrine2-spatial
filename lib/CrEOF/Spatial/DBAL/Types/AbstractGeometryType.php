@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\DBAL\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\DBAL\Types\Platforms\PlatformInterface;
+use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
@@ -221,6 +221,6 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatformClass(AbstractPlatform $platform)
     {
-        return sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getTypeFamily(), $this->getPlatformName($platform));
+        return sprintf('CrEOF\Spatial\DBAL\Platform\%s\%s', $this->getTypeFamily(), $this->getPlatformName($platform));
     }
 }

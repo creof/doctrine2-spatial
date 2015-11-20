@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Geometry\Platforms;
+namespace CrEOF\Spatial\DBAL\Platform\Geometry;
 
-use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
-use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\DBAL\Platform\AbstractPlatform;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
- * PostgreSql spatial platform
+ * MySql spatial platform
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class PostgreSql extends AbstractPlatform
+class MySql extends AbstractPlatform
 {
     /**
      * {@inheritdoc}
@@ -48,11 +47,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        if ($fieldDeclaration['type']->getSQLType() == GeometryInterface::GEOMETRY) {
-            return 'geometry';
-        }
-
-        return sprintf('geometry(%s)', $fieldDeclaration['type']->getSQLType());
+        return strtoupper($fieldDeclaration['type']->getSQLType());
     }
 
     /**
@@ -60,7 +55,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToPHPValueSQL($sqlExpr)
     {
-        return sprintf('ST_AsEWKB(%s)', $sqlExpr);
+        return sprintf('AsBinary(%s)', $sqlExpr);
     }
 
     /**
@@ -68,39 +63,6 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToDatabaseValueSQL($sqlExpr)
     {
-        return sprintf('ST_GeomFromEWKT(%s)', $sqlExpr);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function convertBinaryToPHPValue($sqlExpr)
-    {
-        if ( ! is_resource($sqlExpr)) {
-            throw InvalidValueException::invalidType('resource', $sqlExpr);
-        }
-
-        $sqlExpr = stream_get_contents($sqlExpr);
-
-        return parent::convertBinaryToPHPValue($sqlExpr);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToDatabaseValue(GeometryInterface $value)
-    {
-        $sridSQL = null;
-
-        if (($srid = $value->getSrid()) !== null) {
-            $sridSQL = sprintf('SRID=%d;', $srid);
-        }
-
-        return sprintf(
-            '%s%s(%s)',
-            $sridSQL,
-            strtoupper($value->getType()),
-            $value
-        );
+        return sprintf('GeomFromText(%s)', $sqlExpr);
     }
 }

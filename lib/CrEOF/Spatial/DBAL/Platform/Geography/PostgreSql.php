@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +21,45 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Platforms;
+namespace CrEOF\Spatial\DBAL\Platform\Geography;
 
-use CrEOF\Geo\WKT\Parser as StringParser;
-use CrEOF\Geo\WKB\Parser as BinaryParser;
+use CrEOF\Spatial\DBAL\Platform\AbstractPlatform;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * Abstract spatial platform
+ * PostgreSql spatial platform
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractPlatform implements PlatformInterface
+class PostgreSql extends AbstractPlatform
 {
+    const DEFAULT_SRID = 4326;
+
     /**
      * {@inheritdoc}
      */
-    public function convertStringToPHPValue($sqlExpr)
+    public function getTypeFamily()
     {
-        $parser = new StringParser($sqlExpr);
-
-        return $this->newObjectFromValue($parser->parse());
+        return GeographyInterface::GEOGRAPHY;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertBinaryToPHPValue($sqlExpr)
+    public function getSQLDeclaration(array $fieldDeclaration)
     {
-        $parser = new BinaryParser($sqlExpr);
+        if ($fieldDeclaration['type']->getSQLType() == GeographyInterface::GEOGRAPHY) {
+            return 'geography';
+        }
 
-        return $this->newObjectFromValue($parser->parse());
+        if (isset($fieldDeclaration['srid'])) {
+            return sprintf('geography(%s,%d)', $fieldDeclaration['type']->getSQLType(), $fieldDeclaration['srid']);
+        }
+
+        return sprintf('geography(%s)', $fieldDeclaration['type']->getSQLType());
     }
 
     /**
@@ -61,27 +67,35 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertToDatabaseValue(GeometryInterface $value)
     {
-        return sprintf('%s(%s)', strtoupper($value->getType()), $value);
+        if ( ! ($value instanceof GeographyInterface)) {
+            throw InvalidValueException::invalidValueNotGeography();
+        }
+
+        if ($value->getSrid() === null) {
+            $value->setSrid(self::DEFAULT_SRID);
+        }
+
+        return sprintf(
+            'SRID=%d;%s(%s)',
+            $value->getSrid(),
+            strtoupper($value->getType()),
+            $value
+        );
     }
 
     /**
-     * Create spatial object from parsed value
-     *
-     * @param array $value
-     *
-     * @return GeometryInterface
-     * @throws \CrEOF\Spatial\Exception\InvalidValueException
+     * {@inheritdoc}
      */
-    private function newObjectFromValue($value)
+    public function convertToPHPValueSQL($sqlExpr)
     {
-        $constName = 'CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::' . strtoupper($value['type']);
+        return sprintf('ST_AsEWKT(%s)', $sqlExpr);
+    }
 
-        if (! defined($constName)) {
-            throw InvalidValueException::unsupportedType($this->getTypeFamily(), strtoupper($value['type']));
-        }
-
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), constant($constName));
-
-        return new $class($value['value'], $value['srid']);
+    /**
+     * {@inheritdoc}
+     */
+    public function convertToDatabaseValueSQL($sqlExpr)
+    {
+        return sprintf('ST_GeographyFromText(%s)', $sqlExpr);
     }
 }

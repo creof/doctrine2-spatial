@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,66 +21,36 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Platforms;
+namespace CrEOF\Spatial\DBAL\Platform\Geography;
 
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * Spatial platform interface
+ * MySql spatial platform
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-interface PlatformInterface
+class MySql extends \CrEOF\Spatial\DBAL\Platform\Geometry\MySql
 {
     /**
-     * @param string $sqlExpr
-     *
-     * @return GeometryInterface
+     * {@inheritdoc}
      */
-    public function convertBinaryToPHPValue($sqlExpr);
+    public function getTypeFamily()
+    {
+        return GeographyInterface::GEOGRAPHY;
+    }
 
     /**
-     * @param string $sqlExpr
-     *
-     * @return GeometryInterface
+     * {@inheritdoc}
      */
-    public function convertStringToPHPValue($sqlExpr);
+    public function getSQLDeclaration(array $fieldDeclaration)
+    {
+        if ($fieldDeclaration['type']->getSQLType() == GeographyInterface::GEOGRAPHY) {
+            return 'GEOMETRY';
+        }
 
-    /**
-     * @param GeometryInterface $value
-     *
-     * @return string
-     */
-    public function convertToDatabaseValue(GeometryInterface $value);
+        return parent::getSQLDeclaration($fieldDeclaration);
+    }
 
-    /**
-     * @param string $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToDatabaseValueSQL($sqlExpr);
-
-    /**
-     * @param string $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToPHPValueSQL($sqlExpr);
-
-    /**
-     * Get the type family for this interface (i.e. geometry or geography)
-     *
-     * @return string
-     */
-    public function getTypeFamily();
-
-    /**
-     * Gets the SQL declaration snippet for a field of this type.
-     *
-     * @param array $fieldDeclaration
-     *
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration);
 }
