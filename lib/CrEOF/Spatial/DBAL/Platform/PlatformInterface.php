@@ -35,39 +35,44 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 interface PlatformInterface
 {
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue($sqlExpr);
+    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr);
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertStringToPHPValue($sqlExpr);
+    public function convertStringToPHPValue(AbstractGeometryType $type, $sqlExpr);
 
     /**
-     * @param GeometryInterface $value
+     * @param AbstractGeometryType $type
+     * @param GeometryInterface    $value
      *
      * @return string
      */
-    public function convertToDatabaseValue(GeometryInterface $value);
+    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value);
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL($sqlExpr);
+    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr);
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return string
      */
-    public function convertToPHPValueSQL($sqlExpr);
+    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr);
 
     /**
      * Get the type family for this interface (i.e. geometry or geography)
