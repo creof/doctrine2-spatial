@@ -52,11 +52,10 @@ class MySql extends \CrEOF\Spatial\DBAL\Platform\Geometry\MySql
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        if ($fieldDeclaration['type']->getSQLType() == GeographyInterface::GEOGRAPHY) {
+        if ($fieldDeclaration['type']->getSQLType() === GeographyInterface::GEOGRAPHY) {
             return 'GEOMETRY';
         }
 
         return parent::getSQLDeclaration($fieldDeclaration);
     }
-
 }
