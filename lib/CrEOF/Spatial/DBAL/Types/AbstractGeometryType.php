@@ -81,7 +81,7 @@ abstract class AbstractGeometryType extends Type
             throw new InvalidValueException('Geometry column values must implement GeometryInterface');
         }
 
-        return $this->getSpatialPlatform($platform)->convertToDatabaseValue($value);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValue($this, $value);
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToPHPValueSQL($sqlExpr, $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($this, $sqlExpr);
     }
 
     /**
@@ -107,7 +107,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($this, $sqlExpr);
     }
 
     /**
@@ -125,10 +125,10 @@ abstract class AbstractGeometryType extends Type
         }
 
         if (ctype_alpha($value[0])) {
-            return $this->getSpatialPlatform($platform)->convertStringToPHPValue($value);
+            return $this->getSpatialPlatform($platform)->convertStringToPHPValue($this, $value);
         }
 
-        return $this->getSpatialPlatform($platform)->convertBinaryToPHPValue($value);
+        return $this->getSpatialPlatform($platform)->convertBinaryToPHPValue($this, $value);
     }
 
     /**

@@ -38,35 +38,38 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 abstract class AbstractPlatform implements PlatformInterface
 {
     /**
+     * @param AbstractGeometryType $type
      * @param string $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertStringToPHPValue($sqlExpr)
+    public function convertStringToPHPValue(AbstractGeometryType $type, $sqlExpr)
     {
         $parser = new StringParser($sqlExpr);
 
-        return $this->newObjectFromValue($parser->parse());
+        return $this->newObjectFromValue($type, $parser->parse());
     }
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue($sqlExpr)
+    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr)
     {
         $parser = new BinaryParser($sqlExpr);
 
-        return $this->newObjectFromValue($parser->parse());
+        return $this->newObjectFromValue($type, $parser->parse());
     }
 
     /**
-     * @param GeometryInterface $value
+     * @param AbstractGeometryType $type
+     * @param GeometryInterface    $value
      *
      * @return string
      */
-    public function convertToDatabaseValue(GeometryInterface $value)
+    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value)
     {
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
     }
@@ -86,20 +89,24 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * Create spatial object from parsed value
      *
-     * @param array $value
+     * @param AbstractGeometryType $type
+     * @param array                $value
      *
      * @return GeometryInterface
      * @throws \CrEOF\Spatial\Exception\InvalidValueException
      */
-    private function newObjectFromValue($value)
+    private function newObjectFromValue(AbstractGeometryType $type, $value)
     {
-        $constName = 'CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::' . strtoupper($value['type']);
+        $typeFamily = $type->getTypeFamily();
+        $typeName   = strtoupper($value['type']);
+
+        $constName = sprintf('CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::%s', $typeName);
 
         if (! defined($constName)) {
-            throw new InvalidValueException(sprintf('Unsupported %s type "%s".', $this->getTypeFamily(), strtoupper($value['type'])));
+            throw new InvalidValueException(sprintf('Unsupported %s type "%s".', $typeFamily, $typeName));
         }
 
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), constant($constName));
+        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $typeFamily, constant($constName));
 
         return new $class($value['value'], $value['srid']);
     }
