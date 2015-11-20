@@ -50,6 +50,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     const POLYGON_ENTITY          = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
     const MULTIPOLYGON_ENTITY     = 'CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity';
     const GEOGRAPHY_ENTITY        = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
+    const GEO_POINT_SRID_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity';
 
     /**
      * @var EntityManager
@@ -117,6 +118,10 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
         self::GEOGRAPHY_ENTITY => array(
             'types' => array('geography'),
             'table' => 'GeographyEntity'
+        ),
+        self::GEO_POINT_SRID_ENTITY => array(
+            'types' => array('geopoint'),
+            'table' => 'GeoPointSridEntity'
         )
     );
 
