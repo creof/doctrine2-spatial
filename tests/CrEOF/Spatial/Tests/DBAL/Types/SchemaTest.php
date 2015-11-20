@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,21 +32,36 @@ use CrEOF\Spatial\Tests\OrmTest;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
- *
- * @group result_processing
  */
 class SchemaTest extends OrmTest
 {
+    protected function setUp()
+    {
+        $this->usesEntity(self::GEOMETRY_ENTITY);
+        $this->usesEntity(self::POINT_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesEntity(self::MULTIPOLYGON_ENTITY);
+        $this->usesEntity(self::GEOGRAPHY_ENTITY);
+        $this->usesEntity(self::GEO_POINT_SRID_ENTITY);
+        parent::setUp();
+    }
+
     public function testDoctrineTypeMapping()
     {
+        $platform = $this->getPlatform();
+
         foreach ($this->getAllClassMetadata() as $metadata) {
             foreach ($metadata->getFieldNames() as $fieldName) {
-                $fieldType = $metadata->getTypeOfField($fieldName);
+                $doctrineType  = $metadata->getTypeOfField($fieldName);
+                $type          = Type::getType($doctrineType);
+                $databaseTypes =  $type->getMappedDatabaseTypes($platform);
 
-                // Throws exception if mapping does not exist
-                $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($fieldType);
+                foreach ($databaseTypes as $databaseType) {
+                    $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($databaseType);
 
-                $this->assertNotEmpty($typeMapping);
+                    $this->assertEquals($doctrineType, $typeMapping);
+                }
             }
         }
     }
