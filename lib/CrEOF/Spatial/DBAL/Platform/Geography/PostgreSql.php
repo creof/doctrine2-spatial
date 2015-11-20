@@ -76,7 +76,7 @@ class PostgreSql extends AbstractPlatform
      */
     public function convertToDatabaseValue(GeometryInterface $value)
     {
-        if ( ! ($value instanceof GeographyInterface)) {
+        if (! ($value instanceof GeographyInterface)) {
             throw InvalidValueException::invalidValueNotGeography();
         }
 
@@ -84,12 +84,7 @@ class PostgreSql extends AbstractPlatform
             $value->setSrid(self::DEFAULT_SRID);
         }
 
-        return sprintf(
-            'SRID=%d;%s(%s)',
-            $value->getSrid(),
-            strtoupper($value->getType()),
-            $value
-        );
+        return sprintf('SRID=%d;%s', $value->getSrid(), parent::convertToDatabaseValue($value));
     }
 
     /**

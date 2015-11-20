@@ -111,11 +111,6 @@ class PostgreSql extends AbstractPlatform
             $sridSQL = sprintf('SRID=%d;', $srid);
         }
 
-        return sprintf(
-            '%s%s(%s)',
-            $sridSQL,
-            strtoupper($value->getType()),
-            $value
-        );
+        return sprintf('%s%s', $sridSQL, parent::convertToDatabaseValue($value));
     }
 }
