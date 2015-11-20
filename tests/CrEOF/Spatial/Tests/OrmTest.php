@@ -341,8 +341,6 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $classes = array();
-
         $this->sqlLoggerStack->enabled = false;
 
         foreach (array_keys($this->usedEntities) as $entityName) {
