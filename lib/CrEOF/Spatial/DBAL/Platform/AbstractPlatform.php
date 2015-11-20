@@ -25,6 +25,7 @@ namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Geo\WKT\Parser as StringParser;
 use CrEOF\Geo\WKB\Parser as BinaryParser;
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
@@ -68,6 +69,18 @@ abstract class AbstractPlatform implements PlatformInterface
     public function convertToDatabaseValue(GeometryInterface $value)
     {
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
+    }
+
+    /**
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractGeometryType $value
+     *
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractGeometryType $value)
+    {
+        return array(strtolower($value->getSQLType()));
     }
 
     /**

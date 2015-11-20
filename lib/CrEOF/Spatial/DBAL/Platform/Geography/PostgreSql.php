@@ -24,6 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Platform\Geography;
 
 use CrEOF\Spatial\DBAL\Platform\AbstractPlatform;
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
@@ -105,5 +106,23 @@ class PostgreSql extends AbstractPlatform
     public function convertToDatabaseValueSQL($sqlExpr)
     {
         return sprintf('ST_GeographyFromText(%s)', $sqlExpr);
+    }
+
+    /**
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractGeometryType $value
+     *
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractGeometryType $value)
+    {
+        $type = $value->getSQLType();
+
+        if (GeographyInterface::GEOGRAPHY === $type) {
+            return array(strtolower($type));
+        }
+
+        return array(sprintf('geography(%s)', strtolower($type)));
     }
 }

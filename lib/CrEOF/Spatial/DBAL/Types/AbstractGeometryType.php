@@ -163,7 +163,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function getMappedDatabaseTypes(AbstractPlatform $platform)
     {
-        return array(strtolower($this->getSQLType()));
+        return $this->getSpatialPlatform($platform)->getMappedDatabaseTypes($this);
     }
 
     /**

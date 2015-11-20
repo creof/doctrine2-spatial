@@ -23,6 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Platform;
 
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
@@ -83,4 +84,11 @@ interface PlatformInterface
      * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration);
+
+    /**
+     * @param AbstractGeometryType $value
+     *
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractGeometryType $value);
 }
