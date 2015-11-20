@@ -46,7 +46,7 @@ class WrappingTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->usesEntity('geometry');
+        $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesType('point');
         parent::setUp();
     }

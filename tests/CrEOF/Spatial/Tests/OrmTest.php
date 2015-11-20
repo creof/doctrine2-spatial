@@ -90,38 +90,31 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      * @var array[]
      */
     protected static $entities = array(
-        'geometry' => array(
-            'class' => self::GEOMETRY_ENTITY,
+        self::GEOMETRY_ENTITY => array(
             'types' => array('geometry'),
             'table' => 'GeometryEntity'
         ),
-        'no_hint_geometry' => array(
-            'class' => self::NO_HINT_GEOMETRY_ENTITY,
+        self::NO_HINT_GEOMETRY_ENTITY => array(
             'types' => array('geometry'),
             'table' => 'NoHintGeometryEntity'
         ),
-        'point' => array(
-            'class' => self::POINT_ENTITY,
+        self::POINT_ENTITY => array(
             'types' => array('point'),
             'table' => 'PointEntity'
         ),
-        'linestring' => array(
-            'class' => self::LINESTRING_ENTITY,
+        self::LINESTRING_ENTITY => array(
             'types' => array('linestring'),
             'table' => 'LineStringEntity'
         ),
-        'polygon' => array(
-            'class' => self::POLYGON_ENTITY,
+        self::POLYGON_ENTITY => array(
             'types' => array('polygon'),
             'table' => 'PolygonEntity'
         ),
-        'multipolygon' => array(
-            'class' => self::MULTIPOLYGON_ENTITY,
+        self::MULTIPOLYGON_ENTITY => array(
             'types' => array('multipolygon'),
             'table' => 'MultiPolygonEntity'
         ),
-        'geography' => array(
-            'class' => self::GEOGRAPHY_ENTITY,
+        self::GEOGRAPHY_ENTITY => array(
             'types' => array('geography'),
             'table' => 'GeographyEntity'
         )
@@ -238,13 +231,13 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $entityName
+     * @param string $entityClass
      */
-    protected function usesEntity($entityName)
+    protected function usesEntity($entityClass)
     {
-        $this->usedEntities[$entityName] = true;
+        $this->usedEntities[$entityClass] = true;
 
-        foreach (static::$entities[$entityName]['types'] as $type) {
+        foreach (static::$entities[$entityClass]['types'] as $type) {
             $this->usesType($type);
         }
     }
@@ -283,12 +276,10 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     {
         $classes = array();
 
-        foreach (array_keys($this->usedEntities) as $entityName) {
-            if (! isset(static::$createdEntities[$entityName])) {
-                //TODO: getClassMetadata marked internal in 2.5
-                $classes[] = $this->getEntityManager()->getClassMetadata(static::$entities[$entityName]['class']);
-
-                static::$createdEntities[$entityName] = true;
+        foreach (array_keys($this->usedEntities) as $entityClass) {
+            if (! isset(static::$createdEntities[$entityClass])) {
+                static::$createdEntities[$entityClass] = true;
+                $classes[]                             = $this->getEntityManager()->getClassMetadata($entityClass);
             }
         }
 

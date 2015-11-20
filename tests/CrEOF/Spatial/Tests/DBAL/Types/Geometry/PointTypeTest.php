@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ class PointTypeTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->usesEntity('point');
+        $this->usesEntity(self::POINT_ENTITY);
         parent::setUp();
     }
 

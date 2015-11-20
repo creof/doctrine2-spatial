@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,8 +46,8 @@ class STSummaryTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->usesEntity('geometry');
-        $this->usesEntity('geography');
+        $this->usesEntity(self::GEOMETRY_ENTITY);
+        $this->usesEntity(self::GEOGRAPHY_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();

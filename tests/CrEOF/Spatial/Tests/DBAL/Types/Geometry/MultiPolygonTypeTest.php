@@ -43,7 +43,7 @@ class MultiPolygonTypeTest extends OrmTest
 {
     protected function setUp()
     {
-        $this->usesEntity('multipolygon');
+        $this->usesEntity(self::MULTIPOLYGON_ENTITY);
         parent::setUp();
     }
 
