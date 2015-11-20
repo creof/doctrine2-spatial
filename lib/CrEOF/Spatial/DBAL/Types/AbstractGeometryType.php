@@ -221,6 +221,6 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatformClass(AbstractPlatform $platform)
     {
-        return sprintf('CrEOF\Spatial\DBAL\Platform\%s\%s', $this->getTypeFamily(), $this->getPlatformName($platform));
+        return sprintf('CrEOF\Spatial\DBAL\Platform\%s', $this->getPlatformName($platform));
     }
 }

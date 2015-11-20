@@ -21,9 +21,10 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Platform\Geometry;
+namespace CrEOF\Spatial\DBAL\Platform;
 
-use CrEOF\Spatial\DBAL\Platform\AbstractPlatform;
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
@@ -35,15 +36,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
  */
 class PostgreSql extends AbstractPlatform
 {
-    /**
-     * Get the type family for this interface (i.e. geometry or geography)
-     *
-     * @return string
-     */
-    public function getTypeFamily()
-    {
-        return GeometryInterface::GEOMETRY;
-    }
+    const DEFAULT_SRID = 4326;
 
     /**
      * Gets the SQL declaration snippet for a field of this type.
@@ -54,40 +47,58 @@ class PostgreSql extends AbstractPlatform
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
-        if ($fieldDeclaration['type']->getSQLType() == GeometryInterface::GEOMETRY) {
-            return 'geometry';
+        $typeFamily = $fieldDeclaration['type']->getTypeFamily();
+        $sqlType    = $fieldDeclaration['type']->getSQLType();
+
+        if ($typeFamily === $sqlType) {
+            return $sqlType;
         }
 
-        return sprintf('geometry(%s)', $fieldDeclaration['type']->getSQLType());
+        if (isset($fieldDeclaration['srid'])) {
+            return sprintf('%s(%s,%d)', $typeFamily, $sqlType, $fieldDeclaration['srid']);
+        }
+
+        return sprintf('%s(%s)', $typeFamily, $sqlType);
     }
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return string
      */
-    public function convertToPHPValueSQL($sqlExpr)
+    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr)
     {
+        if ($type instanceof GeographyType) {
+            return sprintf('ST_AsEWKT(%s)', $sqlExpr);
+        }
+
         return sprintf('ST_AsEWKB(%s)', $sqlExpr);
     }
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL($sqlExpr)
+    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr)
     {
+        if ($type instanceof GeographyType) {
+            return sprintf('ST_GeographyFromText(%s)', $sqlExpr);
+        }
+
         return sprintf('ST_GeomFromEWKT(%s)', $sqlExpr);
     }
 
     /**
-     * @param string $sqlExpr
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
      *
      * @return GeometryInterface
      * @throws InvalidValueException
      */
-    public function convertBinaryToPHPValue($sqlExpr)
+    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr)
     {
         if (! is_resource($sqlExpr)) {
             throw new InvalidValueException(sprintf('Invalid resource value "%s"', $sqlExpr));
@@ -95,22 +106,27 @@ class PostgreSql extends AbstractPlatform
 
         $sqlExpr = stream_get_contents($sqlExpr);
 
-        return parent::convertBinaryToPHPValue($sqlExpr);
+        return parent::convertBinaryToPHPValue($type, $sqlExpr);
     }
 
     /**
-     * @param GeometryInterface $value
+     * @param AbstractGeometryType $type
+     * @param GeometryInterface    $value
      *
      * @return string
      */
-    public function convertToDatabaseValue(GeometryInterface $value)
+    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value)
     {
         $sridSQL = null;
 
-        if (($srid = $value->getSrid()) !== null) {
+        if ($type instanceof GeographyType && null === $value->getSrid()) {
+            $value->setSrid(self::DEFAULT_SRID);
+        }
+
+        if (($srid = $value->getSrid()) !== null || $type instanceof GeographyType) {
             $sridSQL = sprintf('SRID=%d;', $srid);
         }
 
-        return sprintf('%s%s', $sridSQL, parent::convertToDatabaseValue($value));
+        return sprintf('%s%s', $sridSQL, parent::convertToDatabaseValue($type, $value));
     }
 }

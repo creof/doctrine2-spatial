@@ -21,8 +21,9 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Platform\Geography;
+namespace CrEOF\Spatial\DBAL\Platform;
 
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
@@ -31,18 +32,8 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class MySql extends \CrEOF\Spatial\DBAL\Platform\Geometry\MySql
+class MySql extends AbstractPlatform
 {
-    /**
-     * Get the type family for this interface (i.e. geometry or geography)
-     *
-     * @return string
-     */
-    public function getTypeFamily()
-    {
-        return GeographyInterface::GEOGRAPHY;
-    }
-
     /**
      * Gets the SQL declaration snippet for a field of this type.
      *
@@ -56,6 +47,28 @@ class MySql extends \CrEOF\Spatial\DBAL\Platform\Geometry\MySql
             return 'GEOMETRY';
         }
 
-        return parent::getSQLDeclaration($fieldDeclaration);
+        return strtoupper($fieldDeclaration['type']->getSQLType());
+    }
+
+    /**
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
+     *
+     * @return string
+     */
+    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr)
+    {
+        return sprintf('AsBinary(%s)', $sqlExpr);
+    }
+
+    /**
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
+     *
+     * @return string
+     */
+    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr)
+    {
+        return sprintf('GeomFromText(%s)', $sqlExpr);
     }
 }
