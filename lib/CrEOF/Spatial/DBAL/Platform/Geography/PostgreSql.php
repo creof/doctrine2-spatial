@@ -39,7 +39,9 @@ class PostgreSql extends AbstractPlatform
     const DEFAULT_SRID = 4326;
 
     /**
-     * {@inheritdoc}
+     * Get the type family for this interface (i.e. geometry or geography)
+     *
+     * @return string
      */
     public function getTypeFamily()
     {
@@ -47,7 +49,11 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array $fieldDeclaration
+     *
+     * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
@@ -63,7 +69,10 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param GeometryInterface $value
+     *
+     * @return string
+     * @throws InvalidValueException
      */
     public function convertToDatabaseValue(GeometryInterface $value)
     {
@@ -84,7 +93,9 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return string
      */
     public function convertToPHPValueSQL($sqlExpr)
     {
@@ -92,7 +103,9 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return string
      */
     public function convertToDatabaseValueSQL($sqlExpr)
     {

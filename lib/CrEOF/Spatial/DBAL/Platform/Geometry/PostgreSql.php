@@ -36,7 +36,9 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 class PostgreSql extends AbstractPlatform
 {
     /**
-     * {@inheritdoc}
+     * Get the type family for this interface (i.e. geometry or geography)
+     *
+     * @return string
      */
     public function getTypeFamily()
     {
@@ -44,7 +46,11 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array $fieldDeclaration
+     *
+     * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
@@ -56,7 +62,9 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return string
      */
     public function convertToPHPValueSQL($sqlExpr)
     {
@@ -64,7 +72,9 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return string
      */
     public function convertToDatabaseValueSQL($sqlExpr)
     {
@@ -72,7 +82,10 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return GeometryInterface
+     * @throws InvalidValueException
      */
     public function convertBinaryToPHPValue($sqlExpr)
     {
@@ -86,7 +99,9 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * {@inheritdoc}
+     * @param GeometryInterface $value
+     *
+     * @return string
      */
     public function convertToDatabaseValue(GeometryInterface $value)
     {

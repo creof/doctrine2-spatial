@@ -37,7 +37,9 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 abstract class AbstractPlatform implements PlatformInterface
 {
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return GeometryInterface
      */
     public function convertStringToPHPValue($sqlExpr)
     {
@@ -47,7 +49,9 @@ abstract class AbstractPlatform implements PlatformInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $sqlExpr
+     *
+     * @return GeometryInterface
      */
     public function convertBinaryToPHPValue($sqlExpr)
     {
@@ -57,7 +61,9 @@ abstract class AbstractPlatform implements PlatformInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param GeometryInterface $value
+     *
+     * @return string
      */
     public function convertToDatabaseValue(GeometryInterface $value)
     {

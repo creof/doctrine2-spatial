@@ -34,7 +34,9 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 class MySql extends \CrEOF\Spatial\DBAL\Platform\Geometry\MySql
 {
     /**
-     * {@inheritdoc}
+     * Get the type family for this interface (i.e. geometry or geography)
+     *
+     * @return string
      */
     public function getTypeFamily()
     {
@@ -42,7 +44,11 @@ class MySql extends \CrEOF\Spatial\DBAL\Platform\Geometry\MySql
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array $fieldDeclaration
+     *
+     * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration)
     {
