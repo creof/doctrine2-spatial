@@ -77,7 +77,7 @@ class PostgreSql extends AbstractPlatform
     public function convertToDatabaseValue(GeometryInterface $value)
     {
         if (! ($value instanceof GeographyInterface)) {
-            throw InvalidValueException::invalidValueNotGeography();
+            throw new InvalidValueException('Geography columns require Geography values');
         }
 
         if ($value->getSrid() === null) {

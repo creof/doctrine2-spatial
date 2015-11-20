@@ -80,7 +80,7 @@ class WrappingTest extends OrmTest
                 $function = 'Contains';
                 break;
             default:
-                throw UnsupportedPlatformException::unsupportedPlatform($this->getPlatform()->getName());
+                throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $this->getPlatform()->getName()));
         }
 
         $dql = sprintf($dql, $function);

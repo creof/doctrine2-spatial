@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -119,7 +119,7 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
         $platformName = $platform->getName();
 
         if (isset($this->platforms) && ! in_array($platformName, $this->platforms)) {
-            throw UnsupportedPlatformException::unsupportedPlatform($platformName);
+            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platformName));
         }
     }
 }

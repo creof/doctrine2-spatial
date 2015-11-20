@@ -56,7 +56,7 @@ class Point extends AbstractPoint implements GeographyInterface
         }
 
         if ($x < -180 || $x > 180) {
-            throw InvalidValueException::invalidLongitude($x);
+            throw new InvalidValueException(sprintf('Invalid longitude value "%s", must be in range -180 to 180.', $x));
         }
 
         $this->x = $x;
@@ -83,7 +83,7 @@ class Point extends AbstractPoint implements GeographyInterface
         }
 
         if ($y < -90 || $y > 90) {
-            throw InvalidValueException::invalidLatitude($y);
+            throw new InvalidValueException(sprintf('Invalid latitude value "%s", must be in range -90 to 90.', $y));
         }
 
         $this->y = $y;

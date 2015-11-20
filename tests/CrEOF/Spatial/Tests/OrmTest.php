@@ -452,7 +452,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
             case 'mysql':
                 break;
             default:
-                throw UnsupportedPlatformException::unsupportedPlatform($connection->getDatabasePlatform()->getName());
+                throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $connection->getDatabasePlatform()->getName()));
         }
 
         return $connection;

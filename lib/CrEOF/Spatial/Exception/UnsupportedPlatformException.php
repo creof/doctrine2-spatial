@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,9 +33,5 @@ use Exception;
  */
 class UnsupportedPlatformException extends Exception
 {
-    static public function unsupportedPlatform($name)
-    {
-        return new self(sprintf('DBAL platform "%s" is not currently supported.', $name));
-    }
 
 }

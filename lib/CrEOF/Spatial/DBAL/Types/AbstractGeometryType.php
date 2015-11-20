@@ -78,7 +78,7 @@ abstract class AbstractGeometryType extends Type
         }
 
         if (! ($value instanceof GeometryInterface)) {
-            throw InvalidValueException::invalidValueNoGeometryInterface();
+            throw new InvalidValueException('Geometry column values must implement GeometryInterface');
         }
 
         return $this->getSpatialPlatform($platform)->convertToDatabaseValue($value);
@@ -191,7 +191,7 @@ abstract class AbstractGeometryType extends Type
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
         if (! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
-            throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
+            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
         }
 
         return new $spatialPlatformClass;
@@ -208,7 +208,7 @@ abstract class AbstractGeometryType extends Type
         $name = __CLASS__ . '::PLATFORM_' . strtoupper($platform->getName());
 
         if (! defined($name)) {
-            throw UnsupportedPlatformException::unsupportedPlatform($name);
+            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $name));
         }
 
         return constant($name);

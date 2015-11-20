@@ -90,7 +90,7 @@ class PostgreSql extends AbstractPlatform
     public function convertBinaryToPHPValue($sqlExpr)
     {
         if (! is_resource($sqlExpr)) {
-            throw InvalidValueException::invalidType('resource', $sqlExpr);
+            throw new InvalidValueException(sprintf('Invalid resource value "%s"', $sqlExpr));
         }
 
         $sqlExpr = stream_get_contents($sqlExpr);
