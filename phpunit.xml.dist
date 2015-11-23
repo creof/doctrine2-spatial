@@ -34,4 +34,13 @@
         <var name="opt_mark_sql" value="true" />        <!-- Execute dummy SELECT statement before each test to mark DB query log -->
         <var name="opt_use_debug_stack" value="true" /> <!-- Enable SQLLoggerStack and query logging exception in tests -->
     </php>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./lib/</directory>
+            <exclude>
+                <directory suffix=".php">./tests/CrEOF/Spatial/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
