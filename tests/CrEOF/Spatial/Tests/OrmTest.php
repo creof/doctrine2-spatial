@@ -250,9 +250,9 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    protected function getEntityClasses()
+    protected function getUsedEntityClasses()
     {
-        return array_column(array_intersect_key(static::$entities, static::$createdEntities), 'class');
+        return static::$createdEntities;
     }
 
     /**

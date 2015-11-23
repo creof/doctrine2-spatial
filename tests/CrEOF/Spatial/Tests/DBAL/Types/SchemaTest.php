@@ -80,7 +80,7 @@ class SchemaTest extends OrmTest
     {
         $metadata = array();
 
-        foreach ($this->getEntityClasses() as $entityClass) {
+        foreach ($this->getUsedEntityClasses() as $entityClass) {
             $metadata[] = $this->getEntityManager()->getClassMetadata($entityClass);
         }
 
