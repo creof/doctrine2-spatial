@@ -29,7 +29,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Version;
@@ -42,7 +42,7 @@ use Doctrine\ORM\Version;
  *
  * @group dql
  */
-class WrappingTest extends OrmTest
+class WrappingTestCase extends OrmTestCase
 {
     protected function setUp()
     {

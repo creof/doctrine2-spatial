@@ -26,7 +26,7 @@ namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
 
 /**
@@ -37,7 +37,7 @@ use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
  *
  * @group geometry
  */
-class LineStringTypeTest extends OrmTest
+class LineStringTypeTestCase extends OrmTestCase
 {
     protected function setUp()
     {

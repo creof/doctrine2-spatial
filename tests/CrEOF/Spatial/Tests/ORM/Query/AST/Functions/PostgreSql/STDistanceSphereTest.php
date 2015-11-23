@@ -27,7 +27,7 @@ use CrEOF\Spatial\PHP\Types\Geography\Point as GeographyPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\ORM\Query;
 
 /**
@@ -38,7 +38,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class STDistanceSphereTest extends OrmTest
+class STDistanceSphereTestCase extends OrmTestCase
 {
     protected function setUp()
     {

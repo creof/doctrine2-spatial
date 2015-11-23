@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\Tests\DBAL\Types\Geography;
 
 use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity;
 
 /**
@@ -36,7 +36,7 @@ use CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity;
  *
  * @group srid
  */
-class GeoPointSridTest extends OrmTest
+class GeoPointSridTestCase extends OrmTestCase
 {
     protected function setUp()
     {

@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\Tests\DBAL\Types;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
  * Doctrine schema related tests
@@ -33,7 +33,7 @@ use CrEOF\Spatial\Tests\OrmTest;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class SchemaTest extends OrmTest
+class SchemaTestCase extends OrmTestCase
 {
     protected function setUp()
     {

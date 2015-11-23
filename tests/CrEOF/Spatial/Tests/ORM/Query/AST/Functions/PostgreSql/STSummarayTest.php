@@ -31,7 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\ORM\Query;
 
 /**
@@ -42,7 +42,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class STSummaryTest extends OrmTest
+class STSummaryTestCase extends OrmTestCase
 {
     protected function setUp()
     {

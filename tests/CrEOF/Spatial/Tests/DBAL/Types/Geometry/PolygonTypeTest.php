@@ -27,7 +27,7 @@ use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 
 /**
@@ -38,7 +38,7 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
  *
  * @group geometry
  */
-class PolygonTypeTest extends OrmTest
+class PolygonTypeTestCase extends OrmTestCase
 {
     protected function setUp()
     {

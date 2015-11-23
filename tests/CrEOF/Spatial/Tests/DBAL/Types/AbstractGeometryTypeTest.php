@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
  * AbstractGeometryType tests
@@ -33,7 +33,7 @@ use CrEOF\Spatial\Tests\OrmTest;
  *
  * @group geometry
  */
-class AbstractGeometryTypeTest extends OrmTest
+class AbstractGeometryTypeTestCase extends OrmTestCase
 {
 
 }

@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
 use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 
 /**
@@ -36,7 +36,7 @@ use CrEOF\Spatial\Tests\Fixtures\PointEntity;
  *
  * @group geometry
  */
-class PointTypeTest extends OrmTest
+class PointTypeTestCase extends OrmTestCase
 {
     protected function setUp()
     {
