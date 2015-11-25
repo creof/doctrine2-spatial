@@ -190,37 +190,14 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        if (! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
+        $const = sprintf('self::PLATFORM_%s', strtoupper($platform->getName()));
+
+        if (! defined($const)) {
             throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
         }
 
-        return new $spatialPlatformClass;
-    }
+        $class = sprintf('CrEOF\Spatial\DBAL\Platform\%s', constant($const));
 
-    /**
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     * @throws UnsupportedPlatformException
-     */
-    private function getPlatformName(AbstractPlatform $platform)
-    {
-        $name = __CLASS__ . '::PLATFORM_' . strtoupper($platform->getName());
-
-        if (! defined($name)) {
-            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
-        }
-
-        return constant($name);
-    }
-
-    /**
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     */
-    private function getSpatialPlatformClass(AbstractPlatform $platform)
-    {
-        return sprintf('CrEOF\Spatial\DBAL\Platform\%s', $this->getPlatformName($platform));
+        return new $class;
     }
 }
