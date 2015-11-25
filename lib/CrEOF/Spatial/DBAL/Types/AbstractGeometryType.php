@@ -54,7 +54,7 @@ abstract class AbstractGeometryType extends Type
     abstract public function getSQLType();
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function canRequireSQLConversion()
     {
