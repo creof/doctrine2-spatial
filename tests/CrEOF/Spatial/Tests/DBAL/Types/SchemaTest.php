@@ -33,7 +33,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class SchemaTestCase extends OrmTestCase
+class SchemaTest extends OrmTestCase
 {
     protected function setUp()
     {
@@ -80,7 +80,7 @@ class SchemaTestCase extends OrmTestCase
     {
         $metadata = array();
 
-        foreach ($this->getUsedEntityClasses() as $entityClass) {
+        foreach (array_keys($this->getUsedEntityClasses()) as $entityClass) {
             $metadata[] = $this->getEntityManager()->getClassMetadata($entityClass);
         }
 
