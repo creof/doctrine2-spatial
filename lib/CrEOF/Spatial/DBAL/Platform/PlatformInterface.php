@@ -84,9 +84,9 @@ interface PlatformInterface
     public function getSQLDeclaration(array $fieldDeclaration);
 
     /**
-     * @param AbstractGeometryType $value
+     * @param AbstractGeometryType $type
      *
      * @return string[]
      */
-    public function getMappedDatabaseTypes(AbstractGeometryType $value);
+    public function getMappedDatabaseTypes(AbstractGeometryType $type);
 }

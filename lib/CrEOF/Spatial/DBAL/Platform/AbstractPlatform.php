@@ -77,13 +77,13 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * Get an array of database types that map to this Doctrine type.
      *
-     * @param AbstractGeometryType $value
+     * @param AbstractGeometryType $type
      *
      * @return string[]
      */
-    public function getMappedDatabaseTypes(AbstractGeometryType $value)
+    public function getMappedDatabaseTypes(AbstractGeometryType $type)
     {
-        return array(strtolower($value->getSQLType()));
+        return array(strtolower($type->getSQLType()));
     }
 
     /**
