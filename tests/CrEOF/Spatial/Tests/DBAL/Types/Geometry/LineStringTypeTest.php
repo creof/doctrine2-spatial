@@ -68,7 +68,8 @@ class LineStringTypeTestCase extends OrmTestCase
                 new Point(0, 0),
                 new Point(1, 1),
                 new Point(2, 2)
-            ));
+            )
+        );
         $entity = new LineStringEntity();
 
         $entity->setLineString($lineString);
@@ -91,7 +92,8 @@ class LineStringTypeTestCase extends OrmTestCase
                  new Point(0, 0),
                  new Point(1, 1),
                  new Point(2, 2)
-            ));
+            )
+        );
         $entity = new LineStringEntity();
 
         $entity->setLineString($lineString);
