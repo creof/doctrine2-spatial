@@ -6,7 +6,7 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          processUncoveredFilesFromWhitelist="true"
->
+        >
 
     <testsuites>
         <testsuite>
@@ -15,24 +15,10 @@
     </testsuites>
 
     <groups>
-        <include>
-            <group>php</group>               <!-- Tests for PHP type objects -->
-            <group>result_processing</group> <!-- Tests for lexer/parser/reader -->
-            <group>geometry</group>          <!-- Tests for geometry types -->
-            <group>dql</group>               <!-- Tests for DQL functions -->
-            <group>geography</group>         <!-- Tests for geography types -->
-        </include>
         <exclude>
             <group>srid</group>              <!-- Tests for SRID functionality -->
         </exclude>
     </groups>
-
-    <filter>
-        <whitelist>
-            <file>../../tests/CrEOF/Spatial/Tests/OrmTest.php</file>
-            <directory>../../lib</directory>
-        </whitelist>
-    </filter>
 
     <php>
         <var name="db_type" value="pdo_mysql"/>
