@@ -142,10 +142,9 @@ class PostgreSql extends AbstractPlatform
         $sqlType = strtolower($type->getSQLType());
 
         if ($type instanceof GeographyType && $sqlType !== 'geography') {
-            return array(sprintf('geography(%s)', $sqlType));
-
+            $sqlType = sprintf('geography(%s)', $sqlType);
         }
 
-        return array(strtolower($type->getSQLType()));
+        return array($sqlType);
     }
 }
