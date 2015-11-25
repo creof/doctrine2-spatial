@@ -129,4 +129,23 @@ class PostgreSql extends AbstractPlatform
 
         return sprintf('%s%s', $sridSQL, parent::convertToDatabaseValue($type, $value));
     }
+
+    /**
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractGeometryType $type
+     *
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractGeometryType $type)
+    {
+        $sqlType = strtolower($type->getSQLType());
+
+        if ($type instanceof GeographyType && $sqlType !== 'geography') {
+            return array(sprintf('geography(%s)', $sqlType));
+
+        }
+
+        return array(strtolower($type->getSQLType()));
+    }
 }
