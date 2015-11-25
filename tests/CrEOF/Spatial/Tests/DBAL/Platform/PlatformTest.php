@@ -40,7 +40,9 @@ class PlatformTest extends OrmMockTestCase
 {
     public function setUp()
     {
-        Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
+        if (! Type::hasType('point')) {
+            Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
+        }
 
         parent::setUp();
     }

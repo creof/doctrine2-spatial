@@ -261,7 +261,7 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
     protected function setUpTypes()
     {
         foreach (array_keys($this->usedTypes) as $typeName) {
-            if (! isset(static::$addedTypes[$typeName])) {
+            if (! isset(static::$addedTypes[$typeName]) && ! Type::hasType($typeName)) {
                 Type::addType($typeName, static::$types[$typeName]);
 
                 $type = Type::getType($typeName);
