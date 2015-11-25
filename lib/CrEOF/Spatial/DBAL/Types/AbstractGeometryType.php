@@ -208,7 +208,7 @@ abstract class AbstractGeometryType extends Type
         $name = __CLASS__ . '::PLATFORM_' . strtoupper($platform->getName());
 
         if (! defined($name)) {
-            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $name));
+            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
         }
 
         return constant($name);
