@@ -38,7 +38,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class STDisjointTestCase extends OrmTestCase
+class STDisjointTest extends OrmTestCase
 {
     protected function setUp()
     {

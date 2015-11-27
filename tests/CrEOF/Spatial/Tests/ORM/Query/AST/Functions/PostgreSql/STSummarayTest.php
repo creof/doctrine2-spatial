@@ -42,7 +42,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class STSummaryTestCase extends OrmTestCase
+class STSummaryTest extends OrmTestCase
 {
     protected function setUp()
     {

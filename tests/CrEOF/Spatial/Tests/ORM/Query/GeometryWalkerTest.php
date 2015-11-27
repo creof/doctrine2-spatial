@@ -37,7 +37,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class GeometryWalkerTestCase extends OrmTestCase
+class GeometryWalkerTest extends OrmTestCase
 {
     protected function setUp()
     {

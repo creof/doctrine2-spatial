@@ -39,7 +39,7 @@ use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
  *
  * @group geometry
  */
-class GeometryTypeTestCase extends OrmTestCase
+class GeometryTypeTest extends OrmTestCase
 {
     protected function setUp()
     {

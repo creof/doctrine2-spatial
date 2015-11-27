@@ -38,7 +38,7 @@ use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
  *
  * @group geography
  */
-class GeographyTypeTestCase extends OrmTestCase
+class GeographyTypeTest extends OrmTestCase
 {
     protected function setUp()
     {

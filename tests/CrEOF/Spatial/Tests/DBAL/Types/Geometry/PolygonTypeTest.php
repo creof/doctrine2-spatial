@@ -38,7 +38,7 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
  *
  * @group geometry
  */
-class PolygonTypeTestCase extends OrmTestCase
+class PolygonTypeTest extends OrmTestCase
 {
     protected function setUp()
     {

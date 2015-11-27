@@ -36,7 +36,7 @@ use CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity;
  *
  * @group srid
  */
-class GeoPointSridTestCase extends OrmTestCase
+class GeoPointSridTest extends OrmTestCase
 {
     protected function setUp()
     {

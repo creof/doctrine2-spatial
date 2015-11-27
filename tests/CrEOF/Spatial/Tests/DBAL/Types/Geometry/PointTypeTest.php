@@ -36,7 +36,7 @@ use CrEOF\Spatial\Tests\Fixtures\PointEntity;
  *
  * @group geometry
  */
-class PointTypeTestCase extends OrmTestCase
+class PointTypeTest extends OrmTestCase
 {
     protected function setUp()
     {

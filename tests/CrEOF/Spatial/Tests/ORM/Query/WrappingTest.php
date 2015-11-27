@@ -42,7 +42,7 @@ use Doctrine\ORM\Version;
  *
  * @group dql
  */
-class WrappingTestCase extends OrmTestCase
+class WrappingTest extends OrmTestCase
 {
     protected function setUp()
     {

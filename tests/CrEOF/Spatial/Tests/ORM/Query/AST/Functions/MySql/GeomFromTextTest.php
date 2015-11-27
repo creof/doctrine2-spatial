@@ -37,7 +37,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class GeomFromTextTestCase extends OrmTestCase
+class GeomFromTextTest extends OrmTestCase
 {
     protected function setUp()
     {

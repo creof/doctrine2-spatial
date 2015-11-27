@@ -37,7 +37,7 @@ use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
  *
  * @group geometry
  */
-class LineStringTypeTestCase extends OrmTestCase
+class LineStringTypeTest extends OrmTestCase
 {
     protected function setUp()
     {

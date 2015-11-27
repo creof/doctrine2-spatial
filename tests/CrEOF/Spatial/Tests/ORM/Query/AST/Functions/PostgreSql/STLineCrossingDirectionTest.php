@@ -37,7 +37,7 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class STLineCrossingDirectionTestCase extends OrmTestCase
+class STLineCrossingDirectionTest extends OrmTestCase
 {
     protected function setUp()
     {

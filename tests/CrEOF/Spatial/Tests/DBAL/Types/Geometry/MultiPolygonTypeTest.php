@@ -39,7 +39,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  *
  * @group geometry
  */
-class MultiPolygonTypeTestCase extends OrmTestCase
+class MultiPolygonTypeTest extends OrmTestCase
 {
     protected function setUp()
     {
