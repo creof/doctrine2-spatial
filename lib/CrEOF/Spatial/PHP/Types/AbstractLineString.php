@@ -44,10 +44,6 @@ abstract class AbstractLineString extends AbstractMultiPoint
      */
     public function isClosed()
     {
-        if ($this->points[0] === $this->points[count($this->points) - 1]) {
-            return true;
-        }
-
-        return false;
+        return $this->points[0] === $this->points[count($this->points) - 1];
     }
 }
