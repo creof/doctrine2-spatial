@@ -51,6 +51,8 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
     const MULTIPOLYGON_ENTITY     = 'CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity';
     const GEOGRAPHY_ENTITY        = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
     const GEO_POINT_SRID_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity';
+    const GEO_LINESTRING_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeoLineStringEntity';
+    const GEO_POLYGON_ENTITY      = 'CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity';
 
     /**
      * @var EntityManager
@@ -122,6 +124,14 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
         self::GEO_POINT_SRID_ENTITY => array(
             'types' => array('geopoint'),
             'table' => 'GeoPointSridEntity'
+        ),
+        self::GEO_LINESTRING_ENTITY => array(
+            'types' => array('geolinestring'),
+            'table' => 'GeoLineStringEntity'
+        ),
+        self::GEO_POLYGON_ENTITY => array(
+            'types' => array('geopolygon'),
+            'table' => 'GeoPolygonEntity'
         )
     );
 

@@ -46,6 +46,8 @@ class SchemaTest extends OrmTestCase
         if ($this->getPlatform()->getName() === 'postgresql') {
             $this->usesEntity(self::GEOGRAPHY_ENTITY);
             $this->usesEntity(self::GEO_POINT_SRID_ENTITY);
+            $this->usesEntity(self::GEO_LINESTRING_ENTITY);
+            $this->usesEntity(self::GEO_POLYGON_ENTITY);
         }
 
         parent::setUp();
