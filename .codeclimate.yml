@@ -3,7 +3,7 @@ engines:
     enabled: true
   phpmd:
     enabled: true
-  codeclimate-fixme
+  fixme:
     enabled: true
 ratings:
   paths:
