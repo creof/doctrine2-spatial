@@ -29,7 +29,7 @@ namespace CrEOF\Spatial\DBAL\Types;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class GeographyType extends AbstractGeometryType
+class GeographyType extends AbstractSpatialType
 {
 
 }

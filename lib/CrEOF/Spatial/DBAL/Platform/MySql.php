@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Platform;
 
-use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
@@ -51,23 +51,23 @@ class MySql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr)
+    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
         return sprintf('AsBinary(%s)', $sqlExpr);
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr)
+    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
         return sprintf('GeomFromText(%s)', $sqlExpr);
     }

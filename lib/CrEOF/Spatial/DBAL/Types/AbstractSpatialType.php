@@ -37,7 +37,7 @@ use Doctrine\DBAL\Types\Type;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractGeometryType extends Type
+abstract class AbstractSpatialType extends Type
 {
     const PLATFORM_MYSQL      = 'MySql';
     const PLATFORM_POSTGRESQL = 'PostgreSql';

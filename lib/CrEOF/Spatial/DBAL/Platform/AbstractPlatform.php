@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Geo\WKT\Parser as StringParser;
 use CrEOF\Geo\WKB\Parser as BinaryParser;
-use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
@@ -39,12 +39,12 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 abstract class AbstractPlatform implements PlatformInterface
 {
     /**
-     * @param AbstractGeometryType $type
-     * @param string $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertStringToPHPValue(AbstractGeometryType $type, $sqlExpr)
+    public function convertStringToPHPValue(AbstractSpatialType $type, $sqlExpr)
     {
         $parser = new StringParser($sqlExpr);
 
@@ -52,12 +52,12 @@ abstract class AbstractPlatform implements PlatformInterface
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr)
+    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr)
     {
         $parser = new BinaryParser($sqlExpr);
 
@@ -65,12 +65,12 @@ abstract class AbstractPlatform implements PlatformInterface
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param GeometryInterface    $value
+     * @param AbstractSpatialType $type
+     * @param GeometryInterface   $value
      *
      * @return string
      */
-    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value)
+    public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
     {
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
     }
@@ -78,11 +78,11 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * Get an array of database types that map to this Doctrine type.
      *
-     * @param AbstractGeometryType $type
+     * @param AbstractSpatialType $type
      *
      * @return string[]
      */
-    public function getMappedDatabaseTypes(AbstractGeometryType $type)
+    public function getMappedDatabaseTypes(AbstractSpatialType $type)
     {
         $sqlType = strtolower($type->getSQLType());
 
@@ -96,13 +96,13 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * Create spatial object from parsed value
      *
-     * @param AbstractGeometryType $type
-     * @param array                $value
+     * @param AbstractSpatialType $type
+     * @param array               $value
      *
      * @return GeometryInterface
      * @throws \CrEOF\Spatial\Exception\InvalidValueException
      */
-    private function newObjectFromValue(AbstractGeometryType $type, $value)
+    private function newObjectFromValue(AbstractSpatialType $type, $value)
     {
         $typeFamily = $type->getTypeFamily();
         $typeName   = strtoupper($value['type']);

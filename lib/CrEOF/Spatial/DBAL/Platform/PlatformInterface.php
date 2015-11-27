@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Platform;
 
-use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
@@ -35,44 +35,44 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 interface PlatformInterface
 {
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr);
+    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertStringToPHPValue(AbstractGeometryType $type, $sqlExpr);
+    public function convertStringToPHPValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractGeometryType $type
-     * @param GeometryInterface    $value
+     * @param AbstractSpatialType $type
+     * @param GeometryInterface   $value
      *
      * @return string
      */
-    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value);
+    public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value);
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr);
+    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr);
+    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr);
 
     /**
      * Gets the SQL declaration snippet for a field of this type.
@@ -84,9 +84,9 @@ interface PlatformInterface
     public function getSQLDeclaration(array $fieldDeclaration);
 
     /**
-     * @param AbstractGeometryType $type
+     * @param AbstractSpatialType $type
      *
      * @return string[]
      */
-    public function getMappedDatabaseTypes(AbstractGeometryType $type);
+    public function getMappedDatabaseTypes(AbstractSpatialType $type);
 }
