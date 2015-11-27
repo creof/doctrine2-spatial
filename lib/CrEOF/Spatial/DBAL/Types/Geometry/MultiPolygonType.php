@@ -24,7 +24,6 @@
 namespace CrEOF\Spatial\DBAL\Types\Geometry;
 
 use CrEOF\Spatial\DBAL\Types\GeometryType;
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Doctrine MULTIPOLYGON type
@@ -34,11 +33,5 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
  */
 class MultiPolygonType extends GeometryType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getSQLType()
-    {
-        return GeometryInterface::MULTIPOLYGON;
-    }
+
 }
