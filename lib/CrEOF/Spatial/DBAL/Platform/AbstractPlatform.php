@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\DBAL\Platform;
 use CrEOF\Geo\WKT\Parser as StringParser;
 use CrEOF\Geo\WKB\Parser as BinaryParser;
 use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
@@ -83,7 +84,13 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function getMappedDatabaseTypes(AbstractGeometryType $type)
     {
-        return array(strtolower($type->getSQLType()));
+        $sqlType = strtolower($type->getSQLType());
+
+        if ($type instanceof GeographyType && $sqlType !== 'geography') {
+            $sqlType = sprintf('geography(%s)', $sqlType);
+        }
+
+        return array($sqlType);
     }
 
     /**
