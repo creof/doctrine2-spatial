@@ -5,6 +5,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 ### Changed
+### Removed
+
+## [1.0.1] - 2015-12-18
+### Added
+- Dependency on creof/geo-parser.
+- Dependency on creof/wkt-parser.
+- Dependency on creof/wkb-parser.
+- Additional spatial functions support for PostgreSQL/PostGIS.
+### Changed
+- Replace regex in AbstractPoint with parser from creof/geo-parser.
+- Use parser from creof/wkt-parser in AbstractPlatform class.
+- Use parser from creof/wkb-parser in AbstractPlatform class.
+### Removed
+- StringLexer and StringParser classes no longer needed.
+- BinaryReader, BinaryParser, and Utils classes no longer needed.
+- Unused expection methods from InvalidValueException.
 
 ## [1.0.0] - 2015-11-09
 ### Added
