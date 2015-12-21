@@ -21,36 +21,67 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Geography\Platforms;
+namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
+use CrEOF\Spatial\PHP\Types\Geography\Point;
 
 /**
- * MySql spatial platform
+ * Geography point entity specifying SRID
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @Entity
  */
-class MySql extends \CrEOF\Spatial\DBAL\Types\Geometry\Platforms\MySql
+class GeoPointSridEntity
 {
     /**
-     * {@inheritdoc}
+     * @var int $id
+     *
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer")
      */
-    public function getTypeFamily()
+    protected $id;
+
+    /**
+     * @var Point $point
+     *
+     * @Column(type="geopoint", nullable=true, options={"srid"="4326"})
+     */
+    protected $point;
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
     {
-        return GeographyInterface::GEOGRAPHY;
+        return $this->id;
     }
 
     /**
-     * {@inheritdoc}
+     * Set geography
+     *
+     * @param Point $point
+     *
+     * @return self
      */
-    public function getSQLDeclaration(array $fieldDeclaration)
+    public function setPoint(Point $point)
     {
-        if ($fieldDeclaration['type']->getSQLType() == GeographyInterface::GEOGRAPHY) {
-            return 'GEOMETRY';
-        }
+        $this->point = $point;
 
-        return parent::getSQLDeclaration($fieldDeclaration);
+        return $this;
     }
 
+    /**
+     * Get geography
+     *
+     * @return Point
+     */
+    public function getPoint()
+    {
+        return $this->point;
+    }
 }

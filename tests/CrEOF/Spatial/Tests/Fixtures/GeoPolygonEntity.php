@@ -21,19 +21,68 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\DBAL\Types;
+namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\PHP\Types\Geography\Polygon;
 
 /**
- * AbstractGeometryType tests
+ * Polygon entity
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group geometry
+ * @Entity
+ * @Table()
  */
-class AbstractGeometryTypeTest extends OrmTest
+class GeoPolygonEntity
 {
+    /**
+     * @var int $id
+     *
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer")
+     */
+    protected $id;
 
+    /**
+     * @var Polygon $polygon
+     *
+     * @Column(type="geopolygon", nullable=true)
+     */
+    protected $polygon;
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set polygon
+     *
+     * @param Polygon $polygon
+     *
+     * @return self
+     */
+    public function setPolygon(Polygon $polygon)
+    {
+        $this->polygon = $polygon;
+
+        return $this;
+    }
+
+    /**
+     * Get polygon
+     *
+     * @return Polygon
+     */
+    public function getPolygon()
+    {
+        return $this->polygon;
+    }
 }

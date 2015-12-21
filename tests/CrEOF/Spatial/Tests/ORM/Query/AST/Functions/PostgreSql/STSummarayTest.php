@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\ORM\Query;
 
 /**
@@ -42,12 +42,12 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class STSummaryTest extends OrmTest
+class STSummaryTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity('geometry');
-        $this->usesEntity('geography');
+        $this->usesEntity(self::GEOMETRY_ENTITY);
+        $this->usesEntity(self::GEOGRAPHY_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();

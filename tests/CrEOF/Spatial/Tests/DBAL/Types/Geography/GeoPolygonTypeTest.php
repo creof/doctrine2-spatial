@@ -21,14 +21,14 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
+namespace CrEOF\Spatial\Tests\DBAL\Types\Geography;
 
 use Doctrine\ORM\Query;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\Geography\LineString;
+use CrEOF\Spatial\PHP\Types\Geography\Point;
+use CrEOF\Spatial\PHP\Types\Geography\Polygon;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity;
 
 /**
  * PolygonType tests
@@ -36,19 +36,19 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
- * @group geometry
+ * @group geography
  */
-class PolygonTypeTest extends OrmTestCase
+class GeoPolygonTypeTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesEntity(self::GEO_POLYGON_ENTITY);
         parent::setUp();
     }
 
     public function testNullPolygon()
     {
-        $entity = new PolygonEntity();
+        $entity = new GeoPolygonEntity();
 
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
@@ -57,7 +57,7 @@ class PolygonTypeTest extends OrmTestCase
 
         $this->getEntityManager()->clear();
 
-        $queryEntity = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -73,7 +73,7 @@ class PolygonTypeTest extends OrmTestCase
                 new Point(0, 0)
             ))
         );
-        $entity = new PolygonEntity();
+        $entity = new GeoPolygonEntity();
 
         $entity->setPolygon(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
@@ -83,7 +83,7 @@ class PolygonTypeTest extends OrmTestCase
 
         $this->getEntityManager()->clear();
 
-        $queryEntity = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -106,7 +106,7 @@ class PolygonTypeTest extends OrmTestCase
                 new Point(5, 5)
             ))
         );
-        $entity = new PolygonEntity();
+        $entity = new GeoPolygonEntity();
 
         $entity->setPolygon(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
@@ -116,7 +116,7 @@ class PolygonTypeTest extends OrmTestCase
 
         $this->getEntityManager()->clear();
 
-        $queryEntity = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->find($id);
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
     }
@@ -132,14 +132,14 @@ class PolygonTypeTest extends OrmTestCase
                 new Point(0, 0)
             ))
         );
-        $entity = new PolygonEntity();
+        $entity = new GeoPolygonEntity();
 
         $entity->setPolygon(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $result = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->findByPolygon(new Polygon($rings));
+        $result = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->findByPolygon(new Polygon($rings));
 
         $this->assertEquals($entity, $result[0]);
     }

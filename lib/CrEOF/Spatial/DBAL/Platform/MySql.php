@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,60 +21,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Platforms;
+namespace CrEOF\Spatial\DBAL\Platform;
 
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * Spatial platform interface
+ * MySql spatial platform
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-interface PlatformInterface
+class MySql extends AbstractPlatform
 {
-    /**
-     * @param string $sqlExpr
-     *
-     * @return GeometryInterface
-     */
-    public function convertBinaryToPHPValue($sqlExpr);
-
-    /**
-     * @param string $sqlExpr
-     *
-     * @return GeometryInterface
-     */
-    public function convertStringToPHPValue($sqlExpr);
-
-    /**
-     * @param GeometryInterface $value
-     *
-     * @return string
-     */
-    public function convertToDatabaseValue(GeometryInterface $value);
-
-    /**
-     * @param string $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToDatabaseValueSQL($sqlExpr);
-
-    /**
-     * @param string $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToPHPValueSQL($sqlExpr);
-
-    /**
-     * Get the type family for this interface (i.e. geometry or geography)
-     *
-     * @return string
-     */
-    public function getTypeFamily();
-
     /**
      * Gets the SQL declaration snippet for a field of this type.
      *
@@ -82,5 +41,34 @@ interface PlatformInterface
      *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration);
+    public function getSQLDeclaration(array $fieldDeclaration)
+    {
+        if ($fieldDeclaration['type']->getSQLType() === GeographyInterface::GEOGRAPHY) {
+            return 'GEOMETRY';
+        }
+
+        return strtoupper($fieldDeclaration['type']->getSQLType());
+    }
+
+    /**
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
+     *
+     * @return string
+     */
+    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr)
+    {
+        return sprintf('AsBinary(%s)', $sqlExpr);
+    }
+
+    /**
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
+     *
+     * @return string
+     */
+    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr)
+    {
+        return sprintf('GeomFromText(%s)', $sqlExpr);
+    }
 }

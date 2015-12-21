@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
 use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 
 /**
@@ -36,11 +36,11 @@ use CrEOF\Spatial\Tests\Fixtures\PointEntity;
  *
  * @group geometry
  */
-class PointTypeTest extends OrmTest
+class PointTypeTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity('point');
+        $this->usesEntity(self::POINT_ENTITY);
         parent::setUp();
     }
 

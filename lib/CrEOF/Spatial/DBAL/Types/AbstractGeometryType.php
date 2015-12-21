@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ namespace CrEOF\Spatial\DBAL\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\DBAL\Types\Platforms\PlatformInterface;
+use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
@@ -54,7 +54,7 @@ abstract class AbstractGeometryType extends Type
     abstract public function getSQLType();
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function canRequireSQLConversion()
     {
@@ -78,10 +78,10 @@ abstract class AbstractGeometryType extends Type
         }
 
         if (! ($value instanceof GeometryInterface)) {
-            throw InvalidValueException::invalidValueNoGeometryInterface();
+            throw new InvalidValueException('Geometry column values must implement GeometryInterface');
         }
 
-        return $this->getSpatialPlatform($platform)->convertToDatabaseValue($value);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValue($this, $value);
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToPHPValueSQL($sqlExpr, $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($this, $sqlExpr);
     }
 
     /**
@@ -107,7 +107,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($this, $sqlExpr);
     }
 
     /**
@@ -125,10 +125,10 @@ abstract class AbstractGeometryType extends Type
         }
 
         if (ctype_alpha($value[0])) {
-            return $this->getSpatialPlatform($platform)->convertStringToPHPValue($value);
+            return $this->getSpatialPlatform($platform)->convertStringToPHPValue($this, $value);
         }
 
-        return $this->getSpatialPlatform($platform)->convertBinaryToPHPValue($value);
+        return $this->getSpatialPlatform($platform)->convertBinaryToPHPValue($this, $value);
     }
 
     /**
@@ -163,7 +163,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function getMappedDatabaseTypes(AbstractPlatform $platform)
     {
-        return array(strtolower($this->getSQLType()));
+        return $this->getSpatialPlatform($platform)->getMappedDatabaseTypes($this);
     }
 
     /**
@@ -190,37 +190,14 @@ abstract class AbstractGeometryType extends Type
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        if (! class_exists($spatialPlatformClass = $this->getSpatialPlatformClass($platform))) {
-            throw UnsupportedPlatformException::unsupportedPlatform($platform->getName());
+        $const = sprintf('self::PLATFORM_%s', strtoupper($platform->getName()));
+
+        if (! defined($const)) {
+            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
         }
 
-        return new $spatialPlatformClass;
-    }
+        $class = sprintf('CrEOF\Spatial\DBAL\Platform\%s', constant($const));
 
-    /**
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     * @throws UnsupportedPlatformException
-     */
-    private function getPlatformName(AbstractPlatform $platform)
-    {
-        $name = __CLASS__ . '::PLATFORM_' . strtoupper($platform->getName());
-
-        if (! defined($name)) {
-            throw UnsupportedPlatformException::unsupportedPlatform($name);
-        }
-
-        return constant($name);
-    }
-
-    /**
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     */
-    private function getSpatialPlatformClass(AbstractPlatform $platform)
-    {
-        return sprintf('CrEOF\Spatial\DBAL\Types\%s\Platforms\%s', $this->getTypeFamily(), $this->getPlatformName($platform));
+        return new $class;
     }
 }

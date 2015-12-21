@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,7 @@ abstract class AbstractGeometry implements GeometryInterface
                 return array_values($point);
                 break;
             default:
-                throw InvalidValueException::invalidType($this, GeometryInterface::POINT, $point);
+                throw new InvalidValueException(sprintf('Invalid %s Point value of type "%s"', $this->getType(), (is_object($point) ? get_class($point) : gettype($point))));
         }
     }
 
@@ -112,13 +112,13 @@ abstract class AbstractGeometry implements GeometryInterface
             case (is_array($ring)):
                 break;
             default:
-                throw InvalidValueException::invalidType($this, GeometryInterface::LINESTRING, $ring);
+                throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
         }
 
         $ring = $this->validateLineStringValue($ring);
 
         if ($ring[0] !== end($ring)) {
-            throw InvalidValueException::ringNotClosed($this->toStringLineString($ring));
+            throw new InvalidValueException(sprintf('Invalid polygon, ring "(%s)" is not closed', $this->toStringLineString($ring)));
         }
 
         return $ring;

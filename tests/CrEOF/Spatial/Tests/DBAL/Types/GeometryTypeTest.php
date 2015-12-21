@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
 
@@ -39,12 +39,12 @@ use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
  *
  * @group geometry
  */
-class GeometryTypeTest extends OrmTest
+class GeometryTypeTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity('geometry');
-        $this->usesEntity('no_hint_geometry');
+        $this->usesEntity(self::GEOMETRY_ENTITY);
+        $this->usesEntity(self::NO_HINT_GEOMETRY_ENTITY);
         parent::setUp();
     }
 

@@ -29,7 +29,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
 use CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
  * MultiPolygonType tests
@@ -39,11 +39,11 @@ use CrEOF\Spatial\Tests\OrmTest;
  *
  * @group geometry
  */
-class MultiPolygonTypeTest extends OrmTest
+class MultiPolygonTypeTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity('multipolygon');
+        $this->usesEntity(self::MULTIPOLYGON_ENTITY);
         parent::setUp();
     }
 

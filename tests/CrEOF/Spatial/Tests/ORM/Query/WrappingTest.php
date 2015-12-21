@@ -29,7 +29,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Version;
@@ -42,11 +42,11 @@ use Doctrine\ORM\Version;
  *
  * @group dql
  */
-class WrappingTest extends OrmTest
+class WrappingTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity('geometry');
+        $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesType('point');
         parent::setUp();
     }
@@ -80,7 +80,7 @@ class WrappingTest extends OrmTest
                 $function = 'Contains';
                 break;
             default:
-                throw UnsupportedPlatformException::unsupportedPlatform($this->getPlatform()->getName());
+                throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $this->getPlatform()->getName()));
         }
 
         $dql = sprintf($dql, $function);

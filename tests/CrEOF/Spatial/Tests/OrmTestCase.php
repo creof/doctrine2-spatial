@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ use Doctrine\ORM\Tools\SchemaTool;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class OrmTest extends \PHPUnit_Framework_TestCase
+abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
 {
     const GEOMETRY_ENTITY         = 'CrEOF\Spatial\Tests\Fixtures\GeometryEntity';
     const NO_HINT_GEOMETRY_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity';
@@ -50,6 +50,9 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     const POLYGON_ENTITY          = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
     const MULTIPOLYGON_ENTITY     = 'CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity';
     const GEOGRAPHY_ENTITY        = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
+    const GEO_POINT_SRID_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity';
+    const GEO_LINESTRING_ENTITY   = 'CrEOF\Spatial\Tests\Fixtures\GeoLineStringEntity';
+    const GEO_POLYGON_ENTITY      = 'CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity';
 
     /**
      * @var EntityManager
@@ -90,40 +93,45 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      * @var array[]
      */
     protected static $entities = array(
-        'geometry' => array(
-            'class' => self::GEOMETRY_ENTITY,
+        self::GEOMETRY_ENTITY => array(
             'types' => array('geometry'),
             'table' => 'GeometryEntity'
         ),
-        'no_hint_geometry' => array(
-            'class' => self::NO_HINT_GEOMETRY_ENTITY,
+        self::NO_HINT_GEOMETRY_ENTITY => array(
             'types' => array('geometry'),
             'table' => 'NoHintGeometryEntity'
         ),
-        'point' => array(
-            'class' => self::POINT_ENTITY,
+        self::POINT_ENTITY => array(
             'types' => array('point'),
             'table' => 'PointEntity'
         ),
-        'linestring' => array(
-            'class' => self::LINESTRING_ENTITY,
+        self::LINESTRING_ENTITY => array(
             'types' => array('linestring'),
             'table' => 'LineStringEntity'
         ),
-        'polygon' => array(
-            'class' => self::POLYGON_ENTITY,
+        self::POLYGON_ENTITY => array(
             'types' => array('polygon'),
             'table' => 'PolygonEntity'
         ),
-        'multipolygon' => array(
-            'class' => self::MULTIPOLYGON_ENTITY,
+        self::MULTIPOLYGON_ENTITY => array(
             'types' => array('multipolygon'),
             'table' => 'MultiPolygonEntity'
         ),
-        'geography' => array(
-            'class' => self::GEOGRAPHY_ENTITY,
+        self::GEOGRAPHY_ENTITY => array(
             'types' => array('geography'),
             'table' => 'GeographyEntity'
+        ),
+        self::GEO_POINT_SRID_ENTITY => array(
+            'types' => array('geopoint'),
+            'table' => 'GeoPointSridEntity'
+        ),
+        self::GEO_LINESTRING_ENTITY => array(
+            'types' => array('geolinestring'),
+            'table' => 'GeoLineStringEntity'
+        ),
+        self::GEO_POLYGON_ENTITY => array(
+            'types' => array('geopolygon'),
+            'table' => 'GeoPolygonEntity'
         )
     );
 
@@ -238,13 +246,13 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $entityName
+     * @param string $entityClass
      */
-    protected function usesEntity($entityName)
+    protected function usesEntity($entityClass)
     {
-        $this->usedEntities[$entityName] = true;
+        $this->usedEntities[$entityClass] = true;
 
-        foreach (static::$entities[$entityName]['types'] as $type) {
+        foreach (static::$entities[$entityClass]['types'] as $type) {
             $this->usesType($type);
         }
     }
@@ -252,9 +260,9 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    protected function getEntityClasses()
+    protected function getUsedEntityClasses()
     {
-        return array_column(array_intersect_key(static::$entities, static::$createdEntities), 'class');
+        return static::$createdEntities;
     }
 
     /**
@@ -263,11 +271,13 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     protected function setUpTypes()
     {
         foreach (array_keys($this->usedTypes) as $typeName) {
-            if (! isset(static::$addedTypes[$typeName])) {
+            if (! isset(static::$addedTypes[$typeName]) && ! Type::hasType($typeName)) {
                 Type::addType($typeName, static::$types[$typeName]);
 
+                $type = Type::getType($typeName);
+
                 // Since doctrineTypeComments may already be initialized check if added type requires comment
-                if (Type::getType($typeName)->requiresSQLCommentHint($this->getPlatform())) {
+                if ($type->requiresSQLCommentHint($this->getPlatform()) && ! $this->getPlatform()->isCommentedDoctrineType($type)) {
                     $this->getPlatform()->markDoctrineTypeCommented(Type::getType($typeName));
                 }
 
@@ -283,12 +293,10 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
     {
         $classes = array();
 
-        foreach (array_keys($this->usedEntities) as $entityName) {
-            if (! isset(static::$createdEntities[$entityName])) {
-                //TODO: getClassMetadata marked internal in 2.5
-                $classes[] = $this->getEntityManager()->getClassMetadata(static::$entities[$entityName]['class']);
-
-                static::$createdEntities[$entityName] = true;
+        foreach (array_keys($this->usedEntities) as $entityClass) {
+            if (! isset(static::$createdEntities[$entityClass])) {
+                static::$createdEntities[$entityClass] = true;
+                $classes[]                             = $this->getEntityManager()->getClassMetadata($entityClass);
             }
         }
 
@@ -348,8 +356,6 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $classes = array();
-
         $this->sqlLoggerStack->enabled = false;
 
         foreach (array_keys($this->usedEntities) as $entityName) {
@@ -452,7 +458,7 @@ abstract class OrmTest extends \PHPUnit_Framework_TestCase
             case 'mysql':
                 break;
             default:
-                throw UnsupportedPlatformException::unsupportedPlatform($connection->getDatabasePlatform()->getName());
+                throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $connection->getDatabasePlatform()->getName()));
         }
 
         return $connection;

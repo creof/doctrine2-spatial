@@ -21,17 +21,68 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\DBAL\Types\Platforms;
+namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\PHP\Types\Geography\LineString;
 
 /**
- * AbstractPlatform tests
+ * LineString entity
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @Entity
+ * @Table()
  */
-class AbstractPlatformTest extends OrmTest
+class GeoLineStringEntity
 {
+    /**
+     * @var int $id
+     *
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer")
+     */
+    protected $id;
 
+    /**
+     * @var LineString $lineString
+     *
+     * @Column(type="geolinestring", nullable=true)
+     */
+    protected $lineString;
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set lineString
+     *
+     * @param LineString $lineString
+     *
+     * @return self
+     */
+    public function setLineString(LineString $lineString)
+    {
+        $this->lineString = $lineString;
+
+        return $this;
+    }
+
+    /**
+     * Get lineString
+     *
+     * @return LineString
+     */
+    public function getLineString()
+    {
+        return $this->lineString;
+    }
 }

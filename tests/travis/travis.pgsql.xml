@@ -14,23 +14,6 @@
         </testsuite>
     </testsuites>
 
-    <groups>
-        <include>
-            <group>php</group>               <!-- Tests for PHP type objects -->
-            <group>result_processing</group> <!-- Tests for lexer/parser/reader -->
-            <group>geometry</group>          <!-- Tests for geometry types -->
-            <group>dql</group>               <!-- Tests for DQL functions -->
-            <group>geography</group>         <!-- Tests for geography types -->
-            <group>srid</group>              <!-- Tests for SRID functionality -->
-        </include>
-    </groups>
-    <filter>
-        <whitelist>
-            <file>../../tests/CrEOF/Spatial/Tests/OrmTest.php</file>
-            <directory>../../lib</directory>
-        </whitelist>
-    </filter>
-
     <php>
         <var name="db_type" value="pdo_pgsql"/>
         <var name="db_host" value="localhost" />
@@ -41,4 +24,13 @@
         <var name="opt_mark_sql" value="true" />        <!-- Execute dummy SELECT statement before each test to mark DB query log -->
         <var name="opt_use_debug_stack" value="true" /> <!-- Enable SQLLoggerStack and query logging exception in tests -->
     </php>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../../lib/</directory>
+            <exclude>
+                <directory suffix=".php">../CrEOF/Spatial/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

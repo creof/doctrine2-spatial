@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
-use CrEOF\Spatial\Tests\OrmTest;
+use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\ORM\Query;
 
 /**
@@ -37,11 +37,11 @@ use Doctrine\ORM\Query;
  *
  * @group dql
  */
-class GLengthTest extends OrmTest
+class GLengthTest extends OrmTestCase
 {
     protected function setUp()
     {
-        $this->usesEntity('linestring');
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('mysql');
 
         parent::setUp();

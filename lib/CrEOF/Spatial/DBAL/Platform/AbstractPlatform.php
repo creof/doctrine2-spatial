@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,12 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Platforms;
+namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Geo\WKT\Parser as StringParser;
 use CrEOF\Geo\WKB\Parser as BinaryParser;
+use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
@@ -37,50 +39,81 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 abstract class AbstractPlatform implements PlatformInterface
 {
     /**
-     * {@inheritdoc}
+     * @param AbstractGeometryType $type
+     * @param string $sqlExpr
+     *
+     * @return GeometryInterface
      */
-    public function convertStringToPHPValue($sqlExpr)
+    public function convertStringToPHPValue(AbstractGeometryType $type, $sqlExpr)
     {
         $parser = new StringParser($sqlExpr);
 
-        return $this->newObjectFromValue($parser->parse());
+        return $this->newObjectFromValue($type, $parser->parse());
     }
 
     /**
-     * {@inheritdoc}
+     * @param AbstractGeometryType $type
+     * @param string               $sqlExpr
+     *
+     * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue($sqlExpr)
+    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr)
     {
         $parser = new BinaryParser($sqlExpr);
 
-        return $this->newObjectFromValue($parser->parse());
+        return $this->newObjectFromValue($type, $parser->parse());
     }
 
     /**
-     * {@inheritdoc}
+     * @param AbstractGeometryType $type
+     * @param GeometryInterface    $value
+     *
+     * @return string
      */
-    public function convertToDatabaseValue(GeometryInterface $value)
+    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value)
     {
         return sprintf('%s(%s)', strtoupper($value->getType()), $value);
     }
 
     /**
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractGeometryType $type
+     *
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractGeometryType $type)
+    {
+        $sqlType = strtolower($type->getSQLType());
+
+        if ($type instanceof GeographyType && $sqlType !== 'geography') {
+            $sqlType = sprintf('geography(%s)', $sqlType);
+        }
+
+        return array($sqlType);
+    }
+
+    /**
      * Create spatial object from parsed value
      *
-     * @param array $value
+     * @param AbstractGeometryType $type
+     * @param array                $value
      *
      * @return GeometryInterface
      * @throws \CrEOF\Spatial\Exception\InvalidValueException
      */
-    private function newObjectFromValue($value)
+    private function newObjectFromValue(AbstractGeometryType $type, $value)
     {
-        $constName = 'CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::' . strtoupper($value['type']);
+        $typeFamily = $type->getTypeFamily();
+        $typeName   = strtoupper($value['type']);
+
+        $constName = sprintf('CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::%s', $typeName);
 
         if (! defined($constName)) {
-            throw InvalidValueException::unsupportedType($this->getTypeFamily(), strtoupper($value['type']));
+            throw new InvalidValueException(sprintf('Unsupported %s type "%s".', $typeFamily, $typeName));
         }
 
-        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $this->getTypeFamily(), constant($constName));
+        $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $typeFamily, constant($constName));
 
         return new $class($value['value'], $value['srid']);
     }

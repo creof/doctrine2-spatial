@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,48 +21,41 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\DBAL\Types\Geometry\Platforms;
+namespace CrEOF\Spatial\Tests\DBAL\Platform;
 
-use CrEOF\Spatial\DBAL\Types\Platforms\AbstractPlatform;
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use CrEOF\Spatial\Tests\OrmMockTestCase;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\SchemaTool;
 
 /**
- * MySql spatial platform
+ * Spatial platform tests
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @group geometry
  */
-class MySql extends AbstractPlatform
+class PlatformTest extends OrmMockTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getTypeFamily()
+    public function setUp()
     {
-        return GeometryInterface::GEOMETRY;
+        if (! Type::hasType('point')) {
+            Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
+        }
+
+        parent::setUp();
     }
 
     /**
-     * {@inheritdoc}
+     * @expectedException        \CrEOF\Spatial\Exception\UnsupportedPlatformException
+     * @expectedExceptionMessage DBAL platform "YourSQL" is not currently supported.
      */
-    public function getSQLDeclaration(array $fieldDeclaration)
+    public function testUnsupportedPlatform()
     {
-        return strtoupper($fieldDeclaration['type']->getSQLType());
-    }
+        $metadata   = $this->getMockEntityManager()->getClassMetadata('CrEOF\Spatial\Tests\Fixtures\PointEntity');
+        $schemaTool = new SchemaTool($this->getMockEntityManager());
 
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToPHPValueSQL($sqlExpr)
-    {
-        return sprintf('AsBinary(%s)', $sqlExpr);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToDatabaseValueSQL($sqlExpr)
-    {
-        return sprintf('GeomFromText(%s)', $sqlExpr);
+        $schemaTool->createSchema(array($metadata));
     }
 }
