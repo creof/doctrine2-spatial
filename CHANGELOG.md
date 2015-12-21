@@ -4,8 +4,28 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Local phpdocs to database platform classes.
+- getMappedDatabaseTypes() method to PlatformInterface returning a unique type name used in type mapping.
+- Entity and test for setting default SRID in column definition on PostgreSQL/PostGIS.
+- Additional parameter to methods in PlatformInterface to pass DBAL type.
+- Test class OrmMockTestCase with mocked DBAL connection.
+- Test for Geography\Polygon type.
+- Test for unsupported platforms.
 ### Changed
+- Moved database platform classes to namespace CrEOF\Spatial\DBAL\Platform.
+- Define exception messages where thrown in classes.
+- Pass entity class names to usesEntity() in tests instead of looking them up in an array.
+- Confirm types have not been previously added when setting up tests.
+- Geometry and Geography platform classes unified in single class for each database platform.
+- Class OrmTest renamed to OrmTestCase.
+- Refactor single use methods in AbstractGeometryType into calling method.
+- Include all test by default so tests are inadvertently skipped.
+- Changed test class names to match filenames.
 ### Removed
+- Static exception messages from package exception classes.
+- getTypeFamily() method from PlatformInterface.
+- Dependency on ramsey/array_column package.
+- Empty test classes.
 
 ## [1.0.1] - 2015-12-18
 ### Added
