@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+### Changed
+### Removed
+
+## [1.1] - 2015-12-20
+### Added
 - Local phpdocs to database platform classes.
 - getMappedDatabaseTypes() method to PlatformInterface returning a unique type name used in type mapping.
 - Entity and test for setting default SRID in column definition on PostgreSQL/PostGIS.
