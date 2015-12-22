@@ -15,7 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Additional parameter to methods in PlatformInterface to pass DBAL type.
 - Test class OrmMockTestCase with mocked DBAL connection.
 - Test for Geography\Polygon type.
-- Test for unsupported platforms.
+- Test for unsupported plateforms.
+
 ### Changed
 - Moved database platform classes to namespace CrEOF\Spatial\DBAL\Platform.
 - Define exception messages where thrown in classes.
@@ -26,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Refactor single use methods in AbstractGeometryType into calling method.
 - Include all test by default so tests are inadvertently skipped.
 - Changed test class names to match filenames.
+
 ### Removed
 - Static exception messages from package exception classes.
 - getTypeFamily() method from PlatformInterface.
@@ -38,10 +40,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Dependency on creof/wkt-parser.
 - Dependency on creof/wkb-parser.
 - Additional spatial functions support for PostgreSQL/PostGIS.
+
 ### Changed
 - Replace regex in AbstractPoint with parser from creof/geo-parser.
 - Use parser from creof/wkt-parser in AbstractPlatform class.
 - Use parser from creof/wkb-parser in AbstractPlatform class.
+
 ### Removed
 - StringLexer and StringParser classes no longer needed.
 - BinaryReader, BinaryParser, and Utils classes no longer needed.
