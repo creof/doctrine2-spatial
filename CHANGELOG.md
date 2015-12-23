@@ -15,7 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Additional parameter to methods in PlatformInterface to pass DBAL type.
 - Test class OrmMockTestCase with mocked DBAL connection.
 - Test for Geography\Polygon type.
-- Test for unsupported plateforms.
+- Test for unsupported platforms.
 
 ### Changed
 - Moved database platform classes to namespace CrEOF\Spatial\DBAL\Platform.
