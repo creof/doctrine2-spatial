@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added support for PostgreSql ST_MakeEnvelope function.
 ### Changed
 ### Removed
 
