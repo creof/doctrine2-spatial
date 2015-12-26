@@ -31,7 +31,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\ORM\Query;
 
 /**
- * ST_Area DQL function tests
+ * ST_MakeEnvelope DQL function tests
  *
  * @author Dragos Protung
  * @license http://dlambert.mit-license.org MIT
