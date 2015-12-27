@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\DBAL\Types;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
+use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
@@ -36,7 +37,7 @@ use Doctrine\DBAL\Types\Type;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-abstract class AbstractGeometryType extends Type
+abstract class AbstractSpatialType extends Type
 {
     const PLATFORM_MYSQL      = 'MySql';
     const PLATFORM_POSTGRESQL = 'PostgreSql';
@@ -44,14 +45,24 @@ abstract class AbstractGeometryType extends Type
     /**
      * @return string
      */
-    abstract public function getTypeFamily();
+    public function getTypeFamily()
+    {
+        return $this instanceof GeographyType ? GeographyInterface::GEOGRAPHY : GeometryInterface::GEOMETRY;
+    }
 
     /**
      * Gets the SQL name of this type.
      *
      * @return string
      */
-    abstract public function getSQLType();
+    public function getSQLType()
+    {
+        $class = get_class($this);
+        $start = strrpos($class, '\\') + 1;
+        $len   = strlen($class) - $start - 4;
+
+        return substr($class, strrpos($class, '\\') + 1, $len);
+    }
 
     /**
      * @return bool
@@ -138,7 +149,7 @@ abstract class AbstractGeometryType extends Type
      */
     public function getName()
     {
-        return array_search(get_class($this), $this->getTypesMap());
+        return array_search(get_class($this), self::getTypesMap(), true);
     }
 
     /**

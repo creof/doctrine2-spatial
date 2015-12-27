@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
-use CrEOF\Spatial\Exception\InvalidValueException;
-
 /**
  * Abstract LineString object for LINESTRING spatial types
  *
@@ -46,10 +44,6 @@ abstract class AbstractLineString extends AbstractMultiPoint
      */
     public function isClosed()
     {
-        if ($this->points[0] === $this->points[count($this->points) - 1]) {
-            return true;
-        }
-
-        return false;
+        return $this->points[0] === $this->points[count($this->points) - 1];
     }
 }

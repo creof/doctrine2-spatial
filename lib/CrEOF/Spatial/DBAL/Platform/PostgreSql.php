@@ -23,7 +23,7 @@
 
 namespace CrEOF\Spatial\DBAL\Platform;
 
-use CrEOF\Spatial\DBAL\Types\AbstractGeometryType;
+use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
@@ -62,12 +62,12 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractGeometryType $type, $sqlExpr)
+    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
         if ($type instanceof GeographyType) {
             return sprintf('ST_AsEWKT(%s)', $sqlExpr);
@@ -77,12 +77,12 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractGeometryType $type, $sqlExpr)
+    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
         if ($type instanceof GeographyType) {
             return sprintf('ST_GeographyFromText(%s)', $sqlExpr);
@@ -92,13 +92,13 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param string               $sqlExpr
+     * @param AbstractSpatialType $type
+     * @param string              $sqlExpr
      *
      * @return GeometryInterface
      * @throws InvalidValueException
      */
-    public function convertBinaryToPHPValue(AbstractGeometryType $type, $sqlExpr)
+    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr)
     {
         if (! is_resource($sqlExpr)) {
             throw new InvalidValueException(sprintf('Invalid resource value "%s"', $sqlExpr));
@@ -110,12 +110,12 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractGeometryType $type
-     * @param GeometryInterface    $value
+     * @param AbstractSpatialType $type
+     * @param GeometryInterface   $value
      *
      * @return string
      */
-    public function convertToDatabaseValue(AbstractGeometryType $type, GeometryInterface $value)
+    public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
     {
         $sridSQL = null;
 

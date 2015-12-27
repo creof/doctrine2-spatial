@@ -6,7 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added support for PostgreSql ST_MakeEnvelope function.
 ### Changed
+- Added implementation of getTypeFamily() and getSQLType() to AbstractGeometryType.
+- Rename AbstractGeometryType class to AbstractSpatialType.
+- Simplify logic in isClosed() method of AbstractLineString.
+- Updated copyright year in LICENSE.
 ### Removed
+- Unused imports from a number of classes.
 
 ## [1.1] - 2015-12-20
 ### Added
@@ -77,5 +82,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - StringLexer and StringParser now correctly handle values with exponent/scientific notation.
 
 ### Removed
-- AbstractDualGeometryDQLFunction, AbstractDualGeometryOptionalParameterDQLFunction, AbstractGeometryDQLFunction, AbstractSingleGeometryDQLFunction, AbstractTripleGeometryDQLFunction, and AbstractVariableGeometryDQLFunction classes. 
+- AbstractDualGeometryDQLFunction, AbstractDualGeometryOptionalParameterDQLFunction, AbstractGeometryDQLFunction, AbstractSingleGeometryDQLFunction, AbstractTripleGeometryDQLFunction, and AbstractVariableGeometryDQLFunction classes.
 

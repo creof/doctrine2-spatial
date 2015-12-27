@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +23,13 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
-use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
-
 /**
  * Doctrine GEOMETRY type
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
-class GeometryType extends AbstractGeometryType
+class GeometryType extends AbstractSpatialType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getSQLType()
-    {
-        return GeometryInterface::GEOMETRY;
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTypeFamily()
-    {
-        return GeometryInterface::GEOMETRY;
-    }
 }
