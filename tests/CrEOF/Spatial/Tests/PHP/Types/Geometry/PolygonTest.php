@@ -193,4 +193,28 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testJson()
+    {
+        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
+        $rings = array(
+            array(
+                array(0, 0),
+                array(10, 0),
+                array(10, 10),
+                array(0, 10),
+                array(0, 0)
+            ),
+            array(
+                array(0, 0),
+                array(10, 0),
+                array(10, 10),
+                array(0, 10),
+                array(0, 0)
+            )
+        );
+        $polygon = new Polygon($rings);
+
+        $this->assertEquals($expected, $polygon->toJson());
+    }
 }

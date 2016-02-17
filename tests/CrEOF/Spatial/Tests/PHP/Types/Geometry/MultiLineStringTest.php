@@ -205,4 +205,28 @@ class MultiLineStringTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testJson()
+    {
+        $expected = '{"type":"MultiLineString","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
+        $lineStrings = array(
+            array(
+                array(0, 0),
+                array(10, 0),
+                array(10, 10),
+                array(0, 10),
+                array(0, 0)
+            ),
+            array(
+                array(0, 0),
+                array(10, 0),
+                array(10, 10),
+                array(0, 10),
+                array(0, 0)
+            )
+        );
+        $multiLineString = new MultiLineString($lineStrings);
+
+        $this->assertEquals($expected, $multiLineString->toJson());
+    }
 }

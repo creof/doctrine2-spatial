@@ -233,4 +233,32 @@ class MultiPolygonTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testJson()
+    {
+        $expected = '{"type":"MultiPolygon","coordinates":[[[[0,0],[10,0],[10,10],[0,10],[0,0]]],[[[5,5],[7,5],[7,7],[5,7],[5,5]]]]}';
+        $polygons = array(
+            array(
+                array(
+                    array(0, 0),
+                    array(10, 0),
+                    array(10, 10),
+                    array(0, 10),
+                    array(0, 0)
+                )
+            ),
+            array(
+                array(
+                    array(5, 5),
+                    array(7, 5),
+                    array(7, 7),
+                    array(5, 7),
+                    array(5, 5)
+                )
+            )
+        );
+        $multiPolygon = new MultiPolygon($polygons);
+
+        $this->assertEquals($expected, $multiPolygon->toJson());
+    }
 }

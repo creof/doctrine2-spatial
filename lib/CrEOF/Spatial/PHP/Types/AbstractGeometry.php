@@ -56,6 +56,16 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
+     * @return string
+     */
+    public function toJson()
+    {
+        $json['type'] = $this->getType();
+        $json['coordinates'] = $this->toArray();
+        return json_encode($json);
+    }
+
+    /**
      * @return null|int
      */
     public function getSrid()

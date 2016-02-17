@@ -219,4 +219,12 @@ class PointTest extends \PHPUnit_Framework_TestCase
     {
         new Point(array(), array(), '1234');
     }
+
+    public function testJson()
+    {
+        $expected = '{"type":"Point","coordinates":[5,5]}';
+        $point = new Point(array(5, 5));
+
+        $this->assertEquals($expected, $point->toJson());
+    }
 }
