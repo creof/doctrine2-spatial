@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/creof/doctrine2-spatial/badges/gpa.svg)](https://codeclimate.com/github/creof/doctrine2-spatial)
 [![Coverage Status](https://coveralls.io/repos/creof/doctrine2-spatial/badge.svg?branch=master&service=github)](https://coveralls.io/github/creof/doctrine2-spatial?branch=master)
 [![Downloads](https://img.shields.io/packagist/dm/creof/doctrine2-spatial.svg)](https://packagist.org/packages/creof/doctrine2-spatial)
-
+[![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/creof/doctrine2-spatial)
 
 
 Doctrine2 multi-platform support for spatial types and functions. Currently MySQL and PostgreSQL with PostGIS are supported. Could potentially add support for other platforms if an interest is expressed.
