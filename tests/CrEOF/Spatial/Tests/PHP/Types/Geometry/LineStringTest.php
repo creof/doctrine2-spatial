@@ -157,7 +157,7 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
 
     public function testLineStringFromArraysToString()
     {
-        $expected   = '0 0,0 5,5 0,0 0';
+        $expected = '0 0,0 5,5 0,0 0';
         $lineString = new LineString(
             array(
                 array(0, 0),
@@ -168,5 +168,20 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals($expected, (string) $lineString);
+    }
+
+    public function testJson()
+    {
+        $expected = "{\"type\":\"LineString\",\"coordinates\":[[0,0],[0,5],[5,0],[0,0]]}";
+
+        $lineString = new LineString(
+            array(
+                array(0, 0),
+                array(0, 5),
+                array(5, 0),
+                array(0, 0)
+            )
+        );
+        $this->assertEquals($expected, $lineString->toJson());
     }
 }

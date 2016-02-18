@@ -141,4 +141,19 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, (string) $multiPoint);
     }
+
+    public function testJson()
+    {
+        $expected   = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
+        $multiPoint = new MultiPoint(
+            array(
+                array(0, 0),
+                array(0, 5),
+                array(5, 0),
+                array(0, 0)
+            )
+        );
+
+        $this->assertEquals($expected, $multiPoint->toJson());
+    }
 }
