@@ -99,7 +99,7 @@ abstract class AbstractGeometry implements GeometryInterface
             case ($point instanceof AbstractPoint):
                 return $point->toArray();
                 break;
-            case (is_array($point) && count($point) == 2 && is_numeric($point[0]) && is_numeric($point[1])):
+            case (is_array($point) && count($point) === 2 && is_numeric($point[0]) && is_numeric($point[1])):
                 return array_values($point);
                 break;
             default:

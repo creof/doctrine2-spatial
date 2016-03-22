@@ -198,7 +198,7 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getEntityManager()
     {
-        if (isset($this->entityManager)) {
+        if (null !== $this->entityManager) {
             return $this->entityManager;
         }
 
