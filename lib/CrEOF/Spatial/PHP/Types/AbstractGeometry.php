@@ -115,14 +115,8 @@ abstract class AbstractGeometry implements GeometryInterface
      */
     protected function validateRingValue($ring)
     {
-        switch (true) {
-            case ($ring instanceof AbstractLineString):
-                $ring = $ring->toArray();
-                break;
-            case (is_array($ring)):
-                break;
-            default:
-                throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
+        if (! (is_array($ring) || $ring instanceof AbstractLineString)) {
+            throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
         }
 
         $ring = $this->validateLineStringValue($ring);
@@ -187,6 +181,7 @@ abstract class AbstractGeometry implements GeometryInterface
             if ($polygon instanceof GeometryInterface) {
                 $polygon = $polygon->toArray();
             }
+
             $polygon = $this->validatePolygonValue($polygon);
         }
 
