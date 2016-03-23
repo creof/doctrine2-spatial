@@ -25,5 +25,10 @@
         "psr-0": {
             "CrEOF\\Spatial": "lib/"
         }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "CrEOF\\Spatial\\Tests": "tests/"
+        }
     }
 }
