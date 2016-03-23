@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit backupGlobals="false"
-         colors="true"
-         bootstrap="./tests/CrEOF/Spatial/Tests/TestInit.php"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true"
-        >
+        backupGlobals="false"
+        colors="true"
+        bootstrap="./vendor/autoload.php"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutChangesToGlobalState="true"
+>
 
     <testsuites>
         <testsuite>
