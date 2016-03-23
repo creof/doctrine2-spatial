@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit backupGlobals="false"
-         colors="true"
-         bootstrap="../CrEOF/Spatial/Tests/TestInit.php"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true"
-         processUncoveredFilesFromWhitelist="true"
-        >
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.2/phpunit.xsd"
+        backupGlobals="false"
+        colors="true"
+        bootstrap="../../vendor/autoload.php"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutChangesToGlobalState="true"
+>
 
     <testsuites>
-        <testsuite>
+        <testsuite name="Tests">
             <directory>../CrEOF/Spatial/Tests</directory>
         </testsuite>
     </testsuites>
