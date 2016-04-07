@@ -102,7 +102,7 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
         );
 
         $multiPoint
-            ->addPoint( array(2, 2))
+            ->addPoint(array(2, 2))
             ->addPoint(array(3, 3))
         ;
 

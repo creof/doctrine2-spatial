@@ -173,18 +173,18 @@ class MultiPolygonTest extends \PHPUnit_Framework_TestCase
 
 
         $polygon =  new Polygon(
-        array(
-            new LineString(
-                array(
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0)
-                )
+            array (
+                new LineString(
+                    array (
+                        new Point(0, 0),
+                        new Point(10, 0),
+                        new Point(10, 10),
+                        new Point(0, 10),
+                        new Point(0, 0),
+                    )
+                ),
             )
-        )
-    );
+        );
 
 
         $multiPolygon = new MultiPolygon([ $polygon ]);

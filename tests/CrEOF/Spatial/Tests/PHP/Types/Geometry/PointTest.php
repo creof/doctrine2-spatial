@@ -45,7 +45,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
 
         $point1
             ->setLatitude(40.446111111111)
-            ->setLongitude( -79.948611111111);
+            ->setLongitude(-79.948611111111);
 
         $this->assertEquals(40.446111111111, $point1->getLatitude());
         $this->assertEquals(-79.948611111111, $point1->getLongitude());
@@ -249,7 +249,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testTwoInvalidArguments()
     {
-        new Point(null , null);
+        new Point(null, null);
     }
 
     /**
@@ -260,7 +260,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnusedArguments()
     {
-        new Point(1 , 2 , 3 , 4, null , 5);
+        new Point(1, 2, 3, 4, null, 5);
     }
 
     public function testJson()
