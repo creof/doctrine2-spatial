@@ -64,15 +64,19 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setX($x)
     {
-        $parser = new Parser($x);
+        if (! is_numeric($x)) {
+            $parser = new Parser($x);
 
-        try {
-            $this->x = (float) $parser->parse();
-        } catch (RangeException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
-        } catch (UnexpectedValueException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            try {
+                $x = $parser->parse();
+            } catch (RangeException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            } catch (UnexpectedValueException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            }
         }
+
+        $this->x = (float) $x;
 
         return $this;
     }
@@ -93,15 +97,19 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setY($y)
     {
-        $parser = new Parser($y);
+        if (! is_numeric($y)) {
+            $parser = new Parser($y);
 
-        try {
-            $this->y = (float) $parser->parse();
-        } catch (RangeException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
-        } catch (UnexpectedValueException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            try {
+                $y = $parser->parse();
+            } catch (RangeException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            } catch (UnexpectedValueException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            }
         }
+
+        $this->y = (float) $y;
 
         return $this;
     }
@@ -177,12 +185,12 @@ abstract class AbstractPoint extends AbstractGeometry
     {
         $argc = count($argv);
 
-        if (1 == $argc && is_array($argv[0])) {
+        if (1 === $argc && is_array($argv[0])) {
             return $argv[0];
         }
 
-        if (2 == $argc) {
-            if (is_array($argv[0]) && (is_numeric($argv[1]) || is_null($argv[1]) || is_string($argv[1]))) {
+        if (2 === $argc) {
+            if (is_array($argv[0]) && (is_numeric($argv[1]) || null === $argv[1] || is_string($argv[1]))) {
                 $argv[0][] = $argv[1];
 
                 return $argv[0];
@@ -193,10 +201,8 @@ abstract class AbstractPoint extends AbstractGeometry
             }
         }
 
-        if (3 == $argc) {
-            if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1])) && (is_numeric($argv[2]) || is_null($argv[2]) || is_string($argv[2]))) {
-                return $argv;
-            }
+        if (3 === $argc && ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1])) && (is_numeric($argv[2]) || null === $argv[2] || is_string($argv[2])))) {
+            return $argv;
         }
 
         array_walk($argv, function (&$value) {
