@@ -28,7 +28,7 @@ script:
 after_script:
   - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
   - ./vendor/bin/coveralls -v --exclude-no-stmt
-
+ 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
 
