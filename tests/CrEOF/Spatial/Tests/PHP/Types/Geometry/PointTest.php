@@ -35,13 +35,22 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  */
 class PointTest extends \PHPUnit_Framework_TestCase
 {
+
     public function testGoodNumericPoint()
     {
         $point1 = new Point(-73.7562317, 42.6525793);
 
         $this->assertEquals(42.6525793, $point1->getLatitude());
         $this->assertEquals(-73.7562317, $point1->getLongitude());
+
+        $point1
+            ->setLatitude(40.446111111111)
+            ->setLongitude(-79.948611111111);
+
+        $this->assertEquals(40.446111111111, $point1->getLatitude());
+        $this->assertEquals(-79.948611111111, $point1->getLongitude());
     }
+
 
     public function testGoodStringPoints()
     {
@@ -218,6 +227,40 @@ class PointTest extends \PHPUnit_Framework_TestCase
     public function testPointWrongArgumentTypes()
     {
         new Point(array(), array(), '1234');
+    }
+
+    /**
+     * Test bad string parameters - No parameters
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geometry\Point::__construct:
+     */
+    public function testMissingArguments()
+    {
+        new Point();
+    }
+
+
+    /**
+     * Test bad string parameters - Two invalid parameters
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geometry\Point::__construct: "", ""
+     */
+    public function testTwoInvalidArguments()
+    {
+        new Point(null, null);
+    }
+
+    /**
+     * Test bad string parameters - More than 3 parameters
+     *
+     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
+     * @expectedExceptionMessage Invalid parameters passed to CrEOF\Spatial\PHP\Types\Geometry\Point::__construct: "1", "2", "3", "4", "", "5"
+     */
+    public function testUnusedArguments()
+    {
+        new Point(1, 2, 3, 4, null, 5);
     }
 
     public function testJson()

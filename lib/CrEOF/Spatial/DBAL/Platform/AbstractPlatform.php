@@ -110,7 +110,9 @@ abstract class AbstractPlatform implements PlatformInterface
         $constName = sprintf('CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::%s', $typeName);
 
         if (! defined($constName)) {
+            // @codeCoverageIgnoreStart
             throw new InvalidValueException(sprintf('Unsupported %s type "%s".', $typeFamily, $typeName));
+            // @codeCoverageIgnoreEnd
         }
 
         $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $typeFamily, constant($constName));
