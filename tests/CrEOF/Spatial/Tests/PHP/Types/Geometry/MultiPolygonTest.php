@@ -187,7 +187,7 @@ class MultiPolygonTest extends \PHPUnit_Framework_TestCase
         );
 
 
-        $multiPolygon = new MultiPolygon([ $polygon ]);
+        $multiPolygon = new MultiPolygon( array( $polygon ));
 
         $multiPolygon->addPolygon(
             array (
