@@ -84,6 +84,34 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+
+
+    public function testMultiPointAddPoints()
+    {
+        $expected = array(
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3)
+        );
+        $multiPoint = new MultiPoint(
+            array(
+                array(0, 0),
+                array(1, 1),
+            )
+        );
+
+        $multiPoint
+            ->addPoint(array(2, 2))
+            ->addPoint(array(3, 3))
+        ;
+
+        $actual = $multiPoint->getPoints();
+
+        $this->assertCount(4, $actual);
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testMultiPointFromArraysGetSinglePoint()
     {
         $expected = new Point(1, 1);
