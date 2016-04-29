@@ -139,6 +139,71 @@ class MultiPolygonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $multiPolygon->getPolygons());
     }
 
+
+    public function testSolidMultiPolygonAddPolygon()
+    {
+        $expected = array(
+            new Polygon(
+                array(
+                    new LineString(
+                        array(
+                            new Point(0, 0),
+                            new Point(10, 0),
+                            new Point(10, 10),
+                            new Point(0, 10),
+                            new Point(0, 0)
+                        )
+                    )
+                )
+            ),
+            new Polygon(
+                array(
+                    new LineString(
+                        array(
+                            new Point(5, 5),
+                            new Point(7, 5),
+                            new Point(7, 7),
+                            new Point(5, 7),
+                            new Point(5, 5)
+                        )
+                    )
+                )
+            )
+        );
+
+
+        $polygon =  new Polygon(
+            array (
+                new LineString(
+                    array (
+                        new Point(0, 0),
+                        new Point(10, 0),
+                        new Point(10, 10),
+                        new Point(0, 10),
+                        new Point(0, 0),
+                    )
+                ),
+            )
+        );
+
+
+        $multiPolygon = new MultiPolygon(array($polygon));
+
+        $multiPolygon->addPolygon(
+            array (
+                array (
+                    new Point(5, 5),
+                    new Point(7, 5),
+                    new Point(7, 7),
+                    new Point(5, 7),
+                    new Point(5, 5),
+                ),
+            )
+        );
+
+        $this->assertEquals($expected, $multiPolygon->getPolygons());
+    }
+
     public function testMultiPolygonFromObjectsGetSinglePolygon()
     {
         $polygon1 = new Polygon(
