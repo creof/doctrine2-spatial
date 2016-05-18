@@ -24,6 +24,7 @@
 namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
@@ -34,6 +35,8 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
  */
 class MySql extends AbstractPlatform
 {
+    const DEFAULT_SRID = 4326;
+
     /**
      * Gets the SQL declaration snippet for a field of this type.
      *
@@ -69,6 +72,10 @@ class MySql extends AbstractPlatform
      */
     public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
+        if ($type instanceof GeographyType) {
+            return sprintf('GeomFromText(%s, %u)', $sqlExpr, self::DEFAULT_SRID);
+        }
+
         return sprintf('GeomFromText(%s)', $sqlExpr);
     }
 }
