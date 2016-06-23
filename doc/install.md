@@ -7,7 +7,7 @@ Use these instructions if you're using Doctrine with Symfony2 , otherwise the Or
 Require the `CrEOF/spatial2-doctrine` package in your composer.json and update
 your dependencies.
 
-    $ composer require CrEOF/spatial2-doctrine
+    $ composer require CrEOF/doctrine2-spatial
     
 ## composer.json
 
