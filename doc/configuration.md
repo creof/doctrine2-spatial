@@ -12,11 +12,10 @@ Add the types and functions you need to your Symfony configuration file. The doc
 	    orm:
 	        dql:
 	            numeric_functions:
-	                numeric_functions:
-					st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
-					contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
-					st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
-					st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
-					st_intersects:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
-                	st_buffer:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
-					point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
+			st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
+			contains:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
+			st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
+			st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
+			st_intersects:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
+			st_buffer:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
+			point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
