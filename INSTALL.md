@@ -24,6 +24,9 @@ doctrine:
 
 	    orm:
 	        dql:
+	            string_functions:
+                        # for postgresql
+                        geometry:                CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry
 	            numeric_functions:
                         # for postgresql
                         starea:                  CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
