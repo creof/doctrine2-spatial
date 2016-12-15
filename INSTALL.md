@@ -27,6 +27,7 @@ doctrine:
 	            string_functions:
                         # for postgresql
                         geometry:                CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry
+                        stcollect:               CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect
 	            numeric_functions:
                         # for postgresql
                         starea:                  CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
