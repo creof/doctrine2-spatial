@@ -335,6 +335,7 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
             $configuration->addCustomNumericFunction('st_length', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength');
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
             $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');
+            $configuration->addCustomStringFunction('st_snaptogrid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid');
             $configuration->addCustomStringFunction('st_startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STStartPoint');
             $configuration->addCustomStringFunction('st_summary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSummary');
         }
