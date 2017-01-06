@@ -27,8 +27,10 @@ doctrine:
 	            string_functions:
                         # for postgresql
                         geometry:                CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry
+                        stbuffer:                CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STBuffer
                         stcollect:               CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect
                         stsnaptogrid:            CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid
+                        stoverlaps:              CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STOverlaps
 	            numeric_functions:
                         # for postgresql
                         starea:                  CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
@@ -37,7 +39,6 @@ doctrine:
                         stastext:                CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAsText
                         stazimuth:               CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAzimuth
                         stboundary:              CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STBoundary
-                        STBuffer:                CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STBuffer
                         stcentroid:              CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCentroid
                         stclosestpoint:          CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STClosestPoint
                         stcontains:              CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContains
