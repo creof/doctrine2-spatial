@@ -64,15 +64,19 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setX($x)
     {
-        $parser = new Parser($x);
+        if (!is_numeric($x)) {
+            $parser = new Parser($x);
 
-        try {
-            $this->x = (float) $parser->parse();
-        } catch (RangeException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
-        } catch (UnexpectedValueException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            try {
+                $x = $parser->parse();
+            } catch (RangeException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            } catch (UnexpectedValueException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            }
         }
+
+        $this->x = (float) $x;
 
         return $this;
     }
@@ -93,15 +97,19 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setY($y)
     {
-        $parser = new Parser($y);
+        if (!is_numeric($y)) {
+            $parser = new Parser($y);
 
-        try {
-            $this->y = (float) $parser->parse();
-        } catch (RangeException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
-        } catch (UnexpectedValueException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            try {
+                $y = $parser->parse();
+            } catch (RangeException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            } catch (UnexpectedValueException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            }
         }
+
+        $this->y = (float) $y;
 
         return $this;
     }
