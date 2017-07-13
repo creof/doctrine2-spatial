@@ -32,11 +32,10 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  luca capra <luca.capra@create-net.org>
  * @license http://dlambert.mit-license.org MIT
  */
-class STDistance extends AbstractSpatialDQLFunction {
-
+class STDistance extends AbstractSpatialDQLFunction
+{
     protected $platforms = array('mysql');
     protected $functionName = 'ST_Distance';
     protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
-
 }
