@@ -128,9 +128,11 @@ doctrine:
                 x:                      CrEOF\Spatial\ORM\Query\AST\Functions\MySql\X
                 y:                      CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Y
 
+```
+
 ## Add new function in dql
 Simply add new class in vendor\slavenin\doctrine2-spatial\lib\CrEOF\Spatial\ORM\Query\AST\Functions\MySql\ with need function name and config.yml.
-```
+
 
 Example:
 ```php
