@@ -1,6 +1,5 @@
 <?php
 /**
- * Copyright (C) 2015 Mohammad Heydari
  * Copyright (C) 2012 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,18 +26,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * SRID DQL function
+ * ST_Distance_Sphere DQL function
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
- * @license https://philkingston.mit-license.org MIT
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @license http://dlambert.mit-license.org MIT
  */
-class SRID extends AbstractSpatialDQLFunction
+class STDistanceSphere extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
-
-    protected $functionName = 'SRID';
-
-    protected $minGeomExpr = 1;
-
-    protected $maxGeomExpr = 1;
+    protected $functionName = 'ST_Distance_Sphere';
+    protected $minGeomExpr = 2;
+    protected $maxGeomExpr = 2;
 }
