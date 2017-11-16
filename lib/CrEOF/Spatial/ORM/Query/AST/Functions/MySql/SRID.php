@@ -30,7 +30,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * SRID DQL function
  *
  * @author  Mohammad Heydari <mdh.heydari@gmail.com>
- * @license https://philkingston.mit-license.org MIT
+ * @license http://mdhheydari.mit-license.org MIT
  */
 class SRID extends AbstractSpatialDQLFunction
 {

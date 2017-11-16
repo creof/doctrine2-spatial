@@ -28,8 +28,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 /**
  * ST_Distance_Sphere DQL function
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author  Phil Kingston <phil.kingston@tec20.co.uk>
+ * @license https://philkingston.mit-license.org MIT
  */
 class STDistanceSphere extends AbstractSpatialDQLFunction
 {
