@@ -127,3 +127,10 @@
 * ST_X(geometry)
 * ST_Y(geometry)
 * ST_Z(geometry)
+
+
+# Operator Replacements (workaround for DQL)
+
+* &&
+  * geometry_overlaps(geometry A, geometry B)
+  * geography_overlaps(geography A, geography B)
