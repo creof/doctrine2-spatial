@@ -168,6 +168,15 @@ abstract class AbstractPoint extends AbstractGeometry
     }
 
     /**
+     * @return string
+     */
+    public function toGeoJSON() {
+        $geoJsonArr['type'] = 'Point';
+        $geoJsonArr['coordinates'] = $this->toArray();
+        return json_encode($geoJsonArr);
+    }
+
+    /**
      * @param array $argv
      *
      * @return array
