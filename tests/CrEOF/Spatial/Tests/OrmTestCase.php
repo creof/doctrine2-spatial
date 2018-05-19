@@ -357,6 +357,7 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
             $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STDistanceSphere');
             $configuration->addCustomNumericFunction('st_distance', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STDistance');
             $configuration->addCustomStringFunction('st_geographyfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STGeographyFromText');
+            $configuration->addCustomStringFunction('st_geomfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText');
         }
     }
 

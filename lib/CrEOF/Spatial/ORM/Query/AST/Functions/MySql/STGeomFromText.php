@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2015 Christian Bieg
+ * Copyright (C) 2012 Christian Bieg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,15 +26,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_GeographyFromText DQL function
+ * ST_GeomFromText DQL function
  *
  * @author  Christian Bieg <christianbieg@aol.de>
  */
-class STGeographyFromText extends AbstractSpatialDQLFunction
+class STGeomFromText extends AbstractSpatialDQLFunction
 {
     protected $platforms = array('mysql');
 
-    protected $functionName = 'ST_GeographyFromText';
+    protected $functionName = 'ST_GeomFromText';
 
     protected $minGeomExpr = 1;
 
