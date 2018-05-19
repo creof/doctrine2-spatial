@@ -14,12 +14,12 @@
     </testsuites>
 
     <php>
-        <var name="db_type" value="pdo_pgsql"/>
-        <var name="db_host" value="localhost" />
-        <var name="db_username" value="postgres" />
-        <var name="db_password" value="" />
+        <var name="db_type" value="pdo_mysql"/>
+        <var name="db_host" value="192.168.99.100" />
+        <var name="db_username" value="root" />
+        <var name="db_password" value="fdklgjhsaljf" />
         <var name="db_name" value="spatial_tests" />
-        <var name="db_port" value="5432" />
+        <var name="db_port" value="32779" />
         <var name="opt_mark_sql" value="true" />        <!-- Execute dummy SELECT statement before each test to mark DB query log -->
         <var name="opt_use_debug_stack" value="true" /> <!-- Enable SQLLoggerStack and query logging exception in tests -->
     </php>
