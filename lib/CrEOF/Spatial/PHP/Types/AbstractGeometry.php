@@ -68,7 +68,8 @@ abstract class AbstractGeometry implements GeometryInterface, \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return $this->toArray();
     }
 
