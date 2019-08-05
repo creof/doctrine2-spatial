@@ -64,7 +64,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setX($x)
     {
-        $parser = new Parser($x);
+        $parser = new Parser((string) $x);
 
         try {
             $this->x = (float) $parser->parse();
@@ -93,7 +93,7 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     public function setY($y)
     {
-        $parser = new Parser($y);
+        $parser = new Parser((string) $y);
 
         try {
             $this->y = (float) $parser->parse();
