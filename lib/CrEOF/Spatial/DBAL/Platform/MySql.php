@@ -35,6 +35,15 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 class MySql extends AbstractPlatform
 {
     /**
+     * For Geographic types MySQL follows the WKT specifications and returns (latitude,longitude) while (x,y) / (longitude,latitude) is expected.
+     *
+     * Using the following option the preferred axis-order can be indicated.
+     *
+     * @var string
+     */
+    const AXIS_ORDER_OPTION = 'axis-order=long-lat';
+
+    /**
      * Gets the SQL declaration snippet for a field of this type.
      *
      * @param array $fieldDeclaration
@@ -58,7 +67,9 @@ class MySql extends AbstractPlatform
      */
     public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
-        return sprintf('ST_AsBinary(%s)', $sqlExpr);
+        return $type instanceof GeographyInterface
+            ? sprintf('ST_AsBinary(%s, "%s")', $sqlExpr, self::AXIS_ORDER_OPTION)
+            : sprintf('ST_AsBinary(%s)', $sqlExpr);
     }
 
     /**
@@ -70,7 +81,8 @@ class MySql extends AbstractPlatform
     public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
         return $type instanceof GeographyInterface
-            ? sprintf('ST_GeomFromText(%s, %d)', $sqlExpr, $type->getSrid())
+            ? sprintf('ST_GeomFromText(%s, %d, "%s")', $sqlExpr, $type->getSrid(), self::AXIS_ORDER_OPTION)
             : sprintf('ST_GeomFromText(%s)', $sqlExpr);
     }
+
 }
