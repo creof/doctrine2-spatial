@@ -25,6 +25,7 @@ namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 
 /**
  * MySql spatial platform
@@ -67,7 +68,7 @@ class MySql extends AbstractPlatform
      */
     public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
-        return $type instanceof GeographyInterface
+        return $type instanceof GeographyType
             ? sprintf('ST_AsBinary(%s, "%s")', $sqlExpr, self::AXIS_ORDER_OPTION)
             : sprintf('ST_AsBinary(%s)', $sqlExpr);
     }
@@ -80,7 +81,7 @@ class MySql extends AbstractPlatform
      */
     public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
-        return $type instanceof GeographyInterface
+        return $type instanceof GeographyType
             ? sprintf('ST_GeomFromText(%s, %d, "%s")', $sqlExpr, $type->getSrid(), self::AXIS_ORDER_OPTION)
             : sprintf('ST_GeomFromText(%s)', $sqlExpr);
     }
