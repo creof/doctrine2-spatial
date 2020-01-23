@@ -81,7 +81,9 @@ class MySql extends AbstractPlatform
      */
     public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
-        return sprintf('ST_GeomFromText(%s)', $sqlExpr);
+        return $type instanceof GeographyType && is_int(self::$srid)
+            ? sprintf('ST_GeomFromText(%s, %d)', $sqlExpr, self::$srid)
+            : sprintf('ST_GeomFromText(%s)', $sqlExpr);
     }
 
 }
