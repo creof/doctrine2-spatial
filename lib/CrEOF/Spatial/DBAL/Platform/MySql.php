@@ -45,6 +45,13 @@ class MySql extends AbstractPlatform
     const AXIS_ORDER_OPTION = 'axis-order=long-lat';
 
     /**
+     * Optionally a SRID can be set to be used for Geographic types.
+     *
+     * @var int|null
+     */
+    public static $srid;
+
+    /**
      * Gets the SQL declaration snippet for a field of this type.
      *
      * @param array $fieldDeclaration
