@@ -27,21 +27,23 @@ namespace CrEOF\Spatial\Tests;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\ORM\Tools\ToolsException;
 use Exception;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 /**
  * Abstract ORM test class.
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
  */
 abstract class OrmTestCase extends TestCase
 {
@@ -151,6 +153,7 @@ abstract class OrmTestCase extends TestCase
      * @var bool[]
      */
     protected $usedTypes = [];
+
     /**
      * @var SchemaTool
      */
@@ -162,7 +165,10 @@ abstract class OrmTestCase extends TestCase
     private $sqlLoggerStack;
 
     /**
-     * @throws UnsupportedPlatformException
+     * Setup connection before class creation.
+     *
+     * @throws UnsupportedPlatformException this should not happen
+     * @throws DBALException                this can happen when database or credentials are not set
      */
     public static function setUpBeforeClass(): void
     {
@@ -172,7 +178,8 @@ abstract class OrmTestCase extends TestCase
     /**
      * Creates a connection to the test database, if there is none yet, and creates the necessary tables.
      *
-     * @throws UnsupportedPlatformException
+     * @throws UnsupportedPlatformException this should not happen
+     * @throws DBALException                this can happen when database or credentials are not set
      */
     protected function setUp(): void
     {
@@ -200,19 +207,27 @@ abstract class OrmTestCase extends TestCase
 
     /**
      * Teardown fixtures.
+     *
+     * @throws UnsupportedPlatformException this should not happen
+     * @throws DBALException                this can happen when database or credentials are not set
      */
     protected function tearDown(): void
     {
         $this->sqlLoggerStack->enabled = false;
 
         foreach (array_keys($this->usedEntities) as $entityName) {
-            static::getConnection()->executeUpdate(sprintf('DELETE FROM %s', static::$entities[$entityName]['table']));
+            static::getConnection()->executeUpdate(sprintf(
+                'DELETE FROM %s',
+                static::$entities[$entityName]['table']
+            ));
         }
 
         $this->getEntityManager()->clear();
     }
 
     /**
+     * Return common connection parameters.
+     *
      * @return array
      */
     protected static function getCommonConnectionParameters()
@@ -238,8 +253,10 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * @throws UnsupportedPlatformException
-     * @throws \Doctrine\DBAL\DBALException
+     * Establish the connection if it is not already done, then returns it.
+     *
+     * @throws UnsupportedPlatformException this should not happen
+     * @throws DBALException                this can happen when database or credentials are not set
      *
      * @return Connection
      */
@@ -258,14 +275,19 @@ abstract class OrmTestCase extends TestCase
             case 'mysql':
                 break;
             default:
-                throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $connection->getDatabasePlatform()->getName()));
+                throw new UnsupportedPlatformException(sprintf(
+                    'DBAL platform "%s" is not currently supported.',
+                    $connection->getDatabasePlatform()->getName()
+                ));
         }
 
         return $connection;
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * Return connection parameters.
+     *
+     * @throws DBALException this can happen when database or credentials are not set
      *
      * @return array
      */
@@ -298,6 +320,12 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
+     * Return the entity manager.
+     *
+     * @throws DBALException                this can happen when database or credentials are not set
+     * @throws ORMException                 this can happen when database or credentials are not set
+     * @throws UnsupportedPlatformException this should not happen
+     *
      * @return EntityManager
      */
     protected function getEntityManager()
@@ -311,17 +339,24 @@ abstract class OrmTestCase extends TestCase
 
         static::getConnection()->getConfiguration()->setSQLLogger($this->sqlLoggerStack);
 
+        $realPaths = [realpath(__DIR__.'/Fixtures')];
         $config = new Configuration();
 
         $config->setMetadataCacheImpl(new ArrayCache());
         $config->setProxyDir(__DIR__.'/Proxies');
         $config->setProxyNamespace('CrEOF\Spatial\Tests\Proxies');
-        $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver([realpath(__DIR__.'/Fixtures')], true));
+        //TODO WARNING: a non-expected parameter is provided.
+        $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver($realPaths, true));
 
         return EntityManager::create(static::getConnection(), $config);
     }
 
     /**
+     * Get platform.
+     *
+     * @throws DBALException                this can happen when database or credentials are not set
+     * @throws UnsupportedPlatformException this should not happen
+     *
      * @return AbstractPlatform
      */
     protected function getPlatform()
@@ -330,6 +365,12 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
+     * Return the schema tool.
+     *
+     * @throws DBALException                this can happen when database or credentials are not set
+     * @throws ORMException                 this can happen when database or credentials are not set
+     * @throws UnsupportedPlatformException this should not happen
+     *
      * @return SchemaTool
      */
     protected function getSchemaTool()
@@ -342,6 +383,8 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
+     * Return the static created entity classes.
+     *
      * @return array
      */
     protected function getUsedEntityClasses()
@@ -350,14 +393,16 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * @throws Exception
+     * On not successful test.
      *
-     * @todo: This needs cleanup
+     * @param Throwable $throwable the exception
+     *
+     * @throws Throwable
      */
-    protected function onNotSuccessfulTest(Exception $e): void
+    protected function onNotSuccessfulTest(Throwable $throwable): void
     {
-        if (!$GLOBALS['opt_use_debug_stack'] || $e instanceof \PHPUnit\Framework\AssertionFailedError) {
-            throw $e;
+        if (!$GLOBALS['opt_use_debug_stack'] || $throwable instanceof AssertionFailedError) {
+            throw $throwable;
         }
 
         if (isset($this->sqlLoggerStack->queries) && count($this->sqlLoggerStack->queries)) {
@@ -375,10 +420,15 @@ abstract class OrmTestCase extends TestCase
                     return sprintf("'%s'", $param);
                 }, $query['params'] ?: []);
 
-                $queries .= sprintf("%2d. SQL: '%s' Params: %s\n", $i, $query['sql'], implode(', ', $params));
+                $queries .= sprintf(
+                    "%2d. SQL: '%s' Params: %s\n",
+                    $i,
+                    $query['sql'],
+                    implode(', ', $params)
+                );
             }
 
-            $trace = $e->getTrace();
+            $trace = $throwable->getTrace();
             $traceMsg = '';
 
             foreach ($trace as $part) {
@@ -392,17 +442,22 @@ abstract class OrmTestCase extends TestCase
                 }
             }
 
-            $message = sprintf("[%s] %s\n\n", get_class($e), $e->getMessage());
+            $message = sprintf("[%s] %s\n\n", get_class($throwable), $throwable->getMessage());
             $message .= sprintf("With queries:\n%s\nTrace:\n%s", $queries, $traceMsg);
 
-            throw new Exception($message, (int) $e->getCode(), $e);
+            throw new Exception($message, (int) $throwable->getCode(), $throwable);
         }
 
-        throw $e;
+        throw $throwable;
     }
 
     /**
      * Create entities used by tests.
+     *
+     * @throws DBALException
+     * @throws ORMException
+     * @throws UnsupportedPlatformException
+     * @throws ToolsException
      */
     protected function setUpEntities()
     {
@@ -422,12 +477,17 @@ abstract class OrmTestCase extends TestCase
 
     /**
      * Setup DQL functions.
+     *
+     * @throws DBALException
+     * @throws ORMException
+     * @throws UnsupportedPlatformException
      */
     protected function setUpFunctions()
     {
         $configuration = $this->getEntityManager()->getConfiguration();
 
         if ('postgresql' == $this->getPlatform()->getName()) {
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomStringFunction('geometry', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry');
             $configuration->addCustomStringFunction('st_asbinary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAsBinary');
             $configuration->addCustomStringFunction('st_astext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAsText');
@@ -455,9 +515,11 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomStringFunction('st_snaptogrid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid');
             $configuration->addCustomStringFunction('st_startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STStartPoint');
             $configuration->addCustomStringFunction('st_summary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSummary');
+            // phpcs:enable
         }
 
         if ('mysql' == $this->getPlatform()->getName()) {
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomNumericFunction('area', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area');
             $configuration->addCustomStringFunction('asbinary', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\AsBinary');
             $configuration->addCustomStringFunction('astext', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\AsText');
@@ -469,11 +531,15 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('mbrcontains', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRContains');
             $configuration->addCustomNumericFunction('mbrdisjoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRDisjoint');
             $configuration->addCustomStringFunction('startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\StartPoint');
+            // phpcs:enable
         }
     }
 
     /**
      * Add types used by test to DBAL.
+     *
+     * @throws DBALException
+     * @throws UnsupportedPlatformException when platform is not supported
      */
     protected function setUpTypes()
     {
@@ -484,7 +550,8 @@ abstract class OrmTestCase extends TestCase
                 $type = Type::getType($typeName);
 
                 // Since doctrineTypeComments may already be initialized check if added type requires comment
-                if ($type->requiresSQLCommentHint($this->getPlatform()) && !$this->getPlatform()->isCommentedDoctrineType($type)) {
+                $platform = $this->getPlatform();
+                if ($type->requiresSQLCommentHint($platform) && !$platform->isCommentedDoctrineType($type)) {
                     $this->getPlatform()->markDoctrineTypeCommented(Type::getType($typeName));
                 }
 
@@ -494,7 +561,9 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * @param string $platform
+     * Set the supported platforms.
+     *
+     * @param string $platform the platform to support
      */
     protected function supportsPlatform($platform)
     {
@@ -502,7 +571,9 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * @param string $entityClass
+     * Declare the used entities.
+     *
+     * @param string $entityClass the entity class
      */
     protected function usesEntity($entityClass)
     {
@@ -514,7 +585,9 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * @param string $typeName
+     * Set the type used.
+     *
+     * @param string $typeName the type name
      */
     protected function usesType($typeName)
     {

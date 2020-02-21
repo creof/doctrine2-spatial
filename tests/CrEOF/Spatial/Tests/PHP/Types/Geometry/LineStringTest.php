@@ -32,9 +32,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * LineString object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
