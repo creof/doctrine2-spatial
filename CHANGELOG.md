@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Project fork from creof/doctrine-spatial2
+- Adding support of PHP7.2, PHP7.3, PHP7.4
+- Removing deprecations of doctrine2
+### Removed
+- Removing support of PHP5.*, PHP7.0, PHP7.1
+
+## [1.1.1] - 2020-02-21 
+Nota: This version was never published by creof. But the fork begins at this date.
+### Added
 - Added support for PostgreSql ST_MakeEnvelope function.
 ### Changed
 - Added implementation of getTypeFamily() and getSQLType() to AbstractGeometryType.

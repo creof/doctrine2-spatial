@@ -15,7 +15,7 @@
     ],
     "license": "MIT",
     "require": {
-        "doctrine/orm": ">2.7",
+        "doctrine/orm": "<2.7",
         "creof/geo-parser": "~2.0",
         "creof/wkt-parser": "~2.0",
         "creof/wkb-parser": "~2.0"

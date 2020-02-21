@@ -3,21 +3,21 @@ language: php
 sudo: false
 
 php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
   - hhvm
 
 env:
   - ORM=2.3
   - ORM=2.4
   - ORM=2.5
+  - ORM=2.6
+  - ORM=2.7
 
 before_script:
   - composer self-update
+  - cp ./composer.json ./tests/travis/composer.orm2.7.json
   - cp ./tests/travis/composer.orm$ORM.json ./composer.json
   - composer install --prefer-source
   - mkdir -p ./build/coverage
@@ -36,6 +36,10 @@ notifications:
 matrix:
   allow_failures:
     - php: hhvm     # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-  exclude:
-    - php: 5.3
-      env: ORM=2.5  # ORM >=2.5 requires PHP >=5.4
+#  exclude:
+#    - php: 7.4
+#      env: ORM=2.3  # ORM <=2.6.4 are not compatible with PHP >=7.4
+#    - php: 7.4
+#      env: ORM=2.4  # ORM <=2.6.4 are not compatible with PHP >=7.4
+#    - php: 7.4
+#      env: ORM=2.5  # ORM <=2.6.4 are not compatible with PHP >=7.4
