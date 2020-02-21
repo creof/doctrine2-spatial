@@ -33,9 +33,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Polygon object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
@@ -53,9 +50,14 @@ class PolygonTest extends TestCase
         $this->assertEmpty($polygon->getRings());
     }
 
+    /**
+     * Test to export json.
+     */
     public function testJson()
     {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
+        // phpcs:enable
         $rings = [
             [
                 [0, 0],
@@ -97,9 +99,12 @@ class PolygonTest extends TestCase
         new Polygon($rings);
     }
 
+    /**
+     * Test to get last ring.
+     */
     public function testRingPolygonFromObjectsGetLastRing()
     {
-        $ring1 = new LineString(
+        $ringA = new LineString(
             [
                 new Point(0, 0),
                 new Point(10, 0),
@@ -108,7 +113,7 @@ class PolygonTest extends TestCase
                 new Point(0, 0),
             ]
         );
-        $ring2 = new LineString(
+        $ringB = new LineString(
             [
                 new Point(5, 5),
                 new Point(7, 5),
@@ -117,14 +122,17 @@ class PolygonTest extends TestCase
                 new Point(5, 5),
             ]
         );
-        $polygon = new Polygon([$ring1, $ring2]);
+        $polygon = new Polygon([$ringA, $ringB]);
 
-        $this->assertEquals($ring2, $polygon->getRing(-1));
+        $this->assertEquals($ringB, $polygon->getRing(-1));
     }
 
+    /**
+     * Test to get the first ring.
+     */
     public function testRingPolygonFromObjectsGetSingleRing()
     {
-        $ring1 = new LineString(
+        $ringA = new LineString(
             [
                 new Point(0, 0),
                 new Point(10, 0),
@@ -133,7 +141,7 @@ class PolygonTest extends TestCase
                 new Point(0, 0),
             ]
         );
-        $ring2 = new LineString(
+        $ringB = new LineString(
             [
                 new Point(5, 5),
                 new Point(7, 5),
@@ -142,11 +150,16 @@ class PolygonTest extends TestCase
                 new Point(5, 5),
             ]
         );
-        $polygon = new Polygon([$ring1, $ring2]);
+        $polygon = new Polygon([$ringA, $ringB]);
 
-        $this->assertEquals($ring1, $polygon->getRing(0));
+        $this->assertEquals($ringA, $polygon->getRing(0));
     }
 
+    /**
+     * Test a solid polygon from array add rings.
+     *
+     * @throws InvalidValueException This should not happen
+     */
     public function testSolidPolygonFromArrayAddRings()
     {
         $expected = [
@@ -195,6 +208,9 @@ class PolygonTest extends TestCase
         $this->assertEquals($expected, $polygon->getRings());
     }
 
+    /**
+     * Test a solid polygon from an array of points.
+     */
     public function testSolidPolygonFromArrayOfPoints()
     {
         $expected = [
@@ -221,6 +237,9 @@ class PolygonTest extends TestCase
         $this->assertEquals($expected, $polygon->toArray());
     }
 
+    /**
+     * Test a solid polygon from an array of rings.
+     */
     public function testSolidPolygonFromArraysGetRings()
     {
         $expected = [
@@ -249,6 +268,9 @@ class PolygonTest extends TestCase
         $this->assertEquals($expected, $polygon->getRings());
     }
 
+    /**
+     * Test a solid polygon from arrays to string.
+     */
     public function testSolidPolygonFromArraysToString()
     {
         $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
@@ -274,6 +296,9 @@ class PolygonTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Test solid polygon from objects to array.
+     */
     public function testSolidPolygonFromObjectsToArray()
     {
         $expected = [

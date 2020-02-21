@@ -31,9 +31,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Point object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
@@ -58,7 +55,9 @@ class PointTest extends TestCase
     public function testBadLatitudeDirection()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('[Syntax Error] line 0, col 8: Error: Expected CrEOF\\Geo\\String\\Lexer::T_INTEGER or CrEOF\\Geo\\String\\Lexer::T_FLOAT, got "Q" in value "84:26:46Q"');
+        // phpcs:enable
 
         new Point('100:56:55W', '84:26:46Q');
     }
@@ -102,7 +101,9 @@ class PointTest extends TestCase
     public function testBadLongitudeDirection()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('[Syntax Error] line 0, col 9: Error: Expected CrEOF\\Geo\\String\\Lexer::T_INTEGER or CrEOF\\Geo\\String\\Lexer::T_FLOAT, got "P" in value "100:56:55P"');
+        // phpcs:enable
 
         new Point('100:56:55P', '84:26:46N');
     }
@@ -173,6 +174,9 @@ class PointTest extends TestCase
         new Point(-230, 54);
     }
 
+    /**
+     * Test getType method.
+     */
     public function testGetType()
     {
         $point = new Point(10, 10);
@@ -181,6 +185,9 @@ class PointTest extends TestCase
         $this->assertEquals('Point', $result);
     }
 
+    /**
+     * Test a valid numeric point.
+     */
     public function testGoodNumericPoint()
     {
         $point = new Point(-73.7562317, 42.6525793);
@@ -189,6 +196,9 @@ class PointTest extends TestCase
         $this->assertEquals(-73.7562317, $point->getLongitude());
     }
 
+    /**
+     * Test valid string points.
+     */
     public function testGoodStringPoints()
     {
         $point = new Point('79:56:55W', '40:26:46N');
@@ -227,6 +237,9 @@ class PointTest extends TestCase
         $this->assertEquals(-112.06666666667, $point->getLongitude());
     }
 
+    /**
+     * Test a point created with an array and converts to string.
+     */
     public function testPointFromArrayToString()
     {
         $expected = '5 5';
@@ -235,30 +248,52 @@ class PointTest extends TestCase
         $this->assertEquals($expected, (string) $point);
     }
 
+    /**
+     * Test error when point created with too many arguments.
+     */
     public function testPointTooManyArguments()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geography\\Point::__construct: "5", "5", "5", "5"');
+        // phpcs:enable
 
         new Point(5, 5, 5, 5);
     }
 
+    /**
+     * Test a point with SRID.
+     */
     public function testPointWithSrid()
     {
         $point = new Point(10, 10, 4326);
         $result = $point->getSrid();
 
         $this->assertEquals(4326, $result);
+
+        //Lambert
+        $point = new Point(10, 10, 2154);
+        $result = $point->getSrid();
+
+        $this->assertEquals(2154, $result);
     }
 
+    /**
+     * Test error when point is created with wrong arguments.
+     */
     public function testPointWrongArgumentTypes()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geography\\Point::__construct: Array, Array, "1234"');
+        // phpcs:enable
 
         new Point([], [], '1234');
     }
 
+    /**
+     * Test to convert point to array.
+     */
     public function testToArray()
     {
         $expected = [10, 10];

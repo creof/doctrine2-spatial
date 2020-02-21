@@ -26,8 +26,10 @@ namespace CrEOF\Spatial\Tests\DBAL\Platform;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmMockTestCase;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\ORM\Tools\ToolsException;
 
 /**
  * Spatial platform tests.
@@ -42,6 +44,11 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 class PlatformTest extends OrmMockTestCase
 {
+    /**
+     * Setup the test.
+     *
+     * @throws DBALException This should not happen
+     */
     public function setUp(): void
     {
         if (!Type::hasType('point')) {
@@ -51,6 +58,11 @@ class PlatformTest extends OrmMockTestCase
         parent::setUp();
     }
 
+    /**
+     * Test non-supported platform.
+     *
+     * @throws ToolsException this should not happen
+     */
     public function testUnsupportedPlatform()
     {
         $this->expectException(UnsupportedPlatformException::class);

@@ -24,10 +24,13 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\ORM\ORMException;
 
 /**
  * AsBinary DQL function tests.
@@ -42,6 +45,11 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  */
 class AsBinaryTest extends OrmTestCase
 {
+    /**
+     * Setup the test.
+     *
+     * @throws UnsupportedPlatformException this should not happen
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
@@ -51,40 +59,49 @@ class AsBinaryTest extends OrmTestCase
     }
 
     /**
+     * Test to convert as binary.
+     *
      * @group geometry
+     *
+     * @throws ORMException     this should not happen
+     * @throws MappingException this should not happen
      */
     public function testAsBinary()
     {
-        $lineString1 = [
+        $lineStringA = [
             new Point(0, 0),
             new Point(2, 2),
             new Point(5, 5),
         ];
-        $lineString2 = [
+        $lineStringB = [
             new Point(3, 3),
             new Point(4, 15),
             new Point(5, 22),
         ];
-        $entity1 = new LineStringEntity();
+        $entityA = new LineStringEntity();
 
-        $entity1->setLineString(new LineString($lineString1));
-        $this->getEntityManager()->persist($entity1);
+        $entityA->setLineString(new LineString($lineStringA));
+        $this->getEntityManager()->persist($entityA);
 
-        $entity2 = new LineStringEntity();
+        $entityB = new LineStringEntity();
 
-        $entity2->setLineString(new LineString($lineString2));
-        $this->getEntityManager()->persist($entity2);
+        $entityB->setLineString(new LineString($lineStringB));
+        $this->getEntityManager()->persist($entityB);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
         $result = $query->getResult();
-        $string1 = '010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440';
-        $string2 = '0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640';
-        $binary1 = pack('H*', $string1);
-        $binary2 = pack('H*', $string2);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $stringA = '010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440';
+        $stringB = '0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640';
+        // phpcs:enable
+        $binaryA = pack('H*', $stringA);
+        $binaryB = pack('H*', $stringB);
 
-        $this->assertEquals($binary1, $result[0][1]);
-        $this->assertEquals($binary2, $result[1][1]);
+        $this->assertEquals($binaryA, $result[0][1]);
+        $this->assertEquals($binaryB, $result[1][1]);
     }
 }

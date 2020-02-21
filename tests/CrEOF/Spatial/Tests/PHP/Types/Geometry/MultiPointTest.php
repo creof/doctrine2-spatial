@@ -32,9 +32,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * MultiPoint object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
@@ -53,6 +50,9 @@ class MultiPointTest extends TestCase
         new MultiPoint([1, 2, 3, 4]);
     }
 
+    /**
+     * Test an empty multipoint.
+     */
     public function testEmptyMultiPoint()
     {
         $multiPoint = new MultiPoint([]);
@@ -60,6 +60,9 @@ class MultiPointTest extends TestCase
         $this->assertEmpty($multiPoint->getPoints());
     }
 
+    /**
+     * Test to convert multipoint to json.
+     */
     public function testJson()
     {
         $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
@@ -75,6 +78,11 @@ class MultiPointTest extends TestCase
         $this->assertEquals($expected, $multiPoint->toJson());
     }
 
+    /**
+     * Test to add point to a multipoint.
+     *
+     * @throws InvalidValueException this should not happen
+     */
     public function testMultiPointAddPoints()
     {
         $expected = [
@@ -101,6 +109,9 @@ class MultiPointTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get last point from a multipoint.
+     */
     public function testMultiPointFromArraysGetLastPoint()
     {
         $expected = new Point(3, 3);
@@ -117,6 +128,9 @@ class MultiPointTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get points from a multipoint.
+     */
     public function testMultiPointFromArraysGetPoints()
     {
         $expected = [
@@ -139,6 +153,9 @@ class MultiPointTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get first point from a multipoint.
+     */
     public function testMultiPointFromArraysGetSinglePoint()
     {
         $expected = new Point(1, 1);
@@ -155,6 +172,9 @@ class MultiPointTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to convert multipoint to string.
+     */
     public function testMultiPointFromArraysToString()
     {
         $expected = '0 0,0 5,5 0,0 0';
@@ -170,6 +190,9 @@ class MultiPointTest extends TestCase
         $this->assertEquals($expected, (string) $multiPoint);
     }
 
+    /**
+     * Test to convert multipoint to array.
+     */
     public function testMultiPointFromObjectsToArray()
     {
         $expected = [

@@ -31,9 +31,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Point object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
@@ -58,7 +55,9 @@ class PointTest extends TestCase
     public function testBadLatitudeDirection()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('[Syntax Error] line 0, col 8: Error: Expected CrEOF\\Geo\\String\\Lexer::T_INTEGER or CrEOF\\Geo\\String\\Lexer::T_FLOAT, got "Q" in value "84:26:46Q"');
+        // phpcs:enable
 
         new Point('100:56:55W', '84:26:46Q');
     }
@@ -102,7 +101,9 @@ class PointTest extends TestCase
     public function testBadLongitudeDirection()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('[Syntax Error] line 0, col 9: Error: Expected CrEOF\\Geo\\String\\Lexer::T_INTEGER or CrEOF\\Geo\\String\\Lexer::T_FLOAT, got "P" in value "100:56:55P"');
+        // phpcs:enable
 
         new Point('100:56:55P', '84:26:46N');
     }
@@ -129,6 +130,9 @@ class PointTest extends TestCase
         new Point('108:53:94W', '84:26:46N');
     }
 
+    /**
+     * Test getType method.
+     */
     public function testGetType()
     {
         $point = new Point(10, 10);
@@ -137,60 +141,69 @@ class PointTest extends TestCase
         $this->assertEquals('Point', $result);
     }
 
+    /**
+     * Test a valid numeric point.
+     */
     public function testGoodNumericPoint()
     {
-        $point1 = new Point(-73.7562317, 42.6525793);
+        $point = new Point(-73.7562317, 42.6525793);
 
-        $this->assertEquals(42.6525793, $point1->getLatitude());
-        $this->assertEquals(-73.7562317, $point1->getLongitude());
+        $this->assertEquals(42.6525793, $point->getLatitude());
+        $this->assertEquals(-73.7562317, $point->getLongitude());
 
-        $point1
+        $point
             ->setLatitude(40.446111111111)
             ->setLongitude(-79.948611111111)
         ;
 
-        $this->assertEquals(40.446111111111, $point1->getLatitude());
-        $this->assertEquals(-79.948611111111, $point1->getLongitude());
+        $this->assertEquals(40.446111111111, $point->getLatitude());
+        $this->assertEquals(-79.948611111111, $point->getLongitude());
     }
 
+    /**
+     * Test valid string points.
+     */
     public function testGoodStringPoints()
     {
-        $point2 = new Point('79:56:55W', '40:26:46N');
+        $point = new Point('79:56:55W', '40:26:46N');
 
-        $this->assertEquals(40.446111111111, $point2->getLatitude());
-        $this->assertEquals(-79.948611111111, $point2->getLongitude());
+        $this->assertEquals(40.446111111111, $point->getLatitude());
+        $this->assertEquals(-79.948611111111, $point->getLongitude());
 
-        $point3 = new Point('79°56\'55"W', '40°26\'46"N');
+        $point = new Point('79°56\'55"W', '40°26\'46"N');
 
-        $this->assertEquals(40.446111111111, $point3->getLatitude());
-        $this->assertEquals(-79.948611111111, $point3->getLongitude());
+        $this->assertEquals(40.446111111111, $point->getLatitude());
+        $this->assertEquals(-79.948611111111, $point->getLongitude());
 
-        $point4 = new Point('79° 56\' 55" W', '40° 26\' 46" N');
+        $point = new Point('79° 56\' 55" W', '40° 26\' 46" N');
 
-        $this->assertEquals(40.446111111111, $point4->getLatitude());
-        $this->assertEquals(-79.948611111111, $point4->getLongitude());
+        $this->assertEquals(40.446111111111, $point->getLatitude());
+        $this->assertEquals(-79.948611111111, $point->getLongitude());
 
-        $point5 = new Point('79°56′55″W', '40°26′46″N');
+        $point = new Point('79°56′55″W', '40°26′46″N');
 
-        $this->assertEquals(40.446111111111, $point5->getLatitude());
-        $this->assertEquals(-79.948611111111, $point5->getLongitude());
+        $this->assertEquals(40.446111111111, $point->getLatitude());
+        $this->assertEquals(-79.948611111111, $point->getLongitude());
 
-        $point6 = new Point('79° 56′ 55″ W', '40° 26′ 46″ N');
+        $point = new Point('79° 56′ 55″ W', '40° 26′ 46″ N');
 
-        $this->assertEquals(40.446111111111, $point6->getLatitude());
-        $this->assertEquals(-79.948611111111, $point6->getLongitude());
+        $this->assertEquals(40.446111111111, $point->getLatitude());
+        $this->assertEquals(-79.948611111111, $point->getLongitude());
 
-        $point7 = new Point('79:56:55.832W', '40:26:46.543N');
+        $point = new Point('79:56:55.832W', '40:26:46.543N');
 
-        $this->assertEquals(40.446261944444, $point7->getLatitude());
-        $this->assertEquals(-79.948842222222, $point7->getLongitude());
+        $this->assertEquals(40.446261944444, $point->getLatitude());
+        $this->assertEquals(-79.948842222222, $point->getLongitude());
 
-        $point8 = new Point('112:4:0W', '33:27:0N');
+        $point = new Point('112:4:0W', '33:27:0N');
 
-        $this->assertEquals(33.45, $point8->getLatitude());
-        $this->assertEquals(-112.06666666667, $point8->getLongitude());
+        $this->assertEquals(33.45, $point->getLatitude());
+        $this->assertEquals(-112.06666666667, $point->getLongitude());
     }
 
+    /**
+     * Test to convert point to json.
+     */
     public function testJson()
     {
         $expected = '{"type":"Point","coordinates":[5,5]}';
@@ -205,11 +218,16 @@ class PointTest extends TestCase
     public function testMissingArguments()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geometry\\Point::__construct:');
+        // phpcs:enable
 
         new Point();
     }
 
+    /**
+     * Test a point created with an array.
+     */
     public function testPointFromArrayToString()
     {
         $expected = '5 5';
@@ -218,30 +236,46 @@ class PointTest extends TestCase
         $this->assertEquals($expected, (string) $point);
     }
 
+    /**
+     * Test error when point is created with too many arguments.
+     */
     public function testPointTooManyArguments()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geometry\\Point::__construct: "5", "5", "5", "5"');
+        // phpcs:enable
 
         new Point(5, 5, 5, 5);
     }
 
+    /**
+     * Test point with srid.
+     */
     public function testPointWithSrid()
     {
-        $point = new Point(10, 10, 4326);
+        $point = new Point(10, 10, 2154);
         $result = $point->getSrid();
 
-        $this->assertEquals(4326, $result);
+        $this->assertEquals(2154, $result);
     }
 
+    /**
+     * Test error when point was created with wrong arguments type.
+     */
     public function testPointWrongArgumentTypes()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geometry\\Point::__construct: Array, Array, "1234"');
+        // phpcs:enable
 
         new Point([], [], '1234');
     }
 
+    /**
+     * Test to convert a point to an array.
+     */
     public function testToArray()
     {
         $expected = [10, 10];
@@ -257,7 +291,9 @@ class PointTest extends TestCase
     public function testTwoInvalidArguments()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geometry\\Point::__construct: "", ""');
+        // phpcs:enable
 
         new Point(null, null);
     }
@@ -268,7 +304,9 @@ class PointTest extends TestCase
     public function testUnusedArguments()
     {
         $this->expectException(InvalidValueException::class);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->expectExceptionMessage('Invalid parameters passed to CrEOF\\Spatial\\PHP\\Types\\Geometry\\Point::__construct: "1", "2", "3", "4", "", "5"');
+        // phpcs:enable
 
         new Point(1, 2, 3, 4, null, 5);
     }

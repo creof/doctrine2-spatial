@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (C) 2015 Derek J. Lambert
  * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -170,15 +170,18 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * Creates a connection to the test database, if there is none yet, and
-     * creates the necessary tables.
+     * Creates a connection to the test database, if there is none yet, and creates the necessary tables.
      *
      * @throws UnsupportedPlatformException
      */
     protected function setUp(): void
     {
         if (count($this->supportedPlatforms) && !isset($this->supportedPlatforms[$this->getPlatform()->getName()])) {
-            $this->markTestSkipped(sprintf('No support for platform %s in test class %s.', $this->getPlatform()->getName(), get_class($this)));
+            $this->markTestSkipped(sprintf(
+                'No support for platform %s in test class %s.',
+                $this->getPlatform()->getName(),
+                get_class($this)
+            ));
         }
 
         $this->entityManager = $this->getEntityManager();
