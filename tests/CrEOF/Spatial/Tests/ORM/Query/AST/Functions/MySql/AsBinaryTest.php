@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,19 +28,21 @@ use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * AsBinary DQL function tests
+ * AsBinary DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class AsBinaryTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('mysql');
@@ -52,16 +55,16 @@ class AsBinaryTest extends OrmTestCase
      */
     public function testAsBinary()
     {
-        $lineString1 = array(
+        $lineString1 = [
             new Point(0, 0),
             new Point(2, 2),
-            new Point(5, 5)
-        );
-        $lineString2 = array(
+            new Point(5, 5),
+        ];
+        $lineString2 = [
             new Point(3, 3),
             new Point(4, 15),
-            new Point(5, 22)
-        );
+            new Point(5, 22),
+        ];
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString(new LineString($lineString1));
@@ -74,8 +77,8 @@ class AsBinaryTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query   = $this->getEntityManager()->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
-        $result  = $query->getResult();
+        $query = $this->getEntityManager()->createQuery('SELECT AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $result = $query->getResult();
         $string1 = '010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440';
         $string2 = '0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640';
         $binary1 = pack('H*', $string1);

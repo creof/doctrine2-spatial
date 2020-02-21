@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,29 +24,65 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * Doctrine GeometryType tests
+ * Doctrine GeometryType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group geometry
+ *
+ * @internal
+ * @coversNothing
  */
 class GeometryTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesEntity(self::NO_HINT_GEOMETRY_ENTITY);
         parent::setUp();
+    }
+
+    public function testBadGeometryValue()
+    {
+        $this->expectException(\CrEOF\Spatial\Exception\InvalidValueException::class);
+        $this->expectExceptionMessage('Geometry column values must implement GeometryInterface');
+
+        $entity = new NoHintGeometryEntity();
+
+        $entity->setGeometry('POINT(0 0)');
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+    }
+
+    public function testLineStringGeometry()
+    {
+        $entity = new GeometryEntity();
+
+        $entity->setGeometry(new LineString(
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+            ])
+        );
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
+        $this->getEntityManager()->clear();
+
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
+
+        $this->assertEquals($entity, $queryEntity);
     }
 
     public function testNullGeometry()
@@ -87,7 +124,7 @@ class GeometryTypeTest extends OrmTestCase
     public function testPointGeometryWithSrid()
     {
         $entity = new GeometryEntity();
-        $point  = new Point(1, 1);
+        $point = new Point(1, 1);
 
         $point->setSrid(200);
         $entity->setGeometry($point);
@@ -109,32 +146,10 @@ class GeometryTypeTest extends OrmTestCase
     public function testPointGeometryWithZeroSrid()
     {
         $entity = new GeometryEntity();
-        $point  = new Point(1, 1);
+        $point = new Point(1, 1);
 
         $point->setSrid(0);
         $entity->setGeometry($point);
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
-    public function testLineStringGeometry()
-    {
-        $entity = new GeometryEntity();
-
-        $entity->setGeometry(new LineString(
-            array(
-                 new Point(0, 0),
-                 new Point(1, 1)
-            ))
-        );
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
@@ -151,15 +166,15 @@ class GeometryTypeTest extends OrmTestCase
     {
         $entity = new GeometryEntity();
 
-        $rings = array(
-            new LineString(array(
+        $rings = [
+            new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
                 new Point(10, 10),
                 new Point(0, 10),
-                new Point(0, 0)
-            ))
-        );
+                new Point(0, 0),
+            ]),
+        ];
 
         $entity->setGeometry(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
@@ -172,18 +187,5 @@ class GeometryTypeTest extends OrmTestCase
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
-    }
-
-    /**
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Geometry column values must implement GeometryInterface
-     */
-    public function testBadGeometryValue()
-    {
-        $entity = new NoHintGeometryEntity();
-
-        $entity->setGeometry('POINT(0 0)');
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
     }
 }

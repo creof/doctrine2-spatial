@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (C) 2015 Mohammad Heydari
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,18 +28,17 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * MBRIntersects DQL function
- * Whether MBRs of two geometries intersect
+ * Whether MBRs of two geometries intersect.
  *
  * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @license http://mdhheydari.mit-license.org MIT
  */
 class MBRIntersects extends AbstractSpatialDQLFunction
 {
-    protected $platforms = array('mysql');
-
     protected $functionName = 'MBRIntersects';
 
-    protected $minGeomExpr = 2;
-
     protected $maxGeomExpr = 2;
+
+    protected $minGeomExpr = 2;
+    protected $platforms = ['mysql'];
 }

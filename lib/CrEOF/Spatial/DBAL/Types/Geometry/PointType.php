@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,12 +27,11 @@ namespace CrEOF\Spatial\DBAL\Types\Geometry;
 use CrEOF\Spatial\DBAL\Types\GeometryType;
 
 /**
- * Doctrine POINT type
+ * Doctrine POINT type.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
 class PointType extends GeometryType
 {
-
 }

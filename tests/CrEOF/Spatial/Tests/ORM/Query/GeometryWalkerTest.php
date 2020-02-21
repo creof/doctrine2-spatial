@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,16 +31,19 @@ use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\ORM\Query;
 
 /**
- * GeometryWalker tests
+ * GeometryWalker tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class GeometryWalkerTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         parent::setUp();
@@ -50,16 +54,16 @@ class GeometryWalkerTest extends OrmTestCase
      */
     public function testGeometryWalkerBinary()
     {
-        $lineString1 = new LineString(array(
+        $lineString1 = new LineString([
             new Point(0, 0),
             new Point(2, 2),
-            new Point(5, 5)
-        ));
-        $lineString2 = new LineString(array(
+            new Point(5, 5),
+        ]);
+        $lineString2 = new LineString([
             new Point(3, 3),
             new Point(4, 15),
-            new Point(5, 22)
-        ));
+            new Point(5, 22),
+        ]);
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
@@ -74,14 +78,14 @@ class GeometryWalkerTest extends OrmTestCase
 
         switch ($this->getPlatform()->getName()) {
             case 'mysql':
-                $asBinary   = 'AsBinary';
+                $asBinary = 'AsBinary';
                 $startPoint = 'StartPoint';
-                $envelope   = 'Envelope';
+                $envelope = 'Envelope';
                 break;
             default:
-                $asBinary   = 'ST_AsBinary';
+                $asBinary = 'ST_AsBinary';
                 $startPoint = 'ST_StartPoint';
-                $envelope   = 'ST_Envelope';
+                $envelope = 'ST_Envelope';
                 break;
         }
 
@@ -107,16 +111,16 @@ class GeometryWalkerTest extends OrmTestCase
      */
     public function testGeometryWalkerText()
     {
-        $lineString1 = new LineString(array(
+        $lineString1 = new LineString([
             new Point(0, 0),
             new Point(2, 2),
-            new Point(5, 5)
-        ));
-        $lineString2 = new LineString(array(
+            new Point(5, 5),
+        ]);
+        $lineString2 = new LineString([
             new Point(3, 3),
             new Point(4, 15),
-            new Point(5, 22)
-        ));
+            new Point(5, 22),
+        ]);
         $entity1 = new LineStringEntity();
 
         $entity1->setLineString($lineString1);
@@ -131,14 +135,14 @@ class GeometryWalkerTest extends OrmTestCase
 
         switch ($this->getPlatform()->getName()) {
             case 'mysql':
-                $asText   = 'AsText';
+                $asText = 'AsText';
                 $startPoint = 'StartPoint';
-                $envelope   = 'Envelope';
+                $envelope = 'Envelope';
                 break;
             default:
-                $asText   = 'ST_AsText';
+                $asText = 'ST_AsText';
                 $startPoint = 'ST_StartPoint';
-                $envelope   = 'ST_Envelope';
+                $envelope = 'ST_Envelope';
                 break;
         }
 

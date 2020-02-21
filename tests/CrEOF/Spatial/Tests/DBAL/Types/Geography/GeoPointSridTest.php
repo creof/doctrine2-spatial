@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,22 +24,24 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geography;
 
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * Doctrine GeographyType tests
+ * Doctrine GeographyType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group srid
+ *
+ * @internal
+ * @coversNothing
  */
 class GeoPointSridTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEO_POINT_SRID_ENTITY);
         parent::setUp();

@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +28,17 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_AsBinary DQL function
+ * ST_AsBinary DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
 class STAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
-    protected $platforms = array('postgresql');
-
     protected $functionName = 'ST_AsBinary';
 
-    protected $minGeomExpr = 1;
-
     protected $maxGeomExpr = 1;
+
+    protected $minGeomExpr = 1;
+    protected $platforms = ['postgresql'];
 }

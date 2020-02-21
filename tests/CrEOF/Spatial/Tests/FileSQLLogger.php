@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +27,7 @@ namespace CrEOF\Spatial\Tests;
 use Doctrine\DBAL\Logging\SQLLogger;
 
 /**
- * Simple SQLLogger to log to file
+ * Simple SQLLogger to log to file.
  */
 class FileSQLLogger implements SQLLogger
 {
@@ -45,14 +46,14 @@ class FileSQLLogger implements SQLLogger
      */
     public function startQuery($sql, array $params = null, array $types = null)
     {
-        file_put_contents($this->filename, $sql . PHP_EOL, FILE_APPEND);
+        file_put_contents($this->filename, $sql.PHP_EOL, FILE_APPEND);
 
         if ($params) {
-            file_put_contents($this->filename, var_export($params, true) . PHP_EOL, FILE_APPEND);
+            file_put_contents($this->filename, var_export($params, true).PHP_EOL, FILE_APPEND);
         }
 
         if ($types) {
-            file_put_contents($this->filename, var_export($types, true) . PHP_EOL, FILE_APPEND);
+            file_put_contents($this->filename, var_export($types, true).PHP_EOL, FILE_APPEND);
         }
     }
 

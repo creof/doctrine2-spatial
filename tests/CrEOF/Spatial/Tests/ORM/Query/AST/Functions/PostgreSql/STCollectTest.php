@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2016 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,16 +29,19 @@ use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * ST_Collect DQL function tests
+ * ST_Collect DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STCollectTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::POINT_ENTITY);
         $this->supportsPlatform('postgresql');
@@ -60,9 +64,9 @@ class STCollectTest extends OrmTestCase
         $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_Collect(geometry(p.point), ST_GeomFromText(\'POINT(-2 3)\'))) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
         $result = $query->getResult();
 
-        $expected = array(
-            array(1 => 'MULTIPOINT(1 2,-2 3)'),
-        );
+        $expected = [
+            [1 => 'MULTIPOINT(1 2,-2 3)'],
+        ];
 
         $this->assertEquals($expected, $result);
     }

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,23 +27,67 @@ namespace CrEOF\Spatial\Tests\DBAL\Types;
 use CrEOF\Spatial\PHP\Types\Geography\LineString;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
 use CrEOF\Spatial\PHP\Types\Geography\Polygon;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
+use PHPUnit\Framework\Error\Error;
 
 /**
- * Doctrine GeographyType tests
+ * Doctrine GeographyType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group geography
+ *
+ * @internal
+ * @coversNothing
  */
 class GeographyTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOGRAPHY_ENTITY);
         parent::setUp();
+    }
+
+    public function testBadGeographyValue()
+    {
+        $this->expectException(Error::class);
+
+        $entity = new GeographyEntity();
+
+        try {
+            $entity->setGeography('POINT(0 0)');
+        } catch (\TypeError $exception) {
+            throw new Error(
+                $exception->getMessage(),
+                $exception->getCode(),
+                $exception->getFile(),
+                $exception->getLine()
+            );
+        }
+    }
+
+    public function testLineStringGeography()
+    {
+        $entity = new GeographyEntity();
+
+        $entity->setGeography(new LineString(
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+            ])
+        );
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
+        $this->getEntityManager()->clear();
+
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
+
+        $this->assertEquals($entity, $queryEntity);
     }
 
     public function testNullGeography()
@@ -78,41 +123,19 @@ class GeographyTypeTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
     }
 
-    public function testLineStringGeography()
-    {
-        $entity = new GeographyEntity();
-
-        $entity->setGeography(new LineString(
-            array(
-                 new Point(0, 0),
-                 new Point(1, 1)
-            ))
-        );
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
     public function testPolygonGeography()
     {
         $entity = new GeographyEntity();
 
-        $rings = array(
-            new LineString(array(
+        $rings = [
+            new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
                 new Point(10, 10),
                 new Point(0, 10),
-                new Point(0, 0)
-            ))
-        );
+                new Point(0, 0),
+            ]),
+        ];
 
         $entity->setGeography(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
@@ -125,24 +148,5 @@ class GeographyTypeTest extends OrmTestCase
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testBadGeographyValue()
-    {
-        $entity = new GeographyEntity();
-
-        try {
-            $entity->setGeography('POINT(0 0)');
-        } catch (\TypeError $exception) {
-            throw new \PHPUnit_Framework_Error(
-                $exception->getMessage(),
-                $exception->getCode(),
-                $exception->getFile(),
-                $exception->getLine()
-            );
-        }
     }
 }

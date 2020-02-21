@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,24 +24,24 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
-use CrEOF\Spatial\PHP\Types\Geography\Point as GeographyPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
-use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * ST_Distance_Sphere DQL function tests
+ * ST_Distance_Sphere DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STDistanceSphereTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::POINT_ENTITY);
         $this->supportsPlatform('postgresql');
@@ -53,9 +54,9 @@ class STDistanceSphereTest extends OrmTestCase
      */
     public function testSelectSTDistanceSphereGeometry()
     {
-        $newYork   = new Point(-73.938611, 40.664167);
+        $newYork = new Point(-73.938611, 40.664167);
         $losAngles = new Point(-118.2430, 34.0522);
-        $dallas    = new Point(-96.803889, 32.782778);
+        $dallas = new Point(-96.803889, 32.782778);
 
         $entity1 = new PointEntity();
 
@@ -74,7 +75,7 @@ class STDistanceSphereTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query  = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
 
         $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 

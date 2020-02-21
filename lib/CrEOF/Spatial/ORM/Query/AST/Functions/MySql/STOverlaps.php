@@ -1,7 +1,7 @@
 <?php
-
 /**
- * Copyright (C) 2013 luca capra
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,16 +27,15 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * STOverlaps DQL function
+ * STOverlaps DQL function.
  *
  * @author  luca capra <luca.capra@create-net.org>
  * @license http://mit-license.org MIT
  */
-class STOverlaps extends AbstractSpatialDQLFunction {
-
-    protected $platforms = array('mysql');
+class STOverlaps extends AbstractSpatialDQLFunction
+{
     protected $functionName = 'ST_Overlaps';
-    protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
-
+    protected $minGeomExpr = 2;
+    protected $platforms = ['mysql'];
 }

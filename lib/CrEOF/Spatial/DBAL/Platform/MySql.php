@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +28,7 @@ use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * MySql spatial platform
+ * MySql spatial platform.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -35,24 +36,17 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 class MySql extends AbstractPlatform
 {
     /**
-     * Gets the SQL declaration snippet for a field of this type.
-     *
-     * @param array $fieldDeclaration
+     * @param string $sqlExpr
      *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration)
+    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
-        if ($fieldDeclaration['type']->getSQLType() === GeographyInterface::GEOGRAPHY) {
-            return 'GEOMETRY';
-        }
-
-        return strtoupper($fieldDeclaration['type']->getSQLType());
+        return sprintf('GeomFromText(%s)', $sqlExpr);
     }
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * @param string $sqlExpr
      *
      * @return string
      */
@@ -62,13 +56,16 @@ class MySql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * Gets the SQL declaration snippet for a field of this type.
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
+    public function getSQLDeclaration(array $fieldDeclaration)
     {
-        return sprintf('GeomFromText(%s)', $sqlExpr);
+        if (GeographyInterface::GEOGRAPHY === $fieldDeclaration['type']->getSQLType()) {
+            return 'GEOMETRY';
+        }
+
+        return mb_strtoupper($fieldDeclaration['type']->getSQLType());
     }
 }

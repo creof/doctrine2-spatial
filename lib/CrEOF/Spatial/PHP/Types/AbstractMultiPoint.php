@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,7 +27,7 @@ namespace CrEOF\Spatial\PHP\Types;
 use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
- * Abstract MultiPoint object for MULTIPOINT spatial types
+ * Abstract MultiPoint object for MULTIPOINT spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -34,55 +35,31 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 abstract class AbstractMultiPoint extends AbstractGeometry
 {
     /**
-     * @var array[] $points
+     * @var array[]
      */
-    protected $points = array();
+    protected $points = [];
 
     /**
      * @param AbstractPoint[]|array[] $points
-     * @param null|int                $srid
+     * @param int|null                $srid
      */
     public function __construct(array $points, $srid = null)
     {
         $this->setPoints($points)
-            ->setSrid($srid);
+            ->setSrid($srid)
+        ;
     }
 
     /**
      * @param AbstractPoint|array $point
      *
-     * @return self
      * @throws InvalidValueException
+     *
+     * @return self
      */
     public function addPoint($point)
     {
         $this->points[] = $this->validatePointValue($point);
-
-        return $this;
-    }
-
-    /**
-     * @return AbstractPoint[]
-     */
-    public function getPoints()
-    {
-        $points = array();
-
-        for ($i = 0; $i < count($this->points); $i++) {
-            $points[] = $this->getPoint($i);
-        }
-
-        return $points;
-    }
-
-    /**
-     * @param AbstractPoint[]|array[] $points
-     *
-     * @return self
-     */
-    public function setPoints($points)
-    {
-        $this->points = $this->validateMultiPointValue($points);
 
         return $this;
     }
@@ -103,9 +80,23 @@ abstract class AbstractMultiPoint extends AbstractGeometry
                 break;
         }
 
-        $pointClass = $this->getNamespace() . '\Point';
+        $pointClass = $this->getNamespace().'\Point';
 
         return new $pointClass($point[0], $point[1], $this->srid);
+    }
+
+    /**
+     * @return AbstractPoint[]
+     */
+    public function getPoints()
+    {
+        $points = [];
+
+        for ($i = 0; $i < count($this->points); ++$i) {
+            $points[] = $this->getPoint($i);
+        }
+
+        return $points;
     }
 
     /**
@@ -114,6 +105,18 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     public function getType()
     {
         return self::MULTIPOINT;
+    }
+
+    /**
+     * @param AbstractPoint[]|array[] $points
+     *
+     * @return self
+     */
+    public function setPoints($points)
+    {
+        $this->points = $this->validateMultiPointValue($points);
+
+        return $this;
     }
 
     /**

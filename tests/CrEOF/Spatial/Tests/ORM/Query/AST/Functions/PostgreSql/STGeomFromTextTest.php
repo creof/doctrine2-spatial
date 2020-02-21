@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,24 +28,54 @@ use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * ST_GeomFromText DQL function tests
+ * ST_GeomFromText DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STGeomFromTextTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
+    }
+
+    /**
+     * @group geometry
+     */
+    public function testLineString()
+    {
+        $value = [
+            new Point(0, 0),
+            new Point(5, 5),
+            new Point(10, 10),
+        ];
+
+        $entity1 = new GeometryEntity();
+
+        $entity1->setGeometry(new LineString($value));
+        $this->getEntityManager()->persist($entity1);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
+
+        $query->setParameter('geometry', 'LINESTRING(0 0,5 5,10 10)', 'string');
+
+        $result = $query->getResult();
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($entity1, $result[0]);
     }
 
     /**
@@ -62,34 +93,6 @@ class STGeomFromTextTest extends OrmTestCase
         $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
 
         $query->setParameter('geometry', 'POINT(5 5)', 'string');
-
-        $result = $query->getResult();
-
-        $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
-    }
-
-    /**
-     * @group geometry
-     */
-    public function testLineString()
-    {
-        $value = array(
-            new Point(0, 0),
-            new Point(5, 5),
-            new Point(10, 10)
-        );
-
-        $entity1 = new GeometryEntity();
-
-        $entity1->setGeometry(new LineString($value));
-        $this->getEntityManager()->persist($entity1);
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
-
-        $query->setParameter('geometry', 'LINESTRING(0 0,5 5,10 10)', 'string');
 
         $result = $query->getResult();
 

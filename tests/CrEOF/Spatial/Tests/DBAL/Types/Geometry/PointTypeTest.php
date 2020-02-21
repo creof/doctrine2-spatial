@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,25 +24,43 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * Doctrine PointType tests
+ * Doctrine PointType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group geometry
+ *
+ * @internal
+ * @coversNothing
  */
 class PointTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::POINT_ENTITY);
         parent::setUp();
+    }
+
+    public function testFindByPoint()
+    {
+        $point = new Point(1, 1);
+        $entity = new PointEntity();
+
+        $entity->setPoint($point);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $this->getEntityManager()->clear();
+
+        $result = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->findByPoint($point);
+
+        $this->assertEquals($entity, $result[0]);
     }
 
     public function testNullPoint()
@@ -62,7 +81,7 @@ class PointTypeTest extends OrmTestCase
 
     public function testPoint()
     {
-        $point  = new Point(1, 1);
+        $point = new Point(1, 1);
         $entity = new PointEntity();
 
         $entity->setPoint($point);
@@ -76,21 +95,5 @@ class PointTypeTest extends OrmTestCase
         $queryEntity = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
-    }
-
-    public function testFindByPoint()
-    {
-        $point  = new Point(1, 1);
-        $entity = new PointEntity();
-
-        $entity->setPoint($point);
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $this->getEntityManager()->clear();
-
-        $result = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->findByPoint($point);
-
-        $this->assertEquals($entity, $result[0]);
     }
 }

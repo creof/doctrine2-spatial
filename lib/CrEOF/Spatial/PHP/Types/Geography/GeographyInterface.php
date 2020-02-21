@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +25,14 @@
 namespace CrEOF\Spatial\PHP\Types\Geography;
 
 /**
- * Geography interface for Geography objects
+ * Geography interface for Geography objects.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
 interface GeographyInterface
 {
-    const GEOGRAPHY = 'Geography';
+    public const GEOGRAPHY = 'Geography';
 
     /**
      * @return int
@@ -39,14 +40,14 @@ interface GeographyInterface
     public function getSrid();
 
     /**
+     * @return string
+     */
+    public function getType();
+
+    /**
      * @param int $srid
      *
      * @return self
      */
     public function setSrid($srid);
-
-    /**
-     * @return string
-     */
-    public function getType();
 }

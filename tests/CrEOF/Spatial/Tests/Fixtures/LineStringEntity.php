@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +25,25 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * LineString entity
+ * LineString entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table()
+ * @Table
  */
 class LineStringEntity
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -46,14 +52,14 @@ class LineStringEntity
     protected $id;
 
     /**
-     * @var LineString $lineString
+     * @var LineString
      *
      * @Column(type="linestring", nullable=true)
      */
     protected $lineString;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -63,9 +69,17 @@ class LineStringEntity
     }
 
     /**
-     * Set lineString
+     * Get lineString.
      *
-     * @param LineString $lineString
+     * @return LineString
+     */
+    public function getLineString()
+    {
+        return $this->lineString;
+    }
+
+    /**
+     * Set lineString.
      *
      * @return self
      */
@@ -74,15 +88,5 @@ class LineStringEntity
         $this->lineString = $lineString;
 
         return $this;
-    }
-
-    /**
-     * Get lineString
-     *
-     * @return LineString
-     */
-    public function getLineString()
-    {
-        return $this->lineString;
     }
 }

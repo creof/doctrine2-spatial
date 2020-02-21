@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +25,7 @@
 namespace CrEOF\Spatial\PHP\Types;
 
 /**
- * Abstract Polygon object for POLYGON spatial types
+ * Abstract Polygon object for POLYGON spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -32,18 +33,19 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractMultiPolygon extends AbstractGeometry
 {
     /**
-     * @var array[] $polygons
+     * @var array[]
      */
-    protected $polygons = array();
+    protected $polygons = [];
 
     /**
      * @param AbstractPolygon[]|array[] $polygons
-     * @param null|int                     $srid
+     * @param int|null                  $srid
      */
     public function __construct(array $polygons, $srid = null)
     {
         $this->setPolygons($polygons)
-            ->setSrid($srid);
+            ->setSrid($srid)
+        ;
     }
 
     /**
@@ -59,20 +61,6 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @return AbstractPolygon[]
-     */
-    public function getPolygons()
-    {
-        $polygons = array();
-
-        for ($i = 0; $i < count($this->polygons); $i++) {
-            $polygons[] = $this->getPolygon($i);
-        }
-
-        return $polygons;
-    }
-
-    /**
      * @param int $index
      *
      * @return AbstractPolygon
@@ -83,9 +71,31 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
             $index = count($this->polygons) - 1;
         }
 
-        $polygonClass = $this->getNamespace() . '\Polygon';
+        $polygonClass = $this->getNamespace().'\Polygon';
 
         return new $polygonClass($this->polygons[$index], $this->srid);
+    }
+
+    /**
+     * @return AbstractPolygon[]
+     */
+    public function getPolygons()
+    {
+        $polygons = [];
+
+        for ($i = 0; $i < count($this->polygons); ++$i) {
+            $polygons[] = $this->getPolygon($i);
+        }
+
+        return $polygons;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return self::MULTIPOLYGON;
     }
 
     /**
@@ -98,14 +108,6 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
         $this->polygons = $this->validateMultiPolygonValue($polygons);
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::MULTIPOLYGON;
     }
 
     /**

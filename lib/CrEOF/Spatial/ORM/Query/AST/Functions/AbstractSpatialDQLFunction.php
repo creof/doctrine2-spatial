@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,7 +33,7 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Abstract spatial DQL function
+ * Abstract spatial DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -45,19 +46,9 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     protected $functionName;
 
     /**
-     * @var array
-     */
-    protected $platforms = array();
-
-    /**
      * @var Node[]
      */
-    protected $geomExpr = array();
-
-    /**
-     * @var int
-     */
-    protected $minGeomExpr;
+    protected $geomExpr = [];
 
     /**
      * @var int
@@ -65,8 +56,30 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     protected $maxGeomExpr;
 
     /**
-     * @param Parser $parser
+     * @var int
      */
+    protected $minGeomExpr;
+
+    /**
+     * @var array
+     */
+    protected $platforms = [];
+
+    /**
+     * @return string
+     */
+    public function getSql(SqlWalker $sqlWalker)
+    {
+        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
+
+        $arguments = [];
+        foreach ($this->geomExpr as $expression) {
+            $arguments[] = $expression->dispatch($sqlWalker);
+        }
+
+        return sprintf('%s(%s)', $this->functionName, implode(', ', $arguments));
+    }
+
     public function parse(Parser $parser)
     {
         $lexer = $parser->getLexer();
@@ -76,7 +89,7 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
 
         $this->geomExpr[] = $parser->ArithmeticPrimary();
 
-        while (count($this->geomExpr) < $this->minGeomExpr || (($this->maxGeomExpr === null || count($this->geomExpr) < $this->maxGeomExpr) && $lexer->lookahead['type'] != Lexer::T_CLOSE_PARENTHESIS)) {
+        while (count($this->geomExpr) < $this->minGeomExpr || ((null === $this->maxGeomExpr || count($this->geomExpr) < $this->maxGeomExpr) && Lexer::T_CLOSE_PARENTHESIS != $lexer->lookahead['type'])) {
             $parser->match(Lexer::T_COMMA);
 
             $this->geomExpr[] = $parser->ArithmeticPrimary();
@@ -86,25 +99,6 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     }
 
     /**
-     * @param SqlWalker $sqlWalker
-     *
-     * @return string
-     */
-    public function getSql(SqlWalker $sqlWalker)
-    {
-        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
-
-        $arguments = array();
-        foreach ($this->geomExpr as $expression) {
-            $arguments[] = $expression->dispatch($sqlWalker);
-        }
-
-        return sprintf('%s(%s)', $this->functionName, implode(', ', $arguments));
-    }
-
-    /**
-     * @param AbstractPlatform $platform
-     *
      * @throws UnsupportedPlatformException
      */
     protected function validatePlatform(AbstractPlatform $platform)

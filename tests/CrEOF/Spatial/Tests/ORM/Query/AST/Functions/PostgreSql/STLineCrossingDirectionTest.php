@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,19 +28,21 @@ use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * ST_LineCrossingDirection DQL function tests
+ * ST_LineCrossingDirection DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STLineCrossingDirectionTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
@@ -52,21 +55,21 @@ class STLineCrossingDirectionTest extends OrmTestCase
      */
     public function testSelectSTLineCrossingDirection()
     {
-        $lineString1 = new LineString(array(
+        $lineString1 = new LineString([
             new Point(8, 15),
-            new Point(4, 8)
-        ));
-        $lineString2 = new LineString(array(
+            new Point(4, 8),
+        ]);
+        $lineString2 = new LineString([
             new Point(12, 14),
-            new Point(3, 4)
-        ));
-        $lineString3 = new LineString(array(
+            new Point(3, 4),
+        ]);
+        $lineString3 = new LineString([
             new Point(2, 5),
             new Point(3, 6),
             new Point(12, 8),
             new Point(10, 10),
-            new Point(13, 11)
-        ));
+            new Point(13, 11),
+        ]);
 
         $entity1 = new LineStringEntity();
 
@@ -105,21 +108,21 @@ class STLineCrossingDirectionTest extends OrmTestCase
      */
     public function testSTLineCrossingDirectionWhereParameter()
     {
-        $lineString1 = new LineString(array(
+        $lineString1 = new LineString([
             new Point(8, 15),
-            new Point(4, 8)
-        ));
-        $lineString2 = new LineString(array(
+            new Point(4, 8),
+        ]);
+        $lineString2 = new LineString([
             new Point(12, 14),
-            new Point(3, 4)
-        ));
-        $lineString3 = new LineString(array(
+            new Point(3, 4),
+        ]);
+        $lineString3 = new LineString([
             new Point(2, 5),
             new Point(3, 6),
             new Point(12, 8),
             new Point(10, 10),
-            new Point(13, 11)
-        ));
+            new Point(13, 11),
+        ]);
 
         $entity1 = new LineStringEntity();
 

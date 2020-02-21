@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,26 +24,74 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * Doctrine LineStringType tests
+ * Doctrine LineStringType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group geometry
+ *
+ * @internal
+ * @coversNothing
  */
 class LineStringTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         parent::setUp();
+    }
+
+    public function testFindByLineString()
+    {
+        $lineString = new LineString(
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+            ]
+        );
+        $entity = new LineStringEntity();
+
+        $entity->setLineString($lineString);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $this->getEntityManager()->clear();
+
+        $result = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->findByLineString($lineString);
+
+        $this->assertEquals($entity, $result[0]);
+    }
+
+    public function testLineString()
+    {
+        $lineString = new LineString(
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+            ]
+        );
+        $entity = new LineStringEntity();
+
+        $entity->setLineString($lineString);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
+        $this->getEntityManager()->clear();
+
+        $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
+
+        $this->assertEquals($entity, $queryEntity);
     }
 
     public function testNullLineStringType()
@@ -59,51 +108,5 @@ class LineStringTypeTest extends OrmTestCase
         $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
-    }
-
-    public function testLineString()
-    {
-        $lineString = new LineString(
-            array(
-                new Point(0, 0),
-                new Point(1, 1),
-                new Point(2, 2)
-            )
-        );
-        $entity = new LineStringEntity();
-
-        $entity->setLineString($lineString);
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
-    public function testFindByLineString()
-    {
-        $lineString = new LineString(
-            array(
-                 new Point(0, 0),
-                 new Point(1, 1),
-                 new Point(2, 2)
-            )
-        );
-        $entity = new LineStringEntity();
-
-        $entity->setLineString($lineString);
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $this->getEntityManager()->clear();
-
-        $result = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->findByLineString($lineString);
-
-        $this->assertEquals($entity, $result[0]);
     }
 }

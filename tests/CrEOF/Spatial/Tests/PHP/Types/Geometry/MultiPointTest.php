@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,89 +24,115 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Spatial\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use PHPUnit\Framework\TestCase;
 
 /**
- * MultiPoint object tests
+ * MultiPoint object tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group php
+ *
+ * @internal
+ * @coversNothing
  */
-class MultiPointTest extends \PHPUnit_Framework_TestCase
+class MultiPointTest extends TestCase
 {
+    /**
+     * Test MultiPoint bad parameter.
+     */
+    public function testBadLineString()
+    {
+        $this->expectException(InvalidValueException::class);
+        $this->expectExceptionMessage('Invalid MultiPoint Point value of type "integer"');
+
+        new MultiPoint([1, 2, 3, 4]);
+    }
+
     public function testEmptyMultiPoint()
     {
-        $multiPoint = new MultiPoint(array());
+        $multiPoint = new MultiPoint([]);
 
         $this->assertEmpty($multiPoint->getPoints());
     }
 
-    public function testMultiPointFromObjectsToArray()
+    public function testJson()
     {
-        $expected = array(
-            array(0, 0),
-            array(1, 1),
-            array(2, 2),
-            array(3, 3)
+        $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
+        $multiPoint = new MultiPoint(
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
         );
-        $multiPoint = new MultiPoint(array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3)
-        ));
 
-        $this->assertCount(4, $multiPoint->getPoints());
-        $this->assertEquals($expected, $multiPoint->toArray());
+        $this->assertEquals($expected, $multiPoint->toJson());
     }
 
-    public function testMultiPointFromArraysGetPoints()
+    public function testMultiPointAddPoints()
     {
-        $expected = array(
+        $expected = [
             new Point(0, 0),
             new Point(1, 1),
             new Point(2, 2),
-            new Point(3, 3)
-        );
+            new Point(3, 3),
+        ];
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [0, 0],
+                [1, 1],
+            ]
         );
+
+        $multiPoint
+            ->addPoint([2, 2])
+            ->addPoint([3, 3])
+        ;
+
         $actual = $multiPoint->getPoints();
 
         $this->assertCount(4, $actual);
         $this->assertEquals($expected, $actual);
     }
 
-
-
-    public function testMultiPointAddPoints()
+    public function testMultiPointFromArraysGetLastPoint()
     {
-        $expected = array(
+        $expected = new Point(3, 3);
+        $multiPoint = new MultiPoint(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+        $actual = $multiPoint->getPoint(-1);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMultiPointFromArraysGetPoints()
+    {
+        $expected = [
             new Point(0, 0),
             new Point(1, 1),
             new Point(2, 2),
-            new Point(3, 3)
-        );
+            new Point(3, 3),
+        ];
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-            )
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
         );
-
-        $multiPoint
-            ->addPoint(array(2, 2))
-            ->addPoint(array(3, 3))
-        ;
-
         $actual = $multiPoint->getPoints();
 
         $this->assertCount(4, $actual);
@@ -116,72 +143,49 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new Point(1, 1);
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
         );
         $actual = $multiPoint->getPoint(1);
 
         $this->assertEquals($expected, $actual);
     }
 
-    public function testMultiPointFromArraysGetLastPoint()
-    {
-        $expected = new Point(3, 3);
-        $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
-        );
-        $actual = $multiPoint->getPoint(-1);
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * Test MultiPoint bad parameter
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid MultiPoint Point value of type "integer"
-     */
-    public function testBadLineString()
-    {
-        new MultiPoint(array(1, 2, 3 ,4));
-    }
-
     public function testMultiPointFromArraysToString()
     {
-        $expected   = '0 0,0 5,5 0,0 0';
+        $expected = '0 0,0 5,5 0,0 0';
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
         );
 
         $this->assertEquals($expected, (string) $multiPoint);
     }
 
-    public function testJson()
+    public function testMultiPointFromObjectsToArray()
     {
-        $expected   = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
-        $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
-        );
+        $expected = [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+            [3, 3],
+        ];
+        $multiPoint = new MultiPoint([
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3),
+        ]);
 
-        $this->assertEquals($expected, $multiPoint->toJson());
+        $this->assertCount(4, $multiPoint->getPoints());
+        $this->assertEquals($expected, $multiPoint->toArray());
     }
 }

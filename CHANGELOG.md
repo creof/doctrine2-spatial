@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Needed PHP extension added in composer.json 
 - Project fork from creof/doctrine-spatial2
 - Adding support of PHP7.2, PHP7.3, PHP7.4
 - Removing deprecations of doctrine2

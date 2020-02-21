@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,19 +28,21 @@ use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * GLength DQL function tests
+ * GLength DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class GLengthTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('mysql');
@@ -50,46 +53,21 @@ class GLengthTest extends OrmTestCase
     /**
      * @group geometry
      */
-    public function testSelectGLength()
-    {
-        $entity = new LineStringEntity();
-
-        $entity->setLineString(new LineString(array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2)
-        )));
-
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query  = $this->getEntityManager()->createQuery('SELECT l, GLength(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
-        $result = $query->getResult();
-
-        $this->assertCount(1, $result);
-        $this->assertEquals($entity, $result[0][0]);
-        $this->assertEquals(2.82842712474619, $result[0][1]);
-    }
-
-    /**
-     * @group geometry
-     */
     public function testGLengthWhereParameter()
     {
         $entity = new LineStringEntity();
 
-        $entity->setLineString(new LineString(array(
+        $entity->setLineString(new LineString([
             new Point(0, 0),
             new Point(1, 1),
-            new Point(2, 2)
-        )));
+            new Point(2, 2),
+        ]));
 
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query  = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE GLength(GeomFromText(:p1)) > GLength(l.lineString)');
+        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE GLength(GeomFromText(:p1)) > GLength(l.lineString)');
 
         $query->setParameter('p1', 'LINESTRING(0 0,1 1,2 2,3 3,4 4,5 5)', 'string');
 
@@ -97,5 +75,30 @@ class GLengthTest extends OrmTestCase
 
         $this->assertCount(1, $result);
         $this->assertEquals($entity, $result[0]);
+    }
+
+    /**
+     * @group geometry
+     */
+    public function testSelectGLength()
+    {
+        $entity = new LineStringEntity();
+
+        $entity->setLineString(new LineString([
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+        ]));
+
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery('SELECT l, GLength(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $result = $query->getResult();
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($entity, $result[0][0]);
+        $this->assertEquals(2.82842712474619, $result[0][1]);
     }
 }

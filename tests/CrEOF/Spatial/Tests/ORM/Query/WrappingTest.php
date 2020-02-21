@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,20 +32,22 @@ use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Version;
 
 /**
- * DQL type wrapping tests
+ * DQL type wrapping tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class WrappingTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesType('point');
@@ -56,16 +59,16 @@ class WrappingTest extends OrmTestCase
      */
     public function testTypeWrappingSelect()
     {
-        $lineString = new LineString(array(
+        $lineString = new LineString([
             new Point(0, 0),
             new Point(10, 0),
             new Point(10, 10),
             new Point(0, 10),
-            new Point(0, 0)
-        ));
+            new Point(0, 0),
+        ]);
         $entity = new PolygonEntity();
 
-        $entity->setPolygon(new Polygon(array($lineString)));
+        $entity->setPolygon(new Polygon([$lineString]));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
@@ -90,7 +93,7 @@ class WrappingTest extends OrmTestCase
         $query->setParameter('geometry', new Point(2, 2), 'point');
         $query->processParameterValue('geometry');
 
-        $result    = $query->getSQL();
+        $result = $query->getSQL();
         $parameter = '?';
 
         if (Version::compare('2.5') <= 0) {
@@ -119,7 +122,7 @@ class WrappingTest extends OrmTestCase
         $query->setParameter('geometry', new Point(5, 5), 'point');
         $query->processParameterValue('geometry');
 
-        $result    = $query->getSQL();
+        $result = $query->getSQL();
         $parameter = '?';
 
         if (Version::compare('2.5') <= 0) {

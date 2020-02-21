@@ -1,7 +1,7 @@
 <?php
-
 /**
- * Copyright (C) 2017 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,16 +31,19 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * ST_Overlaps DQL function tests
+ * ST_Overlaps DQL function tests.
  *
  * @author Dragos Protung
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STOverlapsTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
@@ -53,28 +56,28 @@ class STOverlapsTest extends OrmTestCase
      */
     public function testSelectSTMakeEnvelope()
     {
-        $lineString1 = new LineString(array(
+        $lineString1 = new LineString([
             new Point(0, 0),
             new Point(2, 0),
             new Point(2, 2),
             new Point(0, 2),
-            new Point(0, 0)
-        ));
-        $lineString2 = new LineString(array(
+            new Point(0, 0),
+        ]);
+        $lineString2 = new LineString([
             new Point(2, 2),
             new Point(7, 2),
             new Point(7, 7),
             new Point(2, 7),
-            new Point(2, 2)
-        ));
+            new Point(2, 2),
+        ]);
         $entity1 = new PolygonEntity();
 
-        $entity1->setPolygon(new Polygon(array($lineString1)));
+        $entity1->setPolygon(new Polygon([$lineString1]));
         $this->getEntityManager()->persist($entity1);
 
         $entity2 = new PolygonEntity();
 
-        $entity2->setPolygon(new Polygon(array($lineString2)));
+        $entity2->setPolygon(new Polygon([$lineString2]));
         $this->getEntityManager()->persist($entity2);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();

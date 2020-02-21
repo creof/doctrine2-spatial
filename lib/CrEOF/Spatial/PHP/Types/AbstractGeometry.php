@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +28,7 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
- * Abstract geometry object for spatial types
+ * Abstract geometry object for spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -40,33 +41,7 @@ abstract class AbstractGeometry implements GeometryInterface
     protected $srid;
 
     /**
-     * @return array
-     */
-    abstract public function toArray();
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $type   = strtoupper($this->getType());
-        $method = 'toString' . $type;
-
-        return $this->$method($this->toArray());
-    }
-
-    /**
-     * @return string
-     */
-    public function toJson()
-    {
-        $json['type'] = $this->getType();
-        $json['coordinates'] = $this->toArray();
-        return json_encode($json);
-    }
-
-    /**
-     * @return null|int
+     * @return int|null
      */
     public function getSrid()
     {
@@ -80,7 +55,7 @@ abstract class AbstractGeometry implements GeometryInterface
      */
     public function setSrid($srid)
     {
-        if ($srid !== null) {
+        if (null !== $srid) {
             $this->srid = (int) $srid;
         }
 
@@ -88,50 +63,53 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractPoint|array $point
-     *
      * @return array
-     * @throws InvalidValueException
      */
-    protected function validatePointValue($point)
+    abstract public function toArray();
+
+    /**
+     * @return string
+     */
+    public function toJson()
     {
-        switch (true) {
-            case ($point instanceof AbstractPoint):
-                return $point->toArray();
-                break;
-            case (is_array($point) && count($point) == 2 && is_numeric($point[0]) && is_numeric($point[1])):
-                return array_values($point);
-                break;
-            default:
-                throw new InvalidValueException(sprintf('Invalid %s Point value of type "%s"', $this->getType(), (is_object($point) ? get_class($point) : gettype($point))));
-        }
+        $json['type'] = $this->getType();
+        $json['coordinates'] = $this->toArray();
+
+        return json_encode($json);
     }
 
     /**
-     * @param AbstractLineString|array[] $ring
+     * @return string
+     */
+    protected function getNamespace()
+    {
+        $class = get_class($this);
+
+        return mb_substr($class, 0, mb_strrpos($class, '\\') - mb_strlen($class));
+    }
+
+    /**
+     * @param AbstractLineString|AbstractPoint[]|array[] $lineString
      *
      * @return array[]
-     * @throws InvalidValueException
      */
-    protected function validateRingValue($ring)
+    protected function validateLineStringValue($lineString)
     {
-        switch (true) {
-            case ($ring instanceof AbstractLineString):
-                $ring = $ring->toArray();
-                break;
-            case (is_array($ring)):
-                break;
-            default:
-                throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
+        return $this->validateMultiPointValue($lineString);
+    }
+
+    /**
+     * @param AbstractLineString[] $lineStrings
+     *
+     * @return array
+     */
+    protected function validateMultiLineStringValue(array $lineStrings)
+    {
+        foreach ($lineStrings as &$lineString) {
+            $lineString = $this->validateLineStringValue($lineString);
         }
 
-        $ring = $this->validateLineStringValue($ring);
-
-        if ($ring[0] !== end($ring)) {
-            throw new InvalidValueException(sprintf('Invalid polygon, ring "(%s)" is not closed', $this->toStringLineString($ring)));
-        }
-
-        return $ring;
+        return $lineStrings;
     }
 
     /**
@@ -153,30 +131,6 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractLineString|AbstractPoint[]|array[] $lineString
-     *
-     * @return array[]
-     */
-    protected function validateLineStringValue($lineString)
-    {
-        return $this->validateMultiPointValue($lineString);
-    }
-
-    /**
-     * @param AbstractLineString[] $rings
-     *
-     * @return array
-     */
-    protected function validatePolygonValue(array $rings)
-    {
-        foreach ($rings as &$ring) {
-            $ring = $this->validateRingValue($ring);
-        }
-
-        return $rings;
-    }
-
-    /**
      * @param AbstractPolygon[] $polygons
      *
      * @return array
@@ -194,53 +148,66 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractLineString[] $lineStrings
+     * @param AbstractPoint|array $point
+     *
+     * @throws InvalidValueException
      *
      * @return array
      */
-    protected function validateMultiLineStringValue(array $lineStrings)
+    protected function validatePointValue($point)
     {
-        foreach ($lineStrings as &$lineString) {
-            $lineString = $this->validateLineStringValue($lineString);
+        switch (true) {
+            case $point instanceof AbstractPoint:
+                return $point->toArray();
+                break;
+            case is_array($point) && 2 == count($point) && is_numeric($point[0]) && is_numeric($point[1]):
+                return array_values($point);
+                break;
+            default:
+                throw new InvalidValueException(sprintf('Invalid %s Point value of type "%s"', $this->getType(), (is_object($point) ? get_class($point) : gettype($point))));
+        }
+    }
+
+    /**
+     * @param AbstractLineString[] $rings
+     *
+     * @return array
+     */
+    protected function validatePolygonValue(array $rings)
+    {
+        foreach ($rings as &$ring) {
+            $ring = $this->validateRingValue($ring);
         }
 
-        return $lineStrings;
+        return $rings;
     }
 
     /**
-     * @return string
-     */
-    protected function getNamespace()
-    {
-        $class = get_class($this);
-
-        return substr($class, 0, strrpos($class, '\\') - strlen($class));
-    }
-
-    /**
-     * @param array $point
+     * @param AbstractLineString|array[] $ring
      *
-     * @return string
-     */
-    private function toStringPoint(array $point)
-    {
-        return vsprintf('%s %s', $point);
-    }
-
-    /**
-     * @param array[] $multiPoint
+     * @throws InvalidValueException
      *
-     * @return string
+     * @return array[]
      */
-    private function toStringMultiPoint(array $multiPoint)
+    protected function validateRingValue($ring)
     {
-        $strings = array();
-
-        foreach ($multiPoint as $point) {
-            $strings[] = $this->toStringPoint($point);
+        switch (true) {
+            case $ring instanceof AbstractLineString:
+                $ring = $ring->toArray();
+                break;
+            case is_array($ring):
+                break;
+            default:
+                throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
         }
 
-        return implode(',', $strings);
+        $ring = $this->validateLineStringValue($ring);
+
+        if ($ring[0] !== end($ring)) {
+            throw new InvalidValueException(sprintf('Invalid polygon, ring "(%s)" is not closed', $this->toStringLineString($ring)));
+        }
+
+        return $ring;
     }
 
     /**
@@ -263,10 +230,50 @@ abstract class AbstractGeometry implements GeometryInterface
         $strings = null;
 
         foreach ($multiLineString as $lineString) {
-            $strings[] = '(' . $this->toStringLineString($lineString) . ')';
+            $strings[] = '('.$this->toStringLineString($lineString).')';
         }
 
         return implode(',', $strings);
+    }
+
+    /**
+     * @param array[] $multiPoint
+     *
+     * @return string
+     */
+    private function toStringMultiPoint(array $multiPoint)
+    {
+        $strings = [];
+
+        foreach ($multiPoint as $point) {
+            $strings[] = $this->toStringPoint($point);
+        }
+
+        return implode(',', $strings);
+    }
+
+    /**
+     * @param array[] $multiPolygon
+     *
+     * @return string
+     */
+    private function toStringMultiPolygon(array $multiPolygon)
+    {
+        $strings = null;
+
+        foreach ($multiPolygon as $polygon) {
+            $strings[] = '('.$this->toStringPolygon($polygon).')';
+        }
+
+        return implode(',', $strings);
+    }
+
+    /**
+     * @return string
+     */
+    private function toStringPoint(array $point)
+    {
+        return vsprintf('%s %s', $point);
     }
 
     /**
@@ -280,18 +287,13 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param array[] $multiPolygon
-     *
      * @return string
      */
-    private function toStringMultiPolygon(array $multiPolygon)
+    public function __toString()
     {
-        $strings = null;
+        $type = mb_strtoupper($this->getType());
+        $method = 'toString'.$type;
 
-        foreach ($multiPolygon as $polygon) {
-            $strings[] = '(' . $this->toStringPolygon($polygon) . ')';
-        }
-
-        return implode(',', $strings);
+        return $this->{$method}($this->toArray());
     }
 }

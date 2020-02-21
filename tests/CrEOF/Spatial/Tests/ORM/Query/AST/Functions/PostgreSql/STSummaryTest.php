@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,22 +30,24 @@ use CrEOF\Spatial\PHP\Types\Geography\Polygon as GeographyPolygon;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
+use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * ST_Summary DQL function tests
+ * ST_Summary DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STSummaryTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesEntity(self::GEOGRAPHY_ENTITY);
@@ -54,92 +57,39 @@ class STSummaryTest extends OrmTestCase
     }
 
     /**
-     * @group geometry
-     */
-    public function testSelectSTSummaryGeometry()
-    {
-        $entity1 = new GeometryEntity();
-        $point1  = new Point(5, 5);
-
-        $entity1->setGeometry($point1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2     = new GeometryEntity();
-        $lineString2 = new LineString(
-            array(
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
-        );
-
-        $entity2->setGeometry($lineString2);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3  = new GeometryEntity();
-        $polygon3 = new Polygon(
-            array(
-                array(
-                    array(0, 0),
-                    array(10, 0),
-                    array(10, 10),
-                    array(0, 10),
-                    array(0, 0)
-                )
-            )
-        );
-
-        $entity3->setGeometry($polygon3);
-        $this->getEntityManager()->persist($entity3);
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query  = $this->getEntityManager()->createQuery('SELECT g, ST_Summary(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g');
-        $result = $query->getResult();
-
-        $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
-        $this->assertRegExp('/^Point\[[^G]*\]/', $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
-        $this->assertRegExp('/^LineString\[[^G]*\]/', $result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
-        $this->assertRegExp('/^Polygon\[[^G]*\]/', $result[2][1]);
-    }
-
-    /**
      * @group geography
      */
     public function testSelectSTSummaryGeography()
     {
         $entity1 = new GeographyEntity();
-        $point1  = new GeographyPoint(5, 5);
+        $point1 = new GeographyPoint(5, 5);
 
         $entity1->setGeography($point1);
         $this->getEntityManager()->persist($entity1);
 
-        $entity2     = new GeographyEntity();
+        $entity2 = new GeographyEntity();
         $lineString2 = new GeographyLineString(
-            array(
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
         );
 
         $entity2->setGeography($lineString2);
         $this->getEntityManager()->persist($entity2);
 
-        $entity3  = new GeographyEntity();
+        $entity3 = new GeographyEntity();
         $polygon3 = new GeographyPolygon(
-            array(
-                array(
-                    array(0, 0),
-                    array(10, 0),
-                    array(10, 10),
-                    array(0, 10),
-                    array(0, 0)
-                )
-            )
+            [
+                [
+                    [0, 0],
+                    [10, 0],
+                    [10, 10],
+                    [0, 10],
+                    [0, 0],
+                ],
+            ]
         );
 
         $entity3->setGeography($polygon3);
@@ -147,7 +97,7 @@ class STSummaryTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query  = $this->getEntityManager()->createQuery('SELECT g, ST_Summary(g.geography) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Summary(g.geography) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
@@ -157,5 +107,58 @@ class STSummaryTest extends OrmTestCase
         $this->assertRegExp('/^LineString\[.*G.*\]/', $result[1][1]);
         $this->assertEquals($entity3, $result[2][0]);
         $this->assertRegExp('/^Polygon\[.*G.*\]/', $result[2][1]);
+    }
+
+    /**
+     * @group geometry
+     */
+    public function testSelectSTSummaryGeometry()
+    {
+        $entity1 = new GeometryEntity();
+        $point1 = new Point(5, 5);
+
+        $entity1->setGeometry($point1);
+        $this->getEntityManager()->persist($entity1);
+
+        $entity2 = new GeometryEntity();
+        $lineString2 = new LineString(
+            [
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+
+        $entity2->setGeometry($lineString2);
+        $this->getEntityManager()->persist($entity2);
+
+        $entity3 = new GeometryEntity();
+        $polygon3 = new Polygon(
+            [
+                [
+                    [0, 0],
+                    [10, 0],
+                    [10, 10],
+                    [0, 10],
+                    [0, 0],
+                ],
+            ]
+        );
+
+        $entity3->setGeometry($polygon3);
+        $this->getEntityManager()->persist($entity3);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Summary(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g');
+        $result = $query->getResult();
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertRegExp('/^Point\[[^G]*\]/', $result[0][1]);
+        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertRegExp('/^LineString\[[^G]*\]/', $result[1][1]);
+        $this->assertEquals($entity3, $result[2][0]);
+        $this->assertRegExp('/^Polygon\[[^G]*\]/', $result[2][1]);
     }
 }

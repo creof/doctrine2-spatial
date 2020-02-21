@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,20 +25,25 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * Polygon entity
+ * Polygon entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table()
+ * @Table
  */
 class MultiPolygonEntity
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -46,14 +52,14 @@ class MultiPolygonEntity
     protected $id;
 
     /**
-     * @var MultiPolygon $multiPolygon
+     * @var MultiPolygon
      *
      * @Column(type="multipolygon", nullable=true)
      */
     protected $multiPolygon;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -63,9 +69,17 @@ class MultiPolygonEntity
     }
 
     /**
-     * Set multipolygon
+     * Get multipolygon.
      *
-     * @param MultiPolygon $multiPolygon
+     * @return MultiPolygon
+     */
+    public function getMultiPolygon()
+    {
+        return $this->multiPolygon;
+    }
+
+    /**
+     * Set multipolygon.
      *
      * @return self
      */
@@ -74,15 +88,5 @@ class MultiPolygonEntity
         $this->multiPolygon = $multiPolygon;
 
         return $this;
-    }
-
-    /**
-     * Get multipolygon
-     *
-     * @return MultiPolygon
-     */
-    public function getMultiPolygon()
-    {
-        return $this->multiPolygon;
     }
 }

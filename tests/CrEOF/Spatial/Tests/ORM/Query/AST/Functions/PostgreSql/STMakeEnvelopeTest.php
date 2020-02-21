@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,19 +29,21 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * ST_MakeEnvelope DQL function tests
+ * ST_MakeEnvelope DQL function tests.
  *
  * @author Dragos Protung
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STMakeEnvelopeTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
@@ -54,17 +57,17 @@ class STMakeEnvelopeTest extends OrmTestCase
     public function testSelectSTMakeEnvelope()
     {
         $entity = new PolygonEntity();
-        $rings = array(
+        $rings = [
             new LineString(
-                array(
+                [
                     new Point(0, 0),
                     new Point(10, 0),
                     new Point(10, 10),
                     new Point(0, 10),
                     new Point(0, 0),
-                )
+                ]
             ),
-        );
+        ];
 
         $entity->setPolygon(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
@@ -77,9 +80,9 @@ class STMakeEnvelopeTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $expected = array(
-            array(1 => 'POLYGON((5 5,5 10,10 10,10 5,5 5))'),
-        );
+        $expected = [
+            [1 => 'POLYGON((5 5,5 10,10 10,10 5,5 5))'],
+        ];
 
         $this->assertEquals($expected, $result);
     }

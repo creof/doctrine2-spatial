@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,7 +31,7 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\AbstractPoint;
 
 /**
- * Point object for POINT geography type
+ * Point object for POINT geography type.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -40,8 +41,9 @@ class Point extends AbstractPoint implements GeographyInterface
     /**
      * @param mixed $x
      *
-     * @return self
      * @throws InvalidValueException
+     *
+     * @return self
      */
     public function setX($x)
     {
@@ -67,8 +69,9 @@ class Point extends AbstractPoint implements GeographyInterface
     /**
      * @param mixed $y
      *
-     * @return self
      * @throws InvalidValueException
+     *
+     * @return self
      */
     public function setY($y)
     {

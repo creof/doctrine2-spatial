@@ -1,7 +1,7 @@
 <?php
-
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +27,22 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_MakeEnvelope DQL function
+ * ST_MakeEnvelope DQL function.
  *
  * @author  Dragos Protung
  * @license http://dlambert.mit-license.org MIT
  */
 class STMakeEnvelope extends AbstractSpatialDQLFunction
 {
-    protected $platforms = array('postgresql');
-
     protected $functionName = 'ST_MakeEnvelope';
+
+    protected $maxGeomExpr = 5;
 
     /**
      * From Postgis 2.0, the 5th parameter (SRID) is not required.
      *
-     * @var integer
+     * @var int
      */
     protected $minGeomExpr = 4;
-
-    protected $maxGeomExpr = 5;
+    protected $platforms = ['postgresql'];
 }

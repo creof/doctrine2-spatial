@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +25,31 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * Geometry entity
+ * Geometry entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table()
+ * @Table
  */
 class GeometryEntity
 {
     /**
-     * @var int $id
+     * @var GeometryInterface
+     *
+     * @Column(type="geometry", nullable=true)
+     */
+    protected $geometry;
+    /**
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -46,14 +58,17 @@ class GeometryEntity
     protected $id;
 
     /**
-     * @var GeometryInterface $geometry
+     * Get geometry.
      *
-     * @Column(type="geometry", nullable=true)
+     * @return GeometryInterface
      */
-    protected $geometry;
+    public function getGeometry()
+    {
+        return $this->geometry;
+    }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -63,9 +78,7 @@ class GeometryEntity
     }
 
     /**
-     * Set geometry
-     *
-     * @param GeometryInterface $geometry
+     * Set geometry.
      *
      * @return self
      */
@@ -74,15 +87,5 @@ class GeometryEntity
         $this->geometry = $geometry;
 
         return $this;
-    }
-
-    /**
-     * Get geometry
-     *
-     * @return GeometryInterface
-     */
-    public function getGeometry()
-    {
-        return $this->geometry;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,19 +24,21 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\DBAL\Types\Type;
 
 /**
- * Doctrine schema related tests
+ * Doctrine schema related tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
+ *
+ * @internal
+ * @coversNothing
  */
 class SchemaTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesEntity(self::POINT_ENTITY);
@@ -43,7 +46,7 @@ class SchemaTest extends OrmTestCase
         $this->usesEntity(self::POLYGON_ENTITY);
         $this->usesEntity(self::MULTIPOLYGON_ENTITY);
 
-        if ($this->getPlatform()->getName() === 'postgresql') {
+        if ('postgresql' === $this->getPlatform()->getName()) {
             $this->usesEntity(self::GEOGRAPHY_ENTITY);
             $this->usesEntity(self::GEO_POINT_SRID_ENTITY);
             $this->usesEntity(self::GEO_LINESTRING_ENTITY);
@@ -59,9 +62,9 @@ class SchemaTest extends OrmTestCase
 
         foreach ($this->getAllClassMetadata() as $metadata) {
             foreach ($metadata->getFieldNames() as $fieldName) {
-                $doctrineType  = $metadata->getTypeOfField($fieldName);
-                $type          = Type::getType($doctrineType);
-                $databaseTypes =  $type->getMappedDatabaseTypes($platform);
+                $doctrineType = $metadata->getTypeOfField($fieldName);
+                $type = Type::getType($doctrineType);
+                $databaseTypes = $type->getMappedDatabaseTypes($platform);
 
                 foreach ($databaseTypes as $databaseType) {
                     $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($databaseType);
@@ -84,7 +87,7 @@ class SchemaTest extends OrmTestCase
      */
     private function getAllClassMetadata()
     {
-        $metadata = array();
+        $metadata = [];
 
         foreach (array_keys($this->getUsedEntityClasses()) as $entityClass) {
             $metadata[] = $this->getEntityManager()->getClassMetadata($entityClass);

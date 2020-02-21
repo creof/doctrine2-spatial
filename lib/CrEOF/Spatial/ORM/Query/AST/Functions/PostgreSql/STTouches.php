@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Tom Vogt
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +27,17 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Touches DQL function
+ * ST_Touches DQL function.
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @license http://mit-license.org MIT
  */
 class STTouches extends AbstractSpatialDQLFunction
 {
-    protected $platforms = array('postgresql');
-
     protected $functionName = 'ST_Touches';
 
-    protected $minGeomExpr = 2;
-
     protected $maxGeomExpr = 2;
+
+    protected $minGeomExpr = 2;
+    protected $platforms = ['postgresql'];
 }

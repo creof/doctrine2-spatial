@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +25,25 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * Polygon entity
+ * Polygon entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table()
+ * @Table
  */
 class PolygonEntity
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -46,14 +52,14 @@ class PolygonEntity
     protected $id;
 
     /**
-     * @var Polygon $polygon
+     * @var Polygon
      *
      * @Column(type="polygon", nullable=true)
      */
     protected $polygon;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -63,9 +69,17 @@ class PolygonEntity
     }
 
     /**
-     * Set polygon
+     * Get polygon.
      *
-     * @param Polygon $polygon
+     * @return Polygon
+     */
+    public function getPolygon()
+    {
+        return $this->polygon;
+    }
+
+    /**
+     * Set polygon.
      *
      * @return self
      */
@@ -74,15 +88,5 @@ class PolygonEntity
         $this->polygon = $polygon;
 
         return $this;
-    }
-
-    /**
-     * Get polygon
-     *
-     * @return Polygon
-     */
-    public function getPolygon()
-    {
-        return $this->polygon;
     }
 }

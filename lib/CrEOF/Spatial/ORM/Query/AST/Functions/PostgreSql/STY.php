@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +27,17 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Y DQL function
+ * ST_Y DQL function.
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @license http:// mit-license.org MIT
  */
 class STY extends AbstractSpatialDQLFunction
 {
-    protected $platforms = array('postgresql');
-
     protected $functionName = 'ST_Y';
 
-    protected $minGeomExpr = 1;
-
     protected $maxGeomExpr = 1;
+
+    protected $minGeomExpr = 1;
+    protected $platforms = ['postgresql'];
 }

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,56 +30,53 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
- * PostgreSql spatial platform
+ * PostgreSql spatial platform.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  */
 class PostgreSql extends AbstractPlatform
 {
-    const DEFAULT_SRID = 4326;
+    public const DEFAULT_SRID = 4326;
 
     /**
-     * Gets the SQL declaration snippet for a field of this type.
+     * @param string $sqlExpr
      *
-     * @param array $fieldDeclaration
+     * @throws InvalidValueException
      *
-     * @return string
+     * @return GeometryInterface
      */
-    public function getSQLDeclaration(array $fieldDeclaration)
+    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr)
     {
-        $typeFamily = $fieldDeclaration['type']->getTypeFamily();
-        $sqlType    = $fieldDeclaration['type']->getSQLType();
-
-        if ($typeFamily === $sqlType) {
-            return $sqlType;
+        if (!is_resource($sqlExpr)) {
+            throw new InvalidValueException(sprintf('Invalid resource value "%s"', $sqlExpr));
         }
 
-        if (isset($fieldDeclaration['srid'])) {
-            return sprintf('%s(%s,%d)', $typeFamily, $sqlType, $fieldDeclaration['srid']);
-        }
+        $sqlExpr = stream_get_contents($sqlExpr);
 
-        return sprintf('%s(%s)', $typeFamily, $sqlType);
+        return parent::convertBinaryToPHPValue($type, $sqlExpr);
     }
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
-     *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
+    public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
     {
-        if ($type instanceof GeographyType) {
-            return sprintf('ST_AsEWKT(%s)', $sqlExpr);
+        $sridSQL = null;
+
+        if ($type instanceof GeographyType && null === $value->getSrid()) {
+            $value->setSrid(self::DEFAULT_SRID);
         }
 
-        return sprintf('ST_AsEWKB(%s)', $sqlExpr);
+        if (null !== ($srid = $value->getSrid()) || $type instanceof GeographyType) {
+            $sridSQL = sprintf('SRID=%d;', $srid);
+        }
+
+        return sprintf('%s%s', $sridSQL, parent::convertToDatabaseValue($type, $value));
     }
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * @param string $sqlExpr
      *
      * @return string
      */
@@ -92,41 +90,37 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
-     *
-     * @return GeometryInterface
-     * @throws InvalidValueException
-     */
-    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr)
-    {
-        if (! is_resource($sqlExpr)) {
-            throw new InvalidValueException(sprintf('Invalid resource value "%s"', $sqlExpr));
-        }
-
-        $sqlExpr = stream_get_contents($sqlExpr);
-
-        return parent::convertBinaryToPHPValue($type, $sqlExpr);
-    }
-
-    /**
-     * @param AbstractSpatialType $type
-     * @param GeometryInterface   $value
+     * @param string $sqlExpr
      *
      * @return string
      */
-    public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
+    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
     {
-        $sridSQL = null;
-
-        if ($type instanceof GeographyType && null === $value->getSrid()) {
-            $value->setSrid(self::DEFAULT_SRID);
+        if ($type instanceof GeographyType) {
+            return sprintf('ST_AsEWKT(%s)', $sqlExpr);
         }
 
-        if (($srid = $value->getSrid()) !== null || $type instanceof GeographyType) {
-            $sridSQL = sprintf('SRID=%d;', $srid);
+        return sprintf('ST_AsEWKB(%s)', $sqlExpr);
+    }
+
+    /**
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration)
+    {
+        $typeFamily = $fieldDeclaration['type']->getTypeFamily();
+        $sqlType = $fieldDeclaration['type']->getSQLType();
+
+        if ($typeFamily === $sqlType) {
+            return $sqlType;
         }
 
-        return sprintf('%s%s', $sridSQL, parent::convertToDatabaseValue($type, $value));
+        if (isset($fieldDeclaration['srid'])) {
+            return sprintf('%s(%s,%d)', $typeFamily, $sqlType, $fieldDeclaration['srid']);
+        }
+
+        return sprintf('%s(%s)', $typeFamily, $sqlType);
     }
 }

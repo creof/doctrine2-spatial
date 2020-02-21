@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2016 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,13 +43,12 @@ use Doctrine\ORM\Query\Parser;
  */
 class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
-    protected $platforms = array('postgresql');
-
     protected $functionName = 'ST_SnapToGrid';
 
-    protected $minGeomExpr = 2;
-
     protected $maxGeomExpr = 6;
+
+    protected $minGeomExpr = 2;
+    protected $platforms = ['postgresql'];
 
     /**
      * {@inheritdoc}
@@ -66,13 +66,13 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
         $this->geomExpr[] = $parser->ArithmeticFactor();
 
         // 2nd signature
-        if ($lexer->lookahead['type'] === Lexer::T_COMMA) {
+        if (Lexer::T_COMMA === $lexer->lookahead['type']) {
             $parser->match(Lexer::T_COMMA);
             $this->geomExpr[] = $parser->ArithmeticFactor();
         }
 
         // 3rd signature
-        if ($lexer->lookahead['type'] === Lexer::T_COMMA) {
+        if (Lexer::T_COMMA === $lexer->lookahead['type']) {
             $parser->match(Lexer::T_COMMA);
             $this->geomExpr[] = $parser->ArithmeticFactor();
 
@@ -80,7 +80,7 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
             $this->geomExpr[] = $parser->ArithmeticFactor();
 
             // 4th signature
-            if ($lexer->lookahead['type'] === Lexer::T_COMMA) {
+            if (Lexer::T_COMMA === $lexer->lookahead['type']) {
                 // sizeM
                 $parser->match(Lexer::T_COMMA);
                 $this->geomExpr[] = $parser->ArithmeticFactor();

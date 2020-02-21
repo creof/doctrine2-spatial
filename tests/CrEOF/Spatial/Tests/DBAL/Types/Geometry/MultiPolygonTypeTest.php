@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,28 +24,117 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
+use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
 use CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 
 /**
- * MultiPolygonType tests
+ * MultiPolygonType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group geometry
+ *
+ * @internal
+ * @coversNothing
  */
 class MultiPolygonTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::MULTIPOLYGON_ENTITY);
         parent::setUp();
+    }
+
+    public function testFindByMultiPolygon()
+    {
+        $polygons = [
+            new Polygon(
+                [
+                    new LineString(
+                        [
+                            new Point(0, 0),
+                            new Point(10, 0),
+                            new Point(10, 10),
+                            new Point(0, 10),
+                            new Point(0, 0),
+                        ]
+                    ),
+                ]
+            ),
+            new Polygon(
+                [
+                    new LineString(
+                        [
+                            new Point(5, 5),
+                            new Point(7, 5),
+                            new Point(7, 7),
+                            new Point(5, 7),
+                            new Point(5, 5),
+                        ]
+                    ),
+                ]
+            ),
+        ];
+        $entity = new MultiPolygonEntity();
+
+        $entity->setMultiPolygon(new MultiPolygon($polygons));
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $result = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->findByMultiPolygon(new MultiPolygon($polygons));
+
+        $this->assertEquals($entity, $result[0]);
+    }
+
+    public function testMultiPolygon()
+    {
+        $polygons = [
+            new Polygon(
+                [
+                    new LineString(
+                        [
+                            new Point(0, 0),
+                            new Point(10, 0),
+                            new Point(10, 10),
+                            new Point(0, 10),
+                            new Point(0, 0),
+                        ]
+                    ),
+                ]
+            ),
+            new Polygon(
+                [
+                    new LineString(
+                        [
+                            new Point(5, 5),
+                            new Point(7, 5),
+                            new Point(7, 7),
+                            new Point(5, 7),
+                            new Point(5, 5),
+                        ]
+                    ),
+                ]
+            ),
+        ];
+        $entity = new MultiPolygonEntity();
+
+        $entity->setMultiPolygon(new MultiPolygon($polygons));
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
+        $this->getEntityManager()->clear();
+
+        $queryEntity = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->find($id);
+
+        $this->assertEquals($entity, $queryEntity);
     }
 
     public function testNullMultiPolygon()
@@ -61,93 +151,5 @@ class MultiPolygonTypeTest extends OrmTestCase
         $queryEntity = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->find($id);
 
         $this->assertEquals($entity, $queryEntity);
-    }
-
-    public function testMultiPolygon()
-    {
-        $polygons = array(
-            new Polygon(
-                array(
-                    new LineString(
-                        array(
-                            new Point(0, 0),
-                            new Point(10, 0),
-                            new Point(10, 10),
-                            new Point(0, 10),
-                            new Point(0, 0)
-                        )
-                    )
-                )
-            ),
-            new Polygon(
-                array(
-                    new LineString(
-                        array(
-                            new Point(5, 5),
-                            new Point(7, 5),
-                            new Point(7, 7),
-                            new Point(5, 7),
-                            new Point(5, 5)
-                        )
-                    )
-                )
-            )
-        );
-        $entity = new MultiPolygonEntity();
-
-        $entity->setMultiPolygon(new MultiPolygon($polygons));
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
-
-    public function testFindByMultiPolygon()
-    {
-        $polygons = array(
-            new Polygon(
-                array(
-                    new LineString(
-                        array(
-                            new Point(0, 0),
-                            new Point(10, 0),
-                            new Point(10, 10),
-                            new Point(0, 10),
-                            new Point(0, 0)
-                        )
-                    )
-                )
-            ),
-            new Polygon(
-                array(
-                    new LineString(
-                        array(
-                            new Point(5, 5),
-                            new Point(7, 5),
-                            new Point(7, 7),
-                            new Point(5, 7),
-                            new Point(5, 5)
-                        )
-                    )
-                )
-            )
-        );
-        $entity = new MultiPolygonEntity();
-
-        $entity->setMultiPolygon(new MultiPolygon($polygons));
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $result = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->findByMultiPolygon(new MultiPolygon($polygons));
-
-        $this->assertEquals($entity, $result[0]);
     }
 }

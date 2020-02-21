@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +28,7 @@ use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
- * Spatial platform interface
+ * Spatial platform interface.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -35,58 +36,47 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 interface PlatformInterface
 {
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * @param string $sqlExpr
      *
      * @return GeometryInterface
      */
     public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * @param string $sqlExpr
      *
      * @return GeometryInterface
      */
     public function convertStringToPHPValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param GeometryInterface   $value
-     *
      * @return string
      */
     public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * @param string $sqlExpr
      *
      * @return string
      */
     public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * @param string $sqlExpr
      *
      * @return string
      */
     public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr);
 
     /**
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractSpatialType $type);
+
+    /**
      * Gets the SQL declaration snippet for a field of this type.
-     *
-     * @param array $fieldDeclaration
      *
      * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration);
-
-    /**
-     * @param AbstractSpatialType $type
-     *
-     * @return string[]
-     */
-    public function getMappedDatabaseTypes(AbstractSpatialType $type);
 }

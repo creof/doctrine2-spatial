@@ -1,7 +1,7 @@
 <?php
-
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,14 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Description of STIntersects
+ * Description of STIntersects.
  *
  * @author Maximilian
  */
-class STBuffer extends AbstractSpatialDQLFunction {
-
-    protected $platforms = array('mysql');
+class STBuffer extends AbstractSpatialDQLFunction
+{
     protected $functionName = 'ST_Buffer';
-    protected $minGeomExpr = 2;
     protected $maxGeomExpr = 2;
-
+    protected $minGeomExpr = 2;
+    protected $platforms = ['mysql'];
 }

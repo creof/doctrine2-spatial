@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +25,7 @@
 namespace CrEOF\Spatial\PHP\Types;
 
 /**
- * Abstract MultiLineString object for MULTILINESTRING spatial types
+ * Abstract MultiLineString object for MULTILINESTRING spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -32,18 +33,19 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractMultiLineString extends AbstractGeometry
 {
     /**
-     * @var array[] $lineStrings
+     * @var array[]
      */
-    protected $lineStrings = array();
+    protected $lineStrings = [];
 
     /**
      * @param AbstractLineString[]|array[] $rings
-     * @param null|int                     $srid
+     * @param int|null                     $srid
      */
     public function __construct(array $rings, $srid = null)
     {
         $this->setLineStrings($rings)
-            ->setSrid($srid);
+            ->setSrid($srid)
+        ;
     }
 
     /**
@@ -59,13 +61,29 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
+     * @param int $index
+     *
+     * @return AbstractLineString
+     */
+    public function getLineString($index)
+    {
+        if (-1 == $index) {
+            $index = count($this->lineStrings) - 1;
+        }
+
+        $lineStringClass = $this->getNamespace().'\LineString';
+
+        return new $lineStringClass($this->lineStrings[$index], $this->srid);
+    }
+
+    /**
      * @return AbstractLineString[]
      */
     public function getLineStrings()
     {
-        $lineStrings = array();
+        $lineStrings = [];
 
-        for ($i = 0; $i < count($this->lineStrings); $i++) {
+        for ($i = 0; $i < count($this->lineStrings); ++$i) {
             $lineStrings[] = $this->getLineString($i);
         }
 
@@ -73,19 +91,11 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
-     * @param int $index
-     *
-     * @return AbstractLineString
+     * @return string
      */
-    public function getLineString($index)
+    public function getType()
     {
-        if ($index == -1) {
-            $index = count($this->lineStrings) - 1;
-        }
-
-        $lineStringClass = $this->getNamespace() . '\LineString';
-
-        return new $lineStringClass($this->lineStrings[$index], $this->srid);
+        return self::MULTILINESTRING;
     }
 
     /**
@@ -98,14 +108,6 @@ abstract class AbstractMultiLineString extends AbstractGeometry
         $this->lineStrings = $this->validateMultiLineStringValue($lineStrings);
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::MULTILINESTRING;
     }
 
     /**

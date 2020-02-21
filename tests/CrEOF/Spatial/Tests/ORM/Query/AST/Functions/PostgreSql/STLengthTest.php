@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,19 +28,21 @@ use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\ORM\Query;
 
 /**
- * ST_Length DQL function tests
+ * ST_Length DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversNothing
  */
 class STLengthTest extends OrmTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
@@ -55,18 +58,18 @@ class STLengthTest extends OrmTestCase
         $entity = new LineStringEntity();
 
         $entity->setLineString(new LineString(
-            array(
+            [
                 new Point(0, 0),
                 new Point(1, 1),
-                new Point(2, 2)
-            ))
+                new Point(2, 2),
+            ])
         );
 
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query  = $this->getEntityManager()->createQuery('SELECT l, ST_Length(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery('SELECT l, ST_Length(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
@@ -82,11 +85,11 @@ class STLengthTest extends OrmTestCase
         $entity = new LineStringEntity();
 
         $entity->setLineString(new LineString(
-            array(
-                 new Point(0, 0),
-                 new Point(1, 1),
-                 new Point(2, 2)
-            ))
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+            ])
         );
 
         $this->getEntityManager()->persist($entity);
