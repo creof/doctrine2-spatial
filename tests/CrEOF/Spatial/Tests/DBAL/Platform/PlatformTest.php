@@ -38,7 +38,7 @@ use Doctrine\ORM\Tools\SchemaTool;
  * @group geometry
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class PlatformTest extends OrmMockTestCase
 {

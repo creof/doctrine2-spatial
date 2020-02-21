@@ -37,7 +37,7 @@ use PHPUnit\Framework\TestCase;
  * @group php
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class PointTest extends TestCase
 {

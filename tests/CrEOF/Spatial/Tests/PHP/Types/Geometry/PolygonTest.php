@@ -39,10 +39,13 @@ use PHPUnit\Framework\TestCase;
  * @group php
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class PolygonTest extends TestCase
 {
+    /**
+     * Test an empty polygon.
+     */
     public function testEmptyPolygon()
     {
         $polygon = new Polygon([]);

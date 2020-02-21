@@ -43,7 +43,7 @@ use Doctrine\ORM\Version;
  * @group dql
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class WrappingTest extends OrmTestCase
 {

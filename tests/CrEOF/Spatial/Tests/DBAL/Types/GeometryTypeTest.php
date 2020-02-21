@@ -40,7 +40,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  * @group geometry
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class GeometryTypeTest extends OrmTestCase
 {

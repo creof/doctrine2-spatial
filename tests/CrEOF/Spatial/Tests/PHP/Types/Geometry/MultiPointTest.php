@@ -38,7 +38,7 @@ use PHPUnit\Framework\TestCase;
  * @group php
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class MultiPointTest extends TestCase
 {

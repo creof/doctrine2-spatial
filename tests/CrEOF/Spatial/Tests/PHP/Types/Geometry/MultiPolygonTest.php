@@ -39,7 +39,7 @@ use PHPUnit\Framework\TestCase;
  * @group php
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class MultiPolygonTest extends TestCase
 {

@@ -39,7 +39,7 @@ use Doctrine\ORM\Query;
  * @group dql
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class GeometryWalkerTest extends OrmTestCase
 {

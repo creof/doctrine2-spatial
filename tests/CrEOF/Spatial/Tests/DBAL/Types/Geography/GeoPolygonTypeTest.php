@@ -39,7 +39,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  * @group geography
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class GeoPolygonTypeTest extends OrmTestCase
 {

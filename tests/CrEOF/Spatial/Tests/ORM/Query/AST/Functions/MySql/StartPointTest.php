@@ -38,7 +38,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  * @group dql
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class StartPointTest extends OrmTestCase
 {

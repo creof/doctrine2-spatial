@@ -40,7 +40,7 @@ use PHPUnit\Framework\Error\Error;
  * @group geography
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class GeographyTypeTest extends OrmTestCase
 {

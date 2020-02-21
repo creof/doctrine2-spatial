@@ -34,7 +34,7 @@ use Doctrine\DBAL\Types\Type;
  * @license http://dlambert.mit-license.org MIT
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class SchemaTest extends OrmTestCase
 {

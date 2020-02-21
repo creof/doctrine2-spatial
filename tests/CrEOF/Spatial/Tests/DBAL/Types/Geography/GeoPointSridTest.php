@@ -37,7 +37,7 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  * @group srid
  *
  * @internal
- * @coversNothing
+ * @coversDefaultClass
  */
 class GeoPointSridTest extends OrmTestCase
 {
