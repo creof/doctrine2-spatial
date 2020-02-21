@@ -32,9 +32,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * MultiLineString object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
@@ -42,6 +39,9 @@ use PHPUnit\Framework\TestCase;
  */
 class MultiLineStringTest extends TestCase
 {
+    /**
+     * Test an empty multiline string.
+     */
     public function testEmptyMultiLineString()
     {
         $multiLineString = new MultiLineString([]);
@@ -49,9 +49,14 @@ class MultiLineStringTest extends TestCase
         $this->assertEmpty($multiLineString->getLineStrings());
     }
 
+    /**
+     * Test to convert multiline string to json.
+     */
     public function testJson()
     {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $expected = '{"type":"MultiLineString","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
+        // phpcs:enable
         $lineStrings = [
             [
                 [0, 0],
@@ -73,6 +78,9 @@ class MultiLineStringTest extends TestCase
         $this->assertEquals($expected, $multiLineString->toJson());
     }
 
+    /**
+     * Test to convert a multiline string to a string.
+     */
     public function testMultiLineStringFromArraysToString()
     {
         $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
@@ -98,9 +106,12 @@ class MultiLineStringTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Test to get last line from multiline string.
+     */
     public function testMultiLineStringFromObjectsGetLastLineString()
     {
-        $lineString1 = new LineString(
+        $firstLineString = new LineString(
             [
                 new Point(0, 0),
                 new Point(10, 0),
@@ -109,7 +120,7 @@ class MultiLineStringTest extends TestCase
                 new Point(0, 0),
             ]
         );
-        $lineString2 = new LineString(
+        $lastLineString = new LineString(
             [
                 new Point(5, 5),
                 new Point(7, 5),
@@ -118,14 +129,17 @@ class MultiLineStringTest extends TestCase
                 new Point(5, 5),
             ]
         );
-        $polygon = new MultiLineString([$lineString1, $lineString2]);
+        $polygon = new MultiLineString([$firstLineString, $lastLineString]);
 
-        $this->assertEquals($lineString2, $polygon->getLineString(-1));
+        $this->assertEquals($lastLineString, $polygon->getLineString(-1));
     }
 
+    /**
+     * Test to get first line from multiline string.
+     */
     public function testMultiLineStringFromObjectsGetSingleLineString()
     {
-        $lineString1 = new LineString(
+        $firstLineString = new LineString(
             [
                 new Point(0, 0),
                 new Point(10, 0),
@@ -134,7 +148,7 @@ class MultiLineStringTest extends TestCase
                 new Point(0, 0),
             ]
         );
-        $lineString2 = new LineString(
+        $lastLineString = new LineString(
             [
                 new Point(5, 5),
                 new Point(7, 5),
@@ -143,11 +157,14 @@ class MultiLineStringTest extends TestCase
                 new Point(5, 5),
             ]
         );
-        $multiLineString = new MultiLineString([$lineString1, $lineString2]);
+        $multiLineString = new MultiLineString([$firstLineString, $lastLineString]);
 
-        $this->assertEquals($lineString1, $multiLineString->getLineString(0));
+        $this->assertEquals($firstLineString, $multiLineString->getLineString(0));
     }
 
+    /**
+     * Test to create multiline string from line string.
+     */
     public function testMultiLineStringFromObjectsToArray()
     {
         $expected = [
@@ -192,6 +209,9 @@ class MultiLineStringTest extends TestCase
         $this->assertEquals($expected, $multiLineString->toArray());
     }
 
+    /**
+     * Test a solid multiline string.
+     */
     public function testSolidMultiLineStringAddRings()
     {
         $expected = [
@@ -239,6 +259,9 @@ class MultiLineStringTest extends TestCase
         $this->assertEquals($expected, $multiLineString->getLineStrings());
     }
 
+    /**
+     * Test a solid multiline string.
+     */
     public function testSolidMultiLineStringFromArraysGetRings()
     {
         $expected = [

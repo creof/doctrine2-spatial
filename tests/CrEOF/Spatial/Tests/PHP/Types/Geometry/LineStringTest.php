@@ -53,6 +53,9 @@ class LineStringTest extends TestCase
         new LineString([1, 2, 3, 4]);
     }
 
+    /**
+     * Test an empty line string.
+     */
     public function testEmptyLineString()
     {
         $lineString = new LineString([]);
@@ -60,6 +63,9 @@ class LineStringTest extends TestCase
         $this->assertEmpty($lineString->getPoints());
     }
 
+    /**
+     * Test to convert line string to json.
+     */
     public function testJson()
     {
         $expected = '{"type":"LineString","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
@@ -75,6 +81,9 @@ class LineStringTest extends TestCase
         $this->assertEquals($expected, $lineString->toJson());
     }
 
+    /**
+     * Test to get last point.
+     */
     public function testLineStringFromArraysGetLastPoint()
     {
         $expected = new Point(3, 3);
@@ -91,6 +100,9 @@ class LineStringTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get all points of a line string.
+     */
     public function testLineStringFromArraysGetPoints()
     {
         $expected = [
@@ -113,6 +125,9 @@ class LineStringTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get second point of a linestring.
+     */
     public function testLineStringFromArraysGetSinglePoint()
     {
         $expected = new Point(1, 1);
@@ -129,6 +144,9 @@ class LineStringTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to verify that a line is closed.
+     */
     public function testLineStringFromArraysIsClosed()
     {
         $lineString = new LineString(
@@ -143,6 +161,9 @@ class LineStringTest extends TestCase
         $this->assertTrue($lineString->isClosed());
     }
 
+    /**
+     * Test to verify that a line is opened.
+     */
     public function testLineStringFromArraysIsOpen()
     {
         $lineString = new LineString(
@@ -157,6 +178,9 @@ class LineStringTest extends TestCase
         $this->assertFalse($lineString->isClosed());
     }
 
+    /**
+     * Test to convert line to string.
+     */
     public function testLineStringFromArraysToString()
     {
         $expected = '0 0,0 5,5 0,0 0';
@@ -172,6 +196,9 @@ class LineStringTest extends TestCase
         $this->assertEquals($expected, (string) $lineString);
     }
 
+    /**
+     * Test to convert line to array.
+     */
     public function testLineStringFromObjectsToArray()
     {
         $expected = [

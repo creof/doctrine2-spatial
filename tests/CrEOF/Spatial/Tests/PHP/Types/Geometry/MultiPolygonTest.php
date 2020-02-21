@@ -33,9 +33,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Polygon object tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
- *
  * @group php
  *
  * @internal
@@ -43,6 +40,9 @@ use PHPUnit\Framework\TestCase;
  */
 class MultiPolygonTest extends TestCase
 {
+    /**
+     * Test an empty polygon.
+     */
     public function testEmptyMultiPolygon()
     {
         $multiPolygon = new MultiPolygon([]);
@@ -50,9 +50,14 @@ class MultiPolygonTest extends TestCase
         $this->assertEmpty($multiPolygon->getPolygons());
     }
 
+    /**
+     * Test to convert multipolygon to Json.
+     */
     public function testJson()
     {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $expected = '{"type":"MultiPolygon","coordinates":[[[[0,0],[10,0],[10,10],[0,10],[0,0]]],[[[5,5],[7,5],[7,7],[5,7],[5,5]]]]}';
+        // phpcs:enable
         $polygons = [
             [
                 [
@@ -78,9 +83,12 @@ class MultiPolygonTest extends TestCase
         $this->assertEquals($expected, $multiPolygon->toJson());
     }
 
+    /**
+     * Test to get last polygon from a multipolygon created from a lot objects.
+     */
     public function testMultiPolygonFromObjectsGetLastPolygon()
     {
-        $polygon1 = new Polygon(
+        $firstPolygon = new Polygon(
             [
                 new LineString(
                     [
@@ -93,7 +101,7 @@ class MultiPolygonTest extends TestCase
                 ),
             ]
         );
-        $polygon2 = new Polygon(
+        $lastPolygon = new Polygon(
             [
                 new LineString(
                     [
@@ -106,14 +114,17 @@ class MultiPolygonTest extends TestCase
                 ),
             ]
         );
-        $multiPolygon = new MultiPolygon([$polygon1, $polygon2]);
+        $multiPolygon = new MultiPolygon([$firstPolygon, $lastPolygon]);
 
-        $this->assertEquals($polygon2, $multiPolygon->getPolygon(-1));
+        $this->assertEquals($lastPolygon, $multiPolygon->getPolygon(-1));
     }
 
+    /**
+     * Test to get first polygon from a multipolygon created from a lot objects.
+     */
     public function testMultiPolygonFromObjectsGetSinglePolygon()
     {
-        $polygon1 = new Polygon(
+        $firstPolygon = new Polygon(
             [
                 new LineString(
                     [
@@ -126,7 +137,7 @@ class MultiPolygonTest extends TestCase
                 ),
             ]
         );
-        $polygon2 = new Polygon(
+        $lastPolygon = new Polygon(
             [
                 new LineString(
                     [
@@ -139,11 +150,14 @@ class MultiPolygonTest extends TestCase
                 ),
             ]
         );
-        $multiPolygon = new MultiPolygon([$polygon1, $polygon2]);
+        $multiPolygon = new MultiPolygon([$firstPolygon, $lastPolygon]);
 
-        $this->assertEquals($polygon1, $multiPolygon->getPolygon(0));
+        $this->assertEquals($firstPolygon, $multiPolygon->getPolygon(0));
     }
 
+    /**
+     * Test getPolygons method.
+     */
     public function testSolidMultiPolygonAddPolygon()
     {
         $expected = [
@@ -206,6 +220,9 @@ class MultiPolygonTest extends TestCase
         $this->assertEquals($expected, $multiPolygon->getPolygons());
     }
 
+    /**
+     * Test getPolygons method.
+     */
     public function testSolidMultiPolygonFromArraysGetPolygons()
     {
         $expected = [
@@ -263,6 +280,9 @@ class MultiPolygonTest extends TestCase
         $this->assertEquals($expected, $multiPolygon->getPolygons());
     }
 
+    /**
+     * Test to convert multipolygon created from array to string.
+     */
     public function testSolidMultiPolygonFromArraysToString()
     {
         $expected = '((0 0,10 0,10 10,0 10,0 0)),((5 5,7 5,7 7,5 7,5 5))';
@@ -292,6 +312,9 @@ class MultiPolygonTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Test to convert multipolygon created from objects to array.
+     */
     public function testSolidMultiPolygonFromObjectsToArray()
     {
         $expected = [
