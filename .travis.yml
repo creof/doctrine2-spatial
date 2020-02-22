@@ -14,6 +14,8 @@ env:
   - ORM=2.5
   - ORM=2.6
   - ORM=2.7
+  global:
+    - CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
 
 before_script:
   - composer self-update
@@ -21,6 +23,10 @@ before_script:
   - cp ./tests/travis/composer.orm$ORM.json ./composer.json
   - composer install --prefer-source
   - mkdir -p ./build/coverage
+  # Test coverage for code climate
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
   - ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-php ./build/coverage/coverage-pgsql-$TRAVIS_PHP_VERSION-$ORM.cov
@@ -29,6 +35,8 @@ script:
 after_script:
   - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
   - ./vendor/bin/coveralls -v --exclude-no-stmt
+  #Push code climate coverage
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
