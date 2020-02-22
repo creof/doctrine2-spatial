@@ -26,8 +26,13 @@ namespace CrEOF\Spatial\Tests;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,15 +40,32 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class OrmMockTestCase extends TestCase
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $mockEntityManager;
 
+    /**
+     * Setup the mocked entity manager.
+     *
+     * @throws DBALException when connection is not successful
+     * @throws ORMException  when
+     */
     protected function setUp(): void
     {
         $this->mockEntityManager = $this->getMockEntityManager();
     }
 
+    /**
+     * Return the mocked connection.
+     *
+     * @return Connection
+     *
+     * @throws DBALException This should not happen because connection is mocked
+     */
     protected function getMockConnection()
     {
+        /** @var Driver|MockObject $driver */
         $driver = $this->getMockBuilder('Doctrine\DBAL\Driver\PDOSqlite\Driver')
             ->setMethods(['getDatabasePlatform'])
             ->getMock()
@@ -64,7 +86,12 @@ abstract class OrmMockTestCase extends TestCase
     }
 
     /**
-     * @return EntityManager
+     * Get the mocked entity manager.
+     *
+     * @return EntityManagerInterface a mocked entity manager
+     *
+     * @throws DBALException When connection is not successfule
+     * @throws ORMException  when
      */
     protected function getMockEntityManager()
     {
@@ -72,12 +99,14 @@ abstract class OrmMockTestCase extends TestCase
             return $this->mockEntityManager;
         }
 
+        $path = [realpath(__DIR__.'/Fixtures')];
         $config = new Configuration();
 
         $config->setMetadataCacheImpl(new ArrayCache());
         $config->setProxyDir(__DIR__.'/Proxies');
         $config->setProxyNamespace('CrEOF\Spatial\Tests\Proxies');
-        $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver([realpath(__DIR__.'/Fixtures')], true));
+        //TODO Warning wrong paramater is provided
+        $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver($path, true));
 
         return EntityManager::create($this->getMockConnection(), $config);
     }
