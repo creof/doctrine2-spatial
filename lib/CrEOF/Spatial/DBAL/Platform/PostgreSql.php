@@ -40,11 +40,14 @@ class PostgreSql extends AbstractPlatform
     public const DEFAULT_SRID = 4326;
 
     /**
-     * @param string $sqlExpr
+     * Convert Binary to php value.
      *
-     * @throws InvalidValueException
+     * @param AbstractSpatialType $type    Spatial type
+     * @param string              $sqlExpr Sql expression
      *
      * @return GeometryInterface
+     *
+     * @throws InvalidValueException when SQL expression is not a resource
      */
     public function convertBinaryToPhpValue(AbstractSpatialType $type, $sqlExpr)
     {
@@ -58,6 +61,11 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
+     * Convert to database value.
+     *
+     * @param AbstractSpatialType $type  The spatial type
+     * @param GeometryInterface   $value The geometry interface
+     *
      * @return string
      */
     public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
@@ -76,11 +84,14 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param string $sqlExpr
+     * Convert to database value to SQL.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
+    public function convertToDatabaseValueSql(AbstractSpatialType $type, $sqlExpr)
     {
         if ($type instanceof GeographyType) {
             return sprintf('ST_GeographyFromText(%s)', $sqlExpr);
@@ -90,11 +101,14 @@ class PostgreSql extends AbstractPlatform
     }
 
     /**
-     * @param string $sqlExpr
+     * Convert to php value to SQL.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
+    public function convertToPhpValueSql(AbstractSpatialType $type, $sqlExpr)
     {
         if ($type instanceof GeographyType) {
             return sprintf('ST_AsEWKT(%s)', $sqlExpr);
@@ -106,9 +120,11 @@ class PostgreSql extends AbstractPlatform
     /**
      * Gets the SQL declaration snippet for a field of this type.
      *
+     * @param array $fieldDeclaration array SHALL contains 'type' as key
+     *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration)
+    public function getSqlDeclaration(array $fieldDeclaration)
     {
         $typeFamily = $fieldDeclaration['type']->getTypeFamily();
         $sqlType = $fieldDeclaration['type']->getSQLType();

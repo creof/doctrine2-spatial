@@ -59,14 +59,14 @@ interface PlatformInterface
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr);
+    public function convertToDatabaseValueSql(AbstractSpatialType $type, $sqlExpr);
 
     /**
      * @param string $sqlExpr
      *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr);
+    public function convertToPhpValueSql(AbstractSpatialType $type, $sqlExpr);
 
     /**
      * @return string[]
@@ -78,5 +78,5 @@ interface PlatformInterface
      *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration);
+    public function getSqlDeclaration(array $fieldDeclaration);
 }

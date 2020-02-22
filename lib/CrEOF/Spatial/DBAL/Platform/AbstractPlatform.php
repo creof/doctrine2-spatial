@@ -78,12 +78,10 @@ abstract class AbstractPlatform implements PlatformInterface
      * @param GeometryInterface   $value The geometry object
      *
      * @return string
-     *
-     * @throws InvalidValueException when the provided type is not supported
      */
     public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
     {
-        //TODO removed the unused variable $type
+        //TODO the unused variable $type is used by overriding method
         return sprintf('%s(%s)', mb_strtoupper($value->getType()), $value);
     }
 

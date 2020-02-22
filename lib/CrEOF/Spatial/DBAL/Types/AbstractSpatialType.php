@@ -81,9 +81,9 @@ abstract class AbstractSpatialType extends Type
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
+    public function convertToDatabaseValueSql($sqlExpr, AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($this, $sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSql($this, $sqlExpr);
     }
 
     /**
@@ -114,9 +114,9 @@ abstract class AbstractSpatialType extends Type
      *
      * @return string
      */
-    public function convertToPHPValueSQL($sqlExpr, $platform)
+    public function convertToPhpValueSql($sqlExpr, $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($this, $sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToPhpValueSql($this, $sqlExpr);
     }
 
     /**
@@ -144,9 +144,9 @@ abstract class AbstractSpatialType extends Type
      *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->getSQLDeclaration($fieldDeclaration);
+        return $this->getSpatialPlatform($platform)->getSqlDeclaration($fieldDeclaration);
     }
 
     /**

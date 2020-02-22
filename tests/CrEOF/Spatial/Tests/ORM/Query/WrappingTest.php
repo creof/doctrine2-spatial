@@ -97,7 +97,7 @@ class WrappingTest extends OrmTestCase
         $parameter = '?';
 
         if (Version::compare('2.5') <= 0) {
-            $parameter = Type::getType('point')->convertToDatabaseValueSQL($parameter, $this->getPlatform());
+            $parameter = Type::getType('point')->convertToDatabaseValueSql($parameter, $this->getPlatform());
         }
 
         $regex = preg_quote(sprintf('/.polygon, %s)/', $parameter));
@@ -126,7 +126,7 @@ class WrappingTest extends OrmTestCase
         $parameter = '?';
 
         if (Version::compare('2.5') <= 0) {
-            $parameter = Type::getType('point')->convertToDatabaseValueSQL($parameter, $this->getPlatform());
+            $parameter = Type::getType('point')->convertToDatabaseValueSql($parameter, $this->getPlatform());
         }
 
         $regex = preg_quote(sprintf('/geometry = %s/', $parameter));
