@@ -20,8 +20,7 @@ env:
   - ORM=2.5
   - ORM=2.6
   - ORM=2.7
-  global:
-    - CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
+  - CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
 
 before_script:
   - composer self-update
