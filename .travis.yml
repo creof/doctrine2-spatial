@@ -15,11 +15,10 @@ php:
   - hhvm
 
 env:
-  - ORM=2.3
-  - ORM=2.4
-  - ORM=2.5
-  - ORM=2.6
+  # Only stable and upcoming releases are tested https://www.doctrine-project.org/projects/orm.html
   - ORM=2.7
+  - ORM=2.8
+  - ORM=3.0
   - CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
 
 before_script:
@@ -32,7 +31,6 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - psql -U postgres -c "create extension postgis"
 
 script:
   - ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-php ./build/coverage/coverage-pgsql-$TRAVIS_PHP_VERSION-$ORM.cov
@@ -50,10 +48,6 @@ notifications:
 matrix:
   allow_failures:
     - php: hhvm     # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-#  exclude:
-#    - php: 7.4
-#      env: ORM=2.3  # ORM <=2.6.4 are not compatible with PHP >=7.4
-#    - php: 7.4
-#      env: ORM=2.4  # ORM <=2.6.4 are not compatible with PHP >=7.4
-#    - php: 7.4
-#      env: ORM=2.5  # ORM <=2.6.4 are not compatible with PHP >=7.4
+    # Upcoming releases can fail
+    - env: ORM=2.8
+    - env: ORM=3.0
