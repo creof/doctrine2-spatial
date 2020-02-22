@@ -8,7 +8,7 @@
         >
 
     <testsuites>
-        <testsuite>
+        <testsuite name="Doctrine spatial library">
             <directory>./tests/CrEOF/Spatial/Tests</directory>
         </testsuite>
     </testsuites>

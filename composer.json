@@ -39,7 +39,8 @@
         ],
         "phpcs": "phpcs --standard=phpcs.xml.dist -s",
         "phpcsfixer": "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
-        "phpmd": "phpmd bin,config,public,src,tests text ./phpmd.xml.dist"
+        "phpmd": "phpmd bin,config,public,src,tests text ./phpmd.xml.dist",
+        "test": "phpunit"
     },
     "autoload": {
         "psr-0": {

@@ -9,7 +9,7 @@
         >
 
     <testsuites>
-        <testsuite>
+        <testsuite name="Doctrine spatial library tests for MySQL">
             <directory>../CrEOF/Spatial/Tests</directory>
         </testsuite>
     </testsuites>

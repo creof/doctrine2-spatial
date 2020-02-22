@@ -9,7 +9,7 @@
         >
 
     <testsuites>
-        <testsuite>
+        <testsuite name="Doctrine spatial library tests for PgSQL">
             <directory>../CrEOF/Spatial/Tests</directory>
         </testsuite>
     </testsuites>

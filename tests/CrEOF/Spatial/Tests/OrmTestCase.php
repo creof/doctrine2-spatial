@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\Tests;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
@@ -47,6 +48,7 @@ use Throwable;
  */
 abstract class OrmTestCase extends TestCase
 {
+    //Fixtures and entities
     public const GEO_LINESTRING_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeoLineStringEntity';
     public const GEO_POINT_SRID_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity';
     public const GEO_POLYGON_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity';
@@ -167,7 +169,7 @@ abstract class OrmTestCase extends TestCase
     /**
      * Setup connection before class creation.
      *
-     * @throws UnsupportedPlatformException this should not happen
+     * @throws UnsupportedPlatformException this happen when platform is not mysql or postgresql
      * @throws DBALException                this can happen when database or credentials are not set
      */
     public static function setUpBeforeClass(): void
@@ -180,6 +182,7 @@ abstract class OrmTestCase extends TestCase
      *
      * @throws UnsupportedPlatformException this should not happen
      * @throws DBALException                this can happen when database or credentials are not set
+     * @throws ORMException                 ORM Exception
      */
     protected function setUp(): void
     {
@@ -210,6 +213,8 @@ abstract class OrmTestCase extends TestCase
      *
      * @throws UnsupportedPlatformException this should not happen
      * @throws DBALException                this can happen when database or credentials are not set
+     * @throws ORMException                 ORM Exception
+     * @throws MappingException             Mapping exception when clear fails
      */
     protected function tearDown(): void
     {
@@ -256,7 +261,6 @@ abstract class OrmTestCase extends TestCase
      * Establish the connection if it is not already done, then returns it.
      *
      * @throws UnsupportedPlatformException this should not happen
-     * @throws DBALException                this can happen when database or credentials are not set
      *
      * @return Connection
      */
@@ -397,7 +401,7 @@ abstract class OrmTestCase extends TestCase
      *
      * @param Throwable $throwable the exception
      *
-     * @throws Throwable
+     * @throws Exception The exception provided by parameter.
      */
     protected function onNotSuccessfulTest(Throwable $throwable): void
     {
@@ -454,10 +458,10 @@ abstract class OrmTestCase extends TestCase
     /**
      * Create entities used by tests.
      *
-     * @throws DBALException
-     * @throws ORMException
-     * @throws UnsupportedPlatformException
-     * @throws ToolsException
+     * @throws DBALException                when connection is not successful
+     * @throws ORMException                 when
+     * @throws UnsupportedPlatformException when platform is not supported
+     * @throws ToolsException               when schema cannot be created
      */
     protected function setUpEntities()
     {
@@ -478,9 +482,9 @@ abstract class OrmTestCase extends TestCase
     /**
      * Setup DQL functions.
      *
-     * @throws DBALException
-     * @throws ORMException
-     * @throws UnsupportedPlatformException
+     * @throws DBALException                when connection is not successful
+     * @throws ORMException                 when
+     * @throws UnsupportedPlatformException when platform is not supported
      */
     protected function setUpFunctions()
     {
@@ -538,7 +542,7 @@ abstract class OrmTestCase extends TestCase
     /**
      * Add types used by test to DBAL.
      *
-     * @throws DBALException
+     * @throws DBALException                when credential or connection failed
      * @throws UnsupportedPlatformException when platform is not supported
      */
     protected function setUpTypes()
