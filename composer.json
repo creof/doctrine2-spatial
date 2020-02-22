@@ -21,7 +21,7 @@
         "creof/geo-parser": "~2.0",
         "creof/wkt-parser": "~2.0",
         "creof/wkb-parser": "~2.0",
-        "doctrine/orm": ">2.7"
+        "doctrine/orm": "^2.7.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
