@@ -19,9 +19,9 @@ env:
   - ORM=2.7
   - ORM=2.8
   - ORM=3.0
-  - CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
 
 before_script:
+  - export CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
   - composer self-update
   - cp ./composer.json ./tests/travis/composer.orm2.7.json
   - cp ./tests/travis/composer.orm$ORM.json ./composer.json
