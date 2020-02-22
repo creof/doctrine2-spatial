@@ -40,14 +40,14 @@ interface PlatformInterface
      *
      * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr);
+    public function convertBinaryToPhpValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
      * @param string $sqlExpr
      *
      * @return GeometryInterface
      */
-    public function convertStringToPHPValue(AbstractSpatialType $type, $sqlExpr);
+    public function convertStringToPhpValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
      * @return string

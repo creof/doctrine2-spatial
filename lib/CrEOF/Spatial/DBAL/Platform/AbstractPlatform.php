@@ -34,17 +34,20 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 /**
  * Abstract spatial platform.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
  */
 abstract class AbstractPlatform implements PlatformInterface
 {
     /**
-     * @param string $sqlExpr
+     * Convert binary data to a php value.
+     *
+     * @param AbstractSpatialType $type    The abstract spatial type
+     * @param string              $sqlExpr the SQL expression
      *
      * @return GeometryInterface
+     *
+     * @throws InvalidValueException when the provided type is not supported
      */
-    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr)
+    public function convertBinaryToPhpValue(AbstractSpatialType $type, $sqlExpr)
     {
         $parser = new BinaryParser($sqlExpr);
 
@@ -52,11 +55,16 @@ abstract class AbstractPlatform implements PlatformInterface
     }
 
     /**
-     * @param string $sqlExpr
+     * Convert string data to a php value.
+     *
+     * @param AbstractSpatialType $type    The abstract spatial type
+     * @param string              $sqlExpr the SQL expression
      *
      * @return GeometryInterface
+     *
+     * @throws InvalidValueException when the provided type is not supported
      */
-    public function convertStringToPHPValue(AbstractSpatialType $type, $sqlExpr)
+    public function convertStringToPhpValue(AbstractSpatialType $type, $sqlExpr)
     {
         $parser = new StringParser($sqlExpr);
 
@@ -64,15 +72,25 @@ abstract class AbstractPlatform implements PlatformInterface
     }
 
     /**
+     * Convert binary data to a php value.
+     *
+     * @param AbstractSpatialType $type  The spatial type
+     * @param GeometryInterface   $value The geometry object
+     *
      * @return string
+     *
+     * @throws InvalidValueException when the provided type is not supported
      */
     public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
     {
+        //TODO removed the unused variable $type
         return sprintf('%s(%s)', mb_strtoupper($value->getType()), $value);
     }
 
     /**
      * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractSpatialType $type the spatial type
      *
      * @return string[]
      */
@@ -90,9 +108,10 @@ abstract class AbstractPlatform implements PlatformInterface
     /**
      * Create spatial object from parsed value.
      *
-     * @param array $value
+     * @param AbstractSpatialType $type  The type spatial type
+     * @param array               $value The value of the spatial object
      *
-     * @throws \CrEOF\Spatial\Exception\InvalidValueException
+     * @throws InvalidValueException when the provided type is not supported
      *
      * @return GeometryInterface
      */
@@ -104,9 +123,7 @@ abstract class AbstractPlatform implements PlatformInterface
         $constName = sprintf('CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::%s', $typeName);
 
         if (!defined($constName)) {
-            // @codeCoverageIgnoreStart
             throw new InvalidValueException(sprintf('Unsupported %s type "%s".', $typeFamily, $typeName));
-            // @codeCoverageIgnoreEnd
         }
 
         $class = sprintf('CrEOF\Spatial\PHP\Types\%s\%s', $typeFamily, constant($constName));
