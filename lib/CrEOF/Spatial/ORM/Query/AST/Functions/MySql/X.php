@@ -35,10 +35,31 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  */
 class X extends AbstractSpatialDQLFunction
 {
+    /**
+     * SQL Function name.
+     *
+     * @var string
+     */
     protected $functionName = 'X';
 
+    /**
+     * Maximum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $maxGeomExpr = 1;
 
+    /**
+     * Minimum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $minGeomExpr = 1;
+
+    /**
+     * Platform accepting this function.
+     *
+     * @var array
+     */
     protected $platforms = ['mysql'];
 }

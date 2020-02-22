@@ -24,11 +24,17 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * PolygonType tests.
@@ -43,12 +49,29 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  */
 class PolygonTypeTest extends OrmTestCase
 {
+    /**
+     * Setup the test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
         parent::setUp();
     }
 
+    /**
+     * Test to store a polygon and find it by its geometric.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
     public function testFindByPolygon()
     {
         $rings = [
@@ -72,6 +95,15 @@ class PolygonTypeTest extends OrmTestCase
         $this->assertEquals($entity, $result[0]);
     }
 
+    /**
+     * Test to store a null polygon and find it by its id.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testNullPolygon()
     {
         $entity = new PolygonEntity();
@@ -88,6 +120,16 @@ class PolygonTypeTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
     }
 
+    /**
+     * Test to store a polygon ring and find it by its id.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
     public function testPolygonRing()
     {
         $rings = [
@@ -121,6 +163,16 @@ class PolygonTypeTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
     }
 
+    /**
+     * Test to store a solid polygon and find it by its id.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
     public function testSolidPolygon()
     {
         $rings = [

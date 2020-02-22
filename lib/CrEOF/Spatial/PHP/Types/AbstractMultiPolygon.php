@@ -24,6 +24,8 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+
 /**
  * Abstract Polygon object for POLYGON spatial types.
  *
@@ -38,8 +40,12 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     protected $polygons = [];
 
     /**
-     * @param AbstractPolygon[]|array[] $polygons
-     * @param int|null                  $srid
+     * AbstractMultiPolygon constructor.
+     *
+     * @param AbstractPolygon[]|array[] $polygons Polygons
+     * @param int|null                  $srid     Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException when a polygon is invalid
      */
     public function __construct(array $polygons, $srid = null)
     {
@@ -49,7 +55,11 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractPolygon|array[] $polygon
+     * Add a polygon to geometry.
+     *
+     * @param AbstractPolygon|array[] $polygon polygon to add
+     *
+     * @throws InvalidValueException when polygon is invalid
      *
      * @return self
      */
@@ -61,12 +71,15 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @param int $index
+     * Polygon getter.
+     *
+     * @param int $index Index of polygon, use -1 to get last one
      *
      * @return AbstractPolygon
      */
     public function getPolygon($index)
     {
+        //TODO replace by a function to be compliant with -1, -2, etc.
         if (-1 == $index) {
             $index = count($this->polygons) - 1;
         }
@@ -77,6 +90,8 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
+     * Polygons getter.
+     *
      * @return AbstractPolygon[]
      */
     public function getPolygons()
@@ -91,7 +106,9 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @return string
+     * Type getter.
+     *
+     * @return string MultiPolygon
      */
     public function getType()
     {
@@ -99,7 +116,11 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractPolygon[] $polygons
+     * Polygon setter.
+     *
+     * @param AbstractPolygon[] $polygons polygons to set
+     *
+     * @throws InvalidValueException when a polygon is invalid
      *
      * @return self
      */
@@ -111,6 +132,8 @@ abstract class AbstractMultiPolygon extends AbstractGeometry
     }
 
     /**
+     * Convert Polygon into array.
+     *
      * @return array[]
      */
     public function toArray()

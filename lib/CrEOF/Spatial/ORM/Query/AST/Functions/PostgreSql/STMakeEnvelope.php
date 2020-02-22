@@ -34,15 +34,33 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  */
 class STMakeEnvelope extends AbstractSpatialDQLFunction
 {
+    /**
+     * SQL Function name.
+     *
+     * @var string
+     */
     protected $functionName = 'ST_MakeEnvelope';
 
+    /**
+     * Maximum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $maxGeomExpr = 5;
 
     /**
+     * Minimum number of parameters accepted by SQL function.
+     *
      * From Postgis 2.0, the 5th parameter (SRID) is not required.
      *
      * @var int
      */
     protected $minGeomExpr = 4;
+
+    /**
+     * Platform accepting this function.
+     *
+     * @var array
+     */
     protected $platforms = ['postgresql'];
 }

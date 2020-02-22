@@ -24,6 +24,8 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+
 /**
  * Abstract Polygon object for POLYGON spatial types.
  *
@@ -33,13 +35,19 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractPolygon extends AbstractGeometry
 {
     /**
+     * Polygons are rings.
+     *
      * @var array[]
      */
     protected $rings = [];
 
     /**
-     * @param AbstractLineString[]|array[] $rings
-     * @param int|null                     $srid
+     * Abstract polygon constructor.
+     *
+     * @param AbstractLineString[]|array[] $rings the polygons
+     * @param int|null                     $srid  Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException When a ring is invalid
      */
     public function __construct(array $rings, $srid = null)
     {
@@ -49,9 +57,11 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString|array[] $ring
+     * Add a polygon to geometry.
      *
-     * @throws \CrEOF\Spatial\Exception\InvalidValueException
+     * @param AbstractLineString|array[] $ring Ring to add to geometry
+     *
+     * @throws InvalidValueException when a ring is invalid
      *
      * @return self
      */
@@ -63,7 +73,9 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @param int $index
+     * Polygon getter.
+     *
+     * @param int $index index of polygon, use -1 to get last one
      *
      * @return AbstractLineString
      */
@@ -79,6 +91,8 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
+     * Rings getter.
+     *
      * @return AbstractLineString[]
      */
     public function getRings()
@@ -93,7 +107,9 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @return string
+     * Type getter.
+     *
+     * @return string Polygon
      */
     public function getType()
     {
@@ -101,7 +117,11 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString[] $rings
+     * Rings fluent setter.
+     *
+     * @param AbstractLineString[] $rings Rings to set
+     *
+     * @throws InvalidValueException when a ring is invalid
      *
      * @return self
      */
@@ -113,6 +133,8 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
+     * Converts rings to array.
+     *
      * @return array[]
      */
     public function toArray()

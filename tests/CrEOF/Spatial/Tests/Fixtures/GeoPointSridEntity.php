@@ -79,6 +79,8 @@ class GeoPointSridEntity
     /**
      * Set geography.
      *
+     * @param Point $point point to set
+     *
      * @return self
      */
     public function setPoint(Point $point)

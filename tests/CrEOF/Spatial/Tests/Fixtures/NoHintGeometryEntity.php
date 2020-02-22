@@ -47,6 +47,7 @@ class NoHintGeometryEntity
      * @Column(type="geometry", nullable=true)
      */
     protected $geometry;
+
     /**
      * @var int
      *
@@ -79,7 +80,7 @@ class NoHintGeometryEntity
     /**
      * Set geometry.
      *
-     * @param mixed $geometry
+     * @param mixed $geometry the geometry to set
      *
      * @return self
      */

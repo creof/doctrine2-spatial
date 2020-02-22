@@ -24,11 +24,17 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * MBRContains DQL function tests.
@@ -43,6 +49,13 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  */
 class MBRContainsTest extends OrmTestCase
 {
+    /**
+     * Setup the function type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
@@ -53,6 +66,15 @@ class MBRContainsTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
      * @group geometry
      */
     public function testMBRContainsWhereParameter()
@@ -106,6 +128,15 @@ class MBRContainsTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
      * @group geometry
      */
     public function testSelectMBRContains()

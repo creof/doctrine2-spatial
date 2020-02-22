@@ -28,6 +28,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Doctrine\ORM\Query\QueryException;
 
 /**
  * ST_SnapToGrid DQL function.
@@ -43,15 +44,40 @@ use Doctrine\ORM\Query\Parser;
  */
 class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
+    /**
+     * SQL Function name.
+     *
+     * @var string
+     */
     protected $functionName = 'ST_SnapToGrid';
 
+    /**
+     * Maximum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $maxGeomExpr = 6;
 
+    /**
+     * Minimum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $minGeomExpr = 2;
+
+    /**
+     * Platform accepting this function.
+     *
+     * @var array
+     */
     protected $platforms = ['postgresql'];
 
     /**
-     * {@inheritdoc}
+     * Parse SQL.
+     *
+     * @param Parser $parser parser
+     *
+     * @throws QueryException Query exception
      */
     public function parse(Parser $parser)
     {

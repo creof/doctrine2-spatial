@@ -81,6 +81,8 @@ class MultiPolygonEntity
     /**
      * Set multipolygon.
      *
+     * @param MultiPolygon $multiPolygon multipolygon to set
+     *
      * @return self
      */
     public function setMultiPolygon(MultiPolygon $multiPolygon)

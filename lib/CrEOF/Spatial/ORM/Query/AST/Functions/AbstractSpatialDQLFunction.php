@@ -25,18 +25,18 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\ORM\Query\AST\ASTException;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * Abstract spatial DQL function.
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
  */
 abstract class AbstractSpatialDQLFunction extends FunctionNode
 {
@@ -66,6 +66,14 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     protected $platforms = [];
 
     /**
+     * Get the SQL.
+     *
+     * @param SqlWalker $sqlWalker the SQL Walker
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws DBALException                when an invalid platform was specified for this connection
+     * @throws ASTException                 when node cannot dispatch SqlWalker
+     *
      * @return string
      */
     public function getSql(SqlWalker $sqlWalker)
@@ -80,6 +88,13 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
         return sprintf('%s(%s)', $this->functionName, implode(', ', $arguments));
     }
 
+    /**
+     * Parse SQL.
+     *
+     * @param Parser $parser parser
+     *
+     * @throws QueryException Query exception
+     */
     public function parse(Parser $parser)
     {
         $lexer = $parser->getLexer();
@@ -89,7 +104,10 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
 
         $this->geomExpr[] = $parser->ArithmeticPrimary();
 
-        while (count($this->geomExpr) < $this->minGeomExpr || ((null === $this->maxGeomExpr || count($this->geomExpr) < $this->maxGeomExpr) && Lexer::T_CLOSE_PARENTHESIS != $lexer->lookahead['type'])) {
+        while (count($this->geomExpr) < $this->minGeomExpr
+            || ((null === $this->maxGeomExpr || count($this->geomExpr) < $this->maxGeomExpr)
+                && Lexer::T_CLOSE_PARENTHESIS != $lexer->lookahead['type'])
+        ) {
             $parser->match(Lexer::T_COMMA);
 
             $this->geomExpr[] = $parser->ArithmeticPrimary();
@@ -99,7 +117,11 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     }
 
     /**
-     * @throws UnsupportedPlatformException
+     * Test that the platform supports spatial type.
+     *
+     * @param AbstractPlatform $platform database spatial
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
      */
     protected function validatePlatform(AbstractPlatform $platform)
     {

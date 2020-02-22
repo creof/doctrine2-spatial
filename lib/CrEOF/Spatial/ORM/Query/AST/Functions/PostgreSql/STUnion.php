@@ -35,10 +35,31 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  */
 class STUnion extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
+    /**
+     * SQL Function name.
+     *
+     * @var string
+     */
     protected $functionName = 'ST_Union';
 
+    /**
+     * Maximum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $maxGeomExpr = 2;
 
+    /**
+     * Minimum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $minGeomExpr = 1;
+
+    /**
+     * Platform accepting this function.
+     *
+     * @var array
+     */
     protected $platforms = ['postgresql'];
 }

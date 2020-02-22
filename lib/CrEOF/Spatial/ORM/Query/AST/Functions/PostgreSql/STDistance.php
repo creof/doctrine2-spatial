@@ -34,10 +34,31 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  */
 class STDistance extends AbstractSpatialDQLFunction
 {
+    /**
+     * SQL Function name.
+     *
+     * @var string
+     */
     protected $functionName = 'ST_Distance';
 
+    /**
+     * Maximum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $maxGeomExpr = 3;
 
+    /**
+     * Minimum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $minGeomExpr = 2;
+
+    /**
+     * Platform accepting this function.
+     *
+     * @var array
+     */
     protected $platforms = ['postgresql'];
 }

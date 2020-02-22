@@ -35,10 +35,31 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  */
 class STTranslate extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
+    /**
+     * SQL Function name.
+     *
+     * @var string
+     */
     protected $functionName = 'ST_Translate';
 
+    /**
+     * Maximum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $maxGeomExpr = 4;
 
+    /**
+     * Minimum number of parameters accepted by SQL function.
+     *
+     * @var int
+     */
     protected $minGeomExpr = 3;
+
+    /**
+     * Platform accepting this function.
+     *
+     * @var array
+     */
     protected $platforms = ['postgresql'];
 }

@@ -24,6 +24,8 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+
 /**
  * Abstract MultiLineString object for MULTILINESTRING spatial types.
  *
@@ -33,13 +35,19 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractMultiLineString extends AbstractGeometry
 {
     /**
+     * Array of line strings.
+     *
      * @var array[]
      */
     protected $lineStrings = [];
 
     /**
-     * @param AbstractLineString[]|array[] $rings
-     * @param int|null                     $srid
+     * AbstractMultiLineString constructor.
+     *
+     * @param AbstractLineString[]|array[] $rings array of linestring
+     * @param int|null                     $srid  Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException when rings contains an invalid linestring
      */
     public function __construct(array $rings, $srid = null)
     {
@@ -49,7 +57,11 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString|array[] $lineString
+     * Add a linestring to geometry.
+     *
+     * @param AbstractLineString|array[] $lineString the line string to add to Geometry
+     *
+     * @throws InvalidValueException when linestring is not valid
      *
      * @return self
      */
@@ -61,7 +73,9 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
-     * @param int $index
+     * Return linestring at specified offset.
+     *
+     * @param int $index offset of line string to return. Use -1 to get last linestring.
      *
      * @return AbstractLineString
      */
@@ -77,6 +91,8 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
+     * Line strings getter.
+     *
      * @return AbstractLineString[]
      */
     public function getLineStrings()
@@ -91,7 +107,9 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
-     * @return string
+     * Type getter.
+     *
+     * @return string MultiLineString
      */
     public function getType()
     {
@@ -99,7 +117,11 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
-     * @param AbstractLineString[] $lineStrings
+     * LineStrings fluent setter.
+     *
+     * @param AbstractLineString[] $lineStrings array of LineString
+     *
+     * @throws InvalidValueException when a linestring is not valid
      *
      * @return self
      */
@@ -111,6 +133,8 @@ abstract class AbstractMultiLineString extends AbstractGeometry
     }
 
     /**
+     * Implements abstract method to convert line strings into an array.
+     *
      * @return array[]
      */
     public function toArray()

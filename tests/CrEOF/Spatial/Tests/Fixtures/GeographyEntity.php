@@ -46,6 +46,7 @@ class GeographyEntity
      * @Column(type="geography", nullable=true)
      */
     protected $geography;
+
     /**
      * @var int
      *
@@ -77,6 +78,8 @@ class GeographyEntity
 
     /**
      * Set geography.
+     *
+     * @param GeographyInterface $geography Geography to set
      *
      * @return self
      */

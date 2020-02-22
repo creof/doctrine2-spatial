@@ -170,7 +170,7 @@ abstract class OrmTestCase extends TestCase
      * Setup connection before class creation.
      *
      * @throws UnsupportedPlatformException this happen when platform is not mysql or postgresql
-     * @throws DBALException                this can happen when database or credentials are not set
+     * @throws DBALException                when connection is not successful
      */
     public static function setUpBeforeClass(): void
     {
@@ -257,10 +257,13 @@ abstract class OrmTestCase extends TestCase
         return $connectionParams;
     }
 
+    // phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
+    // phpcs miss the DBALException
     /**
      * Establish the connection if it is not already done, then returns it.
      *
-     * @throws UnsupportedPlatformException this should not happen
+     * @throws DBALException                when connection is not successful
+     * @throws UnsupportedPlatformException when platform is unsupported
      *
      * @return Connection
      */
@@ -287,11 +290,12 @@ abstract class OrmTestCase extends TestCase
 
         return $connection;
     }
+    // phpcs:enable
 
     /**
      * Return connection parameters.
      *
-     * @throws DBALException this can happen when database or credentials are not set
+     * @throws DBALException when connection is not successful
      *
      * @return array
      */
@@ -326,9 +330,9 @@ abstract class OrmTestCase extends TestCase
     /**
      * Return the entity manager.
      *
-     * @throws DBALException                this can happen when database or credentials are not set
-     * @throws ORMException                 this can happen when database or credentials are not set
-     * @throws UnsupportedPlatformException this should not happen
+     * @throws DBALException                when connection is not successful
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
      *
      * @return EntityManager
      */
@@ -401,7 +405,7 @@ abstract class OrmTestCase extends TestCase
      *
      * @param Throwable $throwable the exception
      *
-     * @throws Exception The exception provided by parameter.
+     * @throws Exception the exception provided by parameter
      */
     protected function onNotSuccessfulTest(Throwable $throwable): void
     {
@@ -459,8 +463,8 @@ abstract class OrmTestCase extends TestCase
      * Create entities used by tests.
      *
      * @throws DBALException                when connection is not successful
-     * @throws ORMException                 when
-     * @throws UnsupportedPlatformException when platform is not supported
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
      * @throws ToolsException               when schema cannot be created
      */
     protected function setUpEntities()
@@ -484,7 +488,7 @@ abstract class OrmTestCase extends TestCase
      *
      * @throws DBALException                when connection is not successful
      * @throws ORMException                 when
-     * @throws UnsupportedPlatformException when platform is not supported
+     * @throws UnsupportedPlatformException when platform is unsupported
      */
     protected function setUpFunctions()
     {
@@ -543,7 +547,7 @@ abstract class OrmTestCase extends TestCase
      * Add types used by test to DBAL.
      *
      * @throws DBALException                when credential or connection failed
-     * @throws UnsupportedPlatformException when platform is not supported
+     * @throws UnsupportedPlatformException when platform is unsupported
      */
     protected function setUpTypes()
     {

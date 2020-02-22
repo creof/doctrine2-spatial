@@ -24,9 +24,15 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * ST_SnapToGrid DQL function tests.
@@ -41,6 +47,13 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  */
 class STSnapToGridTest extends OrmTestCase
 {
+    /**
+     * Setup the function type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::POINT_ENTITY);
@@ -50,6 +63,15 @@ class STSnapToGridTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function with 2 paramaters to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
      * @group geometry
      */
     public function testSelectSTSnapToGridSignature2Parameters()
@@ -72,6 +94,15 @@ class STSnapToGridTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function with three parameters to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
      * @group geometry
      */
     public function testSelectSTSnapToGridSignature3Parameters()
@@ -94,6 +125,15 @@ class STSnapToGridTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function with five parameters to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
      * @group geometry
      */
     public function testSelectSTSnapToGridSignature5Parameters()
@@ -116,6 +156,15 @@ class STSnapToGridTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function with six paramters to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
      * @group geometry
      */
     public function testSelectSTSnapToGridSignature6Parameters()

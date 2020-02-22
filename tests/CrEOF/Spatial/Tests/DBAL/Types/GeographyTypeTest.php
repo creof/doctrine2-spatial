@@ -24,6 +24,7 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geography\LineString;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
@@ -34,7 +35,6 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use PHPUnit\Framework\Error\Error;
 
 /**
  * Doctrine GeographyType tests.
@@ -49,9 +49,9 @@ class GeographyTypeTest extends OrmTestCase
     /**
      * Setup the geography type test.
      *
-     * @throws UnsupportedPlatformException
-     * @throws DBALException
-     * @throws ORMException
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
      */
     protected function setUp(): void
     {
@@ -63,11 +63,12 @@ class GeographyTypeTest extends OrmTestCase
     /**
      * Test to store and retrieve a geography composed by a linestring.
      *
-     * @throws DBALException
-     * @throws ORMException
-     * @throws UnsupportedPlatformException
-     * @throws MappingException
-     * @throws OptimisticLockException
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testLineStringGeography()
     {
@@ -83,11 +84,11 @@ class GeographyTypeTest extends OrmTestCase
     /**
      * Test to store and retrieve a null geography.
      *
-     * @throws DBALException
-     * @throws MappingException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws UnsupportedPlatformException
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
      */
     public function testNullGeography()
     {
@@ -98,11 +99,12 @@ class GeographyTypeTest extends OrmTestCase
     /**
      * Test to store and retrieve a geography composed by a single point.
      *
-     * @throws DBALException
-     * @throws MappingException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws UnsupportedPlatformException
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testPointGeography()
     {
@@ -115,11 +117,12 @@ class GeographyTypeTest extends OrmTestCase
     /**
      * Test to store and retrieve a geography composed by a polygon.
      *
-     * @throws DBALException
-     * @throws MappingException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws UnsupportedPlatformException
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testPolygonGeography()
     {
@@ -145,11 +148,11 @@ class GeographyTypeTest extends OrmTestCase
      *
      * @param GeographyEntity $entity Entity to test
      *
-     * @throws DBALException
-     * @throws MappingException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws UnsupportedPlatformException
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
      */
     private function storeAndRetrieve(GeographyEntity $entity)
     {

@@ -39,9 +39,11 @@ use CrEOF\Spatial\PHP\Types\AbstractPoint;
 class Point extends AbstractPoint implements GeographyInterface
 {
     /**
-     * @param mixed $x
+     * X setter.
      *
-     * @throws InvalidValueException
+     * @param mixed $x X coordinate
+     *
+     * @throws InvalidValueException when y is not in range of accepted value, or is totally invalid
      *
      * @return self
      */
@@ -67,9 +69,11 @@ class Point extends AbstractPoint implements GeographyInterface
     }
 
     /**
-     * @param mixed $y
+     * Y setter.
      *
-     * @throws InvalidValueException
+     * @param mixed $y the Y coordinate
+     *
+     * @throws InvalidValueException when y is not in range of accepted value, or is totally invalid
      *
      * @return self
      */

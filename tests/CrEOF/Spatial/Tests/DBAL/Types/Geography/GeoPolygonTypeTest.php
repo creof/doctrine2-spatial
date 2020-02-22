@@ -24,11 +24,17 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geography;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geography\LineString;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
 use CrEOF\Spatial\PHP\Types\Geography\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * PolygonType tests.
@@ -43,12 +49,29 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  */
 class GeoPolygonTypeTest extends OrmTestCase
 {
+    /**
+     * Setup the test.
+     *
+     * @throws DBALException                When connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::GEO_POLYGON_ENTITY);
         parent::setUp();
     }
 
+    /**
+     * Test the find by polygon method.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testFindByPolygon()
     {
         $rings = [
@@ -67,11 +90,23 @@ class GeoPolygonTypeTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $result = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->findByPolygon(new Polygon($rings));
+        $result = $this->getEntityManager()
+            ->getRepository(self::GEO_POLYGON_ENTITY)
+            ->findByPolygon(new Polygon($rings))
+        ;
 
         $this->assertEquals($entity, $result[0]);
     }
 
+    /**
+     * Test to store an empty polygon.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testNullPolygon()
     {
         $entity = new GeoPolygonEntity();
@@ -88,6 +123,16 @@ class GeoPolygonTypeTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
     }
 
+    /**
+     * Test to store a polygon ring.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testPolygonRing()
     {
         $rings = [
@@ -121,6 +166,16 @@ class GeoPolygonTypeTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
     }
 
+    /**
+     * Test to store a solid polygon.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testSolidPolygon()
     {
         $rings = [

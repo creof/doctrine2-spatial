@@ -40,8 +40,12 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     protected $points = [];
 
     /**
-     * @param AbstractPoint[]|array[] $points
-     * @param int|null                $srid
+     * Abstract multipoint constructor.
+     *
+     * @param AbstractPoint[]|array[] $points array of point
+     * @param int|null                $srid   Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException when a point is not valid
      */
     public function __construct(array $points, $srid = null)
     {
@@ -51,9 +55,11 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
-     * @param AbstractPoint|array $point
+     * Add a point to geometry.
      *
-     * @throws InvalidValueException
+     * @param AbstractPoint|array $point Point to add to geometry
+     *
+     * @throws InvalidValueException when the point is not valid
      *
      * @return self
      */
@@ -65,7 +71,9 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
-     * @param int $index
+     * Point getter.
+     *
+     * @param int $index index of the point to retrieve. -1 to get last point.
      *
      * @return AbstractPoint
      */
@@ -86,6 +94,8 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
+     * Points getter.
+     *
      * @return AbstractPoint[]
      */
     public function getPoints()
@@ -100,7 +110,9 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
-     * @return string
+     * Type getter.
+     *
+     * @return string Multipoint
      */
     public function getType()
     {
@@ -108,7 +120,11 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
-     * @param AbstractPoint[]|array[] $points
+     * Points fluent setter.
+     *
+     * @param AbstractPoint[]|array[] $points the points
+     *
+     * @throws InvalidValueException when a point is invalid
      *
      * @return self
      */
@@ -120,6 +136,8 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
+     * Convert multipoint to array.
+     *
      * @return array[]
      */
     public function toArray()

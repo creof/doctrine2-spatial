@@ -24,8 +24,12 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\ORMException;
 
 /**
  * Doctrine schema related tests.
@@ -38,6 +42,13 @@ use Doctrine\DBAL\Types\Type;
  */
 class SchemaTest extends OrmTestCase
 {
+    /**
+     * Setup the geography type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
@@ -56,6 +67,13 @@ class SchemaTest extends OrmTestCase
         parent::setUp();
     }
 
+    /**
+     * Test doctrine type mapping.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     public function testDoctrineTypeMapping()
     {
         $platform = $this->getPlatform();
@@ -75,6 +93,13 @@ class SchemaTest extends OrmTestCase
         }
     }
 
+    /**
+     * Testto reverse shema mapping.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     public function testSchemaReverseMapping()
     {
         $result = $this->getSchemaTool()->getUpdateSchemaSql($this->getAllClassMetadata(), true);
@@ -83,7 +108,13 @@ class SchemaTest extends OrmTestCase
     }
 
     /**
-     * @return \Doctrine\ORM\Mapping\ClassMetadata[]
+     * All class metadata getter.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     *
+     * @return ClassMetadata[]
      */
     private function getAllClassMetadata()
     {

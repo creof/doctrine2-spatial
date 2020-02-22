@@ -33,7 +33,6 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Abstract spatial platform.
- *
  */
 abstract class AbstractPlatform implements PlatformInterface
 {
@@ -43,9 +42,9 @@ abstract class AbstractPlatform implements PlatformInterface
      * @param AbstractSpatialType $type    The abstract spatial type
      * @param string              $sqlExpr the SQL expression
      *
-     * @return GeometryInterface
-     *
      * @throws InvalidValueException when the provided type is not supported
+     *
+     * @return GeometryInterface
      */
     public function convertBinaryToPhpValue(AbstractSpatialType $type, $sqlExpr)
     {
@@ -60,9 +59,9 @@ abstract class AbstractPlatform implements PlatformInterface
      * @param AbstractSpatialType $type    The abstract spatial type
      * @param string              $sqlExpr the SQL expression
      *
-     * @return GeometryInterface
-     *
      * @throws InvalidValueException when the provided type is not supported
+     *
+     * @return GeometryInterface
      */
     public function convertStringToPhpValue(AbstractSpatialType $type, $sqlExpr)
     {
@@ -70,6 +69,8 @@ abstract class AbstractPlatform implements PlatformInterface
 
         return $this->newObjectFromValue($type, $parser->parse());
     }
+
+    // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceBeforeLastUsed
 
     /**
      * Convert binary data to a php value.
@@ -81,9 +82,11 @@ abstract class AbstractPlatform implements PlatformInterface
      */
     public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value)
     {
-        //TODO the unused variable $type is used by overriding method
+        //the unused variable $type is used by overriding method
         return sprintf('%s(%s)', mb_strtoupper($value->getType()), $value);
     }
+
+    // phpcs:enable
 
     /**
      * Get an array of database types that map to this Doctrine type.

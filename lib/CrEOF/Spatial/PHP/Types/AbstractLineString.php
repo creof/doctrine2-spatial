@@ -33,6 +33,8 @@ namespace CrEOF\Spatial\PHP\Types;
 abstract class AbstractLineString extends AbstractMultiPoint
 {
     /**
+     * Type of this geometry: Linestring.
+     *
      * @return string
      */
     public function getType()
@@ -41,6 +43,8 @@ abstract class AbstractLineString extends AbstractMultiPoint
     }
 
     /**
+     * This line string is closed when first point is the same than last point.
+     *
      * @return bool
      */
     public function isClosed()

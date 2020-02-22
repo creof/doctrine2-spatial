@@ -36,11 +36,15 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 abstract class AbstractGeometry implements GeometryInterface
 {
     /**
+     * Spatial Reference System Identifier.
+     *
      * @var int
      */
     protected $srid;
 
     /**
+     * Spatial Reference System Identifier getter.
+     *
      * @return int|null
      */
     public function getSrid()
@@ -49,7 +53,9 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param mixed $srid
+     * Spatial Reference System Identifier fluent setter.
+     *
+     * @param mixed $srid Spatial Reference System Identifier
      *
      * @return self
      */
@@ -63,11 +69,15 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
+     * Convert this abstract geometry to an array.
+     *
      * @return array
      */
     abstract public function toArray();
 
     /**
+     * Convert this abstract geometry to a Json string.
+     *
      * @return string
      */
     public function toJson()
@@ -79,6 +89,8 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
+     * Return the namespace of this class.
+     *
      * @return string
      */
     protected function getNamespace()
@@ -89,7 +101,11 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractLineString|AbstractPoint[]|array[] $lineString
+     * Validate line strings value.
+     *
+     * @param AbstractLineString|AbstractPoint[]|array[] $lineString line string to validate
+     *
+     * @throws InvalidValueException when a point of line string is not valid
      *
      * @return array[]
      */
@@ -99,7 +115,11 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractLineString[] $lineStrings
+     * Validate multiline strings value.
+     *
+     * @param AbstractLineString[] $lineStrings the array of line strings to validate
+     *
+     * @throws InvalidValueException as soon as a point of a line string is not valid
      *
      * @return array
      */
@@ -113,7 +133,11 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractLineString|AbstractPoint[]|array[] $points
+     * Validate multi point value.
+     *
+     * @param AbstractLineString|AbstractPoint[]|array[] $points array of geometric data to validate
+     *
+     * @throws InvalidValueException when one point is not valid
      *
      * @return array[]
      */
@@ -131,9 +155,13 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractPolygon[] $polygons
+     * Validate multi polygon value.
      *
-     * @return array
+     * @param AbstractPolygon[] $polygons the array of polygons to validate
+     *
+     * @throws InvalidValueException when one polygon is not valid
+     *
+     * @return array the validated polygons
      */
     protected function validateMultiPolygonValue(array $polygons)
     {
@@ -148,9 +176,11 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractPoint|array $point
+     * Validate a geometric point or an array of geometric points.
      *
-     * @throws InvalidValueException
+     * @param AbstractPoint|array $point the geometric point(s) to validate
+     *
+     * @throws InvalidValueException as soon as one point is not valid
      *
      * @return array
      */
@@ -164,14 +194,22 @@ abstract class AbstractGeometry implements GeometryInterface
                 return array_values($point);
                 break;
             default:
-                throw new InvalidValueException(sprintf('Invalid %s Point value of type "%s"', $this->getType(), (is_object($point) ? get_class($point) : gettype($point))));
+                throw new InvalidValueException(sprintf(
+                    'Invalid %s Point value of type "%s"',
+                    $this->getType(),
+                    (is_object($point) ? get_class($point) : gettype($point))
+                ));
         }
     }
 
     /**
-     * @param AbstractLineString[] $rings
+     * Validate polygon values.
      *
-     * @return array
+     * @param AbstractLineString[] $rings the array of rings
+     *
+     * @throws InvalidValueException when ring is not valid
+     *
+     * @return array the validated rings
      */
     protected function validatePolygonValue(array $rings)
     {
@@ -183,11 +221,13 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param AbstractLineString|array[] $ring
+     * Validate ring value.
      *
-     * @throws InvalidValueException
+     * @param AbstractLineString|array[] $ring the ring or a ring converted to array
      *
-     * @return array[]
+     * @throws InvalidValueException when the ring is not an abstract line string or is not closed
+     *
+     * @return array[] the validate ring
      */
     protected function validateRingValue($ring)
     {
@@ -198,20 +238,29 @@ abstract class AbstractGeometry implements GeometryInterface
             case is_array($ring):
                 break;
             default:
-                throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
+                throw new InvalidValueException(sprintf(
+                    'Invalid %s LineString value of type "%s"',
+                    $this->getType(),
+                    (is_object($ring) ? get_class($ring) : gettype($ring))
+                ));
         }
 
         $ring = $this->validateLineStringValue($ring);
 
         if ($ring[0] !== end($ring)) {
-            throw new InvalidValueException(sprintf('Invalid polygon, ring "(%s)" is not closed', $this->toStringLineString($ring)));
+            throw new InvalidValueException(sprintf(
+                'Invalid polygon, ring "(%s)" is not closed',
+                $this->toStringLineString($ring)
+            ));
         }
 
         return $ring;
     }
 
     /**
-     * @param array[] $lineString
+     * Convert a line to string.
+     *
+     * @param array[] $lineString line string already converted into an array
      *
      * @return string
      */
@@ -221,7 +270,9 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param array[] $multiLineString
+     * Convert multiline strings to a string value.
+     *
+     * @param array[] $multiLineString multi line already converted into an array
      *
      * @return string
      */
@@ -237,7 +288,9 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param array[] $multiPoint
+     * Convert multi points to a string value.
+     *
+     * @param array[] $multiPoint multipoint already converted into an array of point
      *
      * @return string
      */
@@ -253,7 +306,11 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param array[] $multiPolygon
+     * Convert multipolygon to a string.
+     *
+     * TODO: unused private method. Verify which transformation is missing.
+     *
+     * @param array[] $multiPolygon multipolygon already converted into an array of polygon
      *
      * @return string
      */
@@ -269,6 +326,10 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
+     * Convert a point to a string value.
+     *
+     * @param array $point point already converted into an array of TWO coordinates
+     *
      * @return string
      */
     private function toStringPoint(array $point)
@@ -277,7 +338,9 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
-     * @param array[] $polygon
+     * Convert a polygon into a string value.
+     *
+     * @param array[] $polygon polygons already converted into array
      *
      * @return string
      */
@@ -287,6 +350,8 @@ abstract class AbstractGeometry implements GeometryInterface
     }
 
     /**
+     * Magic method: convert geometry to string.
+     *
      * @return string
      */
     public function __toString()

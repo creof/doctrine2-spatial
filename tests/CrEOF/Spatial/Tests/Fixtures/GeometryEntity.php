@@ -48,6 +48,7 @@ class GeometryEntity
      * @Column(type="geometry", nullable=true)
      */
     protected $geometry;
+
     /**
      * @var int
      *
@@ -79,6 +80,8 @@ class GeometryEntity
 
     /**
      * Set geometry.
+     *
+     * @param GeometryInterface $geometry geometry to set
      *
      * @return self
      */

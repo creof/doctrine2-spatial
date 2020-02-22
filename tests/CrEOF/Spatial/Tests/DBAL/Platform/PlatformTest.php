@@ -28,6 +28,7 @@ use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmMockTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 
@@ -47,7 +48,8 @@ class PlatformTest extends OrmMockTestCase
     /**
      * Setup the test.
      *
-     * @throws DBALException This should not happen
+     * @throws DBALException When connection failed
+     * @throws ORMException  when cache is not set
      */
     public function setUp(): void
     {
@@ -61,6 +63,8 @@ class PlatformTest extends OrmMockTestCase
     /**
      * Test non-supported platform.
      *
+     * @throws DBALException  when connection failed
+     * @throws ORMException   when cache is not set
      * @throws ToolsException this should not happen
      */
     public function testUnsupportedPlatform()

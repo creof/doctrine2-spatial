@@ -24,9 +24,15 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geography;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
 use CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * Doctrine GeographyType tests.
@@ -41,12 +47,28 @@ use CrEOF\Spatial\Tests\OrmTestCase;
  */
 class GeoPointSridTest extends OrmTestCase
 {
+    /**
+     * Setup the test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::GEO_POINT_SRID_ENTITY);
         parent::setUp();
     }
 
+    /**
+     * Test a null geography.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testNullGeography()
     {
         $entity = new GeoPointSridEntity();
@@ -63,6 +85,16 @@ class GeoPointSridTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
     }
 
+    /**
+     * Test to store a geographic point.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testPointGeography()
     {
         $entity = new GeoPointSridEntity();
@@ -80,4 +112,6 @@ class GeoPointSridTest extends OrmTestCase
         $this->assertEquals($entity, $queryEntity);
         $this->assertEquals(4326, $queryEntity->getPoint()->getSrid());
     }
+
+    //TODO test to find all null GeoPointSridEntity
 }

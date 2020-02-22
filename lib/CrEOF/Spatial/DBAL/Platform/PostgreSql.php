@@ -31,9 +31,6 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * PostgreSql spatial platform.
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
  */
 class PostgreSql extends AbstractPlatform
 {
@@ -45,9 +42,9 @@ class PostgreSql extends AbstractPlatform
      * @param AbstractSpatialType $type    Spatial type
      * @param string              $sqlExpr Sql expression
      *
-     * @return GeometryInterface
-     *
      * @throws InvalidValueException when SQL expression is not a resource
+     *
+     * @return GeometryInterface
      */
     public function convertBinaryToPhpValue(AbstractSpatialType $type, $sqlExpr)
     {

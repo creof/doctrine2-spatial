@@ -25,7 +25,10 @@
 namespace CrEOF\Spatial\ORM\Query;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\AST\SelectExpression;
+use Doctrine\ORM\Query\ParserResult;
+use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\SqlWalker;
 
@@ -40,12 +43,18 @@ use Doctrine\ORM\Query\SqlWalker;
 class GeometryWalker extends SqlWalker
 {
     /**
+     * Result set mapping.
+     *
      * @var ResultSetMapping
      */
     protected $rsm;
 
     /**
-     * {@inheritdoc}
+     * Initializes TreeWalker with important information about the ASTs to be walked.
+     *
+     * @param AbstractQuery $query           the parsed Query
+     * @param ParserResult  $parserResult    the result of the parsing process
+     * @param array         $queryComponents the query components (symbol table)
      */
     public function __construct($query, $parserResult, array $queryComponents)
     {
@@ -57,7 +66,9 @@ class GeometryWalker extends SqlWalker
     /**
      * Walks down a SelectExpression AST node and generates the corresponding SQL.
      *
-     * @param SelectExpression $selectExpression
+     * @param SelectExpression $selectExpression Select expression AST node
+     *
+     * @throws QueryException when error happend during walking into select expression
      *
      * @return string the SQL
      */

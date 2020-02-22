@@ -31,10 +31,17 @@ use Doctrine\DBAL\Logging\SQLLogger;
  */
 class FileSQLLogger implements SQLLogger
 {
+    /**
+     * Filename.
+     *
+     * @var string
+     */
     protected $filename;
 
     /**
-     * @param string $filename
+     * FileSQLLogger constructor.
+     *
+     * @param string $filename the filename
      */
     public function __construct($filename)
     {
@@ -42,7 +49,11 @@ class FileSQLLogger implements SQLLogger
     }
 
     /**
-     * {@inheritdoc}
+     * Logs a SQL statement somewhere.
+     *
+     * @param string              $sql    the SQL to be executed
+     * @param mixed[]|null        $params the SQL parameters
+     * @param int[]|string[]|null $types  the SQL parameter types
      */
     public function startQuery($sql, array $params = null, array $types = null)
     {
@@ -58,7 +69,7 @@ class FileSQLLogger implements SQLLogger
     }
 
     /**
-     * {@inheritdoc}
+     * Marks the last started query as stopped. This can be used for timing of queries.
      */
     public function stopQuery()
     {

@@ -35,17 +35,23 @@ interface GeographyInterface
     public const GEOGRAPHY = 'Geography';
 
     /**
+     * Spatial Reference System Identifier getter.
+     *
      * @return int
      */
     public function getSrid();
 
     /**
+     * Type getter.
+     *
      * @return string
      */
     public function getType();
 
     /**
-     * @param int $srid
+     * Spatial Reference System Identifier setter.
+     *
+     * @param int $srid A Spatial Reference System Identifier (SRID)
      *
      * @return self
      */

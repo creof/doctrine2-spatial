@@ -29,14 +29,14 @@ use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
  * MySql spatial platform.
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
  */
 class MySql extends AbstractPlatform
 {
     /**
-     * @param string $sqlExpr
+     * Convert to database value.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
@@ -46,7 +46,10 @@ class MySql extends AbstractPlatform
     }
 
     /**
-     * @param string $sqlExpr
+     * Convert to php value to SQL.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
@@ -57,6 +60,8 @@ class MySql extends AbstractPlatform
 
     /**
      * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array $fieldDeclaration array SHALL contains 'type' as key
      *
      * @return string
      */

@@ -81,6 +81,8 @@ class LineStringEntity
     /**
      * Set lineString.
      *
+     * @param LineString $lineString linestring to set
+     *
      * @return self
      */
     public function setLineString(LineString $lineString)
