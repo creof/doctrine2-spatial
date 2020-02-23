@@ -26,10 +26,6 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
@@ -78,51 +74,21 @@ class EnvelopeTest extends OrmTestCase
      */
     public function testEnvelopeWhereParameter()
     {
-        $entity1 = new PolygonEntity();
-        $rings1 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity1->setPolygon(new Polygon($rings1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-        $rings2 = [
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity2->setPolygon(new Polygon($rings2));
-        $this->getEntityManager()->persist($entity2);
+        $holeyPolygon = $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $this->createPolygon([$this->createInternalLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Envelope(p.polygon) = GeomFromText(:p1)');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Envelope(p.polygon) = GeomFromText(:p1)'
+        );
 
         $query->setParameter('p1', 'POLYGON((0 0,10 0,10 10,0 10,0 0))', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($holeyPolygon, $result[0]);
     }
 
     /**
@@ -139,44 +105,14 @@ class EnvelopeTest extends OrmTestCase
      */
     public function testSelectEnvelope()
     {
-        $entity1 = new PolygonEntity();
-        $rings1 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-        ];
-
-        $entity1->setPolygon(new Polygon($rings1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-        $rings2 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity2->setPolygon(new Polygon($rings2));
-        $this->getEntityManager()->persist($entity2);
+        $this->createPolygon([$this->createEnvelopingLineString()]);
+        $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT AsText(Envelope(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT AsText(Envelope(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
         $result = $query->getResult();
 
         $this->assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[0][1]);

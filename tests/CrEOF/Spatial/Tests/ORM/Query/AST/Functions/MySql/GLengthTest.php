@@ -75,7 +75,7 @@ class GLengthTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testGLengthWhereParameter()
+    public function testLengthWhereParameter()
     {
         $entity = new LineStringEntity();
 
@@ -89,7 +89,11 @@ class GLengthTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE GLength(GeomFromText(:p1)) > GLength(l.lineString)');
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE GLength(GeomFromText(:p1)) > GLength(l.lineString)'
+        );
+        // phpcs:enable
 
         $query->setParameter('p1', 'LINESTRING(0 0,1 1,2 2,3 3,4 4,5 5)', 'string');
 
@@ -111,7 +115,7 @@ class GLengthTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectGLength()
+    public function testSelectLength()
     {
         $entity = new LineStringEntity();
 
@@ -125,7 +129,9 @@ class GLengthTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l, GLength(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT l, GLength(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
         $result = $query->getResult();
 
         $this->assertCount(1, $result);

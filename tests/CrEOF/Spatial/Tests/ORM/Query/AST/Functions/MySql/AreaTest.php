@@ -235,7 +235,7 @@ class AreaTest extends OrmTestCase
      *
      * @return PolygonEntity
      */
-    private function createPolygon(array $ring)
+    protected function createPolygon(array $ring)
     {
         $polygonEntity = new PolygonEntity();
         $polygonEntity->setPolygon(new Polygon($ring));

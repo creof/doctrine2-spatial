@@ -26,10 +26,6 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
@@ -77,54 +73,41 @@ class MBRContainsTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testMBRContainsWhereParameter()
+    public function testMbrContainsWhereParameter()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10),
-            new Point(0, 10),
-            new Point(0, 0),
-        ]);
-        $lineString2 = new LineString([
-            new Point(5, 5),
-            new Point(7, 5),
-            new Point(7, 7),
-            new Point(5, 7),
-            new Point(5, 5),
-        ]);
-        $entity1 = new PolygonEntity();
-
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString1, $lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $bigPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
+        $holeyPolygon = $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'POINT(6 6)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0]);
-        $this->assertEquals($entity2, $result[1]);
+        $this->assertEquals($bigPolygon, $result[0]);
+        $this->assertEquals($holeyPolygon, $result[1]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MBRContains(p.polygon, GeomFromText(:p)) = 1'
+            // phpcs:enable
+        );
 
-        $query->setParameter('p1', 'POINT(2 2)', 'string');
+        $query->setParameter('p', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0]);
-        $this->assertEquals($entity2, $result[1]);
+        $this->assertEquals($bigPolygon, $result[0]);
+        $this->assertEquals($holeyPolygon, $result[1]);
     }
 
     /**
@@ -139,44 +122,25 @@ class MBRContainsTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectMBRContains()
+    public function testSelectMbrContains()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10),
-            new Point(0, 10),
-            new Point(0, 0),
-        ]);
-        $lineString2 = new LineString([
-            new Point(5, 5),
-            new Point(7, 5),
-            new Point(7, 7),
-            new Point(5, 7),
-            new Point(5, 5),
-        ]);
-        $entity1 = new PolygonEntity();
-
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $envelopingPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
+        $internalPolygon = $this->createPolygon([$this->createInternalLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, MBRContains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, MBRContains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($envelopingPolygon, $result[0][0]);
         $this->assertEquals(1, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($internalPolygon, $result[1][0]);
         $this->assertEquals(0, $result[1][1]);
     }
 }

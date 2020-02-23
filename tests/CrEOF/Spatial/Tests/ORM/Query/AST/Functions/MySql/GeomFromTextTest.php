@@ -84,21 +84,22 @@ class GeomFromTextTest extends OrmTestCase
             new Point(10, 10),
         ];
 
-        $entity1 = new GeometryEntity();
-
-        $entity1->setGeometry(new LineString($value));
-        $this->getEntityManager()->persist($entity1);
+        $linestring = new GeometryEntity();
+        $linestring->setGeometry(new LineString($value));
+        $this->getEntityManager()->persist($linestring);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)'
+        );
 
         $query->setParameter('p1', 'LINESTRING(0 0,5 5,10 10)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($linestring, $result[0]);
     }
 
     /**
@@ -115,20 +116,22 @@ class GeomFromTextTest extends OrmTestCase
      */
     public function testPoint()
     {
-        $entity1 = new GeometryEntity();
+        $point = new GeometryEntity();
 
-        $entity1->setGeometry(new Point(5, 5));
-        $this->getEntityManager()->persist($entity1);
+        $point->setGeometry(new Point(5, 5));
+        $this->getEntityManager()->persist($point);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)'
+        );
 
         $query->setParameter('p1', 'POINT(5 5)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($point, $result[0]);
     }
 }
