@@ -79,52 +79,56 @@ class ContainsTest extends OrmTestCase
      */
     public function testContainsWhereParameter()
     {
-        $lineString1 = new LineString([
+        $lineString = new LineString([
             new Point(0, 0),
             new Point(10, 0),
             new Point(10, 10),
             new Point(0, 10),
             new Point(0, 0),
         ]);
-        $lineString2 = new LineString([
+        $entityA = new PolygonEntity();
+
+        $entityA->setPolygon(new Polygon([$lineString]));
+        $this->getEntityManager()->persist($entityA);
+
+        $lineString = new LineString([
             new Point(5, 5),
             new Point(7, 5),
             new Point(7, 7),
             new Point(5, 7),
             new Point(5, 5),
         ]);
-        $entity1 = new PolygonEntity();
+        $entityB = new PolygonEntity();
 
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString1, $lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $entityB->setPolygon(new Polygon([$lineString, $lineString]));
+        $this->getEntityManager()->persist($entityB);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, GeomFromText(:p1))= 1'
+        );
 
         $query->setParameter('p1', 'POINT(6 6)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0]);
-        $this->assertEquals($entity2, $result[1]);
+        $this->assertEquals($entityA, $result[0]);
+        $this->assertEquals($entityB, $result[1]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Contains(p.polygon, GeomFromText(:p1))= 1'
+        );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0]);
-        $this->assertEquals($entity2, $result[1]);
+        $this->assertEquals($entityA, $result[0]);
+        $this->assertEquals($entityB, $result[1]);
     }
 
     /**
@@ -141,42 +145,45 @@ class ContainsTest extends OrmTestCase
      */
     public function testSelectContains()
     {
-        $lineString1 = new LineString([
+        $lineString = new LineString([
             new Point(0, 0),
             new Point(10, 0),
             new Point(10, 10),
             new Point(0, 10),
             new Point(0, 0),
         ]);
-        $lineString2 = new LineString([
+        $polygonA = new PolygonEntity();
+
+        $polygonA->setPolygon(new Polygon([$lineString]));
+        $this->getEntityManager()->persist($polygonA);
+
+        $lineString = new LineString([
             new Point(5, 5),
             new Point(7, 5),
             new Point(7, 7),
             new Point(5, 7),
             new Point(5, 5),
         ]);
-        $entity1 = new PolygonEntity();
+        $polygonB = new PolygonEntity();
 
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $polygonB->setPolygon(new Polygon([$lineString]));
+        $this->getEntityManager()->persist($polygonB);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, Contains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, Contains(p.polygon, GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($polygonA, $result[0][0]);
         $this->assertEquals(1, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($polygonB, $result[1][0]);
         $this->assertEquals(0, $result[1][1]);
     }
+
 }

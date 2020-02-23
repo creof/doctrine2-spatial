@@ -78,8 +78,7 @@ class AreaTest extends OrmTestCase
      */
     public function testAreaWhere()
     {
-        $entity1 = new PolygonEntity();
-        $rings1 = [
+        $ring = [
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -89,11 +88,9 @@ class AreaTest extends OrmTestCase
             ]),
         ];
 
-        $entity1->setPolygon(new Polygon($rings1));
-        $this->getEntityManager()->persist($entity1);
+        $this->createPolygon($ring);
 
-        $entity2 = new PolygonEntity();
-        $rings2 = [
+        $ring = [
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -109,12 +106,9 @@ class AreaTest extends OrmTestCase
                 new Point(5, 5),
             ]),
         ];
+        $this->createPolygon($ring);
 
-        $entity2->setPolygon(new Polygon($rings2));
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new PolygonEntity();
-        $rings3 = [
+        $ring = [
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -124,12 +118,9 @@ class AreaTest extends OrmTestCase
                 new Point(0, 0),
             ]),
         ];
+        $this->createPolygon($ring);
 
-        $entity3->setPolygon(new Polygon($rings3));
-        $this->getEntityManager()->persist($entity3);
-
-        $entity4 = new PolygonEntity();
-        $rings4 = [
+        $ring = [
             new LineString([
                 new Point(5, 5),
                 new Point(7, 5),
@@ -139,16 +130,17 @@ class AreaTest extends OrmTestCase
             ]),
         ];
 
-        $entity4->setPolygon(new Polygon($rings4));
-        $this->getEntityManager()->persist($entity4);
+        $expected = $this->createPolygon($ring);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Area(p.polygon) < 50');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE Area(p.polygon) < 50'
+        );
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity4, $result[0]);
+        $this->assertEquals($expected, $result[0]);
     }
 
     /**
@@ -165,8 +157,7 @@ class AreaTest extends OrmTestCase
      */
     public function testSelectArea()
     {
-        $entity1 = new PolygonEntity();
-        $rings1 = [
+        $ring = [
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -175,12 +166,9 @@ class AreaTest extends OrmTestCase
                 new Point(0, 0),
             ]),
         ];
+        $this->createPolygon($ring);
 
-        $entity1->setPolygon(new Polygon($rings1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-        $rings2 = [
+        $ring = [
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -196,12 +184,9 @@ class AreaTest extends OrmTestCase
                 new Point(5, 5),
             ]),
         ];
+        $this->createPolygon($ring);
 
-        $entity2->setPolygon(new Polygon($rings2));
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new PolygonEntity();
-        $rings3 = [
+        $ring = [
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -211,12 +196,9 @@ class AreaTest extends OrmTestCase
                 new Point(0, 0),
             ]),
         ];
+        $this->createPolygon($ring);
 
-        $entity3->setPolygon(new Polygon($rings3));
-        $this->getEntityManager()->persist($entity3);
-
-        $entity4 = new PolygonEntity();
-        $rings4 = [
+        $ring = [
             new LineString([
                 new Point(5, 5),
                 new Point(7, 5),
@@ -225,18 +207,40 @@ class AreaTest extends OrmTestCase
                 new Point(5, 5),
             ]),
         ];
+        $this->createPolygon($ring);
 
-        $entity4->setPolygon(new Polygon($rings4));
-        $this->getEntityManager()->persist($entity4);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT Area(p.polygon) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT Area(p.polygon) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
         $result = $query->getResult();
 
         $this->assertEquals(100, $result[0][1]);
         $this->assertEquals(96, $result[1][1]);
         $this->assertEquals(100, $result[2][1]);
         $this->assertEquals(4, $result[3][1]);
+    }
+
+    /**
+     * Create and persist a polygon from a ring.
+     *
+     * @param array $ring The ring to create polygon
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @return PolygonEntity
+     */
+    private function createPolygon(array $ring)
+    {
+        $polygonEntity = new PolygonEntity();
+        $polygonEntity->setPolygon(new Polygon($ring));
+        $this->getEntityManager()->persist($polygonEntity);
+
+        return $polygonEntity;
     }
 }

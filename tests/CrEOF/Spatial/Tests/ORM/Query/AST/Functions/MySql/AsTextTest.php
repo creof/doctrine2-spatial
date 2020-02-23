@@ -77,32 +77,51 @@ class AsTextTest extends OrmTestCase
      */
     public function testAsText()
     {
-        $lineString1 = [
+        $points = [
             new Point(0, 0),
             new Point(2, 2),
             new Point(5, 5),
         ];
-        $lineString2 = [
+        $this->createLinestring($points);
+
+        $points = [
             new Point(3, 3),
             new Point(4, 15),
             new Point(5, 22),
         ];
-        $entity1 = new LineStringEntity();
+        $this->createLinestring($points);
 
-        $entity1->setLineString(new LineString($lineString1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString(new LineString($lineString2));
-        $this->getEntityManager()->persist($entity2);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
         $result = $query->getResult();
 
         $this->assertEquals('LINESTRING(0 0,2 2,5 5)', $result[0][1]);
         $this->assertEquals('LINESTRING(3 3,4 15,5 22)', $result[1][1]);
+    }
+
+    /**
+     * Create and persist a linestring from an array of points.
+     *
+     * @param array $points The points to create linestring
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @return LineStringEntity
+     */
+    private function createLinestring(array $points)
+    {
+        $entity = new LineStringEntity();
+
+        $entity->setLineString(new LineString($points));
+        $this->getEntityManager()->persist($entity);
+
+        return $entity;
     }
 }
