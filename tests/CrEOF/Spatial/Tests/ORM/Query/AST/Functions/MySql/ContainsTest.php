@@ -88,9 +88,10 @@ class ContainsTest extends OrmTestCase
         $query->setParameter('p', 'POINT(6 6)', 'string');
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
+        $this->assertCount(3, $result);
         $this->assertEquals($bigPolygon, $result[0]);
         $this->assertEquals($smallPolygon, $result[1]);
+        $this->assertEquals($holeyPolygon, $result[2]);
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
@@ -144,6 +145,6 @@ class ContainsTest extends OrmTestCase
         $this->assertEquals(1, $result[1][2]);
         $this->assertEquals($holeyPolygon, $result[2][0]);
         $this->assertEquals(1, $result[2][1]);
-        $this->assertEquals(0, $result[2][2]);
+        $this->assertEquals(1, $result[2][2]);
     }
 }
