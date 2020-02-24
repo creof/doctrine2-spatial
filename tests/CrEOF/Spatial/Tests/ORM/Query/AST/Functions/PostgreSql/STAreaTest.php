@@ -29,6 +29,7 @@ use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -47,6 +48,8 @@ use Doctrine\ORM\ORMException;
  */
 class STAreaTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -76,8 +79,8 @@ class STAreaTest extends OrmTestCase
      */
     public function testSelectStArea()
     {
-        $this->createPolygon([$this->createEnvelopingLineString()]);
-        $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $this->createBigPolygon();
+        $this->createHoleyPolygon();
         $this->createPolygon([
             new LineString([
                 new Point(0, 0),
@@ -88,7 +91,7 @@ class STAreaTest extends OrmTestCase
                 new Point(0, 0),
             ]),
         ]);
-        $smallPolygon = $this->createPolygon([$this->createInternalLineString()]);
+        $smallPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

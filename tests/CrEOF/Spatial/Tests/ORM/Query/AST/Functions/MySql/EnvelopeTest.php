@@ -27,6 +27,7 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -45,6 +46,8 @@ use Doctrine\ORM\ORMException;
  */
 class EnvelopeTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -74,8 +77,8 @@ class EnvelopeTest extends OrmTestCase
      */
     public function testEnvelopeWhereParameter()
     {
-        $holeyPolygon = $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
-        $this->createPolygon([$this->createInternalLineString()]);
+        $holeyPolygon = $this->createHoleyPolygon();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -105,8 +108,8 @@ class EnvelopeTest extends OrmTestCase
      */
     public function testSelectEnvelope()
     {
-        $this->createPolygon([$this->createEnvelopingLineString()]);
-        $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $this->createBigPolygon();
+        $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

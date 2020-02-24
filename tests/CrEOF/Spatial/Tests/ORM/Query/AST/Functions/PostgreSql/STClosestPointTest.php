@@ -31,6 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -49,6 +50,8 @@ use Doctrine\ORM\ORMException;
  */
 class STClosestPointTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -105,7 +108,9 @@ class STClosestPointTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, ST_GeomFromText(:p1))) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, ST_GeomFromText(:p1))) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 

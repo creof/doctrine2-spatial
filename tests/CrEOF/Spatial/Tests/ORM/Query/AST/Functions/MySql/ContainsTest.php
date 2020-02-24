@@ -27,6 +27,7 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -45,6 +46,8 @@ use Doctrine\ORM\ORMException;
  */
 class ContainsTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -75,9 +78,9 @@ class ContainsTest extends OrmTestCase
      */
     public function testContainsWhereParameter()
     {
-        $bigPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
-        $smallPolygon = $this->createPolygon([$this->createInternalLineString()]);
-        $holeyPolygon = $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -119,9 +122,9 @@ class ContainsTest extends OrmTestCase
      */
     public function testSelectContains()
     {
-        $bigPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
-        $smallPolygon = $this->createPolygon([$this->createInternalLineString()]);
-        $holeyPolygon = $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

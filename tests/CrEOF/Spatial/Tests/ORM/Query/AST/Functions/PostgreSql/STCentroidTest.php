@@ -31,6 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -49,6 +50,8 @@ use Doctrine\ORM\ORMException;
  */
 class STCentroidTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -76,41 +79,22 @@ class STCentroidTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectSTCentroid()
+    public function testSelectStCentroid()
     {
-        $lineString1 = new LineString([
-            new Point(6, 6),
-            new Point(10, 6),
-            new Point(10, 10),
-            new Point(6, 10),
-            new Point(6, 6),
-        ]);
-        $lineString2 = new LineString([
-            new Point(5, 5),
-            new Point(7, 5),
-            new Point(7, 7),
-            new Point(5, 7),
-            new Point(5, 5),
-        ]);
-        $entity1 = new PolygonEntity();
-
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0][0]);
-        $this->assertEquals('POINT(8 8)', $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($bigPolygon, $result[0][0]);
+        $this->assertEquals('POINT(5 5)', $result[0][1]);
+        $this->assertEquals($smallPolygon, $result[1][0]);
         $this->assertEquals('POINT(6 6)', $result[1][1]);
     }
 }

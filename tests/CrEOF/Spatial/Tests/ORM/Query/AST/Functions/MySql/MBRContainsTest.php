@@ -27,6 +27,7 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -45,6 +46,8 @@ use Doctrine\ORM\ORMException;
  */
 class MBRContainsTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -75,8 +78,8 @@ class MBRContainsTest extends OrmTestCase
      */
     public function testMbrContainsWhereParameter()
     {
-        $bigPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
-        $holeyPolygon = $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $bigPolygon = $this->createBigPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -124,8 +127,8 @@ class MBRContainsTest extends OrmTestCase
      */
     public function testSelectMbrContains()
     {
-        $envelopingPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
-        $internalPolygon = $this->createPolygon([$this->createInternalLineString()]);
+        $envelopingPolygon = $this->createBigPolygon();
+        $internalPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

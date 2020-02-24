@@ -76,14 +76,7 @@ symfony php phpunit-9.phar --configuration phpunit.mysql.xml
 symfony php phpunit-9.phar --configuration phpunit.pgsql.xml 
 ```
 
-## Quality checks
-A code can works, be successfully tested but still be unmaintenable.
-To help contributors as you, there is a composer script that will launch three process to verify the quality of the 
-code. This script will launch PHPCSFIXER, PHP Code sniffer and PHP Mess detector.
-Simply launch: 
-```
-composer quality
-```
-Read the output and completes your script.
+## Which geometries are in test suite?
 
-Thanks a lot! 
+[TestHelperTrait.php](../tests/CrEOF/Spatial/Tests/TestHelperTrait.php) provides some protected methods to create 
+and persist some geometry entities.

@@ -31,6 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -49,6 +50,8 @@ use Doctrine\ORM\ORMException;
  */
 class STDistanceTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -78,41 +81,36 @@ class STDistanceTest extends OrmTestCase
      *
      * @group geography
      */
-    public function testSelectSTDistanceGeographyCartesian()
+    public function testSelectStDistanceGeographyCartesian()
     {
-        $newYork = new GeographyPoint(-73.938611, 40.664167);
-        $losAngles = new GeographyPoint(-118.2430, 34.0522);
-        $dallas = new GeographyPoint(-96.803889, 32.782778);
+        $newYork = new GeographyEntity();
+        $newYork->setGeography(new GeographyPoint(-73.938611, 40.664167));
+        $this->getEntityManager()->persist($newYork);
 
-        $entity1 = new GeographyEntity();
+        $losAngeles = new GeographyEntity();
+        $losAngeles->setGeography(new GeographyPoint(-118.2430, 34.0522));
+        $this->getEntityManager()->persist($losAngeles);
 
-        $entity1->setGeography($newYork);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new GeographyEntity();
-
-        $entity2->setGeography($losAngles);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new GeographyEntity();
-
-        $entity3->setGeography($dallas);
-        $this->getEntityManager()->persist($entity3);
+        $dallas = new GeographyEntity();
+        $dallas->setGeography(new GeographyPoint(-96.803889, 32.782778));
+        $this->getEntityManager()->persist($dallas);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+        );
 
         $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($newYork, $result[0][0]);
         $this->assertEquals(1305895.94823465, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($losAngeles, $result[1][0]);
         $this->assertEquals(2684082.08249337, $result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
+        $this->assertEquals($dallas, $result[2][0]);
         $this->assertEquals(1313754.60684762, $result[2][1]);
     }
 
@@ -128,42 +126,38 @@ class STDistanceTest extends OrmTestCase
      *
      * @group geography
      */
-    public function testSelectSTDistanceGeographySpheroid()
+    public function testSelectStDistanceGeographySpheroid()
     {
-        $newYork = new GeographyPoint(-73.938611, 40.664167);
-        $losAngles = new GeographyPoint(-118.2430, 34.0522);
-        $dallas = new GeographyPoint(-96.803889, 32.782778);
+        $newYork = new GeographyEntity();
+        $newYork->setGeography(new GeographyPoint(-73.938611, 40.664167));
+        $this->getEntityManager()->persist($newYork);
 
-        $entity1 = new GeographyEntity();
+        $losAngeles = new GeographyEntity();
+        $losAngeles->setGeography(new GeographyPoint(-118.2430, 34.0522));
+        $this->getEntityManager()->persist($losAngeles);
 
-        $entity1->setGeography($newYork);
-        $this->getEntityManager()->persist($entity1);
+        $dallas = new GeographyEntity();
+        $dallas->setGeography(new GeographyPoint(-96.803889, 32.782778));
+        $this->getEntityManager()->persist($dallas);
 
-        $entity2 = new GeographyEntity();
-
-        $entity2->setGeography($losAngles);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new GeographyEntity();
-
-        $entity3->setGeography($dallas);
-        $this->getEntityManager()->persist($entity3);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+        );
 
         $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
-        $this->assertEquals(1309106.31457703, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
-        $this->assertEquals(2689041.41286683, $result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
-        $this->assertEquals(1312731.61416563, $result[2][1]);
+        $this->assertEquals($newYork, $result[0][0]);
+        $this->assertEquals(1309106.31458423, $result[0][1]);
+        $this->assertEquals($losAngeles, $result[1][0]);
+        $this->assertEquals(2689041.41288843, $result[1][1]);
+        $this->assertEquals($dallas, $result[2][0]);
+        $this->assertEquals(1312731.61417061, $result[2][1]);
     }
 
     /**
@@ -178,41 +172,37 @@ class STDistanceTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectSTDistanceGeometryCartesian()
+    public function testSelectStDistanceGeometryCartesian()
     {
-        $newYork = new Point(-73.938611, 40.664167);
-        $losAngles = new Point(-118.2430, 34.0522);
-        $dallas = new Point(-96.803889, 32.782778);
+        $newYork = new PointEntity();
+        $newYork->setPoint(new Point(-73.938611, 40.664167));
+        $this->getEntityManager()->persist($newYork);
 
-        $entity1 = new PointEntity();
+        $losAngeles = new PointEntity();
+        $losAngeles->setPoint(new Point(-118.2430, 34.0522));
+        $this->getEntityManager()->persist($losAngeles);
 
-        $entity1->setPoint($newYork);
-        $this->getEntityManager()->persist($entity1);
+        $dallas = new PointEntity();
+        $dallas->setPoint(new Point(-96.803889, 32.782778));
+        $this->getEntityManager()->persist($dallas);
 
-        $entity2 = new PointEntity();
-
-        $entity2->setPoint($losAngles);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new PointEntity();
-
-        $entity3->setPoint($dallas);
-        $this->getEntityManager()->persist($entity3);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, ST_Distance(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+        );
 
         $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($newYork, $result[0][0]);
         $this->assertEquals(15.646934398128, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($losAngeles, $result[1][0]);
         $this->assertEquals(30.2188561049899, $result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
+        $this->assertEquals($dallas, $result[2][0]);
         $this->assertEquals(12.6718564262953, $result[2][1]);
     }
 }

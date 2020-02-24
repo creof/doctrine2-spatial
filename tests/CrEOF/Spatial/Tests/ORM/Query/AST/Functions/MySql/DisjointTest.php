@@ -27,6 +27,7 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -45,6 +46,8 @@ use Doctrine\ORM\ORMException;
  */
 class DisjointTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -74,8 +77,8 @@ class DisjointTest extends OrmTestCase
      */
     public function testDisjointWhereParameter()
     {
-        $bigPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
-        $insidePolygon = $this->createPolygon([$this->createInternalLineString()]);
+        $bigPolygon = $this->createBigPolygon();
+        $insidePolygon = $this->createSmallPolygon();
         $externalPolygon = $this->createPolygon([$this->createOuterLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
@@ -119,8 +122,8 @@ class DisjointTest extends OrmTestCase
      */
     public function testSelectDisjoint()
     {
-        $bigPolygon = $this->createPolygon([$this->createEnvelopingLineString()]);
-        $insidePolygon = $this->createPolygon([$this->createInternalLineString()]);
+        $bigPolygon = $this->createBigPolygon();
+        $insidePolygon = $this->createSmallPolygon();
         $externalPolygon = $this->createPolygon([$this->createOuterLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();

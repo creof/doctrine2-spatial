@@ -31,6 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use CrEOF\Spatial\Tests\TestHelperTrait;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -49,6 +50,8 @@ use Doctrine\ORM\ORMException;
  */
 class AreaTest extends OrmTestCase
 {
+    use TestHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -78,47 +81,9 @@ class AreaTest extends OrmTestCase
      */
     public function testAreaWhere()
     {
-        $ring = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-        ];
-
-        $this->createPolygon($ring);
-
-        $ring = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-        $this->createPolygon($ring);
-
-        $ring = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 20),
-                new Point(0, 20),
-                new Point(10, 10),
-                new Point(0, 0),
-            ]),
-        ];
-        $this->createPolygon($ring);
+        $this->createBigPolygon();
+        $this->createHoleyPolygon();
+        $this->createPolygonW();
 
         $ring = [
             new LineString([

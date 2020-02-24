@@ -75,31 +75,31 @@ class STAsTextTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSTAsText()
+    public function testStAsText()
     {
-        $lineString1 = [
+        $lineStringA = new LineStringEntity();
+
+        $lineStringA->setLineString(new LineString([
             new Point(0, 0),
             new Point(2, 2),
             new Point(5, 5),
-        ];
-        $lineString2 = [
+        ]));
+        $this->getEntityManager()->persist($lineStringA);
+
+        $lineStringB = new LineStringEntity();
+
+        $lineStringB->setLineString(new LineString([
             new Point(3, 3),
             new Point(4, 15),
             new Point(5, 22),
-        ];
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString(new LineString($lineString1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString(new LineString($lineString2));
-        $this->getEntityManager()->persist($entity2);
+        ]));
+        $this->getEntityManager()->persist($lineStringB);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
         $result = $query->getResult();
 
         $this->assertEquals('LINESTRING(0 0,2 2,5 5)', $result[0][1]);
