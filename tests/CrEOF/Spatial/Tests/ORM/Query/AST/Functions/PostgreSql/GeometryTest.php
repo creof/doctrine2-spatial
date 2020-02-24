@@ -76,17 +76,19 @@ class GeometryTest extends OrmTestCase
      */
     public function testSelectGeometry()
     {
-        $entity = new PointEntity();
-        $entity->setPoint(new Point(1, 2));
-        $this->getEntityManager()->persist($entity);
-        $entity2 = new PointEntity();
-        $entity2->setPoint(new Point(-2, 3));
-        $this->getEntityManager()->persist($entity2);
+        $pointA = new PointEntity();
+        $pointA->setPoint(new Point(1, 2));
+        $this->getEntityManager()->persist($pointA);
+        $pointB = new PointEntity();
+        $pointB->setPoint(new Point(-2, 3));
+        $this->getEntityManager()->persist($pointB);
 
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(geometry(p.point)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsText(geometry(p.point)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+        );
         $result = $query->getResult();
 
         $expected = [

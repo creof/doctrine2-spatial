@@ -77,32 +77,33 @@ class STAsBinaryTest extends OrmTestCase
      */
     public function testSTAsBinary()
     {
-        $lineString1 = [
+        $lineStringA = new LineStringEntity();
+        $lineStringA->setLineString(new LineString([
             new Point(0, 0),
             new Point(2, 2),
             new Point(5, 5),
-        ];
-        $lineString2 = [
+        ]));
+        $this->getEntityManager()->persist($lineStringA);
+
+        $linestringB = new LineStringEntity();
+        $linestringB->setLineString(new LineString([
             new Point(3, 3),
             new Point(4, 15),
             new Point(5, 22),
-        ];
-        $entity1 = new LineStringEntity();
+        ]));
+        $this->getEntityManager()->persist($linestringB);
 
-        $entity1->setLineString(new LineString($lineString1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString(new LineString($lineString2));
-        $this->getEntityManager()->persist($entity2);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
         $result = $query->getResult();
 
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this->assertEquals('010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440', bin2hex(stream_get_contents($result[0][1])));
         $this->assertEquals('0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640', bin2hex(stream_get_contents($result[1][1])));
+        // phpcs:enable
     }
 }

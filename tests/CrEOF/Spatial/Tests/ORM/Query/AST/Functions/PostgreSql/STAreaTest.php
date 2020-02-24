@@ -28,8 +28,6 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
@@ -76,45 +74,11 @@ class STAreaTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectSTArea()
+    public function testSelectStArea()
     {
-        $entity1 = new PolygonEntity();
-        $rings1 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-        ];
-
-        $entity1->setPolygon(new Polygon($rings1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-        $rings2 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity2->setPolygon(new Polygon($rings2));
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new PolygonEntity();
-        $rings3 = [
+        $this->createPolygon([$this->createEnvelopingLineString()]);
+        $this->createPolygon([$this->createEnvelopingLineString(), $this->createInternalLineString()]);
+        $this->createPolygon([
             new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
@@ -123,120 +87,17 @@ class STAreaTest extends OrmTestCase
                 new Point(10, 10),
                 new Point(0, 0),
             ]),
-        ];
-
-        $entity3->setPolygon(new Polygon($rings3));
-        $this->getEntityManager()->persist($entity3);
-
-        $entity4 = new PolygonEntity();
-        $rings4 = [
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity4->setPolygon(new Polygon($rings4));
-        $this->getEntityManager()->persist($entity4);
+        ]);
+        $smallPolygon = $this->createPolygon([$this->createInternalLineString()]);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_Area(p.polygon) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
-        $result = $query->getResult();
-
-        $this->assertEquals(100, $result[0][1]);
-        $this->assertEquals(96, $result[1][1]);
-        $this->assertEquals(100, $result[2][1]);
-        $this->assertEquals(4, $result[3][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testSTAreaWhere()
-    {
-        $entity1 = new PolygonEntity();
-        $rings1 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-        ];
-
-        $entity1->setPolygon(new Polygon($rings1));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-        $rings2 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity2->setPolygon(new Polygon($rings2));
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new PolygonEntity();
-        $rings3 = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 20),
-                new Point(0, 20),
-                new Point(10, 10),
-                new Point(0, 0),
-            ]),
-        ];
-
-        $entity3->setPolygon(new Polygon($rings3));
-        $this->getEntityManager()->persist($entity3);
-
-        $entity4 = new PolygonEntity();
-        $rings4 = [
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $entity4->setPolygon(new Polygon($rings4));
-        $this->getEntityManager()->persist($entity4);
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Area(p.polygon) < 50');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Area(p.polygon) < 50'
+        );
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity4, $result[0]);
+        $this->assertEquals($smallPolygon, $result[0]);
     }
 }
