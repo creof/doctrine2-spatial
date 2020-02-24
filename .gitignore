@@ -1,5 +1,10 @@
+*.phar
 .phpcs-cache
 .php_cs.cache
+.php-version
+.phpunit.result.cache
+composer.*.lock
 composer.lock
 phpunit.xml
+phpunit.*.xml
 vendor/

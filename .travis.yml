@@ -15,7 +15,6 @@ php:
   - 7.2
   - 7.3
   - 7.4
-  - hhvm
 
 env:
   # Only stable and upcoming releases are tested https://www.doctrine-project.org/projects/orm.html
@@ -50,7 +49,6 @@ notifications:
 
 matrix:
   allow_failures:
-    - php: hhvm     # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
     # Upcoming releases can fail
     - env: ORM=2.8
     - env: ORM=3.0
