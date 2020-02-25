@@ -82,6 +82,7 @@ abstract class AbstractGeometry implements GeometryInterface
      */
     public function toJson()
     {
+        $json = [];
         $json['type'] = $this->getType();
         $json['coordinates'] = $this->toArray();
 
@@ -308,7 +309,7 @@ abstract class AbstractGeometry implements GeometryInterface
     /**
      * Convert multipolygon to a string.
      *
-     * TODO: unused private method. Verify which transformation is missing.
+     * THIS IS NOT A NON USED PRIVATE METHOD.
      *
      * @param array[] $multiPolygon multipolygon already converted into an array of polygon
      *

@@ -73,7 +73,8 @@ class PostgreSql extends AbstractPlatform
             $value->setSrid(self::DEFAULT_SRID);
         }
 
-        if (null !== ($srid = $value->getSrid()) || $type instanceof GeographyType) {
+        $srid = $value->getSrid();
+        if (null !== $srid || $type instanceof GeographyType) {
             $sridSQL = sprintf('SRID=%d;', $srid);
         }
 

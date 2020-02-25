@@ -32,14 +32,19 @@
         "squizlabs/php_codesniffer": "3.*"
     },
     "scripts": {
+        "tt": "php-cs-fixer fix --help",
         "quality": [
-            "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
+            "php-cs-fixer fix --dry-run --config=.php_cs.dist --allow-risky=yes -vvv",
             "phpcs --standard=phpcs.xml.dist -s",
-            "phpmd lib,tests text ./phpmd.xml.dist"
+            "phpmd lib text ./phpmd.lib.xml",
+            "phpmd tests xml ./phpmd.test.xml --exclude OrmTestCase.php"
         ],
         "phpcs": "phpcs --standard=phpcs.xml.dist -s",
         "phpcsfixer": "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
-        "phpmd": "phpmd lib,tests text ./phpmd.xml.dist",
+        "phpmd": [
+            "phpmd lib text ./phpmd.lib.xml",
+            "phpmd tests xml ./phpmd.test.xml --exclude OrmTestCase.php"
+        ],
         "test-mysql": "phpunit --configuration phpunit.mysql.xml",
         "test-pgsql": "phpunit --configuration phpunit.pgsql.xml"
     },

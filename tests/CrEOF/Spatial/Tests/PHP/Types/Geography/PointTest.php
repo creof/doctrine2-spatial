@@ -132,6 +132,8 @@ class PointTest extends TestCase
 
     /**
      * Test bad numeric parameters - latitude greater than 90.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testBadNumericGreaterThanLatitude()
     {
@@ -143,6 +145,8 @@ class PointTest extends TestCase
 
     /**
      * Test bad numeric parameters - longitude greater than 180.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testBadNumericGreaterThanLongitude()
     {
@@ -154,6 +158,8 @@ class PointTest extends TestCase
 
     /**
      * Test bad numeric parameters - latitude less than -90.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testBadNumericLessThanLatitude()
     {
@@ -165,6 +171,8 @@ class PointTest extends TestCase
 
     /**
      * Test bad numeric parameters - longitude less than -180.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testBadNumericLessThanLongitude()
     {
@@ -176,6 +184,8 @@ class PointTest extends TestCase
 
     /**
      * Test getType method.
+     *
+     * @throws InvalidValueException it should NOT happen
      */
     public function testGetType()
     {
@@ -187,6 +197,8 @@ class PointTest extends TestCase
 
     /**
      * Test a valid numeric point.
+     *
+     * @throws InvalidValueException it should NOT happen
      */
     public function testGoodNumericPoint()
     {
@@ -239,6 +251,8 @@ class PointTest extends TestCase
 
     /**
      * Test a point created with an array and converts to string.
+     *
+     * @throws InvalidValueException it should NOT happen
      */
     public function testPointFromArrayToString()
     {
@@ -250,6 +264,8 @@ class PointTest extends TestCase
 
     /**
      * Test error when point created with too many arguments.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testPointTooManyArguments()
     {
@@ -263,6 +279,8 @@ class PointTest extends TestCase
 
     /**
      * Test a point with SRID.
+     *
+     * @throws InvalidValueException it should not happen
      */
     public function testPointWithSrid()
     {
@@ -280,6 +298,8 @@ class PointTest extends TestCase
 
     /**
      * Test error when point is created with wrong arguments.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testPointWrongArgumentTypes()
     {
@@ -293,6 +313,8 @@ class PointTest extends TestCase
 
     /**
      * Test to convert point to array.
+     *
+     * @throws InvalidValueException it should happen
      */
     public function testToArray()
     {
