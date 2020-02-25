@@ -26,20 +26,17 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * GLength DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license http://dlambert.mit-license.org MITIT
  *
  * @group dql
  *
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class GLengthTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,23 +68,13 @@ class GLengthTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testLengthWhereParameter()
     {
-        $entity = new LineStringEntity();
-
-        $entity->setLineString(new LineString([
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-        ]));
-
-        $this->getEntityManager()->persist($entity);
+        $smallLineString = $this->createStraightLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -95,12 +84,12 @@ class GLengthTest extends OrmTestCase
         );
         // phpcs:enable
 
-        $query->setParameter('p1', 'LINESTRING(0 0,1 1,2 2,3 3,4 4,5 5)', 'string');
+        $query->setParameter('p1', 'LINESTRING(0 0,2 2,4 4,6 6,8 8)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity, $result[0]);
+        $this->assertEquals($smallLineString, $result[0]);
     }
 
     /**
@@ -109,23 +98,13 @@ class GLengthTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testSelectLength()
     {
-        $entity = new LineStringEntity();
-
-        $entity->setLineString(new LineString([
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-        ]));
-
-        $this->getEntityManager()->persist($entity);
+        $smallLineString = $this->createStraightLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -135,7 +114,7 @@ class GLengthTest extends OrmTestCase
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity, $result[0][0]);
-        $this->assertEquals(2.82842712474619, $result[0][1]);
+        $this->assertEquals($smallLineString, $result[0][0]);
+        $this->assertEquals(7.0710678118654755, $result[0][1]);
     }
 }

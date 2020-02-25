@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_StartPoint DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STStartPointTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,27 +68,19 @@ class STStartPointTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTStartPointSelect()
+    public function testStStartPointSelect()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ]);
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
+        $this->createStraightLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsText(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
 
         $result = $query->getResult();
 
@@ -102,44 +93,29 @@ class STStartPointTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTStartPointWhereCompareLineString()
+    public function testStStartPointWhereCompareLineString()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ]);
-        $lineString2 = new LineString([
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ]);
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
+        $this->createStraightLineString();
+        $angularLineString = $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_StartPoint(ST_GeomFromText(:p1))');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_StartPoint(ST_GeomFromText(:p1))'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'LINESTRING(3 3, 4 15, 5 22)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity2, $result[0]);
+        $this->assertEquals($angularLineString, $result[0]);
     }
 
     /**
@@ -148,43 +124,29 @@ class STStartPointTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTStartPointWhereComparePoint()
+    public function testStStartPointWhereComparePoint()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ]);
-        $lineString2 = new LineString([
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ]);
-        $entity1 = new LineStringEntity();
+        $straightLineString = $this->createStraightLineString();
+        $this->createAngularLineString();
 
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_GeomFromText(:p1)');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_GeomFromText(:p1)'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'POINT(0 0)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($straightLineString, $result[0]);
     }
 }

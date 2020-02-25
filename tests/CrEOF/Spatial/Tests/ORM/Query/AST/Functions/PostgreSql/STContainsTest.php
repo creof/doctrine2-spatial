@@ -26,20 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Contains DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -49,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STContainsTest extends OrmTestCase
 {
+    use PolygonHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -71,50 +69,29 @@ class STContainsTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTContains()
+    public function testSelectStContains()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10),
-            new Point(0, 10),
-            new Point(0, 0),
-        ]);
-        $lineString2 = new LineString([
-            new Point(5, 5),
-            new Point(7, 5),
-            new Point(7, 7),
-            new Point(5, 7),
-            new Point(5, 5),
-        ]);
-        $entity1 = new PolygonEntity();
-
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Contains(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, ST_Contains(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($bigPolygon, $result[0][0]);
         $this->assertTrue($result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($smallPolygon, $result[1][0]);
         $this->assertFalse($result[1][1]);
     }
 
@@ -124,58 +101,43 @@ class STContainsTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTContainsWhereParameter()
+    public function testStContainsWhereParameter()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10),
-            new Point(0, 10),
-            new Point(0, 0),
-        ]);
-        $lineString2 = new LineString([
-            new Point(5, 5),
-            new Point(7, 5),
-            new Point(7, 7),
-            new Point(5, 7),
-            new Point(5, 5),
-        ]);
-        $entity1 = new PolygonEntity();
-
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString1, $lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $bigPolygon = $this->createBigPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Contains(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Contains(p.polygon, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'POINT(6 6)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($bigPolygon, $result[0]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Contains(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Contains(p.polygon, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0]);
-        $this->assertEquals($entity2, $result[1]);
+        $this->assertEquals($bigPolygon, $result[0]);
+        $this->assertEquals($holeyPolygon, $result[1]);
     }
 }

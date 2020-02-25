@@ -26,19 +26,17 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Length DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +46,9 @@ use Doctrine\ORM\ORMException;
  */
 class STLengthTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+    use PointHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,34 +70,24 @@ class STLengthTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTLength()
+    public function testSelectStLength()
     {
-        $entity = new LineStringEntity();
-
-        $entity->setLineString(new LineString(
-            [
-                new Point(0, 0),
-                new Point(1, 1),
-                new Point(2, 2),
-            ])
-        );
-
-        $this->getEntityManager()->persist($entity);
+        $angularLineString = $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l, ST_Length(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT l, ST_Length(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+        );
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity, $result[0][0]);
-        $this->assertEquals(2.82842712474619, $result[0][1]);
+        $this->assertEquals($angularLineString, $result[0][0]);
+        $this->assertEquals(19.1126623906578, $result[0][1]);
     }
 
     /**
@@ -105,35 +96,27 @@ class STLengthTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTLengthWhereParameter()
+    public function testStLengthWhereParameter()
     {
-        $entity = new LineStringEntity();
-
-        $entity->setLineString(new LineString(
-            [
-                new Point(0, 0),
-                new Point(1, 1),
-                new Point(2, 2),
-            ])
-        );
-
-        $this->getEntityManager()->persist($entity);
+        $angularLineString = $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(ST_GeomFromText(:p1)) > ST_Length(l.lineString)');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Length(ST_GeomFromText(:p1)) > ST_Length(l.lineString)'
+            // phpcs:enable
+        );
 
-        $query->setParameter('p1', 'LINESTRING(0 0,1 1,2 2,3 3)', 'string');
+        $query->setParameter('p1', 'LINESTRING(0 0,21 21)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity, $result[0]);
+        $this->assertEquals($angularLineString, $result[0]);
     }
 }

@@ -38,7 +38,9 @@ use Doctrine\ORM\ORMException;
  * ST_Collect DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
+ *
  *
  * @group dql
  *
@@ -74,7 +76,7 @@ class STCollectTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectSTCollect()
+    public function testSelectStCollect()
     {
         $entity = new PointEntity();
         $entity->setPoint(new Point(1, 2));
@@ -83,7 +85,11 @@ class STCollectTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_Collect(geometry(p.point), ST_GeomFromText(\'POINT(-2 3)\'))) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT ST_AsText(ST_Collect(geometry(p.point), ST_GeomFromText(\'POINT(-2 3)\'))) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            // phpcs:enable
+        );
         $result = $query->getResult();
 
         $expected = [

@@ -581,7 +581,7 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * Declare the used entities.
+     * Declare the used entity class to initialized them (and delete its content before the test).
      *
      * @param string $entityClass the entity class
      */

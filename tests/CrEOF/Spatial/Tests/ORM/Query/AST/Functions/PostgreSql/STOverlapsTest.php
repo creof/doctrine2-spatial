@@ -26,20 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Overlaps DQL function tests.
  *
- * @author Dragos Protung
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -49,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STOverlapsTest extends OrmTestCase
 {
+    use PolygonHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -70,50 +68,29 @@ class STOverlapsTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTMakeEnvelope()
+    public function testSelectStMakeEnvelope()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(2, 0),
-            new Point(2, 2),
-            new Point(0, 2),
-            new Point(0, 0),
-        ]);
-        $lineString2 = new LineString([
-            new Point(2, 2),
-            new Point(7, 2),
-            new Point(7, 7),
-            new Point(2, 7),
-            new Point(2, 2),
-        ]);
-        $entity1 = new PolygonEntity();
-
-        $entity1->setPolygon(new Polygon([$lineString1]));
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PolygonEntity();
-
-        $entity2->setPolygon(new Polygon([$lineString2]));
-        $this->getEntityManager()->persist($entity2);
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             'SELECT p as point, ST_Overlaps(p.polygon, ST_Buffer(ST_GeomFromText(:p1), 3)) as overlap FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpcs:enable
         );
-        $query->setParameter('p1', 'POINT(0 0)', 'string');
+        $query->setParameter('p1', 'POINT(4 4)', 'string');
         $result = $query->getResult();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($entity1, $result[0]['point']);
+        $this->assertEquals($bigPolygon, $result[0]['point']);
         $this->assertFalse($result[0]['overlap']);
-        $this->assertEquals($entity2, $result[1]['point']);
+        $this->assertEquals($smallPolygon, $result[1]['point']);
         $this->assertTrue($result[1]['overlap']);
     }
 }

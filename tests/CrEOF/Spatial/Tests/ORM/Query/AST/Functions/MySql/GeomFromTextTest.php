@@ -26,19 +26,17 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * GeomFromText DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +46,9 @@ use Doctrine\ORM\ORMException;
  */
 class GeomFromTextTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+    use PointHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -57,7 +58,8 @@ class GeomFromTextTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::GEOMETRY_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::POINT_ENTITY);
         $this->usesType('point');
         $this->supportsPlatform('mysql');
 
@@ -70,31 +72,21 @@ class GeomFromTextTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testLineString()
     {
-        $value = [
-            new Point(0, 0),
-            new Point(5, 5),
-            new Point(10, 10),
-        ];
-
-        $linestring = new GeometryEntity();
-        $linestring->setGeometry(new LineString($value));
-        $this->getEntityManager()->persist($linestring);
+        $linestring = $this->createStraightLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)'
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity g WHERE g.lineString = GeomFromText(:p1)'
         );
 
-        $query->setParameter('p1', 'LINESTRING(0 0,5 5,10 10)', 'string');
+        $query->setParameter('p1', 'LINESTRING(0 0,2 2,5 5)', 'string');
 
         $result = $query->getResult();
 
@@ -108,23 +100,18 @@ class GeomFromTextTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testPoint()
     {
-        $point = new GeometryEntity();
-
-        $point->setGeometry(new Point(5, 5));
-        $this->getEntityManager()->persist($point);
+        $point = $this->createPointE();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = GeomFromText(:p1)'
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\PointEntity g WHERE g.point = GeomFromText(:p1)'
         );
 
         $query->setParameter('p1', 'POINT(5 5)', 'string');

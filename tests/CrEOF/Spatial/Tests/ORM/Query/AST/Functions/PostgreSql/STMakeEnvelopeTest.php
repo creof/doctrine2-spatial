@@ -26,20 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_MakeEnvelope DQL function tests.
  *
- * @author Dragos Protung
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -49,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STMakeEnvelopeTest extends OrmTestCase
 {
+    use PolygonHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -70,30 +68,13 @@ class STMakeEnvelopeTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTMakeEnvelope()
+    public function testSelectStMakeEnvelope()
     {
-        $entity = new PolygonEntity();
-        $rings = [
-            new LineString(
-                [
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0),
-                ]
-            ),
-        ];
-
-        $entity->setPolygon(new Polygon($rings));
-        $this->getEntityManager()->persist($entity);
-
+        $this->createBigPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

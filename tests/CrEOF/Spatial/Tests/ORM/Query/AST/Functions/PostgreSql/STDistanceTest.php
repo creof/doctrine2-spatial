@@ -26,21 +26,17 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geography\Point as GeographyPoint;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
-use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use CrEOF\Spatial\Tests\TestHelperTrait;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Distance DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -50,7 +46,8 @@ use Doctrine\ORM\ORMException;
  */
 class STDistanceTest extends OrmTestCase
 {
-    use TestHelperTrait;
+    use PointHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -75,30 +72,22 @@ class STDistanceTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geography
      */
     public function testSelectStDistanceGeographyCartesian()
     {
-        $newYork = new GeographyEntity();
-        $newYork->setGeography(new GeographyPoint(-73.938611, 40.664167));
-        $this->getEntityManager()->persist($newYork);
-
-        $losAngeles = new GeographyEntity();
-        $losAngeles->setGeography(new GeographyPoint(-118.2430, 34.0522));
-        $this->getEntityManager()->persist($losAngeles);
-
-        $dallas = new GeographyEntity();
-        $dallas->setGeography(new GeographyPoint(-96.803889, 32.782778));
-        $this->getEntityManager()->persist($dallas);
+        $newYork = $this->createNewYorkGeography();
+        $losAngeles = $this->createLosAngelesGeography();
+        $dallas = $this->createDallasGeography();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             'SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+            // phpcs:enable
         );
 
         $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
@@ -120,31 +109,22 @@ class STDistanceTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geography
      */
     public function testSelectStDistanceGeographySpheroid()
     {
-        $newYork = new GeographyEntity();
-        $newYork->setGeography(new GeographyPoint(-73.938611, 40.664167));
-        $this->getEntityManager()->persist($newYork);
-
-        $losAngeles = new GeographyEntity();
-        $losAngeles->setGeography(new GeographyPoint(-118.2430, 34.0522));
-        $this->getEntityManager()->persist($losAngeles);
-
-        $dallas = new GeographyEntity();
-        $dallas->setGeography(new GeographyPoint(-96.803889, 32.782778));
-        $this->getEntityManager()->persist($dallas);
-
+        $newYork = $this->createNewYorkGeography();
+        $losAngeles = $this->createLosAngelesGeography();
+        $dallas = $this->createDallasGeography();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             'SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+            // phpcs:enable
         );
 
         $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
@@ -166,26 +146,15 @@ class STDistanceTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testSelectStDistanceGeometryCartesian()
     {
-        $newYork = new PointEntity();
-        $newYork->setPoint(new Point(-73.938611, 40.664167));
-        $this->getEntityManager()->persist($newYork);
-
-        $losAngeles = new PointEntity();
-        $losAngeles->setPoint(new Point(-118.2430, 34.0522));
-        $this->getEntityManager()->persist($losAngeles);
-
-        $dallas = new PointEntity();
-        $dallas->setPoint(new Point(-96.803889, 32.782778));
-        $this->getEntityManager()->persist($dallas);
-
+        $newYork = $this->createNewYorkGeometry();
+        $losAngeles = $this->createLosAngelesGeometry();
+        $dallas = $this->createDallasGeometry();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

@@ -26,17 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use CrEOF\Spatial\Tests\TestHelperTrait;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * Disjoint DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -46,7 +45,7 @@ use Doctrine\ORM\ORMException;
  */
 class DisjointTest extends OrmTestCase
 {
-    use TestHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -69,8 +68,6 @@ class DisjointTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
@@ -79,7 +76,7 @@ class DisjointTest extends OrmTestCase
     {
         $bigPolygon = $this->createBigPolygon();
         $insidePolygon = $this->createSmallPolygon();
-        $externalPolygon = $this->createPolygon([$this->createOuterLineString()]);
+        $externalPolygon = $this->createOuterPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -114,8 +111,6 @@ class DisjointTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
@@ -124,7 +119,7 @@ class DisjointTest extends OrmTestCase
     {
         $bigPolygon = $this->createBigPolygon();
         $insidePolygon = $this->createSmallPolygon();
-        $externalPolygon = $this->createPolygon([$this->createOuterLineString()]);
+        $externalPolygon = $this->createOuterPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

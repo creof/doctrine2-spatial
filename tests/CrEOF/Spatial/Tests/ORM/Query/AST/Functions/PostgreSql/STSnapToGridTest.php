@@ -28,16 +28,16 @@ use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_SnapToGrid DQL function tests.
  *
- * @author  Dragos Protung
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -47,6 +47,8 @@ use Doctrine\ORM\ORMException;
  */
 class STSnapToGridTest extends OrmTestCase
 {
+    use PointHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -63,18 +65,16 @@ class STSnapToGridTest extends OrmTestCase
     }
 
     /**
-     * Test a DQL containing function with 2 paramaters to test in the select.
+     * Test a DQL containing function with 2 parameters to test in the select.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTSnapToGridSignature2Parameters()
+    public function testSelectStSnapToGridSignature2Parameters()
     {
         $entity = new PointEntity();
         $entity->setPoint(new Point(1.25, 2.55));
@@ -83,7 +83,9 @@ class STSnapToGridTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), 0.5)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), 0.5)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+        );
         $result = $query->getResult();
 
         $expected = [
@@ -99,13 +101,11 @@ class STSnapToGridTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTSnapToGridSignature3Parameters()
+    public function testSelectStSnapToGridSignature3Parameters()
     {
         $entity = new PointEntity();
         $entity->setPoint(new Point(1.25, 2.55));
@@ -114,7 +114,9 @@ class STSnapToGridTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), 0.5, 1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), 0.5, 1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+        );
         $result = $query->getResult();
 
         $expected = [
@@ -130,13 +132,11 @@ class STSnapToGridTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTSnapToGridSignature5Parameters()
+    public function testSelectStSnapToGridSignature5Parameters()
     {
         $entity = new PointEntity();
         $entity->setPoint(new Point(5.25, 6.55));
@@ -145,7 +145,11 @@ class STSnapToGridTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), 5.55, 6.25, 0.5, 0.5)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), 5.55, 6.25, 0.5, 0.5)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            // phpcs:enable
+        );
         $result = $query->getResult();
 
         $expected = [
@@ -161,13 +165,11 @@ class STSnapToGridTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTSnapToGridSignature6Parameters()
+    public function testSelectStSnapToGridSignature6Parameters()
     {
         $entity = new PointEntity();
         $entity->setPoint(new Point(5.25, 6.55));
@@ -176,7 +178,11 @@ class STSnapToGridTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), geometry(p.point), 0.005, 0.025, 0.5, 0.01)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT ST_AsText(ST_SnapToGrid(geometry(p.point), geometry(p.point), 0.005, 0.025, 0.5, 0.01)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            // phpcs:enable
+        );
         $result = $query->getResult();
 
         $expected = [

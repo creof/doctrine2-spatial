@@ -26,18 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * Geometry DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -47,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class GeometryTest extends OrmTestCase
 {
+    use PointHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -68,21 +68,14 @@ class GeometryTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testSelectGeometry()
     {
-        $pointA = new PointEntity();
-        $pointA->setPoint(new Point(1, 2));
-        $this->getEntityManager()->persist($pointA);
-        $pointB = new PointEntity();
-        $pointB->setPoint(new Point(-2, 3));
-        $this->getEntityManager()->persist($pointB);
-
+        $this->createPointA();
+        $this->createPointB();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

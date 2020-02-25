@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * AsBinary DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class AsBinaryTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,31 +68,12 @@ class AsBinaryTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      */
     public function testAsBinary()
     {
-        $lineStringA = [
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ];
-        $lineStringB = [
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ];
-        $entityA = new LineStringEntity();
-
-        $entityA->setLineString(new LineString($lineStringA));
-        $this->getEntityManager()->persist($entityA);
-
-        $entityB = new LineStringEntity();
-
-        $entityB->setLineString(new LineString($lineStringB));
-        $this->getEntityManager()->persist($entityB);
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

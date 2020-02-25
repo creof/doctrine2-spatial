@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_LineCrossingDirection DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STLineCrossingDirectionTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,59 +68,34 @@ class STLineCrossingDirectionTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTLineCrossingDirection()
+    public function testSelectStLineCrossingDirection()
     {
-        $lineString1 = new LineString([
-            new Point(8, 15),
-            new Point(4, 8),
-        ]);
-        $lineString2 = new LineString([
-            new Point(12, 14),
-            new Point(3, 4),
-        ]);
-        $lineString3 = new LineString([
-            new Point(2, 5),
-            new Point(3, 6),
-            new Point(12, 8),
-            new Point(10, 10),
-            new Point(13, 11),
-        ]);
-
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new LineStringEntity();
-
-        $entity3->setLineString($lineString3);
-        $this->getEntityManager()->persist($entity3);
+        $lineStringX = $this->createLineStringX();
+        $lineStringY = $this->createLineStringY();
+        $lineStringZ = $this->createLineStringZ();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l, ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l, ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'LINESTRING(12 6,5 11,8 12,5 15)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($lineStringX, $result[0][0]);
         $this->assertEquals(2, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($lineStringY, $result[1][0]);
         $this->assertEquals(1, $result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
+        $this->assertEquals($lineStringZ, $result[2][0]);
         $this->assertEquals(-1, $result[2][1]);
     }
 
@@ -131,54 +105,29 @@ class STLineCrossingDirectionTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTLineCrossingDirectionWhereParameter()
+    public function testStLineCrossingDirectionWhereParameter()
     {
-        $lineString1 = new LineString([
-            new Point(8, 15),
-            new Point(4, 8),
-        ]);
-        $lineString2 = new LineString([
-            new Point(12, 14),
-            new Point(3, 4),
-        ]);
-        $lineString3 = new LineString([
-            new Point(2, 5),
-            new Point(3, 6),
-            new Point(12, 8),
-            new Point(10, 10),
-            new Point(13, 11),
-        ]);
-
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new LineStringEntity();
-
-        $entity3->setLineString($lineString3);
-        $this->getEntityManager()->persist($entity3);
+        $this->createLineStringX();
+        $lineStringY = $this->createLineStringY();
+        $this->createLineStringZ();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'LINESTRING(12 6,5 11,8 12,5 15)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity2, $result[0]);
+        $this->assertEquals($lineStringY, $result[0]);
     }
 }

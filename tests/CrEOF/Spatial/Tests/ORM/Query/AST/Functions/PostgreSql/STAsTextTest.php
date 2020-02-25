@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_AsText DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STAsTextTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,31 +68,14 @@ class STAsTextTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testStAsText()
     {
-        $lineStringA = new LineStringEntity();
-
-        $lineStringA->setLineString(new LineString([
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ]));
-        $this->getEntityManager()->persist($lineStringA);
-
-        $lineStringB = new LineStringEntity();
-
-        $lineStringB->setLineString(new LineString([
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ]));
-        $this->getEntityManager()->persist($lineStringB);
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use CrEOF\Spatial\Tests\TestHelperTrait;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Area DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,7 +45,7 @@ use Doctrine\ORM\ORMException;
  */
 class STAreaTest extends OrmTestCase
 {
-    use TestHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -71,8 +68,6 @@ class STAreaTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
@@ -81,16 +76,7 @@ class STAreaTest extends OrmTestCase
     {
         $this->createBigPolygon();
         $this->createHoleyPolygon();
-        $this->createPolygon([
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 20),
-                new Point(0, 20),
-                new Point(10, 10),
-                new Point(0, 0),
-            ]),
-        ]);
+        $this->createPolygonW();
         $smallPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();

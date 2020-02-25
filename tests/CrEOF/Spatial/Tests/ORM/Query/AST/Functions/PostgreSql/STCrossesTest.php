@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Crosses DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STCrossesTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,56 +68,34 @@ class STCrossesTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTCrosses()
+    public function testSelectStCrosses()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(10, 10),
-        ]);
-        $lineString2 = new LineString([
-            new Point(0, 10),
-            new Point(15, 0),
-        ]);
-        $lineString3 = new LineString([
-            new Point(2, 0),
-            new Point(12, 10),
-        ]);
-
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new LineStringEntity();
-
-        $entity3->setLineString($lineString3);
-        $this->getEntityManager()->persist($entity3);
+        $lineStringA = $this->createLineStringA();
+        $lineStringB = $this->createLineStringB();
+        $lineStringC = $this->createLineStringC();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l, ST_Crosses(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l, ST_Crosses(l.lineString, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            // phpcs:enable
+        );
 
-        $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
+        $query->setParameter('p', 'LINESTRING(0 0, 10 10)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($lineStringA, $result[0][0]);
         $this->assertFalse($result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($lineStringB, $result[1][0]);
         $this->assertTrue($result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
+        $this->assertEquals($lineStringC, $result[2][0]);
         $this->assertFalse($result[2][1]);
     }
 
@@ -128,61 +105,43 @@ class STCrossesTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSTCrossesWhereParameter()
+    public function testStCrossesWhereParameter()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(10, 10),
-        ]);
-        $lineString2 = new LineString([
-            new Point(0, 10),
-            new Point(15, 0),
-        ]);
-        $lineString3 = new LineString([
-            new Point(2, 0),
-            new Point(12, 10),
-        ]);
-
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new LineStringEntity();
-
-        $entity3->setLineString($lineString3);
-        $this->getEntityManager()->persist($entity3);
+        $this->createLineStringA();
+        $lineStringB = $this->createLineStringB();
+        $this->createLineStringC();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity2, $result[0]);
+        $this->assertEquals($lineStringB, $result[0]);
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Crosses(l.lineString, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'LINESTRING(2 0, 12 10)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity2, $result[0]);
+        $this->assertEquals($lineStringB, $result[0]);
     }
 }

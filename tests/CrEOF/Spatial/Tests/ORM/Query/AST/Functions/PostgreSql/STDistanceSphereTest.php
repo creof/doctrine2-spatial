@@ -26,18 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_Distance_Sphere DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -47,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class STDistanceSphereTest extends OrmTestCase
 {
+    use PointHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -68,47 +68,32 @@ class STDistanceSphereTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectSTDistanceSphereGeometry()
+    public function testSelectStDistanceSphereGeometry()
     {
-        $newYork = new Point(-73.938611, 40.664167);
-        $losAngles = new Point(-118.2430, 34.0522);
-        $dallas = new Point(-96.803889, 32.782778);
-
-        $entity1 = new PointEntity();
-
-        $entity1->setPoint($newYork);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new PointEntity();
-
-        $entity2->setPoint($losAngles);
-        $this->getEntityManager()->persist($entity2);
-
-        $entity3 = new PointEntity();
-
-        $entity3->setPoint($dallas);
-        $this->getEntityManager()->persist($entity3);
+        $newYork = $this->createNewYorkGeometry();
+        $losAngeles = $this->createLosAngelesGeometry();
+        $dallas = $this->createDallasGeometry();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+        );
 
-        $query->setParameter('p1', 'POINT(-89.4 43.066667)', 'string');
+        $query->setParameter('p', 'POINT(-89.4 43.066667)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1, $result[0][0]);
+        $this->assertEquals($newYork, $result[0][0]);
         $this->assertEquals(1305895.94823465, $result[0][1]);
-        $this->assertEquals($entity2, $result[1][0]);
+        $this->assertEquals($losAngeles, $result[1][0]);
         $this->assertEquals(2684082.08249337, $result[1][1]);
-        $this->assertEquals($entity3, $result[2][0]);
+        $this->assertEquals($dallas, $result[2][0]);
         $this->assertEquals(1313754.60684762, $result[2][1]);
     }
 }

@@ -26,21 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use CrEOF\Spatial\Tests\TestHelperTrait;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * Area DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -50,7 +45,7 @@ use Doctrine\ORM\ORMException;
  */
 class AreaTest extends OrmTestCase
 {
-    use TestHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -73,8 +68,6 @@ class AreaTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
@@ -84,18 +77,7 @@ class AreaTest extends OrmTestCase
         $this->createBigPolygon();
         $this->createHoleyPolygon();
         $this->createPolygonW();
-
-        $ring = [
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-
-        $expected = $this->createPolygon($ring);
+        $expected = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -114,66 +96,16 @@ class AreaTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testSelectArea()
     {
-        $ring = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-        ];
-        $this->createPolygon($ring);
-
-        $ring = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0),
-            ]),
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-        $this->createPolygon($ring);
-
-        $ring = [
-            new LineString([
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 20),
-                new Point(0, 20),
-                new Point(10, 10),
-                new Point(0, 0),
-            ]),
-        ];
-        $this->createPolygon($ring);
-
-        $ring = [
-            new LineString([
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5),
-            ]),
-        ];
-        $this->createPolygon($ring);
-
+        $this->createBigPolygon();
+        $this->createHoleyPolygon();
+        $this->createPolygonW();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -186,26 +118,5 @@ class AreaTest extends OrmTestCase
         $this->assertEquals(96, $result[1][1]);
         $this->assertEquals(100, $result[2][1]);
         $this->assertEquals(4, $result[3][1]);
-    }
-
-    /**
-     * Create and persist a polygon from a ring.
-     *
-     * @param array $ring The ring to create polygon
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
-     */
-    protected function createPolygon(array $ring)
-    {
-        $polygonEntity = new PolygonEntity();
-        $polygonEntity->setPolygon(new Polygon($ring));
-        $this->getEntityManager()->persist($polygonEntity);
-
-        return $polygonEntity;
     }
 }

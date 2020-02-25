@@ -26,19 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * AsText DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +45,8 @@ use Doctrine\ORM\ORMException;
  */
 class AsTextTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -69,28 +68,14 @@ class AsTextTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testAsText()
     {
-        $points = [
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ];
-        $this->createLinestring($points);
-
-        $points = [
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ];
-        $this->createLinestring($points);
-
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -101,27 +86,5 @@ class AsTextTest extends OrmTestCase
 
         $this->assertEquals('LINESTRING(0 0,2 2,5 5)', $result[0][1]);
         $this->assertEquals('LINESTRING(3 3,4 15,5 22)', $result[1][1]);
-    }
-
-    /**
-     * Create and persist a linestring from an array of points.
-     *
-     * @param array $points The points to create linestring
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return LineStringEntity
-     */
-    private function createLinestring(array $points)
-    {
-        $entity = new LineStringEntity();
-
-        $entity->setLineString(new LineString($points));
-        $this->getEntityManager()->persist($entity);
-
-        return $entity;
     }
 }

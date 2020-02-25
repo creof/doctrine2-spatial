@@ -26,19 +26,17 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
  * ST_GeomFromText DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -48,6 +46,9 @@ use Doctrine\ORM\ORMException;
  */
 class STGeomFromTextTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+    use PointHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -57,7 +58,8 @@ class STGeomFromTextTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::GEOMETRY_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::POINT_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
@@ -69,35 +71,28 @@ class STGeomFromTextTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testLineString()
     {
-        $value = [
-            new Point(0, 0),
-            new Point(5, 5),
-            new Point(10, 10),
-        ];
-
-        $entity1 = new GeometryEntity();
-
-        $entity1->setGeometry(new LineString($value));
-        $this->getEntityManager()->persist($entity1);
+        $lineString = $this->createStraightLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity g WHERE g.lineString = ST_GeomFromText(:geometry)'
+            // phpcs:enable
+        );
 
-        $query->setParameter('geometry', 'LINESTRING(0 0,5 5,10 10)', 'string');
+        $query->setParameter('geometry', 'LINESTRING(0 0,2 2,5 5)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($lineString, $result[0]);
     }
 
     /**
@@ -106,28 +101,25 @@ class STGeomFromTextTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testPoint()
     {
-        $entity1 = new GeometryEntity();
-
-        $entity1->setGeometry(new Point(5, 5));
-        $this->getEntityManager()->persist($entity1);
+        $pointA = $this->createPointA();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = ST_GeomFromText(:geometry)');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\PointEntity g WHERE g.point = ST_GeomFromText(:geometry)'
+        );
 
-        $query->setParameter('geometry', 'POINT(5 5)', 'string');
+        $query->setParameter('geometry', 'POINT(1 2)', 'string');
 
         $result = $query->getResult();
 
         $this->assertCount(1, $result);
-        $this->assertEquals($entity1, $result[0]);
+        $this->assertEquals($pointA, $result[0]);
     }
 }
