@@ -37,6 +37,8 @@ before_script:
 script:
   - ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-php ./build/coverage/coverage-pgsql-$TRAVIS_PHP_VERSION-$ORM.cov
   - ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-php ./build/coverage/coverage-mysql-$TRAVIS_PHP_VERSION-$ORM.cov
+  # Code should respect rules
+  - composer quality
 
 after_script:
   - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
@@ -48,6 +50,11 @@ notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
 
 matrix:
+  exclude:
+    - php: 7.2
+      env: ORM=3.0
+    - php: 7.3
+      env: ORM=3.0
   allow_failures:
     # Upcoming releases can fail
     - env: ORM=2.8
