@@ -50,11 +50,6 @@ notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
 
 matrix:
-  exclude:
-    - php: 7.2
-      env: ORM=3.0
-    - php: 7.3
-      env: ORM=3.0
   allow_failures:
     # Upcoming releases can fail
     - env: ORM=2.8
