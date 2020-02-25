@@ -26,23 +26,20 @@ namespace CrEOF\Spatial\Tests\ORM\Query;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
-use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\DBAL\Version;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Version;
 
 /**
  * DQL type wrapping tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -52,6 +49,8 @@ use Doctrine\ORM\Version;
  */
 class WrappingTest extends OrmTestCase
 {
+    use PolygonHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -61,10 +60,13 @@ class WrappingTest extends OrmTestCase
      */
     protected function setUp(): void
     {
+        $this->usesEntity(self::POLYGON_ENTITY);
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesType('point');
         parent::setUp();
     }
+
+    //phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
 
     /**
      * Test a DQL containing function to test in the predicate.
@@ -72,25 +74,13 @@ class WrappingTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
     public function testTypeWrappingSelect()
     {
-        $lineString = new LineString([
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10),
-            new Point(0, 10),
-            new Point(0, 0),
-        ]);
-        $entity = new PolygonEntity();
-
-        $entity->setPolygon(new Polygon([$lineString]));
-        $this->getEntityManager()->persist($entity);
+        $this->createBigPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -104,7 +94,6 @@ class WrappingTest extends OrmTestCase
                 $function = 'Contains';
                 break;
             default:
-                //TODO create a static function to throw exception.
                 throw new UnsupportedPlatformException(sprintf(
                     'DBAL platform "%s" is not currently supported.',
                     $this->getPlatform()->getName()
@@ -114,7 +103,6 @@ class WrappingTest extends OrmTestCase
         $dql = sprintf($dql, $function);
 
         $query = $this->getEntityManager()->createQuery($dql);
-
         $query->setParameter('geometry', new Point(2, 2), 'point');
         $query->processParameterValue('geometry');
 
@@ -130,9 +118,16 @@ class WrappingTest extends OrmTestCase
         $this->assertRegExp($regex, $result);
     }
 
+    // phpcs:enable
+
     /**
      * @group geometry
-     */
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *     */
     public function testTypeWrappingWhere()
     {
         $entity = new GeometryEntity();
@@ -142,7 +137,9 @@ class WrappingTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = :geometry');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = :geometry'
+        );
 
         $query->setParameter('geometry', new Point(5, 5), 'point');
         $query->processParameterValue('geometry');

@@ -35,11 +35,11 @@
         "quality": [
             "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
             "phpcs --standard=phpcs.xml.dist -s",
-            "phpmd bin,config,public,src,tests text ./phpmd.xml.dist"
+            "phpmd lib,tests text ./phpmd.xml.dist"
         ],
         "phpcs": "phpcs --standard=phpcs.xml.dist -s",
         "phpcsfixer": "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
-        "phpmd": "phpmd bin,config,public,src,tests text ./phpmd.xml.dist",
+        "phpmd": "phpmd lib,tests text ./phpmd.xml.dist",
         "test-mysql": "phpunit --configuration phpunit.mysql.xml",
         "test-pgsql": "phpunit --configuration phpunit.pgsql.xml"
     },

@@ -24,16 +24,20 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query;
 
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
 
 /**
  * GeometryWalker tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
  * @group dql
@@ -43,6 +47,15 @@ use Doctrine\ORM\Query;
  */
 class GeometryWalkerTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
+    /**
+     * Setup the function type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
@@ -50,29 +63,19 @@ class GeometryWalkerTest extends OrmTestCase
     }
 
     /**
+     * Test the geometry walker binary.
+     *
      * @group geometry
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testGeometryWalkerBinary()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ]);
-        $lineString2 = new LineString([
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ]);
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -89,15 +92,26 @@ class GeometryWalkerTest extends OrmTestCase
                 break;
         }
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asBinary, $startPoint);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asBinary,
+            $startPoint
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
+        $query->setHint(
+            Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'CrEOF\Spatial\ORM\Query\GeometryWalker'
+        );
 
         $result = $query->getResult();
         $this->assertEquals(new Point(0, 0), $result[0][1]);
         $this->assertEquals(new Point(3, 3), $result[1][1]);
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asBinary, $envelope);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asBinary,
+            $envelope
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
@@ -107,29 +121,19 @@ class GeometryWalkerTest extends OrmTestCase
     }
 
     /**
+     * Test the geometry walker.
+     *
      * @group geometry
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testGeometryWalkerText()
     {
-        $lineString1 = new LineString([
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5),
-        ]);
-        $lineString2 = new LineString([
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22),
-        ]);
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -146,7 +150,11 @@ class GeometryWalkerTest extends OrmTestCase
                 break;
         }
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asText, $startPoint);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asText,
+            $startPoint
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
@@ -154,7 +162,11 @@ class GeometryWalkerTest extends OrmTestCase
         $this->assertEquals(new Point(0, 0), $result[0][1]);
         $this->assertEquals(new Point(3, 3), $result[1][1]);
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asText, $envelope);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asText,
+            $envelope
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
