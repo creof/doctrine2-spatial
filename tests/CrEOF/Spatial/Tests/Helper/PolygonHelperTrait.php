@@ -59,10 +59,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createBigPolygon()
+    protected function createBigPolygon(): PolygonEntity
     {
         return $this->createPolygon([
             new LineString([
@@ -83,10 +81,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createEccentricPolygon()
+    protected function createEccentricPolygon(): PolygonEntity
     {
         return $this->createPolygon([new LineString([
             new Point(6, 6),
@@ -105,10 +101,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createHoleyPolygon()
+    protected function createHoleyPolygon(): PolygonEntity
     {
         return $this->createPolygon([
             new LineString([
@@ -136,10 +130,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createOuterPolygon()
+    protected function createOuterPolygon(): PolygonEntity
     {
         return $this->createPolygon([
             new LineString([
@@ -161,10 +153,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createPolygon(array $lineStrings)
+    protected function createPolygon(array $lineStrings): PolygonEntity
     {
         $polygon = new PolygonEntity();
         $polygon->setPolygon(new Polygon($lineStrings));
@@ -180,10 +170,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createPolygonW()
+    protected function createPolygonW(): PolygonEntity
     {
         return $this->createPolygon([
             new LineString([
@@ -205,10 +193,8 @@ trait PolygonHelperTrait
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
      * @throws InvalidValueException        when geometries are not valid
-     *
-     * @return PolygonEntity
      */
-    protected function createSmallPolygon()
+    protected function createSmallPolygon(): PolygonEntity
     {
         return $this->createPolygon([
             new LineString([

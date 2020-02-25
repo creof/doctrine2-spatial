@@ -33,8 +33,6 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
-//TODO Add the return type!
-
 /**
  * LineStringHelperTrait Trait.
  *
@@ -42,7 +40,6 @@ use Doctrine\ORM\ORMException;
  * All of these polygonal geometries are defined in test documentation.
  *
  * Methods beginning with create will store a geo* entity in database.
- * Methods beginning with get will only return a geo object.
  *
  * @see /doc/test.md
  *
@@ -61,10 +58,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createAngularLineString()
+    protected function createAngularLineString(): LineStringEntity
     {
         return $this->createLineString([
             new Point(3, 3),
@@ -81,10 +76,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createLineStringA()
+    protected function createLineStringA(): LineStringEntity
     {
         return $this->createLineString([
             new Point(0, 0),
@@ -101,10 +94,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createLineStringB()
+    protected function createLineStringB(): LineStringEntity
     {
         return $this->createLineString([
             new Point(0, 10),
@@ -122,10 +113,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createLineStringC()
+    protected function createLineStringC(): LineStringEntity
     {
         return $this->createLineString([
             new Point(2, 0),
@@ -140,10 +129,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createLineStringX()
+    protected function createLineStringX(): LineStringEntity
     {
         return $this->createLineString([
             new Point(8, 15),
@@ -158,10 +145,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createLineStringY()
+    protected function createLineStringY(): LineStringEntity
     {
         return $this->createLineString([
             new Point(12, 14),
@@ -176,10 +161,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createLineStringZ()
+    protected function createLineStringZ(): LineStringEntity
     {
         return $this->createLineString([
             new Point(2, 5),
@@ -198,10 +181,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    protected function createStraightLineString()
+    protected function createStraightLineString(): LineStringEntity
     {
         return $this->createLineString([
             new Point(0, 0),
@@ -219,10 +200,8 @@ trait LineStringHelperTrait
      * @throws UnsupportedPlatformException when platform is not supported
      * @throws DBALException                when credentials fail
      * @throws ORMException                 when cache is not created
-     *
-     * @return LineStringEntity
      */
-    private function createLineString(array $points)
+    private function createLineString(array $points): LineStringEntity
     {
         $lineStringEntity = new LineStringEntity();
         $lineStringEntity->setLineString(new LineString($points));
