@@ -41,7 +41,6 @@ use Doctrine\ORM\ORMException;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  *
- *
  * @group dql
  *
  * @internal
