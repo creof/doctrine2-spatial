@@ -90,8 +90,8 @@ class GeomFromTextTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($linestring, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($linestring, $result[0]);
     }
 
     /**
@@ -118,7 +118,7 @@ class GeomFromTextTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($point, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($point, $result[0]);
     }
 }

@@ -89,6 +89,6 @@ class GeometryTest extends OrmTestCase
             [1 => 'POINT(-2 3)'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 }

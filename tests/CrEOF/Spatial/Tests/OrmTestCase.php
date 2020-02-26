@@ -187,7 +187,7 @@ abstract class OrmTestCase extends TestCase
     protected function setUp(): void
     {
         if (count($this->supportedPlatforms) && !isset($this->supportedPlatforms[$this->getPlatform()->getName()])) {
-            $this->markTestSkipped(sprintf(
+            static::markTestSkipped(sprintf(
                 'No support for platform %s in test class %s.',
                 $this->getPlatform()->getName(),
                 get_class($this)

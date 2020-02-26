@@ -84,7 +84,7 @@ class STStartPointTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertEquals('POINT(0 0)', $result[0][1]);
+        static::assertEquals('POINT(0 0)', $result[0][1]);
     }
 
     /**
@@ -114,8 +114,8 @@ class STStartPointTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($angularLineString, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($angularLineString, $result[0]);
     }
 
     /**
@@ -146,7 +146,7 @@ class STStartPointTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($straightLineString, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($straightLineString, $result[0]);
     }
 }

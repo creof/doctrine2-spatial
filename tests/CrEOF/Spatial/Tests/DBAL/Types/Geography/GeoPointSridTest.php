@@ -82,7 +82,7 @@ class GeoPointSridTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POINT_SRID_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -109,8 +109,8 @@ class GeoPointSridTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POINT_SRID_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
-        $this->assertEquals(4326, $queryEntity->getPoint()->getSrid());
+        static::assertEquals($entity, $queryEntity);
+        static::assertEquals(4326, $queryEntity->getPoint()->getSrid());
     }
 
     //TODO test to find all null GeoPointSridEntity

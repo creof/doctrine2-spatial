@@ -46,7 +46,7 @@ class MultiLineStringTest extends TestCase
     {
         $multiLineString = new MultiLineString([]);
 
-        $this->assertEmpty($multiLineString->getLineStrings());
+        static::assertEmpty($multiLineString->getLineStrings());
     }
 
     /**
@@ -75,7 +75,7 @@ class MultiLineStringTest extends TestCase
         ];
         $multiLineString = new MultiLineString($lineStrings);
 
-        $this->assertEquals($expected, $multiLineString->toJson());
+        static::assertEquals($expected, $multiLineString->toJson());
     }
 
     /**
@@ -103,7 +103,7 @@ class MultiLineStringTest extends TestCase
         $multiLineString = new MultiLineString($lineStrings);
         $result = (string) $multiLineString;
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**
@@ -131,7 +131,7 @@ class MultiLineStringTest extends TestCase
         );
         $polygon = new MultiLineString([$firstLineString, $lastLineString]);
 
-        $this->assertEquals($lastLineString, $polygon->getLineString(-1));
+        static::assertEquals($lastLineString, $polygon->getLineString(-1));
     }
 
     /**
@@ -159,7 +159,7 @@ class MultiLineStringTest extends TestCase
         );
         $multiLineString = new MultiLineString([$firstLineString, $lastLineString]);
 
-        $this->assertEquals($firstLineString, $multiLineString->getLineString(0));
+        static::assertEquals($firstLineString, $multiLineString->getLineString(0));
     }
 
     /**
@@ -206,7 +206,7 @@ class MultiLineStringTest extends TestCase
 
         $multiLineString = new MultiLineString($lineStrings);
 
-        $this->assertEquals($expected, $multiLineString->toArray());
+        static::assertEquals($expected, $multiLineString->toArray());
     }
 
     /**
@@ -256,7 +256,7 @@ class MultiLineStringTest extends TestCase
             ]
         );
 
-        $this->assertEquals($expected, $multiLineString->getLineStrings());
+        static::assertEquals($expected, $multiLineString->getLineStrings());
     }
 
     /**
@@ -303,6 +303,6 @@ class MultiLineStringTest extends TestCase
 
         $multiLineString = new MultiLineString($rings);
 
-        $this->assertEquals($expected, $multiLineString->getLineStrings());
+        static::assertEquals($expected, $multiLineString->getLineStrings());
     }
 }

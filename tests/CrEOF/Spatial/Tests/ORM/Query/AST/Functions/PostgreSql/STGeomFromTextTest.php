@@ -91,8 +91,8 @@ class STGeomFromTextTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($lineString, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($lineString, $result[0]);
     }
 
     /**
@@ -119,7 +119,7 @@ class STGeomFromTextTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($pointA, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($pointA, $result[0]);
     }
 }

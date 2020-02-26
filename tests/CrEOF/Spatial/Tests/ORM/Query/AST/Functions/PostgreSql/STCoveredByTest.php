@@ -88,13 +88,13 @@ class STCoveredByTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($bigPolygon, $result[0][0]);
-        $this->assertFalse($result[0][1]);
-        $this->assertEquals($eccentricPolygon, $result[1][0]);
-        $this->assertFalse($result[1][1]);
-        $this->assertEquals($smallPolygon, $result[2][0]);
-        $this->assertTrue($result[2][1]);
+        static::assertCount(3, $result);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertFalse($result[0][1]);
+        static::assertEquals($eccentricPolygon, $result[1][0]);
+        static::assertFalse($result[1][1]);
+        static::assertEquals($smallPolygon, $result[2][0]);
+        static::assertTrue($result[2][1]);
     }
 
     /**
@@ -125,7 +125,7 @@ class STCoveredByTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($smallPolygon, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($smallPolygon, $result[0]);
     }
 }

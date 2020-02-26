@@ -93,8 +93,6 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
      * Function SQL name getter.
      *
      * @since 2.0 This function replace the protected property functionName.
-     *
-     * @return string
      */
     protected function getFunctionName(): string
     {
@@ -106,7 +104,7 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
      *
      * @since 2.0 This function replace the protected property maxGeomExpr.
      *
-     * @return int The inherited methods shall NOT return null, but 0 when function has no parameter.
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
     protected function getMaxParameter(): int
     {
@@ -118,7 +116,7 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
      *
      * @since 2.0 This function replace the protected property minGeomExpr.
      *
-     * @return int The inherited methods shall NOT return null, but 0 when function has no parameter.
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
     protected function getMinParameter(): int
     {
@@ -130,7 +128,7 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms.
+     * @return string[] a non-empty array of accepted platforms
      */
     protected function getPlatforms(): array
     {

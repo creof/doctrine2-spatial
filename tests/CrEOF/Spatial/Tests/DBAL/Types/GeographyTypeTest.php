@@ -165,6 +165,6 @@ class GeographyTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
 
-        self::assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 }

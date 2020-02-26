@@ -47,7 +47,7 @@ class PolygonTest extends TestCase
     {
         $polygon = new Polygon([]);
 
-        $this->assertEmpty($polygon->getRings());
+        static::assertEmpty($polygon->getRings());
     }
 
     /**
@@ -76,7 +76,7 @@ class PolygonTest extends TestCase
         ];
         $polygon = new Polygon($rings);
 
-        $this->assertEquals($expected, $polygon->toJson());
+        static::assertEquals($expected, $polygon->toJson());
     }
 
     /**
@@ -124,7 +124,7 @@ class PolygonTest extends TestCase
         );
         $polygon = new Polygon([$ringA, $ringB]);
 
-        $this->assertEquals($ringB, $polygon->getRing(-1));
+        static::assertEquals($ringB, $polygon->getRing(-1));
     }
 
     /**
@@ -152,7 +152,7 @@ class PolygonTest extends TestCase
         );
         $polygon = new Polygon([$ringA, $ringB]);
 
-        $this->assertEquals($ringA, $polygon->getRing(0));
+        static::assertEquals($ringA, $polygon->getRing(0));
     }
 
     /**
@@ -205,7 +205,7 @@ class PolygonTest extends TestCase
             ]
         );
 
-        $this->assertEquals($expected, $polygon->getRings());
+        static::assertEquals($expected, $polygon->getRings());
     }
 
     /**
@@ -234,7 +234,7 @@ class PolygonTest extends TestCase
 
         $polygon = new Polygon($rings);
 
-        $this->assertEquals($expected, $polygon->toArray());
+        static::assertEquals($expected, $polygon->toArray());
     }
 
     /**
@@ -265,7 +265,7 @@ class PolygonTest extends TestCase
 
         $polygon = new Polygon($rings);
 
-        $this->assertEquals($expected, $polygon->getRings());
+        static::assertEquals($expected, $polygon->getRings());
     }
 
     /**
@@ -293,7 +293,7 @@ class PolygonTest extends TestCase
         $polygon = new Polygon($rings);
         $result = (string) $polygon;
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**
@@ -324,6 +324,6 @@ class PolygonTest extends TestCase
 
         $polygon = new Polygon($rings);
 
-        $this->assertEquals($expected, $polygon->toArray());
+        static::assertEquals($expected, $polygon->toArray());
     }
 }

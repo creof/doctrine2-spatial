@@ -104,8 +104,8 @@ class GeometryWalkerTest extends OrmTestCase
         );
 
         $result = $query->getResult();
-        $this->assertEquals(new Point(0, 0), $result[0][1]);
-        $this->assertEquals(new Point(3, 3), $result[1][1]);
+        static::assertEquals(new Point(0, 0), $result[0][1]);
+        static::assertEquals(new Point(3, 3), $result[1][1]);
 
         $queryString = sprintf(
             'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
@@ -116,8 +116,8 @@ class GeometryWalkerTest extends OrmTestCase
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
     }
 
     /**
@@ -159,8 +159,8 @@ class GeometryWalkerTest extends OrmTestCase
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
-        $this->assertEquals(new Point(0, 0), $result[0][1]);
-        $this->assertEquals(new Point(3, 3), $result[1][1]);
+        static::assertEquals(new Point(0, 0), $result[0][1]);
+        static::assertEquals(new Point(3, 3), $result[1][1]);
 
         $queryString = sprintf(
             'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
@@ -171,7 +171,7 @@ class GeometryWalkerTest extends OrmTestCase
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
     }
 }

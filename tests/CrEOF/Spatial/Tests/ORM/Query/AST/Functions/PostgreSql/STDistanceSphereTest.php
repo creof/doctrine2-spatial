@@ -88,12 +88,12 @@ class STDistanceSphereTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($newYork, $result[0][0]);
-        $this->assertEquals(1305895.94823465, $result[0][1]);
-        $this->assertEquals($losAngeles, $result[1][0]);
-        $this->assertEquals(2684082.08249337, $result[1][1]);
-        $this->assertEquals($dallas, $result[2][0]);
-        $this->assertEquals(1313754.60684762, $result[2][1]);
+        static::assertCount(3, $result);
+        static::assertEquals($newYork, $result[0][0]);
+        static::assertEquals(1305895.94823465, $result[0][1]);
+        static::assertEquals($losAngeles, $result[1][0]);
+        static::assertEquals(2684082.08249337, $result[1][1]);
+        static::assertEquals($dallas, $result[2][0]);
+        static::assertEquals(1313754.60684762, $result[2][1]);
     }
 }

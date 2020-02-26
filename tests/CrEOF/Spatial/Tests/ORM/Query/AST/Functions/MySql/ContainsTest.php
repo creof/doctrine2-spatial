@@ -88,10 +88,10 @@ class ContainsTest extends OrmTestCase
         $query->setParameter('p', 'POINT(6 6)', 'string');
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($bigPolygon, $result[0]);
-        $this->assertEquals($smallPolygon, $result[1]);
-        $this->assertEquals($holeyPolygon, $result[2]);
+        static::assertCount(3, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+        static::assertEquals($smallPolygon, $result[1]);
+        static::assertEquals($holeyPolygon, $result[2]);
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
@@ -100,9 +100,9 @@ class ContainsTest extends OrmTestCase
         $query->setParameter('p', 'POINT(2 2)', 'string');
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0]);
-        $this->assertEquals($holeyPolygon, $result[1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+        static::assertEquals($holeyPolygon, $result[1]);
     }
 
     /**
@@ -134,15 +134,15 @@ class ContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($bigPolygon, $result[0][0]);
-        $this->assertEquals(1, $result[0][1]);
-        $this->assertEquals(1, $result[0][2]);
-        $this->assertEquals($smallPolygon, $result[1][0]);
-        $this->assertEquals(0, $result[1][1]);
-        $this->assertEquals(1, $result[1][2]);
-        $this->assertEquals($holeyPolygon, $result[2][0]);
-        $this->assertEquals(1, $result[2][1]);
-        $this->assertEquals(1, $result[2][2]);
+        static::assertCount(3, $result);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertEquals(1, $result[0][1]);
+        static::assertEquals(1, $result[0][2]);
+        static::assertEquals($smallPolygon, $result[1][0]);
+        static::assertEquals(0, $result[1][1]);
+        static::assertEquals(1, $result[1][2]);
+        static::assertEquals($holeyPolygon, $result[2][0]);
+        static::assertEquals(1, $result[2][1]);
+        static::assertEquals(1, $result[2][2]);
     }
 }

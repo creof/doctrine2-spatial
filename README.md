@@ -32,7 +32,32 @@ Update your composer.json to add this package:
     }
 ```
 
-You will also have to change the version requirement of doctrine to at least 2.3:
+You will also have to change the version requirement of doctrine to the stable version 2.7:
 ```yaml
-        "doctrine/orm": ">=2.3",
+   "doctrine/orm": ">=2.7",
 ```
+
+Compatibility
+-------------
+
+**Doctrine dev version**
+
+Continuous integration tests libraries with 2.8.x-dev version. We try to be compatible with this version.
+Continuous integration tests libraries with 2.8.x-dev version. We **DO NOT* try to be compatible with this version, 
+currently. There is too much difference between interface declarations.
+
+**MySQL 5.7 and 8.0**
+
+A lot of functions change their names between this two versions. Currently, tests works with MySQL5.7 and 
+failed with MySQL8.0, [because function names have 
+changed](https://stackoverflow.com/questions/60377271/why-some-spatial-functions-does-not-exists-on-my-mysql-server).
+
+**MariaDB 10**
+
+This version is not compatible with MariaDB version. Some spatial functions seems to work but their results are 
+different from MySQL version (Contains function is a good example)
+
+**PostgreSQL**
+
+ 
+ 

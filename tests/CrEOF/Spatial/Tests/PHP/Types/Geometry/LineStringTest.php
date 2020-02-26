@@ -57,7 +57,7 @@ class LineStringTest extends TestCase
     {
         $lineString = new LineString([]);
 
-        $this->assertEmpty($lineString->getPoints());
+        static::assertEmpty($lineString->getPoints());
     }
 
     /**
@@ -75,7 +75,7 @@ class LineStringTest extends TestCase
                 [0, 0],
             ]
         );
-        $this->assertEquals($expected, $lineString->toJson());
+        static::assertEquals($expected, $lineString->toJson());
     }
 
     /**
@@ -94,7 +94,7 @@ class LineStringTest extends TestCase
         );
         $actual = $lineString->getPoint(-1);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -118,8 +118,8 @@ class LineStringTest extends TestCase
         );
         $actual = $lineString->getPoints();
 
-        $this->assertCount(4, $actual);
-        $this->assertEquals($expected, $actual);
+        static::assertCount(4, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -138,7 +138,7 @@ class LineStringTest extends TestCase
         );
         $actual = $lineString->getPoint(1);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -155,7 +155,7 @@ class LineStringTest extends TestCase
             ]
         );
 
-        $this->assertTrue($lineString->isClosed());
+        static::assertTrue($lineString->isClosed());
     }
 
     /**
@@ -172,7 +172,7 @@ class LineStringTest extends TestCase
             ]
         );
 
-        $this->assertFalse($lineString->isClosed());
+        static::assertFalse($lineString->isClosed());
     }
 
     /**
@@ -190,7 +190,7 @@ class LineStringTest extends TestCase
             ]
         );
 
-        $this->assertEquals($expected, (string) $lineString);
+        static::assertEquals($expected, (string) $lineString);
     }
 
     /**
@@ -211,7 +211,7 @@ class LineStringTest extends TestCase
             new Point(3, 3),
         ]);
 
-        $this->assertCount(4, $lineString->getPoints());
-        $this->assertEquals($expected, $lineString->toArray());
+        static::assertCount(4, $lineString->getPoints());
+        static::assertEquals($expected, $lineString->toArray());
     }
 }

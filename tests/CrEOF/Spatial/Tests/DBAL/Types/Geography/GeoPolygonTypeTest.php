@@ -95,7 +95,7 @@ class GeoPolygonTypeTest extends OrmTestCase
             ->findByPolygon(new Polygon($rings))
         ;
 
-        $this->assertEquals($entity, $result[0]);
+        static::assertEquals($entity, $result[0]);
     }
 
     /**
@@ -120,7 +120,7 @@ class GeoPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -163,7 +163,7 @@ class GeoPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -199,6 +199,6 @@ class GeoPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 }

@@ -138,7 +138,7 @@ class PointTest extends TestCase
         $point = new Point(10, 10);
         $result = $point->getType();
 
-        $this->assertEquals('Point', $result);
+        static::assertEquals('Point', $result);
     }
 
     /**
@@ -148,16 +148,16 @@ class PointTest extends TestCase
     {
         $point = new Point(-73.7562317, 42.6525793);
 
-        $this->assertEquals(42.6525793, $point->getLatitude());
-        $this->assertEquals(-73.7562317, $point->getLongitude());
+        static::assertEquals(42.6525793, $point->getLatitude());
+        static::assertEquals(-73.7562317, $point->getLongitude());
 
         $point
             ->setLatitude(40.446111111111)
             ->setLongitude(-79.948611111111)
         ;
 
-        $this->assertEquals(40.446111111111, $point->getLatitude());
-        $this->assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals(40.446111111111, $point->getLatitude());
+        static::assertEquals(-79.948611111111, $point->getLongitude());
     }
 
     /**
@@ -167,38 +167,38 @@ class PointTest extends TestCase
     {
         $point = new Point('79:56:55W', '40:26:46N');
 
-        $this->assertEquals(40.446111111111, $point->getLatitude());
-        $this->assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals(40.446111111111, $point->getLatitude());
+        static::assertEquals(-79.948611111111, $point->getLongitude());
 
         $point = new Point('79°56\'55"W', '40°26\'46"N');
 
-        $this->assertEquals(40.446111111111, $point->getLatitude());
-        $this->assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals(40.446111111111, $point->getLatitude());
+        static::assertEquals(-79.948611111111, $point->getLongitude());
 
         $point = new Point('79° 56\' 55" W', '40° 26\' 46" N');
 
-        $this->assertEquals(40.446111111111, $point->getLatitude());
-        $this->assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals(40.446111111111, $point->getLatitude());
+        static::assertEquals(-79.948611111111, $point->getLongitude());
 
         $point = new Point('79°56′55″W', '40°26′46″N');
 
-        $this->assertEquals(40.446111111111, $point->getLatitude());
-        $this->assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals(40.446111111111, $point->getLatitude());
+        static::assertEquals(-79.948611111111, $point->getLongitude());
 
         $point = new Point('79° 56′ 55″ W', '40° 26′ 46″ N');
 
-        $this->assertEquals(40.446111111111, $point->getLatitude());
-        $this->assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals(40.446111111111, $point->getLatitude());
+        static::assertEquals(-79.948611111111, $point->getLongitude());
 
         $point = new Point('79:56:55.832W', '40:26:46.543N');
 
-        $this->assertEquals(40.446261944444, $point->getLatitude());
-        $this->assertEquals(-79.948842222222, $point->getLongitude());
+        static::assertEquals(40.446261944444, $point->getLatitude());
+        static::assertEquals(-79.948842222222, $point->getLongitude());
 
         $point = new Point('112:4:0W', '33:27:0N');
 
-        $this->assertEquals(33.45, $point->getLatitude());
-        $this->assertEquals(-112.06666666667, $point->getLongitude());
+        static::assertEquals(33.45, $point->getLatitude());
+        static::assertEquals(-112.06666666667, $point->getLongitude());
     }
 
     /**
@@ -209,7 +209,7 @@ class PointTest extends TestCase
         $expected = '{"type":"Point","coordinates":[5,5]}';
         $point = new Point([5, 5]);
 
-        $this->assertEquals($expected, $point->toJson());
+        static::assertEquals($expected, $point->toJson());
     }
 
     /**
@@ -233,7 +233,7 @@ class PointTest extends TestCase
         $expected = '5 5';
         $point = new Point([5, 5]);
 
-        $this->assertEquals($expected, (string) $point);
+        static::assertEquals($expected, (string) $point);
     }
 
     /**
@@ -257,7 +257,7 @@ class PointTest extends TestCase
         $point = new Point(10, 10, 2154);
         $result = $point->getSrid();
 
-        $this->assertEquals(2154, $result);
+        static::assertEquals(2154, $result);
     }
 
     /**
@@ -282,7 +282,7 @@ class PointTest extends TestCase
         $point = new Point(10, 10);
         $result = $point->toArray();
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**

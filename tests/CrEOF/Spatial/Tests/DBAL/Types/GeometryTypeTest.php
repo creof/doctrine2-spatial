@@ -111,7 +111,7 @@ class GeometryTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -136,7 +136,7 @@ class GeometryTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -163,7 +163,7 @@ class GeometryTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -194,7 +194,7 @@ class GeometryTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -225,7 +225,7 @@ class GeometryTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -262,6 +262,6 @@ class GeometryTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 }

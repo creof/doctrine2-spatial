@@ -92,7 +92,7 @@ class STSnapToGridTest extends OrmTestCase
             [1 => 'POINT(1 2.5)'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**
@@ -123,7 +123,7 @@ class STSnapToGridTest extends OrmTestCase
             [1 => 'POINT(1 3)'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**
@@ -156,7 +156,7 @@ class STSnapToGridTest extends OrmTestCase
             [1 => 'POINT(5.05 6.75)'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**
@@ -189,6 +189,6 @@ class STSnapToGridTest extends OrmTestCase
             [1 => 'POINT(5.25 6.55)'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 }

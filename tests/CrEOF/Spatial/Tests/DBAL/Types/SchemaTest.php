@@ -87,7 +87,7 @@ class SchemaTest extends OrmTestCase
                 foreach ($databaseTypes as $databaseType) {
                     $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($databaseType);
 
-                    $this->assertEquals($doctrineType, $typeMapping);
+                    static::assertEquals($doctrineType, $typeMapping);
                 }
             }
         }
@@ -104,7 +104,7 @@ class SchemaTest extends OrmTestCase
     {
         $result = $this->getSchemaTool()->getUpdateSchemaSql($this->getAllClassMetadata(), true);
 
-        $this->assertCount(0, $result);
+        static::assertCount(0, $result);
     }
 
     /**

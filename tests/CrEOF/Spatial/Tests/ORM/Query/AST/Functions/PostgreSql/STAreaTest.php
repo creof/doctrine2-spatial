@@ -86,7 +86,7 @@ class STAreaTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($smallPolygon, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($smallPolygon, $result[0]);
     }
 }

@@ -47,7 +47,7 @@ class MultiPolygonTest extends TestCase
     {
         $multiPolygon = new MultiPolygon([]);
 
-        $this->assertEmpty($multiPolygon->getPolygons());
+        static::assertEmpty($multiPolygon->getPolygons());
     }
 
     /**
@@ -80,7 +80,7 @@ class MultiPolygonTest extends TestCase
         ];
         $multiPolygon = new MultiPolygon($polygons);
 
-        $this->assertEquals($expected, $multiPolygon->toJson());
+        static::assertEquals($expected, $multiPolygon->toJson());
     }
 
     /**
@@ -116,7 +116,7 @@ class MultiPolygonTest extends TestCase
         );
         $multiPolygon = new MultiPolygon([$firstPolygon, $lastPolygon]);
 
-        $this->assertEquals($lastPolygon, $multiPolygon->getPolygon(-1));
+        static::assertEquals($lastPolygon, $multiPolygon->getPolygon(-1));
     }
 
     /**
@@ -152,7 +152,7 @@ class MultiPolygonTest extends TestCase
         );
         $multiPolygon = new MultiPolygon([$firstPolygon, $lastPolygon]);
 
-        $this->assertEquals($firstPolygon, $multiPolygon->getPolygon(0));
+        static::assertEquals($firstPolygon, $multiPolygon->getPolygon(0));
     }
 
     /**
@@ -217,7 +217,7 @@ class MultiPolygonTest extends TestCase
             ]
         );
 
-        $this->assertEquals($expected, $multiPolygon->getPolygons());
+        static::assertEquals($expected, $multiPolygon->getPolygons());
     }
 
     /**
@@ -277,7 +277,7 @@ class MultiPolygonTest extends TestCase
 
         $multiPolygon = new MultiPolygon($polygons);
 
-        $this->assertEquals($expected, $multiPolygon->getPolygons());
+        static::assertEquals($expected, $multiPolygon->getPolygons());
     }
 
     /**
@@ -309,7 +309,7 @@ class MultiPolygonTest extends TestCase
         $multiPolygon = new MultiPolygon($polygons);
         $result = (string) $multiPolygon;
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
     /**
@@ -369,6 +369,6 @@ class MultiPolygonTest extends TestCase
 
         $multiPolygon = new MultiPolygon($polygons);
 
-        $this->assertEquals($expected, $multiPolygon->toArray());
+        static::assertEquals($expected, $multiPolygon->toArray());
     }
 }

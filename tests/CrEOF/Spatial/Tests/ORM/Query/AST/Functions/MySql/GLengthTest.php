@@ -88,8 +88,8 @@ class GLengthTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($smallLineString, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($smallLineString, $result[0]);
     }
 
     /**
@@ -113,8 +113,8 @@ class GLengthTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($smallLineString, $result[0][0]);
-        $this->assertEquals(7.0710678118654755, $result[0][1]);
+        static::assertCount(1, $result);
+        static::assertEquals($smallLineString, $result[0][0]);
+        static::assertEquals(7.0710678118654755, $result[0][1]);
     }
 }

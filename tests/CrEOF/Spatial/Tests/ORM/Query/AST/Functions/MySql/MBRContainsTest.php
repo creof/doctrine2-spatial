@@ -90,9 +90,9 @@ class MBRContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0]);
-        $this->assertEquals($holeyPolygon, $result[1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+        static::assertEquals($holeyPolygon, $result[1]);
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
@@ -105,9 +105,9 @@ class MBRContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0]);
-        $this->assertEquals($holeyPolygon, $result[1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+        static::assertEquals($holeyPolygon, $result[1]);
     }
 
     /**
@@ -135,10 +135,10 @@ class MBRContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($envelopingPolygon, $result[0][0]);
-        $this->assertEquals(1, $result[0][1]);
-        $this->assertEquals($internalPolygon, $result[1][0]);
-        $this->assertEquals(0, $result[1][1]);
+        static::assertCount(2, $result);
+        static::assertEquals($envelopingPolygon, $result[0][0]);
+        static::assertEquals(1, $result[0][1]);
+        static::assertEquals($internalPolygon, $result[1][0]);
+        static::assertEquals(0, $result[1][1]);
     }
 }

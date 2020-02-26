@@ -113,13 +113,13 @@ class STSummaryTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($point, $result[0][0]);
-        $this->assertRegExp('/^Point\[.*G.*\]/', $result[0][1]);
-        $this->assertEquals($linestring, $result[1][0]);
-        $this->assertRegExp('/^LineString\[.*G.*\]/', $result[1][1]);
-        $this->assertEquals($polygon, $result[2][0]);
-        $this->assertRegExp('/^Polygon\[.*G.*\]/', $result[2][1]);
+        static::assertCount(3, $result);
+        static::assertEquals($point, $result[0][0]);
+        static::assertRegExp('/^Point\[.*G.*\]/', $result[0][1]);
+        static::assertEquals($linestring, $result[1][0]);
+        static::assertRegExp('/^LineString\[.*G.*\]/', $result[1][1]);
+        static::assertEquals($polygon, $result[2][0]);
+        static::assertRegExp('/^Polygon\[.*G.*\]/', $result[2][1]);
     }
 
     /**
@@ -165,12 +165,12 @@ class STSummaryTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($point, $result[0][0]);
-        $this->assertRegExp('/^Point\[[^G]*\]/', $result[0][1]);
-        $this->assertEquals($linestring, $result[1][0]);
-        $this->assertRegExp('/^LineString\[[^G]*\]/', $result[1][1]);
-        $this->assertEquals($polygon, $result[2][0]);
-        $this->assertRegExp('/^Polygon\[[^G]*\]/', $result[2][1]);
+        static::assertCount(3, $result);
+        static::assertEquals($point, $result[0][0]);
+        static::assertRegExp('/^Point\[[^G]*\]/', $result[0][1]);
+        static::assertEquals($linestring, $result[1][0]);
+        static::assertRegExp('/^LineString\[[^G]*\]/', $result[1][1]);
+        static::assertEquals($polygon, $result[2][0]);
+        static::assertRegExp('/^Polygon\[[^G]*\]/', $result[2][1]);
     }
 }

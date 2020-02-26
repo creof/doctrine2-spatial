@@ -87,6 +87,6 @@ class STMakeEnvelopeTest extends OrmTestCase
             [1 => 'POLYGON((5 5,5 10,10 10,10 5,5 5))'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 }

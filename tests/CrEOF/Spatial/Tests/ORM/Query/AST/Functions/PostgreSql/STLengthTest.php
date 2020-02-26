@@ -85,9 +85,9 @@ class STLengthTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($angularLineString, $result[0][0]);
-        $this->assertEquals(19.1126623906578, $result[0][1]);
+        static::assertCount(1, $result);
+        static::assertEquals($angularLineString, $result[0][0]);
+        static::assertEquals(19.1126623906578, $result[0][1]);
     }
 
     /**
@@ -116,7 +116,7 @@ class STLengthTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($angularLineString, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($angularLineString, $result[0]);
     }
 }

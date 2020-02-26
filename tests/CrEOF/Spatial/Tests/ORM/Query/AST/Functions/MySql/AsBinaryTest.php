@@ -88,7 +88,7 @@ class AsBinaryTest extends OrmTestCase
         $binaryA = pack('H*', $stringA);
         $binaryB = pack('H*', $stringB);
 
-        $this->assertEquals($binaryA, $result[0][1]);
-        $this->assertEquals($binaryB, $result[1][1]);
+        static::assertEquals($binaryA, $result[0][1]);
+        static::assertEquals($binaryB, $result[1][1]);
     }
 }

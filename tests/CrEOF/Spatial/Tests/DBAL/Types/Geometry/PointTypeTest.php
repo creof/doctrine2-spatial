@@ -83,7 +83,7 @@ class PointTypeTest extends OrmTestCase
 
         $result = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->findByPoint($point);
 
-        $this->assertEquals($entity, $result[0]);
+        static::assertEquals($entity, $result[0]);
     }
 
     /**
@@ -108,7 +108,7 @@ class PointTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -136,7 +136,7 @@ class PointTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::POINT_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     //TODO test to find a null geometry

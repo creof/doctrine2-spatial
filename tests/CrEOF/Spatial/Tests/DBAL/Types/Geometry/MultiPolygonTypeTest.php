@@ -115,7 +115,7 @@ class MultiPolygonTypeTest extends OrmTestCase
             ->findByMultiPolygon(new MultiPolygon($polygons))
         ;
 
-        $this->assertEquals($entity, $result[0]);
+        static::assertEquals($entity, $result[0]);
     }
 
     /**
@@ -170,7 +170,7 @@ class MultiPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -195,7 +195,7 @@ class MultiPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::MULTIPOLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     //TODO Try to find a null multiploygon

@@ -90,13 +90,13 @@ class STLineCrossingDirectionTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(3, $result);
-        $this->assertEquals($lineStringX, $result[0][0]);
-        $this->assertEquals(2, $result[0][1]);
-        $this->assertEquals($lineStringY, $result[1][0]);
-        $this->assertEquals(1, $result[1][1]);
-        $this->assertEquals($lineStringZ, $result[2][0]);
-        $this->assertEquals(-1, $result[2][1]);
+        static::assertCount(3, $result);
+        static::assertEquals($lineStringX, $result[0][0]);
+        static::assertEquals(2, $result[0][1]);
+        static::assertEquals($lineStringY, $result[1][0]);
+        static::assertEquals(1, $result[1][1]);
+        static::assertEquals($lineStringZ, $result[2][0]);
+        static::assertEquals(-1, $result[2][1]);
     }
 
     /**
@@ -127,7 +127,7 @@ class STLineCrossingDirectionTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($lineStringY, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($lineStringY, $result[0]);
     }
 }

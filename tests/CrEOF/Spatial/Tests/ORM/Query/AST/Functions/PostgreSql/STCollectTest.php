@@ -95,6 +95,6 @@ class STCollectTest extends OrmTestCase
             [1 => 'MULTIPOINT(1 2,-2 3)'],
         ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 }

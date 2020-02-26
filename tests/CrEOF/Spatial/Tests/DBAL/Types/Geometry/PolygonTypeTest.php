@@ -92,7 +92,7 @@ class PolygonTypeTest extends OrmTestCase
 
         $result = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->findByPolygon(new Polygon($rings));
 
-        $this->assertEquals($entity, $result[0]);
+        static::assertEquals($entity, $result[0]);
     }
 
     /**
@@ -117,7 +117,7 @@ class PolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -160,7 +160,7 @@ class PolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -196,6 +196,6 @@ class PolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 }

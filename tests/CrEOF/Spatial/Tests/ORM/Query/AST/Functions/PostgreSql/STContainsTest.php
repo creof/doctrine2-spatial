@@ -88,11 +88,11 @@ class STContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0][0]);
-        $this->assertTrue($result[0][1]);
-        $this->assertEquals($smallPolygon, $result[1][0]);
-        $this->assertFalse($result[1][1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertTrue($result[0][1]);
+        static::assertEquals($smallPolygon, $result[1][0]);
+        static::assertFalse($result[1][1]);
     }
 
     /**
@@ -122,8 +122,8 @@ class STContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($bigPolygon, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($bigPolygon, $result[0]);
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
@@ -136,8 +136,8 @@ class STContainsTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0]);
-        $this->assertEquals($holeyPolygon, $result[1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+        static::assertEquals($holeyPolygon, $result[1]);
     }
 }

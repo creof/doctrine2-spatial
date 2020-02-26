@@ -87,10 +87,10 @@ class STOverlapsTest extends OrmTestCase
         $query->setParameter('p1', 'POINT(4 4)', 'string');
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0]['point']);
-        $this->assertFalse($result[0]['overlap']);
-        $this->assertEquals($smallPolygon, $result[1]['point']);
-        $this->assertTrue($result[1]['overlap']);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0]['point']);
+        static::assertFalse($result[0]['overlap']);
+        static::assertEquals($smallPolygon, $result[1]['point']);
+        static::assertTrue($result[1]['overlap']);
     }
 }

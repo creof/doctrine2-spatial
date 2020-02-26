@@ -57,7 +57,7 @@ class MultiPointTest extends TestCase
     {
         $multiPoint = new MultiPoint([]);
 
-        $this->assertEmpty($multiPoint->getPoints());
+        static::assertEmpty($multiPoint->getPoints());
     }
 
     /**
@@ -75,7 +75,7 @@ class MultiPointTest extends TestCase
             ]
         );
 
-        $this->assertEquals($expected, $multiPoint->toJson());
+        static::assertEquals($expected, $multiPoint->toJson());
     }
 
     /**
@@ -105,8 +105,8 @@ class MultiPointTest extends TestCase
 
         $actual = $multiPoint->getPoints();
 
-        $this->assertCount(4, $actual);
-        $this->assertEquals($expected, $actual);
+        static::assertCount(4, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -125,7 +125,7 @@ class MultiPointTest extends TestCase
         );
         $actual = $multiPoint->getPoint(-1);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -149,8 +149,8 @@ class MultiPointTest extends TestCase
         );
         $actual = $multiPoint->getPoints();
 
-        $this->assertCount(4, $actual);
-        $this->assertEquals($expected, $actual);
+        static::assertCount(4, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -169,7 +169,7 @@ class MultiPointTest extends TestCase
         );
         $actual = $multiPoint->getPoint(1);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -187,7 +187,7 @@ class MultiPointTest extends TestCase
             ]
         );
 
-        $this->assertEquals($expected, (string) $multiPoint);
+        static::assertEquals($expected, (string) $multiPoint);
     }
 
     /**
@@ -208,7 +208,7 @@ class MultiPointTest extends TestCase
             new Point(3, 3),
         ]);
 
-        $this->assertCount(4, $multiPoint->getPoints());
-        $this->assertEquals($expected, $multiPoint->toArray());
+        static::assertCount(4, $multiPoint->getPoints());
+        static::assertEquals($expected, $multiPoint->toArray());
     }
 }

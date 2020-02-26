@@ -86,8 +86,8 @@ class AreaTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($expected, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($expected, $result[0]);
     }
 
     /**
@@ -114,9 +114,9 @@ class AreaTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertEquals(100, $result[0][1]);
-        $this->assertEquals(96, $result[1][1]);
-        $this->assertEquals(100, $result[2][1]);
-        $this->assertEquals(4, $result[3][1]);
+        static::assertEquals(100, $result[0][1]);
+        static::assertEquals(96, $result[1][1]);
+        static::assertEquals(100, $result[2][1]);
+        static::assertEquals(4, $result[3][1]);
     }
 }

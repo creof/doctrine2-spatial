@@ -87,8 +87,8 @@ class EnvelopeTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(1, $result);
-        $this->assertEquals($holeyPolygon, $result[0]);
+        static::assertCount(1, $result);
+        static::assertEquals($holeyPolygon, $result[0]);
     }
 
     /**
@@ -113,7 +113,7 @@ class EnvelopeTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-        $this->assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[0][1]);
-        $this->assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[1][1]);
+        static::assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[0][1]);
+        static::assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[1][1]);
     }
 }

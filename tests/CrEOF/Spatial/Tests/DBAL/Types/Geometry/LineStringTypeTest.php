@@ -91,7 +91,7 @@ class LineStringTypeTest extends OrmTestCase
             ->findByLineString($lineString)
         ;
 
-        $this->assertEquals($entity, $result[0]);
+        static::assertEquals($entity, $result[0]);
     }
 
     /**
@@ -125,7 +125,7 @@ class LineStringTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     /**
@@ -150,7 +150,7 @@ class LineStringTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
     //TODO test to find all null linestring

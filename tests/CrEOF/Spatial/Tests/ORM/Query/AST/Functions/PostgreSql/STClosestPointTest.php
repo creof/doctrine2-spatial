@@ -90,10 +90,10 @@ class STClosestPointTest extends OrmTestCase
 
         $result = $query->getResult();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($bigPolygon, $result[0][0]);
-        $this->assertEquals('POINT(2 2)', $result[0][1]);
-        $this->assertEquals($smallPolygon, $result[1][0]);
-        $this->assertEquals('POINT(5 5)', $result[1][1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertEquals('POINT(2 2)', $result[0][1]);
+        static::assertEquals($smallPolygon, $result[1][0]);
+        static::assertEquals('POINT(5 5)', $result[1][1]);
     }
 }
