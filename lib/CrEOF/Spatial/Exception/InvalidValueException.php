@@ -30,7 +30,7 @@ use Exception;
  * InvalidValueException class.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class InvalidValueException extends Exception
 {

@@ -28,7 +28,7 @@ namespace CrEOF\Spatial\PHP\Types\Geometry;
  * Geometry interface for Geometry objects.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 interface GeometryInterface
 {

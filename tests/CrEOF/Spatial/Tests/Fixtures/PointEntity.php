@@ -35,7 +35,7 @@ use Doctrine\ORM\Mapping\Table;
  * Point entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @Entity
  * @Table

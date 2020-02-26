@@ -30,7 +30,7 @@ use CrEOF\Spatial\DBAL\Types\GeometryType;
  * Doctrine POLYGON type.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class PolygonType extends GeometryType
 {

@@ -31,7 +31,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  *
  * @author  luca capra <luca.capra@create-net.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class Distance extends AbstractSpatialDQLFunction
 {

@@ -31,7 +31,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
  * Abstract geometry object for spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractGeometry implements GeometryInterface
 {

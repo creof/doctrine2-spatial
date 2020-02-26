@@ -36,7 +36,7 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  * http://docs.geotools.org/latest/userguide/library/referencing/order.html
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractPoint extends AbstractGeometry
 {

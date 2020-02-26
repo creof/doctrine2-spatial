@@ -38,7 +38,7 @@ use Doctrine\ORM\Query\SqlWalker;
  * Custom DQL AST walker to return geometry objects from queries instead of strings.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class GeometryWalker extends SqlWalker
 {

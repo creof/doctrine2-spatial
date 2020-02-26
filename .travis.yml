@@ -39,12 +39,12 @@ script:
   - ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-php ./build/coverage/coverage-mysql-$TRAVIS_PHP_VERSION-$ORM.cov
 
 after_script:
-  # Code should respect rules
-  - composer check-quality-code
   - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
   - ./vendor/bin/coveralls -v --exclude-no-stmt
   #Push code climate coverage
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  # Code should respect rules
+  - composer check-quality-code
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK

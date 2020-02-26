@@ -33,7 +33,7 @@ use Doctrine\ORM\Query\QueryException;
 /**
  * ST_SnapToGrid DQL function.
  *
- * Possible signatures:
+ * Possible signatures with 2, 3, 5 or 6 parameters:
  *  geometry ST_SnapToGrid(geometry geomA, float size);
  *  geometry ST_SnapToGrid(geometry geomA, float sizeX, float sizeY);
  *  geometry ST_SnapToGrid(geometry geomA, float originX, float originY, float sizeX, float sizeY);

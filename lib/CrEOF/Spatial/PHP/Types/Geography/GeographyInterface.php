@@ -28,7 +28,7 @@ namespace CrEOF\Spatial\PHP\Types\Geography;
  * Geography interface for Geography objects.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 interface GeographyInterface
 {

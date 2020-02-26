@@ -30,7 +30,7 @@ use CrEOF\Spatial\PHP\Types\AbstractMultiLineString;
  * MultiLineString object for MULTILINESTRING geometry type.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class MultiLineString extends AbstractMultiLineString
 {

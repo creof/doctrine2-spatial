@@ -45,7 +45,7 @@ use Doctrine\ORM\ORMException;
  * @see /doc/test.md
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license http://alexandre-tranchant.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @method EntityManagerInterface getEntityManager Return the entity interface
  */

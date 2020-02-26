@@ -31,7 +31,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license http://mit-license.org MIT
+ * @license https://mit-license.org MIT
  */
 class STTouches extends AbstractSpatialDQLFunction
 {

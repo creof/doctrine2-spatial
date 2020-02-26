@@ -34,7 +34,7 @@ use Doctrine\ORM\Mapping\Table;
  * Geometry entity without type hint.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @Entity
  * @Table

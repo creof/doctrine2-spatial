@@ -40,7 +40,7 @@ use Doctrine\ORM\Query\SqlWalker;
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * This spatial class is updated to avoid non-covered code. A lot of PostgreSQL was not tested, but that tha was not
  * displayed by coverage rapport. Some MySQL methods generates bug since MySQL 8.0 because their name was updated.

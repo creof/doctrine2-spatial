@@ -34,7 +34,7 @@ use Doctrine\ORM\Mapping\Id;
  * Geography point entity specifying SRID.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @Entity
  */

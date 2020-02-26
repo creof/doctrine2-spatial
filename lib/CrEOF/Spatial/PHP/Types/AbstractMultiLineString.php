@@ -30,7 +30,7 @@ use CrEOF\Spatial\Exception\InvalidValueException;
  * Abstract MultiLineString object for MULTILINESTRING spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractMultiLineString extends AbstractGeometry
 {

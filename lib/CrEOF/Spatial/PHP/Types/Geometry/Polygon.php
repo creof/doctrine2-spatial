@@ -30,7 +30,7 @@ use CrEOF\Spatial\PHP\Types\AbstractPolygon;
  * Polygon object for POLYGON geometry type.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class Polygon extends AbstractPolygon
 {

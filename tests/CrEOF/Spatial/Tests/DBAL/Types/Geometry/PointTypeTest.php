@@ -38,7 +38,7 @@ use Doctrine\ORM\ORMException;
  * Doctrine PointType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @group geometry
  *
