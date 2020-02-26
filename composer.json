@@ -33,7 +33,7 @@
     },
     "scripts": {
         "tt": "php-cs-fixer fix --help",
-        "quality": [
+        "check-quality-code": [
             "php-cs-fixer fix --dry-run --config=.php_cs.dist --allow-risky=yes -vvv",
             "phpcs --standard=phpcs.xml.dist -s",
             "phpmd lib text ./phpmd.lib.xml",

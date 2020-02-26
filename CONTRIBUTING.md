@@ -7,7 +7,7 @@ Quality of code is auto-verified by php-cs-fixer, php code sniffer and php mess 
 Before a commit, launch the quality script:
 
 ```bash
-composer quality
+composer check-quality-code
 ```
 
 You can launch PHPCS-FIXER only with:
