@@ -9,3 +9,13 @@ ratings:
   paths:
   - "**.php"
 exclude_paths: []
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        php:
+          mass_threshold: 42
+    checks:
+      Similar code:
+        enabled: false
