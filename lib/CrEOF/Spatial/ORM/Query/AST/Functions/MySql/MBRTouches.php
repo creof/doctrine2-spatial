@@ -31,35 +31,54 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * Whether MBRs of two geometries touch.
  *
  * @author  Mohammad Heydari <mdh.heydari@gmail.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://mdhheydari.mit-license.org MIT
  */
 class MBRTouches extends AbstractSpatialDQLFunction
 {
     /**
-     * SQL Function name.
+     * Function SQL name getter.
      *
-     * @var string
+     * @since 2.0 This function replace the protected property functionName.
      */
-    protected $functionName = 'MBRTouches';
+    protected function getFunctionName(): string
+    {
+        return 'MBRTouches';
+    }
 
     /**
-     * Maximum number of parameters accepted by SQL function.
+     * Maximum number of parameter for the spatial function.
      *
-     * @var int
+     * @since 2.0 This function replace the protected property maxGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
-    protected $maxGeomExpr = 2;
+    protected function getMaxParameter(): int
+    {
+        return 2;
+    }
 
     /**
-     * Minimum number of parameters accepted by SQL function.
+     * Minimum number of parameter for the spatial function.
      *
-     * @var int
+     * @since 2.0 This function replace the protected property minGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
-    protected $minGeomExpr = 2;
+    protected function getMinParameter(): int
+    {
+        return 2;
+    }
 
     /**
-     * Platform accepting this function.
+     * Get the platforms accepted.
      *
-     * @var array
+     * @since 2.0 This function replace the protected property platforms.
+     *
+     * @return string[] a non-empty array of accepted platforms
      */
-    protected $platforms = ['mysql'];
+    protected function getPlatforms(): array
+    {
+        return ['mysql'];
+    }
 }

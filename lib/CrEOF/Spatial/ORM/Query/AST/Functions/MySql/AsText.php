@@ -31,35 +31,40 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * AsText DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://dlambert.mit-license.org MIT
  */
 class AsText extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
-     * SQL Function name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $functionName = 'AsText';
+    protected function getFunctionName(): string
+    {
+        return 'AsText';
+    }
 
     /**
-     * Maximum number of parameters accepted by SQL function.
-     *
-     * @var int
+     * {@inheritdoc}
      */
-    protected $maxGeomExpr = 1;
+    protected function getMaxParameter(): int
+    {
+        return 1;
+    }
 
     /**
-     * Minimum number of parameters accepted by SQL function.
-     *
-     * @var int
+     * {@inheritdoc}
      */
-    protected $minGeomExpr = 1;
+    protected function getMinParameter(): int
+    {
+        return 1;
+    }
 
     /**
-     * Platform accepting this function.
-     *
-     * @var array
+     * {@inheritdoc}
      */
-    protected $platforms = ['mysql'];
+    protected function getPlatforms(): array
+    {
+        return ['mysql'];
+    }
 }

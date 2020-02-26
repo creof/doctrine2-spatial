@@ -28,20 +28,55 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
  * MBRDisjoint DQL function.
+ *
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org
  */
 class MBRDisjoint extends AbstractSpatialDQLFunction
 {
     /**
-     * SQL Function name.
+     * Function SQL name getter.
      *
-     * @var string
+     * @since 2.0 This function replace the protected property functionName.
      */
-    protected $functionName = 'MBRDisjoint';
+    protected function getFunctionName(): string
+    {
+        return 'MBRDisjoint';
+    }
 
     /**
-     * Platform accepting this function.
+     * Maximum number of parameter for the spatial function.
      *
-     * @var array
+     * @since 2.0 This function replace the protected property maxGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
-    protected $platforms = ['mysql'];
+    protected function getMaxParameter(): int
+    {
+        return 2;
+    }
+
+    /**
+     * Minimum number of parameter for the spatial function.
+     *
+     * @since 2.0 This function replace the protected property minGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     */
+    protected function getMinParameter(): int
+    {
+        return 2;
+    }
+
+    /**
+     * Get the platforms accepted.
+     *
+     * @since 2.0 This function replace the protected property platforms.
+     *
+     * @return string[] a non-empty array of accepted platforms
+     */
+    protected function getPlatforms(): array
+    {
+        return ['mysql'];
+    }
 }

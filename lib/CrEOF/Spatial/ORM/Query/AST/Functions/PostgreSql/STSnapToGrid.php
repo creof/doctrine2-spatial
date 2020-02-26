@@ -40,38 +40,11 @@ use Doctrine\ORM\Query\QueryException;
  *  geometry ST_SnapToGrid(geometry geomA, geometry pointOrigin, float sizeX, float sizeY, float sizeZ, float sizeM);
  *
  * @author  Dragos Protung
- * @license http://mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org
  */
 class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
-    /**
-     * SQL Function name.
-     *
-     * @var string
-     */
-    protected $functionName = 'ST_SnapToGrid';
-
-    /**
-     * Maximum number of parameters accepted by SQL function.
-     *
-     * @var int
-     */
-    protected $maxGeomExpr = 6;
-
-    /**
-     * Minimum number of parameters accepted by SQL function.
-     *
-     * @var int
-     */
-    protected $minGeomExpr = 2;
-
-    /**
-     * Platform accepting this function.
-     *
-     * @var array
-     */
-    protected $platforms = ['postgresql'];
-
     /**
      * Parse SQL.
      *
@@ -87,32 +60,80 @@ class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometry
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
         // 1st signature
-        $this->geomExpr[] = $parser->ArithmeticFactor();
+        $this->addGeometryExpression($parser->ArithmeticFactor());
         $parser->match(Lexer::T_COMMA);
-        $this->geomExpr[] = $parser->ArithmeticFactor();
+        $this->addGeometryExpression($parser->ArithmeticFactor());
 
         // 2nd signature
         if (Lexer::T_COMMA === $lexer->lookahead['type']) {
             $parser->match(Lexer::T_COMMA);
-            $this->geomExpr[] = $parser->ArithmeticFactor();
+            $this->addGeometryExpression($parser->ArithmeticFactor());
         }
 
         // 3rd signature
         if (Lexer::T_COMMA === $lexer->lookahead['type']) {
             $parser->match(Lexer::T_COMMA);
-            $this->geomExpr[] = $parser->ArithmeticFactor();
+            $this->addGeometryExpression($parser->ArithmeticFactor());
 
             $parser->match(Lexer::T_COMMA);
-            $this->geomExpr[] = $parser->ArithmeticFactor();
+            $this->addGeometryExpression($parser->ArithmeticFactor());
 
             // 4th signature
             if (Lexer::T_COMMA === $lexer->lookahead['type']) {
                 // sizeM
                 $parser->match(Lexer::T_COMMA);
-                $this->geomExpr[] = $parser->ArithmeticFactor();
+                $this->addGeometryExpression($parser->ArithmeticFactor());
             }
         }
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+    }
+
+    /**
+     * Function SQL name getter.
+     *
+     * @since 2.0 This function replace the protected property functionName.
+     *
+     * @return string
+     */
+    protected function getFunctionName(): string
+    {
+        return 'ST_SnapToGrid';
+    }
+
+    /**
+     * Maximum number of parameter for the spatial function.
+     *
+     * @since 2.0 This function replace the protected property maxGeomExpr.
+     *
+     * @return int The inherited methods shall NOT return null, but 0 when function has no parameter.
+     */
+    protected function getMaxParameter(): int
+    {
+        return 6;
+    }
+
+    /**
+     * Minimum number of parameter for the spatial function.
+     *
+     * @since 2.0 This function replace the protected property minGeomExpr.
+     *
+     * @return int The inherited methods shall NOT return null, but 0 when function has no parameter.
+     */
+    protected function getMinParameter(): int
+    {
+        return 2;
+    }
+
+    /**
+     * Get the platforms accepted.
+     *
+     * @since 2.0 This function replace the protected property platforms.
+     *
+     * @return string[] a non-empty array of accepted platforms.
+     */
+    protected function getPlatforms(): array
+    {
+        return ['postgresql'];
     }
 }

@@ -30,35 +30,54 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * ST_Overlaps DQL function.
  *
  * @author  Dragos Protung
- * @license http://mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org
  */
 class STOverlaps extends AbstractSpatialDQLFunction
 {
     /**
-     * SQL Function name.
+     * Function SQL name getter.
      *
-     * @var string
+     * @since 2.0 This function replace the protected property functionName.
      */
-    protected $functionName = 'ST_Overlaps';
+    protected function getFunctionName(): string
+    {
+        return 'ST_Overlaps';
+    }
 
     /**
-     * Maximum number of parameters accepted by SQL function.
+     * Maximum number of parameter for the spatial function.
      *
-     * @var int
+     * @since 2.0 This function replace the protected property maxGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
-    protected $maxGeomExpr = 2;
+    protected function getMaxParameter(): int
+    {
+        return 2;
+    }
 
     /**
-     * Minimum number of parameters accepted by SQL function.
+     * Minimum number of parameter for the spatial function.
      *
-     * @var int
+     * @since 2.0 This function replace the protected property minGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
      */
-    protected $minGeomExpr = 2;
+    protected function getMinParameter(): int
+    {
+        return 2;
+    }
 
     /**
-     * Platform accepting this function.
+     * Get the platforms accepted.
      *
-     * @var array
+     * @since 2.0 This function replace the protected property platforms.
+     *
+     * @return string[] a non-empty array of accepted platforms
      */
-    protected $platforms = ['postgresql'];
+    protected function getPlatforms(): array
+    {
+        return ['postgresql'];
+    }
 }
