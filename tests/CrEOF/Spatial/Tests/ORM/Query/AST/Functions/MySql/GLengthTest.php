@@ -39,6 +39,7 @@ use Doctrine\ORM\ORMException;
  * @license https://dlambert.mit-license.org MITIT
  *
  * @group dql
+ * @group mysql5
  *
  * @internal
  * @coversDefaultClass
