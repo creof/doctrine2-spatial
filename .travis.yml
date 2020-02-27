@@ -19,9 +19,9 @@ install:
 script:
   - |
     if [ "x$COVERAGE" == "xyes" ]; then
-       ./vendor/bin/phpunit -v --configuration ./tests/travis/travis.$DB.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
     else
-       ./vendor/bin/phpunit -v --configuration ./tests/travis/travis.$DB.xml
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml
     fi
 
 after_script:
