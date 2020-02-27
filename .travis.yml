@@ -11,10 +11,7 @@ cache:
     - $HOME/.composer/cache
 
 before_script:
-  - export CC_TEST_REPORTER_ID=4ea3c7fddc36fb231ef19a43d186f1752b9195b8035bdcd4795769e9967e0f3c
   - composer self-update
-#  - cp ./composer.json ./tests/travis/composer.orm2.7.json
-#  - cp ./tests/travis/composer.orm$ORM.json ./composer.json
   - composer install --prefer-source
   - mkdir -p ./build/coverage
   # Test coverage for code climate
@@ -25,7 +22,7 @@ before_script:
 script:
   - |
     if [ "x$COVERAGE" == "xyes" ]; then
-       /vendor/bin/phpunit -v -c --configuration ./tests/travis/travis.$DB.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
+       ./vendor/bin/phpunit -v -c --configuration ./tests/travis/travis.$DB.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
     else
        ./vendor/bin/phpunit -v -c --configuration ./tests/travis/travis.$DB.xml
     fi
