@@ -10,22 +10,20 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
-before_script:
+install:
   # Test coverage for code climate
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-
-install:
   - composer install --prefer-source
   - mkdir -p ./build/coverage
 
 script:
   - |
     if [ "x$COVERAGE" == "xyes" ]; then
-       ./vendor/bin/phpunit -v -c --configuration ./tests/travis/travis.$DB.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/travis.$DB.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
     else
-       ./vendor/bin/phpunit -v -c --configuration ./tests/travis/travis.$DB.xml
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/travis.$DB.xml
     fi
 
 after_script:
