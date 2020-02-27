@@ -4,7 +4,7 @@ The **Doctrine2-Spatial** library allows you to use spatial methods on your
 MySQL and PostGIS database.
 
  * [Symfony Install](install.md)
- * [Symfony Configuration](configuration.md)
+ * [Symfony Configuration](configuration/configuration.md)
  * [Common Methods](common.md) (also included in MySQL and PostGreSQL)
  * [MySQL Methods](mysql.md)
  * [PostGreSQL Methods](postgresql.md)

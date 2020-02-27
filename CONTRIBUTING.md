@@ -1,6 +1,15 @@
 Contributing
 ============
 
+## Which step to submit a new function
+
+1 - Create the new function into the CrEOF\Spatial\ORM\Query\AST\Functions namespace
+2 - Create the class test into the CrEOF\Spatial\ORM\Query\AST\Functions
+3 - Declare the new function into the [OrmTestCase](./tests/CrEOF/Spatial/Tests/OrmTestCase.php) class test
+4 - Launch the test ;) (Read the last paragraph of this page, to know how to config your dev environment)
+5 - Update the [MySQL](doc/mysql.md) or [PostGreSQL](doc/postgresql.md) description
+6 - Add your function into the configuration [symfony chapter](doc/configuration/configuration.md) 
+
 ## Code quality
 Quality of code is auto-verified by php-cs-fixer, php code sniffer and php mess detector.
 
@@ -24,7 +33,6 @@ You can launch PHP Mess Detector only with:
 ```bash
 composer phpmd
 ```
-
 
 ## Tests
 
