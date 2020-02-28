@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_AsText DQL function.
+ * ST_Dimension DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class STAsText extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class StDimension extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +41,7 @@ class STAsText extends AbstractSpatialDQLFunction implements ReturnsGeometryInte
      */
     protected function getFunctionName(): string
     {
-        return 'ST_AsText';
+        return 'ST_Dimension';
     }
 
     /**
@@ -79,6 +77,6 @@ class STAsText extends AbstractSpatialDQLFunction implements ReturnsGeometryInte
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

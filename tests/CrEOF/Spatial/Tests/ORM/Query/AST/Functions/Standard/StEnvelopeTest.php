@@ -22,21 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
 use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Version;
 use Doctrine\ORM\ORMException;
 
 /**
- * DQL type wrapping tests.
+ * ST_Envelope DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -47,7 +43,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class WrappingTest extends OrmTestCase
+class StEnvelopeTest extends OrmTestCase
 {
     use PolygonHelperTrait;
 
@@ -61,12 +57,46 @@ class WrappingTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
-        $this->usesEntity(self::GEOMETRY_ENTITY);
-        $this->usesType('point');
+        $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
+
         parent::setUp();
     }
 
-    //phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
+    /**
+     * Test a DQL containing function to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testSelectStEnvelope()
+    {
+        $this->createBigPolygon();
+        $this->createHoleyPolygon();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT ST_AsText(ST_Envelope(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
+        $result = $query->getResult();
+
+        switch ($this->getPlatform()->getName()) {
+            case 'mysql':
+                //polygon is equals, but not the same
+                $expected = 'POLYGON((0 0,10 0,10 10,0 10,0 0))';
+                break;
+            case 'postgresql':
+            default:
+                $expected = 'POLYGON((0 0,0 10,10 10,10 0,0 0))';
+        }
+        static::assertEquals($expected, $result[0][1]);
+        static::assertEquals($expected, $result[1][1]);
+    }
 
     /**
      * Test a DQL containing function to test in the predicate.
@@ -78,77 +108,33 @@ class WrappingTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testTypeWrappingSelect()
+    public function testStEnvelopeWhereParameter()
     {
-        $this->createBigPolygon();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $dql = 'SELECT p, ST_Contains(p.polygon, :geometry) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p';
-
-//        switch ($this->getPlatform()->getName()) {
-//            case 'postgresql':
-//            case 'mysql':
-//                $function = 'ST_Contains';
-//                break;
-//            default:
-//                throw new UnsupportedPlatformException(sprintf(
-//                    'DBAL platform "%s" is not currently supported.',
-//                    $this->getPlatform()->getName()
-//                ));
-//        }
-//
-//        $dql = sprintf($dql, $function);
-
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('geometry', new Point(2, 2), 'point');
-        $query->processParameterValue('geometry');
-
-        $result = $query->getSQL();
-//        var_dump($result);
-
-        $parameter = Type::getType('point')->convertToDatabaseValueSql('?', $this->getPlatform());
-
-        $regex = preg_quote(sprintf('/.polygon, %s)/', $parameter));
-
-        static::assertRegExp($regex, $result);
-    }
-
-    // phpcs:enable
-
-    /**
-     * @group geometry
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *     */
-    public function testTypeWrappingWhere()
-    {
-        $entity = new GeometryEntity();
-
-        $entity->setGeometry(new Point(5, 5));
-        $this->getEntityManager()->persist($entity);
+        $holeyPolygon = $this->createHoleyPolygon();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g WHERE g.geometry = :geometry'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Envelope(p.polygon) = ST_GeomFromText(:p)'
+            // phpcs:enable
         );
 
-        $query->setParameter('geometry', new Point(5, 5), 'point');
-        $query->processParameterValue('geometry');
-
-        $result = $query->getSQL();
-        $parameter = '?';
-
-        if (Version::compare('2.5') <= 0) {
-            $parameter = Type::getType('point')->convertToDatabaseValueSql($parameter, $this->getPlatform());
+        switch ($this->getPlatform()->getName()) {
+            case 'mysql':
+                $parameter = 'POLYGON((0 0,10 0,10 10,0 10,0 0))';
+                break;
+            case 'postgresql':
+            default:
+                $parameter = 'POLYGON((0 0,0 10,10 10,10 0,0 0))';
         }
 
-        $regex = preg_quote(sprintf('/geometry = %s/', $parameter));
+        $query->setParameter('p', $parameter, 'string');
 
-        static::assertRegExp($regex, $result);
+        $result = $query->getResult();
+
+        static::assertCount(1, $result);
+        static::assertEquals($holeyPolygon, $result[0]);
     }
 }

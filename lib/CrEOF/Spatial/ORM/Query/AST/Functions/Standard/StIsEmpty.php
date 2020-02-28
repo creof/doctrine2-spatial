@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\Ogc;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Contains DQL function.
+ * ST_IsEmpty DQL function.
  *
+ * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://mdhheydari.mit-license.org MIT
  */
-class StContains extends AbstractSpatialDQLFunction
+class StIsEmpty extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -41,7 +42,7 @@ class StContains extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Contains';
+        return 'ST_IsEmpty';
     }
 
     /**
@@ -53,7 +54,7 @@ class StContains extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -65,7 +66,7 @@ class StContains extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -77,6 +78,6 @@ class StContains extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql', 'mysql'];
+        return ['mysql', 'postgresql'];
     }
 }

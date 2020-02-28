@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * PointFromWKB function.
+ * ST_Boundary DQL function.
  *
+ * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class PointFromWKB extends AbstractSpatialDQLFunction
+class StBoundary extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Function SQL name getter.
@@ -41,7 +43,7 @@ class PointFromWKB extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'PointFromWKB';
+        return 'ST_Boundary';
     }
 
     /**
@@ -77,6 +79,6 @@ class PointFromWKB extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

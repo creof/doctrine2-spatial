@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_AsBinary DQL function.
+ * ST_Contains DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class STAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class StContains extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +41,7 @@ class STAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryIn
      */
     protected function getFunctionName(): string
     {
-        return 'ST_AsBinary';
+        return 'ST_Contains';
     }
 
     /**
@@ -55,7 +53,7 @@ class STAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryIn
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -67,7 +65,7 @@ class STAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryIn
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -79,6 +77,6 @@ class STAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryIn
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

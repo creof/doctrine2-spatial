@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Area DQL function tests.
+ * ST_AsBinary DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -43,9 +43,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STAreaTest extends OrmTestCase
+class StAsBinaryTest extends OrmTestCase
 {
-    use PolygonHelperTrait;
+    use LineStringHelperTrait;
 
     /**
      * Setup the function type test.
@@ -56,8 +56,9 @@ class STAreaTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -72,21 +73,32 @@ class STAreaTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStArea()
+    public function testStAsBinary()
     {
-        $this->createBigPolygon();
-        $this->createHoleyPolygon();
-        $this->createPolygonW();
-        $smallPolygon = $this->createSmallPolygon();
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Area(p.polygon) < 50'
+            'SELECT ST_AsBinary(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-        static::assertCount(1, $result);
-        static::assertEquals($smallPolygon, $result[0]);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expectedA = '010200000003000000000000000000000000000000000000000000000000000040000000000000004000000000000014400000000000001440';
+        $expectedB = '0102000000030000000000000000000840000000000000084000000000000010400000000000002e4000000000000014400000000000003640';
+        // phpcs:enable
+
+        switch ($this->getPlatform()->getName()) {
+            case 'mysql':
+                static::assertEquals(pack('H*', $expectedA), $result[0][1]);
+                static::assertEquals(pack('H*', $expectedB), $result[1][1]);
+                break;
+            case 'postgresql':
+            default:
+                static::assertEquals($expectedA, bin2hex(stream_get_contents($result[0][1])));
+                static::assertEquals($expectedB, bin2hex(stream_get_contents($result[1][1])));
+        }
     }
 }

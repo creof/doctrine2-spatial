@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * Description of GeodistPt.
+ * ST_AsBinary DQL function.
  *
- * @author Maximilian
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://alexandre-tranchant.mit-license.org
+ * @license https://dlambert.mit-license.org MIT
  */
-class GeodistPt extends AbstractSpatialDQLFunction
+class StAsBinary extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Function SQL name getter.
@@ -42,7 +43,7 @@ class GeodistPt extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'geodist_pt';
+        return 'ST_AsBinary';
     }
 
     /**
@@ -54,7 +55,7 @@ class GeodistPt extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -66,7 +67,7 @@ class GeodistPt extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -78,6 +79,6 @@ class GeodistPt extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

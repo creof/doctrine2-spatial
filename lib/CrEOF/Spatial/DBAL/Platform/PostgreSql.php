@@ -31,7 +31,10 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * PostgreSql spatial platform.
- */
+ *
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://dlambert.mit-license.org MIT */
 class PostgreSql extends AbstractPlatform
 {
     public const DEFAULT_SRID = 4326;

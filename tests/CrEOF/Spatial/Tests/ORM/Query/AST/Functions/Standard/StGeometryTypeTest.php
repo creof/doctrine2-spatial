@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,19 +32,18 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * AsText DQL function tests.
+ * ST_GeometryType DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  *
  * @group dql
- * @group mysql5
  *
  * @internal
  * @coversDefaultClass
  */
-class AsTextTest extends OrmTestCase
+class StGeometryTypeTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -58,13 +57,14 @@ class AsTextTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->supportsPlatform('postgresql');
         $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
 
     /**
-     * Test a DQL containing function to test.
+     * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -73,7 +73,7 @@ class AsTextTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testAsText()
+    public function testStAsText()
     {
         $this->createStraightLineString();
         $this->createAngularLineString();
@@ -81,11 +81,24 @@ class AsTextTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT AsText(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT ST_GeometryType(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-        static::assertEquals('LINESTRING(0 0,2 2,5 5)', $result[0][1]);
-        static::assertEquals('LINESTRING(3 3,4 15,5 22)', $result[1][1]);
+
+        static::assertIsArray($result);
+        static::assertIsArray($result[0]);
+        static::assertCount(1, $result[0]);
+
+        switch ($this->getPlatform()->getName()) {
+            case 'mysql':
+                $expected = 'LINESTRING'; // MySQL does not respect OGC
+                break;
+            case 'postgresql':
+            default: //OGC Recommendation
+                $expected = 'ST_LineString';
+        }
+
+        static::assertEquals($expected, $result[0][1]);
     }
 }

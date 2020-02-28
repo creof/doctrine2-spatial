@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
-use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_GeomFromText DQL function tests.
+ * ST_IsEmpty DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -44,10 +43,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STGeomFromTextTest extends OrmTestCase
+class StIsEmptyTest extends OrmTestCase
 {
     use LineStringHelperTrait;
-    use PointHelperTrait;
 
     /**
      * Setup the function type test.
@@ -59,14 +57,14 @@ class STGeomFromTextTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
-        $this->usesEntity(self::POINT_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
 
     /**
-     * Test a DQL containing function to test in the select with a linestring.
+     * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -75,51 +73,21 @@ class STGeomFromTextTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testLineString()
+    public function testFunction()
     {
-        $lineString = $this->createStraightLineString();
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity g WHERE g.lineString = ST_GeomFromText(:geometry)'
-            // phpcs:enable
+            'SELECT ST_IsEmpty(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
-
-        $query->setParameter('geometry', 'LINESTRING(0 0,2 2,5 5)', 'string');
-
         $result = $query->getResult();
 
-        static::assertCount(1, $result);
-        static::assertEquals($lineString, $result[0]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the select with a point.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testPoint()
-    {
-        $pointA = $this->createPointA();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT g FROM CrEOF\Spatial\Tests\Fixtures\PointEntity g WHERE g.point = ST_GeomFromText(:geometry)'
-        );
-
-        $query->setParameter('geometry', 'POINT(1 2)', 'string');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($pointA, $result[0]);
+        static::assertIsArray($result);
+        static::assertIsArray($result[0]);
+        static::assertCount(1, $result[0]);
+        static::assertEquals(0, $result[0][1]);
     }
 }

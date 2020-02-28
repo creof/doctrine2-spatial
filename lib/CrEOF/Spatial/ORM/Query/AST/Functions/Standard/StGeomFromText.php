@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * LineStringFromWKB function.
+ * ST_GeomFromText DQL function.
  *
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://alexandre-tranchant.mit-license.org
+ * @license https://dlambert.mit-license.org MIT
  */
-class LineStringFromWKB extends AbstractSpatialDQLFunction
+class StGeomFromText extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -41,7 +42,7 @@ class LineStringFromWKB extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'LineStringFromWKB';
+        return 'ST_GeomFromText';
     }
 
     /**
@@ -53,7 +54,7 @@ class LineStringFromWKB extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -77,6 +78,6 @@ class LineStringFromWKB extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

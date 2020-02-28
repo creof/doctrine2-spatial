@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Contains DQL function.
+ * ST_IsSimple DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://mdhheydari.mit-license.org MIT
  */
-class Contains extends AbstractSpatialDQLFunction
+class StIsSimple extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class Contains extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'Contains';
+        return 'ST_IsSimple';
     }
 
     /**
@@ -54,7 +54,7 @@ class Contains extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -66,7 +66,7 @@ class Contains extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -74,10 +74,10 @@ class Contains extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-Simple array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['mysql', 'postgresql'];
     }
 }

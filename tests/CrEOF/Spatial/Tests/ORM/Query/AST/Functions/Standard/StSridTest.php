@@ -22,30 +22,31 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Envelope DQL function tests.
+ * ST_SRID DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class STEnvelopeTest extends OrmTestCase
+class StSridTest extends OrmTestCase
 {
-    use PolygonHelperTrait;
+    use LineStringHelperTrait;
 
     /**
      * Setup the function type test.
@@ -56,8 +57,9 @@ class STEnvelopeTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -72,50 +74,25 @@ class STEnvelopeTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStEnvelope()
+    public function testFunctionWithEntity()
     {
-        $this->createBigPolygon();
-        $this->createHoleyPolygon();
+        $entity = new GeometryEntity();
+        $point = new Point(1, 1);
+        $point->setSrid(2154); //Lambert93
+        $entity->setGeometry($point);
+        $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_AsText(ST_Envelope(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            'SELECT ST_SRID(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
         );
         $result = $query->getResult();
 
-        static::assertEquals('POLYGON((0 0,0 10,10 10,10 0,0 0))', $result[0][1]);
-        static::assertEquals('POLYGON((0 0,0 10,10 10,10 0,0 0))', $result[1][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testStEnvelopeWhereParameter()
-    {
-        $holeyPolygon = $this->createHoleyPolygon();
-        $this->createSmallPolygon();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Envelope(p.polygon) = ST_GeomFromText(:p)'
-            // phpcs:enable
-        );
-
-        $query->setParameter('p', 'POLYGON((0 0,0 10,10 10,10 0,0 0))', 'string');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($holeyPolygon, $result[0]);
+        static::assertIsArray($result);
+        static::assertIsArray($result[0]);
+        static::assertCount(1, $result[0]);
+        //FIXME MySQL8 is returning 0 insteadof 2154
+        static::assertSame(2154, $result[0][1]);
     }
 }

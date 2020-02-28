@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_Boundary DQL function.
+ * ST_Envelope DQL function.
  *
- * @author  Tom Vogt <tom@lemuria.org>
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STBoundary extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class StEnvelope extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +42,7 @@ class STBoundary extends AbstractSpatialDQLFunction implements ReturnsGeometryIn
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Boundary';
+        return 'ST_Envelope';
     }
 
     /**
@@ -79,6 +78,6 @@ class STBoundary extends AbstractSpatialDQLFunction implements ReturnsGeometryIn
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

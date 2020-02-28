@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * Geometry DQL function tests.
+ * ST_AsText DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -43,9 +43,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class GeometryTest extends OrmTestCase
+class StDimensionTest extends OrmTestCase
 {
-    use PointHelperTrait;
+    use LineStringHelperTrait;
 
     /**
      * Setup the function type test.
@@ -56,8 +56,9 @@ class GeometryTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::POINT_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -72,23 +73,22 @@ class GeometryTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectGeometry()
+    public function testStAsText()
     {
-        $this->createPointA();
-        $this->createPointB();
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_AsText(geometry(p.point)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            'SELECT ST_DIMENSION(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-        $expected = [
-            [1 => 'POINT(1 2)'],
-            [1 => 'POINT(-2 3)'],
-        ];
 
-        static::assertEquals($expected, $result);
+        static::assertIsArray($result);
+        static::assertIsArray($result[0]);
+        static::assertCount(1, $result[0]);
+        static::assertEquals('1', $result[0][1]);
     }
 }

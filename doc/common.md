@@ -1,6 +1,23 @@
 # Common Functions
+Doctrine spatial is playing around name of functions. The DQL will respect
+the OGC standards. As example to get a geometry from a text, the GeoStandard suggests to
+name function ST_GeomFromText(). PostGreSQL and MySQL8 respects this name, but MySQL5 does not.
 
-These functions are shared between Postgres and MySQL
+So when you compose yor DQL query, use ST_GeomFromText.
+```dql
+SELECT ST_GeomFromText(geometry) FROM TABLESAMPLE
+```
+Then Doctrine Spatial Layer will create the functional SQL query.
+For MySQL8 and PostgreSQL generated SQL query will be:
+```sql
+SELECT ST_GeomFromText(geometry) FROM TABLESAMPLE
+```
+With MySQL5, the generated SQL query will be:
+```sql
+SELECT GeomFromText(geometry) FROM TABLESAMPLE
+```
+
+These DQL functions are implemented and will return a valid SQL function when used.
 
 * [ST_Area(geometry)](./common/ST_Area.md)
 * [ST_AsBinary(geometry)](./common/ST_AsBinary.md)
