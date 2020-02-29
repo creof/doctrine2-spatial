@@ -1,9 +1,6 @@
 language: php
 dist: bionic
 
-services:
-  - mysql
-
 cache:
   directories:
     - vendor
@@ -62,9 +59,6 @@ jobs:
       before_script:
         - bash ./tests/travis/install-postgres-11.sh
     - stage: Test
-      php: 7.2
-      env: DB=sqlite
-    - stage: Test
       php: 7.3
       env: DB=mysql.docker MYSQL_VERSION=8.0
       sudo: required
@@ -88,9 +82,6 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-postgres-11.sh
-    - stage: Test
-      php: 7.3
-      env: DB=sqlite
     - stage: Test
       php: 7.4
       env: DB=mysql COVERAGE=yes
@@ -131,19 +122,13 @@ jobs:
         - bash ./tests/travis/install-mysql-8.0.sh
     - stage: Test
       php: 7.4
-      env: DB=pgsql POSTGRESQL_VERSION=9.4 COVERAGE=yes
-      addons:
-        postgresql: "9.4"
-    - stage: Test
-      php: 7.4
-      env: DB=pgsql POSTGRESQL_VERSION=9.5 COVERAGE=yes
-      addons:
-        postgresql: "9.5"
-    - stage: Test
-      php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes
       addons:
         postgresql: "9.6"
+        apt:
+          packages:
+            - postgis
+            - postgresql-9.6-postgis-2.5
     - stage: Test
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=10.0 COVERAGE=yes
@@ -152,11 +137,11 @@ jobs:
         postgresql: "10"
       before_script:
         - bash ./tests/travis/install-postgres-10.sh
-    - stage: Test
-      php: 7.4
-      env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
-      sudo: required
-      services:
-        - docker
-      before_script:
-        - bash ./tests/travis/install-postgres-11.sh
+#    - stage: Test
+#      php: 7.4
+#      env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
+#      sudo: required
+#      services:
+#        - docker
+#      before_script:
+#        - bash ./tests/travis/install-postgres-11.sh
