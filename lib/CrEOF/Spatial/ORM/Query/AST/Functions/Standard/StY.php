@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * X DQL function
- * Return X coordinate of Point.
+ * ST_Y DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
- * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @author  Tom Vogt <tom@lemuria.org>
+ * @author  Aleyandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class X extends AbstractSpatialDQLFunction
+class StY extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +42,7 @@ class X extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'X';
+        return 'ST_Y';
     }
 
     /**
@@ -79,6 +78,6 @@ class X extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

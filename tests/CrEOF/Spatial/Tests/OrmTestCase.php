@@ -48,6 +48,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersects;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StM;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
@@ -55,6 +56,9 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSymDifference;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StTouches;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StUnion;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StWithin;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StX;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StY;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StZ;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
@@ -564,6 +568,8 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
         $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
         $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
+        $configuration->addCustomNumericFunction('ST_X', StX::class);
+        $configuration->addCustomNumericFunction('ST_Y', StY::class);
 
         if ('postgresql' === $this->getPlatformAndVersion()) {
             //Generic function (PostgreSQL function compatible with the OGC Standard)

@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Y DQL function.
+ * ST_X DQL function.
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STY extends AbstractSpatialDQLFunction
+class StX extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STY extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Y';
+        return 'ST_X';
     }
 
     /**
@@ -78,6 +78,6 @@ class STY extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }
