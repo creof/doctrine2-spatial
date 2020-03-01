@@ -27,7 +27,6 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
-use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
@@ -44,7 +43,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STDistanceTest extends OrmTestCase
+class StDistanceTest extends OrmTestCase
 {
     use PointHelperTrait;
 
