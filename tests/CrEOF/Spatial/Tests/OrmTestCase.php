@@ -48,6 +48,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StTouches;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StUnion;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StWithin;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\Mapping\MappingException;
@@ -546,6 +547,7 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
+        $configuration->addCustomStringFunction('ST_Union', StUnion::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
             $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
         }
@@ -657,7 +659,7 @@ abstract class OrmTestCase extends TestCase
      * @throws DBALException                when connection failed
      * @throws UnsupportedPlatformException when platform is not supported
      */
-    private function getPlatformAndVersion(): string
+    protected function getPlatformAndVersion(): string
     {
         if ($this->getPlatform() instanceof MySQL80Platform) {
             return 'mysql8';
@@ -679,7 +681,8 @@ abstract class OrmTestCase extends TestCase
      * @param mixed                 $value    Value to test
      * @param AbstractPlatform|null $platform the platform
      */
-    protected function assertEmptyGeometry($value, AbstractPlatform $platform = null) {
+    protected static function assertEmptyGeometry($value, AbstractPlatform $platform = null): void
+    {
         $expected = 'GEOMETRYCOLLECTION EMPTY';
         if ($platform instanceof MySQL57Platform && !$platform instanceof MySQL80Platform) {
             //MySQL5 does not return the standard answer
@@ -687,5 +690,28 @@ abstract class OrmTestCase extends TestCase
             $expected = 'GEOMETRYCOLLECTION()';
         }
         self::assertSame($expected, $value);
+    }
+
+    /**
+     * Assert empty geometry.
+     * MySQL5 does not return the standard answer, but this bug was solved in MySQL8.
+     * So test for an empty geometry is a little more complex than to compare two strings.
+     *
+     * @param mixed                 $value    Value to test
+     * @param AbstractPlatform|null $platform the platform
+     */
+    protected static function assertBigPolygon($value, AbstractPlatform $platform = null): void
+    {
+        switch ($platform->getName()) {
+            case 'mysql':
+                //MySQL does not respect creation order of points composing a Polygon.
+                static::assertSame('POLYGON((0 10,0 0,10 0,10 10,0 10))', $value);
+                break;
+            case 'postgresl':
+            default:
+                //Here is the good result.
+                // A linestring minus another crossing linestring returns initial linestring splited
+                static::assertSame('POLYGON((0 0,0 10,10 10,10 0,0 0))', $value);
+        }
     }
 }

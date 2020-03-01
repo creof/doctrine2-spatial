@@ -35,9 +35,8 @@ use Doctrine\ORM\ORMException;
 /**
  * ST_Difference DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *

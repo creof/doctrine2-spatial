@@ -22,28 +22,29 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Overlaps DQL function tests.
+ * ST_Union DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class STOverlapsTest extends OrmTestCase
+class StUnionTest extends OrmTestCase
 {
     use PolygonHelperTrait;
 
@@ -58,6 +59,7 @@ class STOverlapsTest extends OrmTestCase
     {
         $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -72,25 +74,57 @@ class STOverlapsTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStMakeEnvelope()
+    public function testSelectStUnion()
     {
         $bigPolygon = $this->createBigPolygon();
-        $smallPolygon = $this->createSmallPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p as point, ST_Overlaps(p.polygon, ST_Buffer(ST_GeomFromText(:p1), 3)) as overlap FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            'SELECT p, ST_AsText(ST_Union(ST_GeomFromText(:p), p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
             // phpcs:enable
         );
-        $query->setParameter('p1', 'POINT(4 4)', 'string');
+
+        $query->setParameter('p', 'POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))', 'string');
+
         $result = $query->getResult();
 
         static::assertCount(2, $result);
-        static::assertEquals($bigPolygon, $result[0]['point']);
-        static::assertFalse($result[0]['overlap']);
-        static::assertEquals($smallPolygon, $result[1]['point']);
-        static::assertTrue($result[1]['overlap']);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertBigPolygon($result[0][1], $this->getPlatform());
+        static::assertEquals($holeyPolygon, $result[1][0]);
+        static::assertBigPolygon($result[1][1], $this->getPlatform());
+    }
+
+    /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testStUnionWhereParameter()
+    {
+        $this->createBigPolygon();
+        $this->createHoleyPolygon();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_IsEmpty(ST_Union(ST_GeomFromText(:p1), p.polygon)) = true'
+            // phpcs:enable
+        );
+
+        $query->setParameter('p1', 'POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))', 'string');
+
+        $result = $query->getResult();
+
+        static::assertCount(0, $result);
     }
 }
