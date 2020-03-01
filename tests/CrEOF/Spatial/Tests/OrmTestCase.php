@@ -279,6 +279,7 @@ abstract class OrmTestCase extends TestCase
         $connectionParams = [
             'driver' => $GLOBALS['db_type'],
             'user' => $GLOBALS['db_username'],
+            'password' => null,
             'host' => $GLOBALS['db_host'],
             'dbname' => null,
             'port' => $GLOBALS['db_port'],
