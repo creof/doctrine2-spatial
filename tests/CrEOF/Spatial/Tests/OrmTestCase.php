@@ -28,6 +28,7 @@ use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\ScGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
@@ -51,7 +52,6 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StLength;
-use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StM;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
@@ -62,7 +62,6 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StUnion;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StWithin;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StX;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StY;
-use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StZ;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
@@ -588,6 +587,7 @@ abstract class OrmTestCase extends TestCase
         if ('postgresql' === $this->getPlatformAndVersion()) {
             //Generic function (PostgreSQL function compatible with the OGC Standard)
             //Specific functions of PostgreSQL server
+            $configuration->addCustomStringFunction('SC_GeographyFromText', ScGeographyFromText::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomStringFunction('geometry', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry');
@@ -598,7 +598,6 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('st_covers', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCovers');
             $configuration->addCustomNumericFunction('st_coveredby', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCoveredBy');
             $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistanceSphere');
-            $configuration->addCustomStringFunction('st_geographyfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeographyFromText');
             $configuration->addCustomStringFunction('st_geomfromewkt', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromEWKT');
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
             $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');

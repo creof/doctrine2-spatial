@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_GeographyFromText DQL function.
+ * SC_GeographyFromText DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class STGeographyFromText extends AbstractSpatialDQLFunction
+class ScGeographyFromText extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

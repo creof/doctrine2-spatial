@@ -84,7 +84,7 @@ class StDistanceTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1), false) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+            'SELECT g, ST_Distance(g.geography, SC_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
             // phpcs:enable
         );
 
@@ -121,7 +121,7 @@ class StDistanceTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT g, ST_Distance(g.geography, ST_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+            'SELECT g, ST_Distance(g.geography, SC_GeographyFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
             // phpcs:enable
         );
 
