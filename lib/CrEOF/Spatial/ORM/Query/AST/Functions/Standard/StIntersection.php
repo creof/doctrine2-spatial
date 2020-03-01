@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
@@ -33,7 +33,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STIntersection extends AbstractSpatialDQLFunction
+class StIntersection extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -78,6 +78,6 @@ class STIntersection extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

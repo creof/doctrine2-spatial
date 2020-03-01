@@ -39,6 +39,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEquals;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersects;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
@@ -536,6 +537,7 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_Distance', StDistance::class);
         $configuration->addCustomNumericFunction('ST_Equals', StEquals::class);
         $configuration->addCustomNumericFunction('ST_Intersects', StIntersects::class);
+        $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
         $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
         $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
