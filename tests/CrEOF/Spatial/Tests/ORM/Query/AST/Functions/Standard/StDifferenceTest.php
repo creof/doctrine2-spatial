@@ -30,12 +30,10 @@ use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Platforms\MySQL57Platform;
-use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Intersection DQL function tests.
+ * ST_Difference DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -46,7 +44,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StIntersectionTest extends OrmTestCase
+class StDifferenceTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -76,7 +74,7 @@ class StIntersectionTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStIntersection()
+    public function testSelectStDifference()
     {
         $lineStringA = $this->createLineStringA();
         $lineStringB = $this->createLineStringB();
@@ -86,21 +84,31 @@ class StIntersectionTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l, ST_AsText(ST_Intersection(l.lineString, ST_GeomFromText(:p))) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT l, ST_AsText(ST_Difference(ST_GeomFromText(:p), l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
             // phpcs:enable
         );
 
-        $query->setParameter('p', 'POINT(0 0)', 'string');
+        $query->setParameter('p', 'LINESTRING(0 0, 12 12)', 'string');
 
         $result = $query->getResult();
 
         static::assertCount(3, $result);
         static::assertEquals($lineStringA, $result[0][0]);
-        static::assertEquals('POINT(0 0)', $result[0][1]);
+        static::assertEquals('LINESTRING(10 10,12 12)', $result[0][1]);
         static::assertEquals($lineStringB, $result[1][0]);
-        static::assertEmptyGeometry($result[1][1], $this->getPlatform());
+        switch ($this->getPlatform()->getName()) {
+            case 'mysql':
+                //MySQL failed ST_Difference implementation, so I test the bad result.
+                static::assertEquals('LINESTRING(0 0,12 12)', $result[1][1]);
+                break;
+            case 'postgresl':
+            default:
+                //Here is the good result.
+                // A linestring minus another crossing linestring returns initial linestring splited
+                static::assertEquals('MULTILINESTRING((0 0,6 6),(6 6,12 12))', $result[1][1]);
+        }
         static::assertEquals($lineStringC, $result[2][0]);
-        static::assertEmptyGeometry($result[2][1], $this->getPlatform());
+        static::assertEquals('LINESTRING(0 0,12 12)', $result[2][1]);
     }
 
     /**
@@ -113,25 +121,26 @@ class StIntersectionTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStIntersectionWhereParameter()
+    public function testStDifferenceWhereParameter()
     {
-        $lineStringA = $this->createLineStringA();
+        $this->createLineStringA();
         $lineStringB = $this->createLineStringB();
-        $this->createLineStringC();
+        $lineStringC = $this->createLineStringC();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_IsEmpty(ST_Intersection(l.lineString, ST_GeomFromText(:p1))) = false'
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_IsEmpty(ST_Difference(ST_GeomFromText(:p1), l.lineString)) = false'
             // phpcs:enable
         );
 
-        $query->setParameter('p1', 'POINT(0 0)', 'string');
+        $query->setParameter('p1', 'LINESTRING(0 0, 10 10)', 'string');
 
         $result = $query->getResult();
 
-        static::assertCount(1, $result);
-        static::assertEquals($lineStringA, $result[0]);
+        static::assertCount(2, $result);
+        static::assertEquals($lineStringB, $result[0]);
+        static::assertEquals($lineStringC, $result[1]);
     }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
@@ -34,7 +34,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STDifference extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class StDifference extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Function SQL name getter.
@@ -79,6 +79,6 @@ class STDifference extends AbstractSpatialDQLFunction implements ReturnsGeometry
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

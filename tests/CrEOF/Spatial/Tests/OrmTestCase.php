@@ -32,6 +32,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBoundary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StContains;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StCrosses;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDifference;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDimension;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDisjoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDistance;
@@ -532,6 +533,7 @@ abstract class OrmTestCase extends TestCase
         }
         $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
         $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
+        $configuration->addCustomStringFunction('ST_Difference', StDifference::class);
         $configuration->addCustomNumericFunction('ST_Dimension', StDimension::class);
         $configuration->addCustomNumericFunction('ST_Disjoint', StDisjoint::class);
         $configuration->addCustomNumericFunction('ST_Distance', StDistance::class);
@@ -667,5 +669,23 @@ abstract class OrmTestCase extends TestCase
 
 
         return $this->getPlatform()->getName();
+    }
+
+    /**
+     * Assert empty geometry.
+     * MySQL5 does not return the standard answer, but this bug was solved in MySQL8.
+     * So test for an empty geometry is a little more complex than to compare two strings.
+     *
+     * @param mixed                 $value    Value to test
+     * @param AbstractPlatform|null $platform the platform
+     */
+    protected function assertEmptyGeometry($value, AbstractPlatform $platform = null) {
+        $expected = 'GEOMETRYCOLLECTION EMPTY';
+        if ($platform instanceof MySQL57Platform && !$platform instanceof MySQL80Platform) {
+            //MySQL5 does not return the standard answer
+            //This bug was solved in MySQL8
+            $expected = 'GEOMETRYCOLLECTION()';
+        }
+        self::assertSame($expected, $value);
     }
 }
