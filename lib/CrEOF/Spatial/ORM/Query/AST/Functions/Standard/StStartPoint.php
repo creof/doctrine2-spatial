@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_EndPoint DQL function.
+ * ST_StartPoint DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class STEndPoint extends AbstractSpatialDQLFunction
+class StStartPoint extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STEndPoint extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_EndPoint';
+        return 'ST_StartPoint';
     }
 
     /**
@@ -78,6 +78,6 @@ class STEndPoint extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

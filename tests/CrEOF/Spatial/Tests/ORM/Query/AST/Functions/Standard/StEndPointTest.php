@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,7 +32,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_StartPoint DQL function tests.
+ * ST_EndPoint DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -43,7 +43,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STStartPointTest extends OrmTestCase
+class StEndPointTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -58,6 +58,7 @@ class STStartPointTest extends OrmTestCase
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -72,19 +73,19 @@ class STStartPointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStStartPointSelect()
+    public function testStEndPointSelect()
     {
         $this->createStraightLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_AsText(ST_StartPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT ST_AsText(ST_EndPoint(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
 
         $result = $query->getResult();
 
-        static::assertEquals('POINT(0 0)', $result[0][1]);
+        static::assertEquals('POINT(5 5)', $result[0][1]);
     }
 
     /**
@@ -97,7 +98,7 @@ class STStartPointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStStartPointWhereCompareLineString()
+    public function testStEndPointWhereCompareLineString()
     {
         $this->createStraightLineString();
         $angularLineString = $this->createAngularLineString();
@@ -106,7 +107,7 @@ class STStartPointTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_StartPoint(ST_GeomFromText(:p1))'
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_EndPoint(l.lineString) = ST_EndPoint(ST_GeomFromText(:p1))'
             // phpcs:enable
         );
 
@@ -128,7 +129,7 @@ class STStartPointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStStartPointWhereComparePoint()
+    public function testStEndPointWhereComparePoint()
     {
         $straightLineString = $this->createStraightLineString();
         $this->createAngularLineString();
@@ -138,11 +139,11 @@ class STStartPointTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_StartPoint(l.lineString) = ST_GeomFromText(:p1)'
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_EndPoint(l.lineString) = ST_GeomFromText(:p1)'
             // phpcs:enable
         );
 
-        $query->setParameter('p1', 'POINT(0 0)', 'string');
+        $query->setParameter('p1', 'POINT(5 5)', 'string');
 
         $result = $query->getResult();
 

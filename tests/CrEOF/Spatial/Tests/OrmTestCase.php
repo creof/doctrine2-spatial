@@ -40,6 +40,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDifference;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDimension;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDisjoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDistance;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEndPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEquals;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryType;
@@ -52,6 +53,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StM;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StStartPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSymDifference;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StTouches;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StUnion;
@@ -556,6 +558,7 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
         $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
         $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
+        $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
@@ -568,6 +571,7 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
         $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
         $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
+        $configuration->addCustomNumericFunction('ST_StartPoint', StStartPoint::class);
         $configuration->addCustomNumericFunction('ST_X', StX::class);
         $configuration->addCustomNumericFunction('ST_Y', StY::class);
 
@@ -590,7 +594,6 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
             $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');
             $configuration->addCustomStringFunction('st_snaptogrid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid');
-            $configuration->addCustomStringFunction('st_startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STStartPoint');
             $configuration->addCustomStringFunction('st_summary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSummary');
             // phpcs:enable
         }
