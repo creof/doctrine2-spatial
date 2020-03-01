@@ -136,10 +136,16 @@ jobs:
             - postgresql-10
             - postgresql-client-10
             - postgis
-            - postgresql-10.6-postgis-2.4
+            - postgresql-10-postgis-2.4
     - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
       sudo: required
-      before_script:
-        - bash ./tests/travis/install-postgres-11.sh
+      addons:
+        postgresql: "10"
+        apt:
+          packages:
+            - postgresql-11
+            - postgresql-client-11
+            - postgis
+            - postgresql-11-postgis-2.4
