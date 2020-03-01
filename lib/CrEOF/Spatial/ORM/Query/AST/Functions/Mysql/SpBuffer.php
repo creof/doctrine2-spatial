@@ -22,17 +22,20 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Buffer DQL function.
+ * Sp_Buffer DQL function.
+ * MySQL ST_Buffer function is not able to receive a CHARACTER VARYING as third parameter.
+ * This SQL function can only received the result of a ST_Buffer_Strategy function as third parameter.
+ * So Sp_Buffer DQL function is specific to MySQL.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://alexandre-tranchant.mit-license.org
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class STBuffer extends AbstractSpatialDQLFunction
+class SpBuffer extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -77,6 +80,6 @@ class STBuffer extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['mysql'];
     }
 }

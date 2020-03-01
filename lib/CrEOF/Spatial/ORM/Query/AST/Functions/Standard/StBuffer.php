@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Buffer DQL function.
+ * ST_Buffer DQL function.
  *
- * @author  luca capra <luca.capra@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class Buffer extends AbstractSpatialDQLFunction
+class StBuffer extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class Buffer extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'Buffer';
+        return 'ST_Buffer';
     }
 
     /**
@@ -54,7 +53,7 @@ class Buffer extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 3;
     }
 
     /**
@@ -78,6 +77,6 @@ class Buffer extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

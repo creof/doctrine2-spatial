@@ -26,10 +26,13 @@ namespace CrEOF\Spatial\Tests;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBoundary;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StContains;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StCrosses;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDifference;
@@ -531,7 +534,10 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_AsBinary', StAsBinary::class);
         $configuration->addCustomStringFunction('ST_AsText', StAsText::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
+            //This function is not implemented into mysql
             $configuration->addCustomStringFunction('ST_Boundary', StBoundary::class);
+            //This function is implemented into mysql, but the third parameter does not respect OGC standards
+            $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
         }
         $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
         $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
@@ -563,7 +569,6 @@ abstract class OrmTestCase extends TestCase
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomStringFunction('geometry', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry');
-            $configuration->addCustomNumericFunction('st_buffer', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STBuffer');
             $configuration->addCustomStringFunction('st_centroid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCentroid');
             $configuration->addCustomStringFunction('st_closestpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STClosestPoint');
             $configuration->addCustomStringFunction('st_collect', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect');
@@ -584,6 +589,8 @@ abstract class OrmTestCase extends TestCase
 
         if ('mysql' === $this->getPlatform()->getName()) {
             $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
+            $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
+            $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
         }
 
         if ('mysql5' === $this->getPlatformAndVersion()) {
