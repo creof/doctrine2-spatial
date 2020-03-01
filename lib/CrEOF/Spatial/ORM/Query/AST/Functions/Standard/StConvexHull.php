@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * IsSimple DQL function.
+ * ST_ConvexHull DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class IsSimple extends AbstractSpatialDQLFunction
+class StConvexHull extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class IsSimple extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'IsSimple';
+        return 'ST_ConvexHull';
     }
 
     /**
@@ -78,6 +77,6 @@ class IsSimple extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

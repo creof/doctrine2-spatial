@@ -34,6 +34,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBoundary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StContains;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StConvexHull;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StCrosses;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDifference;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDimension;
@@ -540,6 +541,7 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
         }
         $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
+        $configuration->addCustomStringFunction('ST_ConvexHull', StConvexHull::class);
         $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
         $configuration->addCustomStringFunction('ST_Difference', StDifference::class);
         $configuration->addCustomNumericFunction('ST_Dimension', StDimension::class);
