@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Mysql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;

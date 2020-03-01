@@ -279,7 +279,6 @@ abstract class OrmTestCase extends TestCase
         $connectionParams = [
             'driver' => $GLOBALS['db_type'],
             'user' => $GLOBALS['db_username'],
-            'password' => $GLOBALS['db_password'],
             'host' => $GLOBALS['db_host'],
             'dbname' => null,
             'port' => $GLOBALS['db_port'],
@@ -287,6 +286,10 @@ abstract class OrmTestCase extends TestCase
 
         if (isset($GLOBALS['db_server'])) {
             $connectionParams['server'] = $GLOBALS['db_server'];
+        }
+
+        if (!empty($GLOBALS['db_password'])) {
+            $connectionParams['password'] = $GLOBALS['db_password'];
         }
 
         if (isset($GLOBALS['db_unix_socket'])) {
@@ -606,18 +609,11 @@ abstract class OrmTestCase extends TestCase
             // phpcs:enable
         }
 
-        if ('mysql' === $this->getPlatform()->getName()) {
+        //TEST With different
+        if ('postgresql' !== $this->getPlatform()->getName()) {
             $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
             $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
             $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
-        }
-
-        if ('mysql5' === $this->getPlatformAndVersion()) {
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-//            $configuration->addCustomNumericFunction('mbrcontains', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRContains');
-//            $configuration->addCustomNumericFunction('mbrdisjoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRDisjoint');
-//            $configuration->addCustomStringFunction('startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\StartPoint');
-            // phpcs:enable
         }
     }
 
