@@ -133,7 +133,7 @@ jobs:
         postgresql: "10"
       before_script:
         - bash ./tests/travis/install-postgres-10.sh
-    - stage: Test
+    - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
       sudo: required
