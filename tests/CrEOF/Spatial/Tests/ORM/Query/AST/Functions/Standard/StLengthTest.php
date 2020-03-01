@@ -44,7 +44,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STLengthTest extends OrmTestCase
+class StLengthTest extends OrmTestCase
 {
     use LineStringHelperTrait;
     use PointHelperTrait;
@@ -60,6 +60,7 @@ class STLengthTest extends OrmTestCase
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }

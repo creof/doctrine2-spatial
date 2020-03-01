@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * GLength DQL function.
+ * ST_IsRing DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class GLength extends AbstractSpatialDQLFunction
+class StIsRing extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class GLength extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'GLength';
+        return 'ST_IsRing';
     }
 
     /**
@@ -74,10 +73,10 @@ class GLength extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-ring array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

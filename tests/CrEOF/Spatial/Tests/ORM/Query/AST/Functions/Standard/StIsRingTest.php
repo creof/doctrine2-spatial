@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,19 +32,17 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * GLength DQL function tests.
+ * ST_IsRing DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MITIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
- * @group mysql5
  *
  * @internal
  * @coversDefaultClass
  */
-class GLengthTest extends OrmTestCase
+class StIsRingTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -58,39 +56,9 @@ class GLengthTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
-        $this->supportsPlatform('mysql');
+        $this->supportsPlatform('postgresql');
 
         parent::setUp();
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testLengthWhereParameter()
-    {
-        $smallLineString = $this->createStraightLineString();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        // phpcs:disable Generic.Files.LineLength.MaxExceeded
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE GLength(GeomFromText(:p1)) > GLength(l.lineString)'
-        );
-        // phpcs:enable
-
-        $query->setParameter('p1', 'LINESTRING(0 0,2 2,4 4,6 6,8 8)', 'string');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($smallLineString, $result[0]);
     }
 
     /**
@@ -103,19 +71,26 @@ class GLengthTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectLength()
+    public function testFunction()
     {
-        $smallLineString = $this->createStraightLineString();
+        $straight = $this->createStraightLineString();
+        $ring = $this->createRingLineString();
+        $node = $this->createNodeLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT l, GLength(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT l, ST_IsRing(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-        static::assertCount(1, $result);
-        static::assertEquals($smallLineString, $result[0][0]);
-        static::assertEquals(7.0710678118654755, $result[0][1]);
+        static::assertIsArray($result);
+        static::assertCount(3, $result);
+        static::assertEquals($straight, $result[0][0]);
+        static::assertEquals(0, $result[0][1]);
+        static::assertEquals($ring, $result[1][0]);
+        static::assertEquals(1, $result[1][1]);
+        static::assertEquals($node, $result[2][0]);
+        static::assertEquals(0, $result[2][1]);
     }
 }

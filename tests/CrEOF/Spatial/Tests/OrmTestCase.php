@@ -48,7 +48,9 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersects;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StLength;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StM;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
@@ -546,6 +548,7 @@ abstract class OrmTestCase extends TestCase
             //This function is implemented into mysql, but the third parameter does not respect OGC standards
             $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
         }
+
         $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
         $configuration->addCustomStringFunction('ST_ConvexHull', StConvexHull::class);
         $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
@@ -557,17 +560,24 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_Intersects', StIntersects::class);
         $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
         $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
+        if ($this->getPlatform()->getName() !== 'mysql') {
+            //This function is not implemented into mysql
+            $configuration->addCustomNumericFunction('ST_IsRing', StIsRing::class);
+        }
+
         $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
         $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
+        $configuration->addCustomNumericFunction('ST_Length', StLength::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
         $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
         $configuration->addCustomStringFunction('ST_Union', StUnion::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
             $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
         }
+
         $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
         $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
         $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
@@ -590,7 +600,6 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistanceSphere');
             $configuration->addCustomStringFunction('st_geographyfromtext', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeographyFromText');
             $configuration->addCustomStringFunction('st_geomfromewkt', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromEWKT');
-            $configuration->addCustomNumericFunction('st_length', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength');
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
             $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');
             $configuration->addCustomStringFunction('st_snaptogrid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid');
@@ -606,7 +615,6 @@ abstract class OrmTestCase extends TestCase
 
         if ('mysql5' === $this->getPlatformAndVersion()) {
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-//            $configuration->addCustomNumericFunction('glength', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GLength');
 //            $configuration->addCustomNumericFunction('mbrcontains', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRContains');
 //            $configuration->addCustomNumericFunction('mbrdisjoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\MBRDisjoint');
 //            $configuration->addCustomStringFunction('startpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\MySql\StartPoint');

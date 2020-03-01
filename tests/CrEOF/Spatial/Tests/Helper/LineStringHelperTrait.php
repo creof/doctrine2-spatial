@@ -174,6 +174,46 @@ trait LineStringHelperTrait
     }
 
     /**
+     * Create a node linestring and persist it in database.
+     * Line is created with three aligned points: (0 0) (1 0) (0 1) (1 1) (0 0).
+     *
+     * @throws InvalidValueException        when geometries are not valid
+     * @throws UnsupportedPlatformException when platform is not supported
+     * @throws DBALException                when credentials fail
+     * @throws ORMException                 when cache is not created
+     */
+    protected function createNodeLineString(): LineStringEntity
+    {
+        return $this->createLineString([
+            new Point(0, 0),
+            new Point(1, 0),
+            new Point(0, 1),
+            new Point(1, 1),
+            new Point(0, 0),
+        ]);
+    }
+
+    /**
+     * Create a ring linestring and persist it in database.
+     * Line is created with three aligned points: (0 0) (1 0) (1 1) (0 1) (0 0).
+     *
+     * @throws InvalidValueException        when geometries are not valid
+     * @throws UnsupportedPlatformException when platform is not supported
+     * @throws DBALException                when credentials fail
+     * @throws ORMException                 when cache is not created
+     */
+    protected function createRingLineString(): LineStringEntity
+    {
+        return $this->createLineString([
+            new Point(0, 0),
+            new Point(1, 0),
+            new Point(1, 1),
+            new Point(0, 1),
+            new Point(0, 0),
+        ]);
+    }
+
+    /**
      * Create a straight linestring and persist it in database.
      * Line is created with three aligned points: (0 0) (2 2) (5 5).
      *
