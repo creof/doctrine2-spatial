@@ -131,8 +131,12 @@ jobs:
       sudo: required
       addons:
         postgresql: "10"
-      before_script:
-        - bash ./tests/travis/install-postgres-10.sh
+        apt:
+          packages:
+            - postgresql-10
+            - postgresql-client-10
+            - postgis
+            - postgresql-10.6-postgis-2.4
     - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
