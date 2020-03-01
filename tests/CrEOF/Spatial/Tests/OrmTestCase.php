@@ -47,6 +47,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSymDifference;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StTouches;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StUnion;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StWithin;
@@ -547,6 +548,7 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
+        $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
         $configuration->addCustomStringFunction('ST_Union', StUnion::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
             $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
