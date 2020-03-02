@@ -13,7 +13,7 @@ The master release can be used, but be careful, the code coverage is false, and 
 ## Developments in progress
 This fork will upgrade this package to the last doctrine version and the [PHP supported versions](https://www.php.net/supported-versions.php). Developments are done under [ogc branch](https://github.com/Alexandre-T/doctrine2-spatial/tree/ogc) because of backward incompatibility, we suggest to not use this fork for the moment. I would like to release the 2.0.0 version at the end of March.
 
-Currently I'm searching help to configure Travis and find why Mysql tests works on a lot of platform, but not on Travis. I'm searching ISO/IEC 13249-3:2016 documentation. I'm only working with [OGC Standard](https://www.ogc.org/standards/sfs)
+Currently I'm searching help to configure Travis and configure PostgreSQL tests works on my dev environment but fails on Travis because of user connection. I'm searching ISO/IEC 13249-3:2016 documentation. I'm only working with [OGC Standard](https://www.ogc.org/standards/sfs)
 
 
 ## Documentation will be upgraded 
