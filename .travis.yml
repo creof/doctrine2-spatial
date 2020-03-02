@@ -16,7 +16,7 @@ install:
 script:
   - |
     if [ "x$COVERAGE" == "xyes" ]; then
-       ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-$ORM.cov
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-2.7.cov
     else
        ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml
     fi
@@ -34,6 +34,7 @@ notifications:
 
 jobs:
   include:
+    #MySQL 8 - PHP7.2
     - stage: Test MySQL
       php: 7.2
       env: DB=mysql.docker MYSQL_VERSION=8.0
@@ -42,7 +43,8 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
-    - stage: Test MySQL
+    #MySQLi8 - PHP7.2
+    - stage: Test MySQLi
       php: 7.2
       env: DB=mysqli.docker MYSQL_VERSION=8.0
       sudo: required
@@ -50,12 +52,20 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL 11 PHP7.2 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.2
       env: DB=pgsql POSTGRESQL_VERSION=11.0
       sudo: required
-      before_script:
-        - bash ./tests/travis/install-postgres-11.sh
+      addons:
+        postgresql: "11"
+        apt:
+          packages:
+            - postgresql-11
+            - postgresql-client-11
+            - postgis
+            - postgresql-11-postgis-2.5
+    #MySQL 8 PHP 7.3
     - stage: Test MySQL
       php: 7.3
       env: DB=mysql.docker MYSQL_VERSION=8.0
@@ -64,7 +74,8 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
-    - stage: Test MySQL
+    #MySQLi 8 PHP 7.3
+    - stage: Test MySQLi
       php: 7.3
       env: DB=mysqli.docker MYSQL_VERSION=8.0
       sudo: required
@@ -72,23 +83,20 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL11 PHP 7.3 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.3
       env: DB=pgsql POSTGRESQL_VERSION=11.0
       sudo: required
       before_script:
         - bash ./tests/travis/install-postgres-11.sh
+    #MySQL 5.7 PHP 7.4
     - stage: Test MySQL
       php: 7.4
-      env: DB=mysql COVERAGE=yes
+      env: DB=mysql MYSQL_VERSION=5.7 COVERAGE=yes
       services:
         - mysql
-    - stage: Test MySQL
-      php: 7.4
-      env: DB=mysql.docker MYSQL_VERSION=5.7 COVERAGE=yes
-      sudo: required
-      before_script:
-        - bash ./tests/travis/install-mysql-5.7.sh
+    #MySQL 8 PHP 7.4
     - stage: Test MySQL
       php: 7.4
       env: DB=mysql.docker MYSQL_VERSION=8.0 COVERAGE=yes
@@ -97,18 +105,14 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
-    - stage: Test MySQL
+    #MySQLi5.7 PHP 7.4
+    - stage: Test MySQLi
       php: 7.4
-      env: DB=mysqli COVERAGE=yes
+      env: DB=mysqli MYSQL_VERSION=5.7 COVERAGE=yes
       services:
         - mysql
-    - stage: Test MySQL
-      php: 7.4
-      env: DB=mysqli.docker MYSQL_VERSION=5.7 COVERAGE=yes
-      sudo: required
-      before_script:
-        - bash ./tests/travis/install-mysql-5.7.sh
-    - stage: Test MySQL
+    #MySQLi8 PHP 7.4
+    - stage: Test MySQLi
       php: 7.4
       env: DB=mysqli.docker MYSQL_VERSION=8.0 COVERAGE=yes
       sudo: required
@@ -116,6 +120,7 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL9.6 PHP7.4 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes
@@ -125,6 +130,7 @@ jobs:
           packages:
             - postgis
             - postgresql-9.6-postgis-2.5
+    #PostgreSQL10 PHP7.4 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=10.0 COVERAGE=yes
@@ -136,16 +142,17 @@ jobs:
             - postgresql-10
             - postgresql-client-10
             - postgis
-            - postgresql-10-postgis-2.4
-    - stage: Test PostgreSQL
+            - postgresql-10-postgis-2.5
+    #PostgreSQL11 PHP7.4 Postgis 2.5
+    - stage: Test PostgreSQLPOLYG
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
       sudo: required
       addons:
-        postgresql: "10"
+        postgresql: "11"
         apt:
           packages:
             - postgresql-11
             - postgresql-client-11
             - postgis
-            - postgresql-11-postgis-2.4
+            - postgresql-11-postgis-2.5

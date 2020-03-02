@@ -94,11 +94,14 @@ class StDistanceTest extends OrmTestCase
 
         static::assertCount(3, $result);
         static::assertEquals($newYork, $result[0][0]);
-        static::assertEquals(1305895.94823465, $result[0][1]);
+        static::assertGreaterThan(1309000, $result[0][1]);
+        static::assertLessThan(1310000, $result[0][1]);
         static::assertEquals($losAngeles, $result[1][0]);
-        static::assertEquals(2684082.08249337, $result[1][1]);
+        static::assertGreaterThan(2680000, $result[1][1]);
+        static::assertLessThan(2690000, $result[1][1]);
         static::assertEquals($dallas, $result[2][0]);
-        static::assertEquals(1313754.60684762, $result[2][1]);
+        static::assertGreaterThan(1310000, $result[2][1]);
+        static::assertLessThan(1320000, $result[2][1]);
     }
 
     /**
