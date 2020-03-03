@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * PointN DQL function
- * Return N-th point from LineString.
+ * ST_PointOnSurface DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class PointN extends AbstractSpatialDQLFunction
+class StPointOnSurface extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +41,7 @@ class PointN extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'PointN';
+        return 'ST_PointOnSurface';
     }
 
     /**
@@ -75,10 +73,10 @@ class PointN extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-Simple array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

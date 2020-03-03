@@ -22,18 +22,20 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Centroid DQL function.
+ * SP_PointN DQL function.
+ * Be careful MySQL does not respect the OGC Standard. Second parameter cannot be negative.
+ * So in doctrine, we choose to create a specific function.
+ * If your application receives only positive number as second parameter you could use the standard function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class STCentroid extends AbstractSpatialDQLFunction
+class SpPointN extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +44,7 @@ class STCentroid extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Centroid';
+        return 'ST_PointN';
     }
 
     /**
@@ -54,7 +56,7 @@ class STCentroid extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -66,7 +68,7 @@ class STCentroid extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -74,10 +76,11 @@ class STCentroid extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-Simple array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        //Be careful, MySQL does not respect the OGC Standard, second parameter cannot be null
+        return ['mysql'];
     }
 }

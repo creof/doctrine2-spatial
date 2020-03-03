@@ -22,29 +22,29 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_CoveredBy DQL function tests.
+ * ST_PointOnSurface DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license https://dlambert.mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class STCentroidTest extends OrmTestCase
+class StPointOnSurfaceTest extends OrmTestCase
 {
-    use PolygonHelperTrait;
+    use LineStringHelperTrait;
 
     /**
      * Setup the function type test.
@@ -55,7 +55,7 @@ class STCentroidTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
@@ -71,22 +71,57 @@ class STCentroidTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStCentroid()
+    public function testFunction()
     {
-        $bigPolygon = $this->createBigPolygon();
-        $smallPolygon = $this->createSmallPolygon();
+        $straightLineString = $this->createStraightLineString();
+        $angularLineString = $this->createAngularLineString();
+        $ringLineString = $this->createRingLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT p, ST_AsText(ST_Centroid(p.polygon)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            'SELECT l, ST_AsText(ST_PointOnSurface(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-        static::assertCount(2, $result);
-        static::assertEquals($bigPolygon, $result[0][0]);
-        static::assertEquals('POINT(5 5)', $result[0][1]);
-        static::assertEquals($smallPolygon, $result[1][0]);
-        static::assertEquals('POINT(6 6)', $result[1][1]);
+        static::assertIsArray($result);
+        static::assertCount(3, $result);
+        static::assertEquals($straightLineString, $result[0][0]);
+        static::assertEquals('POINT(2 2)', $result[0][1]);
+        static::assertEquals($angularLineString, $result[1][0]);
+        static::assertEquals('POINT(4 15)', $result[1][1]);
+        static::assertEquals($ringLineString, $result[2][0]);
+        static::assertEquals('POINT(1 0)', $result[2][1]);
+    }
+
+    /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testFunctionInPredicate()
+    {
+        $straightLineString = $this->createStraightLineString();
+        $this->createAngularLineString();
+        $this->createRingLineString();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l where  ST_PointOnSurface(l.lineString) = ST_GeomFromText(:p)'
+            // phpcs: enable
+        );
+        $query->setParameter('p', 'POINT(2 2)', 'string');
+        $result = $query->getResult();
+
+        static::assertIsArray($result);
+        static::assertCount(1, $result);
+        static::assertEquals($straightLineString, $result[0]);
     }
 }

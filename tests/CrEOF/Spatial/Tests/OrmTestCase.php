@@ -28,12 +28,14 @@ use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpPointN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\ScGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBoundary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StBuffer;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StCentroid;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StContains;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StConvexHull;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StCrosses;
@@ -44,6 +46,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEndPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEquals;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StExteriorRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
@@ -52,7 +55,11 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StLength;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumInteriorRing;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointN;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointOnSurface;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StStartPoint;
@@ -542,6 +549,7 @@ abstract class OrmTestCase extends TestCase
     {
         $configuration = $this->getEntityManager()->getConfiguration();
 
+        //Generic spatial functions described in OGC Standard
         $configuration->addCustomNumericFunction('ST_Area', StArea::class);
         $configuration->addCustomStringFunction('ST_AsBinary', StAsBinary::class);
         $configuration->addCustomStringFunction('ST_AsText', StAsText::class);
@@ -552,6 +560,7 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
         }
 
+        $configuration->addCustomStringFunction('ST_Centroid', StCentroid::class);
         $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
         $configuration->addCustomStringFunction('ST_ConvexHull', StConvexHull::class);
         $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
@@ -571,10 +580,19 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
         $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
+        $configuration->addCustomStringFunction('ST_ExteriorRing', StExteriorRing::class);
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
+        $configuration->addCustomStringFunction('ST_NumInteriorRing', StNumInteriorRing::class);
         $configuration->addCustomNumericFunction('ST_Length', StLength::class);
+        $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
+        if ($this->getPlatform()->getName() !== 'mysql') {
+            //Mysql does not respect OGC Standard for this function
+            $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
+            //This function is not implemented into mysql
+            $configuration->addCustomStringFunction('ST_PointOnSurface', StPointOnSurface::class);
+        }
         $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
         $configuration->addCustomStringFunction('ST_Union', StUnion::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
@@ -589,13 +607,11 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_Y', StY::class);
 
         if ('postgresql' === $this->getPlatformAndVersion()) {
-            //Generic function (PostgreSQL function compatible with the OGC Standard)
             //Specific functions of PostgreSQL server
             $configuration->addCustomStringFunction('SC_GeographyFromText', ScGeographyFromText::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomStringFunction('geometry', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry');
-            $configuration->addCustomStringFunction('st_centroid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCentroid');
             $configuration->addCustomStringFunction('st_closestpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STClosestPoint');
             $configuration->addCustomStringFunction('st_collect', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect');
             $configuration->addCustomNumericFunction('st_containsproperly', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContainsProperly');
@@ -615,6 +631,7 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
             $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
             $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
+            $configuration->addCustomStringFunction('Mysql_PointN', SpPointN::class);
         }
     }
 

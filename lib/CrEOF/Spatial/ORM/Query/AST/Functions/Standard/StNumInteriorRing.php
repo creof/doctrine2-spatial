@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * NumPoints DQL function
- * Return number of points in LineString.
+ * ST_NumInteriorRing DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class NumPoints extends AbstractSpatialDQLFunction
+class StNumInteriorRing extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +41,7 @@ class NumPoints extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'NumPoints';
+        return 'ST_NumInteriorRing';
     }
 
     /**
@@ -75,10 +73,10 @@ class NumPoints extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-Simple array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['mysql', 'postgresql'];
     }
 }

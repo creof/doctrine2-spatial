@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * NumPoints DQL function
- * Return number of points in LineString.
+ * ST_Centroid DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
-class NumPoints extends AbstractSpatialDQLFunction
+class StCentroid extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +42,7 @@ class NumPoints extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'NumPoints';
+        return 'ST_Centroid';
     }
 
     /**
@@ -79,6 +78,6 @@ class NumPoints extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

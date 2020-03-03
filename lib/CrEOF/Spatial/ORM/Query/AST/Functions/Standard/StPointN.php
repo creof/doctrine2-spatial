@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * StartPoint DQL function.
+ * ST_PointN DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class StartPoint extends AbstractSpatialDQLFunction
+class StPointN extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class StartPoint extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'StartPoint';
+        return 'ST_PointN';
     }
 
     /**
@@ -54,7 +53,7 @@ class StartPoint extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -66,7 +65,7 @@ class StartPoint extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -74,10 +73,11 @@ class StartPoint extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-Simple array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        //Be careful, MySQL does not respect the OGC Standard, second parameter cannot be null
+        return ['postgresql'];
     }
 }
