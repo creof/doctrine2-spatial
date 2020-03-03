@@ -610,7 +610,7 @@ abstract class OrmTestCase extends TestCase
             // phpcs:enable
         }
 
-        //TEST With different
+        //This test does not work when we compare to mysql (on Travis only)
         if ('postgresql' !== $this->getPlatform()->getName()) {
             $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
             $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
