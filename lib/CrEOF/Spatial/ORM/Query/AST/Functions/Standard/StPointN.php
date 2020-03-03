@@ -77,7 +77,6 @@ class StPointN extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        //Be careful, MySQL does not respect the OGC Standard, second parameter cannot be null
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

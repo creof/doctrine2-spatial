@@ -22,20 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * SP_PointN DQL function.
- * Be careful MySQL does not respect the OGC Standard. Second parameter cannot be negative.
- * So in doctrine, we choose to create a specific function.
- * If your application receives only positive number as second parameter you could use the standard function.
+ * ST_NumGeometries DQL function.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class SpPointN extends AbstractSpatialDQLFunction
+class StNumGeometries extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -44,7 +41,7 @@ class SpPointN extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_PointN';
+        return 'ST_NumGeometries';
     }
 
     /**
@@ -56,7 +53,7 @@ class SpPointN extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -68,7 +65,7 @@ class SpPointN extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -80,7 +77,6 @@ class SpPointN extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        //Be careful, MySQL does not respect the OGC Standard, second parameter cannot be null
-        return ['mysql'];
+        return ['mysql', 'postgresql'];
     }
 }

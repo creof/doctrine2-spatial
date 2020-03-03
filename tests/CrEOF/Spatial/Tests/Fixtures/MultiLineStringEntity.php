@@ -22,62 +22,73 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
+use CrEOF\Spatial\PHP\Types\Geometry\MultiLineString;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * InteriorRingN DQL function.
+ * MultiLineString entity.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
+ *
+ * @Entity
+ * @Table
  */
-class InteriorRingN extends AbstractSpatialDQLFunction
+class MultiLineStringEntity
 {
     /**
-     * Function SQL name getter.
+     * @var int
      *
-     * @since 2.0 This function replace the protected property functionName.
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer")
      */
-    protected function getFunctionName(): string
+    protected $id;
+
+    /**
+     * @var MultiLineString
+     *
+     * @Column(type="multiLineString", nullable=true)
+     */
+    protected $multiLineString;
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
     {
-        return 'InteriorRingN';
+        return $this->id;
     }
 
     /**
-     * Maximum number of parameter for the spatial function.
+     * Get multiLineString.
      *
-     * @since 2.0 This function replace the protected property maxGeomExpr.
-     *
-     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     * @return MultiLineString
      */
-    protected function getMaxParameter(): int
+    public function getMultiLineString()
     {
-        return 2;
+        return $this->multiLineString;
     }
 
     /**
-     * Minimum number of parameter for the spatial function.
+     * Set multiLineString.
      *
-     * @since 2.0 This function replace the protected property minGeomExpr.
+     * @param MultiLineString $multiLineString multiLineString to set
      *
-     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     * @return self
      */
-    protected function getMinParameter(): int
+    public function setMultiLineString(MultiLineString $multiLineString)
     {
-        return 2;
-    }
+        $this->multiLineString = $multiLineString;
 
-    /**
-     * Get the platforms accepted.
-     *
-     * @since 2.0 This function replace the protected property platforms.
-     *
-     * @return string[] a non-empty array of accepted platforms
-     */
-    protected function getPlatforms(): array
-    {
-        return ['mysql'];
+        return $this;
     }
 }

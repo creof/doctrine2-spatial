@@ -38,6 +38,7 @@ use Doctrine\ORM\ORMException;
  * Doctrine GeographyType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  *
  * @group srid

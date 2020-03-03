@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
+use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ExteriorRing DQL function.
+ * ST_GeometryN DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
+ * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class ExteriorRing extends AbstractSpatialDQLFunction
+class StGeometryN extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Function SQL name getter.
@@ -42,7 +43,7 @@ class ExteriorRing extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ExteriorRing';
+        return 'ST_GeometryN';
     }
 
     /**
@@ -54,7 +55,7 @@ class ExteriorRing extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -66,7 +67,7 @@ class ExteriorRing extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -78,6 +79,6 @@ class ExteriorRing extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

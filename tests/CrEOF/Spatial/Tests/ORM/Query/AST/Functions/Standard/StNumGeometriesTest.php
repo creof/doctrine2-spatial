@@ -26,15 +26,16 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\MultiPointHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_PointN DQL function tests.
+ * ST_NumGeometries DQL function tests.
  *
- * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @author  Alexandre Tranchant <alexandre-tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
@@ -42,9 +43,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StPointNTest extends OrmTestCase
+class StNumGeometriesTest extends OrmTestCase
 {
-    use LineStringHelperTrait;
+    use MultiPointHelperTrait;
 
     /**
      * Setup the function type test.
@@ -55,8 +56,9 @@ class StPointNTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::MULTIPOINT_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -71,28 +73,23 @@ class StPointNTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunction()
+    public function testSelectStNumGeometries()
     {
-        $straightLineString = $this->createStraightLineString();
-        $angularLineString = $this->createAngularLineString();
-        $ringLineString = $this->createRingLineString();
+        $four = $this->createFourPoints();
+        $single = $this->createSinglePoint();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT l, ST_AsText(ST_PointN(l.lineString, :p)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT m, ST_NumGeometries(m.multiPoint) FROM CrEOF\Spatial\Tests\Fixtures\MultiPointEntity m'
         );
-        $query->setParameter('p', 2, 'integer');
         $result = $query->getResult();
 
-        static::assertIsArray($result);
-        static::assertCount(3, $result);
-        static::assertEquals($straightLineString, $result[0][0]);
-        static::assertEquals('POINT(2 2)', $result[0][1]);
-        static::assertEquals($angularLineString, $result[1][0]);
-        static::assertEquals('POINT(4 15)', $result[1][1]);
-        static::assertEquals($ringLineString, $result[2][0]);
-        static::assertEquals('POINT(1 0)', $result[2][1]);
+        static::assertCount(2, $result);
+        static::assertEquals($four, $result[0][0]);
+        static::assertEquals(4, $result[0][1]);
+        static::assertEquals($single, $result[1][0]);
+        static::assertEquals(1, $result[1][1]);
     }
 
     /**
@@ -105,25 +102,21 @@ class StPointNTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionInPredicate()
+    public function testStNumGeometriesInPredicate()
     {
-        $straightLineString = $this->createStraightLineString();
-        $this->createAngularLineString();
-        $this->createRingLineString();
+        $this->createFourPoints();
+        $single = $this->createSinglePoint();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-        // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l where  ST_PointN(l.lineString, :n) = ST_GeomFromText(:p)'
-        // phpcs: enable
+            'SELECT m FROM CrEOF\Spatial\Tests\Fixtures\MultiPointEntity m WHERE ST_NumGeometries(m.multiPoint) = :p'
         );
-        $query->setParameter('n', 2, 'integer');
-        $query->setParameter('p', 'POINT(2 2)', 'string');
+        $query->setParameter('p', 1);
         $result = $query->getResult();
 
         static::assertIsArray($result);
         static::assertCount(1, $result);
-        static::assertEquals($straightLineString, $result[0]);
+        static::assertEquals($single, $result[0]);
     }
 }

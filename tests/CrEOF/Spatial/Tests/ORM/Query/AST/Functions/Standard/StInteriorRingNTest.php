@@ -26,15 +26,15 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_PointN DQL function tests.
+ * ST_InteriorRingN DQL function tests.
  *
- * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @author  Alexandre Tranchant <alexandre-tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
@@ -42,9 +42,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StPointNTest extends OrmTestCase
+class StInteriorRingNTest extends OrmTestCase
 {
-    use LineStringHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -55,8 +55,9 @@ class StPointNTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -71,59 +72,26 @@ class StPointNTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunction()
+    public function testSelectStInteriorRingN()
     {
-        $straightLineString = $this->createStraightLineString();
-        $angularLineString = $this->createAngularLineString();
-        $ringLineString = $this->createRingLineString();
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT l, ST_AsText(ST_PointN(l.lineString, :p)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT p, ST_AsText(ST_InteriorRingN(p.polygon, :p)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
         );
-        $query->setParameter('p', 2, 'integer');
+        $query->setParameter('p', 1);
         $result = $query->getResult();
 
-        static::assertIsArray($result);
         static::assertCount(3, $result);
-        static::assertEquals($straightLineString, $result[0][0]);
-        static::assertEquals('POINT(2 2)', $result[0][1]);
-        static::assertEquals($angularLineString, $result[1][0]);
-        static::assertEquals('POINT(4 15)', $result[1][1]);
-        static::assertEquals($ringLineString, $result[2][0]);
-        static::assertEquals('POINT(1 0)', $result[2][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testFunctionInPredicate()
-    {
-        $straightLineString = $this->createStraightLineString();
-        $this->createAngularLineString();
-        $this->createRingLineString();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-        // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l where  ST_PointN(l.lineString, :n) = ST_GeomFromText(:p)'
-        // phpcs: enable
-        );
-        $query->setParameter('n', 2, 'integer');
-        $query->setParameter('p', 'POINT(2 2)', 'string');
-        $result = $query->getResult();
-
-        static::assertIsArray($result);
-        static::assertCount(1, $result);
-        static::assertEquals($straightLineString, $result[0]);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertNull($result[0][1]);
+        static::assertEquals($smallPolygon, $result[1][0]);
+        static::assertNull($result[1][1]);
+        static::assertEquals($holeyPolygon, $result[2][0]);
+        static::assertEquals('LINESTRING(5 5,7 5,7 7,5 7,5 5)', $result[2][1]);
     }
 }

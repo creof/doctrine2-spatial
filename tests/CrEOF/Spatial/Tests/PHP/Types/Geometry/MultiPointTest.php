@@ -34,6 +34,9 @@ use PHPUnit\Framework\TestCase;
  *
  * @group php
  *
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org MIT
+ *
  * @internal
  * @coversDefaultClass
  */
@@ -41,6 +44,8 @@ class MultiPointTest extends TestCase
 {
     /**
      * Test MultiPoint bad parameter.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testBadLineString()
     {
@@ -52,6 +57,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test an empty multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testEmptyMultiPoint()
     {
@@ -62,6 +69,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test to convert multipoint to json.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testJson()
     {
@@ -82,6 +91,8 @@ class MultiPointTest extends TestCase
      * Test to add point to a multipoint.
      *
      * @throws InvalidValueException this should not happen
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointAddPoints()
     {
@@ -111,6 +122,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test to get last point from a multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointFromArraysGetLastPoint()
     {
@@ -130,6 +143,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test to get points from a multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointFromArraysGetPoints()
     {
@@ -155,6 +170,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test to get first point from a multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointFromArraysGetSinglePoint()
     {
@@ -174,6 +191,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test to convert multipoint to string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointFromArraysToString()
     {
@@ -192,6 +211,8 @@ class MultiPointTest extends TestCase
 
     /**
      * Test to convert multipoint to array.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointFromObjectsToArray()
     {

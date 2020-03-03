@@ -24,11 +24,21 @@
 
 namespace CrEOF\Spatial\Tests;
 
+use CrEOF\Spatial\DBAL\Types\GeographyType;
+use CrEOF\Spatial\DBAL\Types\Geography\PointType as GeographyPointType;
+use CrEOF\Spatial\DBAL\Types\Geography\LineStringType as GeographyLineStringType;
+use CrEOF\Spatial\DBAL\Types\Geography\PolygonType as GeographyPolygonType;
+use CrEOF\Spatial\DBAL\Types\Geometry\LineStringType;
+use CrEOF\Spatial\DBAL\Types\Geometry\MultiLineStringType;
+use CrEOF\Spatial\DBAL\Types\Geometry\MultiPointType;
+use CrEOF\Spatial\DBAL\Types\Geometry\MultiPolygonType;
+use CrEOF\Spatial\DBAL\Types\Geometry\PointType;
+use CrEOF\Spatial\DBAL\Types\Geometry\PolygonType;
+use CrEOF\Spatial\DBAL\Types\GeometryType;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
-use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpPointN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\ScGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
@@ -47,14 +57,17 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEndPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEquals;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StExteriorRing;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StInteriorRingN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersects;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StLength;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumGeometries;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumInteriorRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
@@ -69,6 +82,18 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StUnion;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StWithin;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StX;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StY;
+use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
+use CrEOF\Spatial\Tests\Fixtures\GeoLineStringEntity;
+use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
+use CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity;
+use CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity;
+use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Fixtures\MultiLineStringEntity;
+use CrEOF\Spatial\Tests\Fixtures\MultiPointEntity;
+use CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity;
+use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
+use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
@@ -95,16 +120,18 @@ use Throwable;
 abstract class OrmTestCase extends TestCase
 {
     //Fixtures and entities
-    public const GEO_LINESTRING_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeoLineStringEntity';
-    public const GEO_POINT_SRID_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeoPointSridEntity';
-    public const GEO_POLYGON_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity';
-    public const GEOGRAPHY_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeographyEntity';
-    public const GEOMETRY_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\GeometryEntity';
-    public const LINESTRING_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\LineStringEntity';
-    public const MULTIPOLYGON_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity';
-    public const NO_HINT_GEOMETRY_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity';
-    public const POINT_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\PointEntity';
-    public const POLYGON_ENTITY = 'CrEOF\Spatial\Tests\Fixtures\PolygonEntity';
+    public const GEO_LINESTRING_ENTITY = GeoLineStringEntity::class;
+    public const GEO_POINT_SRID_ENTITY = GeoPointSridEntity::class;
+    public const GEO_POLYGON_ENTITY = GeoPolygonEntity::class;
+    public const GEOGRAPHY_ENTITY = GeographyEntity::class;
+    public const GEOMETRY_ENTITY = GeometryEntity::class;
+    public const LINESTRING_ENTITY = LineStringEntity::class;
+    public const MULTIPOINT_ENTITY = MultiPointEntity::class;
+    public const MULTILINESTRING_ENTITY = MultiLineStringEntity::class;
+    public const MULTIPOLYGON_ENTITY = MultiPolygonEntity::class;
+    public const NO_HINT_GEOMETRY_ENTITY = NoHintGeometryEntity::class;
+    public const POINT_ENTITY = PointEntity::class;
+    public const POLYGON_ENTITY = PolygonEntity::class;
 
     /**
      * @var bool[]
@@ -125,43 +152,51 @@ abstract class OrmTestCase extends TestCase
      * @var array[]
      */
     protected static $entities = [
-        self::GEOMETRY_ENTITY => [
+        GeometryEntity::class => [
             'types' => ['geometry'],
             'table' => 'GeometryEntity',
         ],
-        self::NO_HINT_GEOMETRY_ENTITY => [
+        NoHintGeometryEntity::class => [
             'types' => ['geometry'],
             'table' => 'NoHintGeometryEntity',
         ],
-        self::POINT_ENTITY => [
+        PointEntity::class => [
             'types' => ['point'],
             'table' => 'PointEntity',
         ],
-        self::LINESTRING_ENTITY => [
+        LineStringEntity::class => [
             'types' => ['linestring'],
             'table' => 'LineStringEntity',
         ],
-        self::POLYGON_ENTITY => [
+        PolygonEntity::class => [
             'types' => ['polygon'],
             'table' => 'PolygonEntity',
         ],
-        self::MULTIPOLYGON_ENTITY => [
+        MultiPointEntity::class => [
+            'types' => ['multipoint'],
+            'table' => 'MultiPointEntity',
+        ],
+        MultiLineStringEntity::class => [
+            'types' => ['multilinestring'],
+            'table' => 'MultiLineStringEntity',
+        ],
+        MultiPolygonEntity::class => [
             'types' => ['multipolygon'],
             'table' => 'MultiPolygonEntity',
         ],
-        self::GEOGRAPHY_ENTITY => [
+        GeographyEntity::class => [
             'types' => ['geography'],
             'table' => 'GeographyEntity',
         ],
-        self::GEO_POINT_SRID_ENTITY => [
+        GeoPointSridEntity::class => [
             'types' => ['geopoint'],
             'table' => 'GeoPointSridEntity',
         ],
-        self::GEO_LINESTRING_ENTITY => [
+        GeoLineStringEntity::class => [
             'types' => ['geolinestring'],
             'table' => 'GeoLineStringEntity',
         ],
-        self::GEO_POLYGON_ENTITY => [
+        GeoPolygonEntity::class => [
             'types' => ['geopolygon'],
             'table' => 'GeoPolygonEntity',
         ],
@@ -171,15 +206,17 @@ abstract class OrmTestCase extends TestCase
      * @var string[]
      */
     protected static $types = [
-        'geometry' => 'CrEOF\Spatial\DBAL\Types\GeometryType',
-        'point' => 'CrEOF\Spatial\DBAL\Types\Geometry\PointType',
-        'linestring' => 'CrEOF\Spatial\DBAL\Types\Geometry\LineStringType',
-        'polygon' => 'CrEOF\Spatial\DBAL\Types\Geometry\PolygonType',
-        'multipolygon' => 'CrEOF\Spatial\DBAL\Types\Geometry\MultiPolygonType',
-        'geography' => 'CrEOF\Spatial\DBAL\Types\GeographyType',
-        'geopoint' => 'CrEOF\Spatial\DBAL\Types\Geography\PointType',
-        'geolinestring' => 'CrEOF\Spatial\DBAL\Types\Geography\LineStringType',
-        'geopolygon' => 'CrEOF\Spatial\DBAL\Types\Geography\PolygonType',
+        'geometry' => GeometryType::class,
+        'point' => PointType::class,
+        'linestring' => LineStringType::class,
+        'polygon' => PolygonType::class,
+        'multipoint' => MultiPointType::class,
+        'multilinestring' => MultiLineStringType::class,
+        'multipolygon' => MultiPolygonType::class,
+        'geography' => GeographyType::class,
+        'geopoint' => GeographyPointType::class,
+        'geolinestring' => GeographyLineStringType::class,
+        'geopolygon' => GeographyPolygonType::class,
     ];
 
     /**
@@ -581,15 +618,17 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
         $configuration->addCustomStringFunction('ST_ExteriorRing', StExteriorRing::class);
+        $configuration->addCustomStringFunction('ST_GeometryN', StGeometryN::class);
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
+        $configuration->addCustomStringFunction('ST_InteriorRingN', StInteriorRingN::class);
         $configuration->addCustomStringFunction('ST_NumInteriorRing', StNumInteriorRing::class);
+        $configuration->addCustomStringFunction('ST_NumGeometries', StNumGeometries::class);
         $configuration->addCustomNumericFunction('ST_Length', StLength::class);
         $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
+        $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
-            //Mysql does not respect OGC Standard for this function
-            $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
             //This function is not implemented into mysql
             $configuration->addCustomStringFunction('ST_PointOnSurface', StPointOnSurface::class);
         }
@@ -631,7 +670,6 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
             $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
             $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
-            $configuration->addCustomStringFunction('Mysql_PointN', SpPointN::class);
         }
     }
 

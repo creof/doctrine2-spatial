@@ -22,62 +22,73 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\Tests\Fixtures;
 
-use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
+use CrEOF\Spatial\PHP\Types\Geometry\MultiPoint;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * ExteriorRing DQL function.
+ * Multipoint entity.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
+ *
+ * @Entity
+ * @Table
  */
-class ExteriorRing extends AbstractSpatialDQLFunction
+class MultiPointEntity
 {
     /**
-     * Function SQL name getter.
+     * @var int
      *
-     * @since 2.0 This function replace the protected property functionName.
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer")
      */
-    protected function getFunctionName(): string
+    protected $id;
+
+    /**
+     * @var MultiPoint
+     *
+     * @Column(type="multipoint", nullable=true)
+     */
+    protected $multiPoint;
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
     {
-        return 'ExteriorRing';
+        return $this->id;
     }
 
     /**
-     * Maximum number of parameter for the spatial function.
+     * Get multipoint.
      *
-     * @since 2.0 This function replace the protected property maxGeomExpr.
-     *
-     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     * @return MultiPoint
      */
-    protected function getMaxParameter(): int
+    public function getMultiPoint()
     {
-        return 1;
+        return $this->multiPoint;
     }
 
     /**
-     * Minimum number of parameter for the spatial function.
+     * Set multipoint.
      *
-     * @since 2.0 This function replace the protected property minGeomExpr.
+     * @param MultiPoint $multiPoint multipoint to set
      *
-     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     * @return self
      */
-    protected function getMinParameter(): int
+    public function setMultiPoint(MultiPoint $multiPoint)
     {
-        return 1;
-    }
+        $this->multiPoint = $multiPoint;
 
-    /**
-     * Get the platforms accepted.
-     *
-     * @since 2.0 This function replace the protected property platforms.
-     *
-     * @return string[] a non-empty array of accepted platforms
-     */
-    protected function getPlatforms(): array
-    {
-        return ['mysql'];
+        return $this;
     }
 }

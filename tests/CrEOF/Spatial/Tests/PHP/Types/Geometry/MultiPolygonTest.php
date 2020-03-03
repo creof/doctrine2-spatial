@@ -24,6 +24,7 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -35,6 +36,9 @@ use PHPUnit\Framework\TestCase;
  *
  * @group php
  *
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org MIT
+ *
  * @internal
  * @coversDefaultClass
  */
@@ -42,6 +46,8 @@ class MultiPolygonTest extends TestCase
 {
     /**
      * Test an empty polygon.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testEmptyMultiPolygon()
     {
@@ -52,6 +58,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test to convert multipolygon to Json.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testJson()
     {
@@ -85,6 +93,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test to get last polygon from a multipolygon created from a lot objects.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPolygonFromObjectsGetLastPolygon()
     {
@@ -121,6 +131,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test to get first polygon from a multipolygon created from a lot objects.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPolygonFromObjectsGetSinglePolygon()
     {
@@ -157,6 +169,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test getPolygons method.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testSolidMultiPolygonAddPolygon()
     {
@@ -222,6 +236,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test getPolygons method.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testSolidMultiPolygonFromArraysGetPolygons()
     {
@@ -282,6 +298,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test to convert multipolygon created from array to string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testSolidMultiPolygonFromArraysToString()
     {
@@ -314,6 +332,8 @@ class MultiPolygonTest extends TestCase
 
     /**
      * Test to convert multipolygon created from objects to array.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testSolidMultiPolygonFromObjectsToArray()
     {

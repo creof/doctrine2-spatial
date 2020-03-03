@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_GeometryN DQL function.
+ * ST_InteriorRingN DQL function.
  *
- * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https:// mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class STGeometryN extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class StInteriorRingN extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +41,7 @@ class STGeometryN extends AbstractSpatialDQLFunction implements ReturnsGeometryI
      */
     protected function getFunctionName(): string
     {
-        return 'ST_GeometryN';
+        return 'ST_InteriorRingN';
     }
 
     /**
@@ -75,10 +73,10 @@ class STGeometryN extends AbstractSpatialDQLFunction implements ReturnsGeometryI
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-Simple array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['mysql', 'postgresql'];
     }
 }
