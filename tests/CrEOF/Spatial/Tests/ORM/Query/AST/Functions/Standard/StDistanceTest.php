@@ -92,6 +92,7 @@ class StDistanceTest extends OrmTestCase
 
         $result = $query->getResult();
 
+        //TODO: Test should be fixed, distance are differents on Windows and on Linux.
         static::assertCount(3, $result);
         static::assertEquals($newYork, $result[0][0]);
         static::assertGreaterThan(1309000, $result[0][1]);
