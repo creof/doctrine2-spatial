@@ -88,8 +88,12 @@ jobs:
       php: 7.3
       env: DB=pgsql POSTGRESQL_VERSION=11.0
       sudo: required
-      before_script:
-        - bash ./tests/travis/install-postgres-11.sh
+      addons:
+        postgresql: "11"
+        apt:
+          packages:
+            - postgis
+            - postgresql-11-postgis-2.5
     #MySQL 5.7 PHP 7.4
     - stage: Test MySQL
       php: 7.4
@@ -144,7 +148,7 @@ jobs:
             - postgis
             - postgresql-10-postgis-2.5
     #PostgreSQL11 PHP7.4 Postgis 2.5
-    - stage: Test PostgreSQLPOLYG
+    - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
       sudo: required
@@ -152,7 +156,5 @@ jobs:
         postgresql: "11"
         apt:
           packages:
-            - postgresql-11
-            - postgresql-client-11
             - postgis
             - postgresql-11-postgis-2.5
