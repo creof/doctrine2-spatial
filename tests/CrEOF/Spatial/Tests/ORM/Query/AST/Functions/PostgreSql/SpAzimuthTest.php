@@ -92,6 +92,6 @@ class SpAzimuthTest extends OrmTestCase
         static::assertEquals($pointO, $result[1][0]);
         static::assertEquals(0, $result[1][1]);
         static::assertEquals($pointE, $result[2][0]);
-        static::assertEquals(90, $result[2][1]);
+        static::assertEquals(4.71238898038469, $result[2][1]);
     }
 }

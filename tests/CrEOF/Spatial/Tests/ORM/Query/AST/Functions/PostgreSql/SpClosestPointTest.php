@@ -26,25 +26,27 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_ClosestPoint DQL function tests.
+ * SP_ClosestPoint DQL function tests.
+ * This function is not issue from the OGC, but it is useful for Database postgresql.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class STClosestPointTest extends OrmTestCase
+class SpClosestPointTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
     use PolygonHelperTrait;
 
     /**
@@ -56,8 +58,8 @@ class STClosestPointTest extends OrmTestCase
      */
     protected function setUp(): void
     {
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->usesEntity(self::POLYGON_ENTITY);
-        $this->usesType('point');
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
@@ -73,7 +75,43 @@ class STClosestPointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStClosestPoint()
+    public function testFunctionInSelect()
+    {
+        $straight = $this->createStraightLineString();
+        $lineC = $this->createLineStringC();
+        $ring = $this->createRingLineString();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l, ST_AsText(PgSql_ClosestPoint(l.lineString, ST_GeomFromText(:p))) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            // phpcs:enable
+        );
+        $query->setParameter('p', 'POINT(4 3)');
+        $result = $query->getResult();
+
+
+        static::assertIsArray($result);
+        static::assertCount(3, $result);
+        static::assertEquals($straight, $result[0][0]);
+        static::assertSame('POINT(3.5 3.5)', $result[0][1]);
+        static::assertEquals($lineC, $result[1][0]);
+        static::assertSame('POINT(4.5 2.5)', $result[1][1]);
+        static::assertEquals($ring, $result[2][0]);
+        static::assertSame('POINT(1 1)', $result[2][1]);
+    }
+    /**
+     * Test a DQL containing function to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testFunctionWithPolygonInSelect()
     {
         $bigPolygon = $this->createBigPolygon();
         $smallPolygon = $this->createSmallPolygon();
@@ -81,9 +119,9 @@ class STClosestPointTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p, ST_AsText(ST_ClosestPoint(p.polygon, ST_GeomFromText(:p1))) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
-            // phpcs:enable
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p, ST_AsText(PgSql_ClosestPoint(p.polygon, ST_GeomFromText(:p1))) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        // phpcs:enable
         );
 
         $query->setParameter('p1', 'POINT(2 2)', 'string');

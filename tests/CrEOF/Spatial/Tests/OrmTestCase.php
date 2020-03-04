@@ -42,6 +42,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpGeometryType as MySqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAsGeoJson;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAzimuth;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpClosestPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCollect;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
@@ -659,12 +660,12 @@ abstract class OrmTestCase extends TestCase
             //Specific functions of PostgreSQL server
             $configuration->addCustomStringFunction('PgSql_AsGeoJson', SpAsGeoJson::class);
             $configuration->addCustomStringFunction('PgSql_Azimuth', SpAzimuth::class);
+            $configuration->addCustomStringFunction('PgSql_ClosestPoint', SpClosestPoint::class);
             $configuration->addCustomStringFunction('PgSql_Collect', SpCollect::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            $configuration->addCustomStringFunction('st_closestpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STClosestPoint');
             $configuration->addCustomNumericFunction('st_containsproperly', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContainsProperly');
             $configuration->addCustomNumericFunction('st_covers', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCovers');
             $configuration->addCustomNumericFunction('st_coveredby', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCoveredBy');

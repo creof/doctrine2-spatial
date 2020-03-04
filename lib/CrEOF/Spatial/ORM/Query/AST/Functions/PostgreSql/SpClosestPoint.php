@@ -27,13 +27,14 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_ClosestPoint DQL function.
+ * SP_ClosestPoint DQL function.
+ * This function is not issue from the OGC, but it is useful for Database postgresql.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class STClosestPoint extends AbstractSpatialDQLFunction
+class SpClosestPoint extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

@@ -74,7 +74,7 @@ class SpAsGeoJsonTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStAsText()
+    public function testFunctionInSelect()
     {
         $this->createStraightLineString();
         $this->createAngularLineString();
