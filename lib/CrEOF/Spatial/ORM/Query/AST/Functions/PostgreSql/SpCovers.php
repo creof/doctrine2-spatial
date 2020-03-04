@@ -33,7 +33,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STCovers extends AbstractSpatialDQLFunction
+class SpCovers extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

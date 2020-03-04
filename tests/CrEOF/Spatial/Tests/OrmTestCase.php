@@ -44,6 +44,9 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAsGeoJson;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAzimuth;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpClosestPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCollect;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpContainsProperly;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCoveredBy;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
@@ -664,11 +667,11 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomStringFunction('PgSql_Collect', SpCollect::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
+            $configuration->addCustomNumericFunction('PgSql_ContainsProperly', SpContainsProperly::class);
+            $configuration->addCustomNumericFunction('PgSql_CoveredBy', SpCoveredBy::class);
+            $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            $configuration->addCustomNumericFunction('st_containsproperly', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContainsProperly');
-            $configuration->addCustomNumericFunction('st_covers', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCovers');
-            $configuration->addCustomNumericFunction('st_coveredby', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCoveredBy');
             $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistanceSphere');
             $configuration->addCustomStringFunction('st_geomfromewkt', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromEWKT');
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');

@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_GeomFromText DQL function.
+ * ST_ContainsProperly DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class STGeomFromText extends AbstractSpatialDQLFunction
+class SpContainsProperly extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STGeomFromText extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_GeomFromText';
+        return 'ST_ContainsProperly';
     }
 
     /**
@@ -66,7 +66,7 @@ class STGeomFromText extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**

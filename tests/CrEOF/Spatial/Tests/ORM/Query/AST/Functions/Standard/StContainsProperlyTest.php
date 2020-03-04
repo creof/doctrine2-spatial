@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,18 +32,17 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_ContainsProperly DQL function tests.
+ * ST_Contains DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class STContainsProperlyTest extends OrmTestCase
+class StContainsProperlyTest extends OrmTestCase
 {
     use PolygonHelperTrait;
 
@@ -57,7 +56,9 @@ class STContainsProperlyTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesType('point');
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -72,7 +73,7 @@ class STContainsProperlyTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStContainsProperly()
+    public function testSelectStContains()
     {
         $bigPolygon = $this->createBigPolygon();
         $smallPolygon = $this->createSmallPolygon();
@@ -81,19 +82,19 @@ class STContainsProperlyTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p, ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
-            // phpcs: enable
+            'SELECT p, PgSql_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpcs:enable
         );
 
-        $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
+        $query->setParameter('p1', 'POINT(2 2)', 'string');
 
         $result = $query->getResult();
 
         static::assertCount(2, $result);
         static::assertEquals($bigPolygon, $result[0][0]);
-        static::assertTrue($result[0][1]);
+        static::assertEquals(1, $result[0][1]);
         static::assertEquals($smallPolygon, $result[1][0]);
-        static::assertFalse($result[1][1]);
+        static::assertEquals(0, $result[1][1]);
     }
 
     /**
@@ -106,20 +107,47 @@ class STContainsProperlyTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStContainsProperlyWhereParameter()
+    public function testStContainsWhereParameter()
     {
         $bigPolygon = $this->createBigPolygon();
-        $this->createSmallPolygon();
+        $holeyPolygon = $this->createHoleyPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Contains(p.polygon, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
 
-        $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
+        $query->setParameter('p1', 'POINT(6 6)', 'string');
 
         $result = $query->getResult();
 
         static::assertCount(1, $result);
         static::assertEquals($bigPolygon, $result[0]);
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Contains(p.polygon, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
+
+        $query->setParameter('p1', 'POINT(2 2)', 'string');
+
+        $result = $query->getResult();
+
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+
+        switch ($this->getPlatform()->getName()) {
+            case 'mysql':
+                //MySQL does not respect the initial polygon and reconstructs it in a bad (direction) way
+                break;
+            case 'postgresql':
+            default:
+                static::assertEquals($holeyPolygon, $result[1]);
+        }
     }
 }

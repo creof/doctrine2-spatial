@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_CoveredBy DQL function.
+ * SP_CoveredBy DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STCoveredBy extends AbstractSpatialDQLFunction
+class SpCoveredBy extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
