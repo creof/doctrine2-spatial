@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Geometry DQL function.
+ * ST_IsClosed DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class Geometry extends AbstractSpatialDQLFunction
+class StIsClosed extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class Geometry extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'geometry';
+        return 'ST_IsClosed';
     }
 
     /**
@@ -74,10 +73,10 @@ class Geometry extends AbstractSpatialDQLFunction
      *
      * @since 2.0 This function replace the protected property platforms.
      *
-     * @return string[] a non-empty array of accepted platforms
+     * @return string[] a non-ring array of accepted platforms
      */
     protected function getPlatforms(): array
     {
-        return ['postgresql'];
+        return ['postgresql', 'mysql'];
     }
 }

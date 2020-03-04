@@ -32,18 +32,17 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_GeometryType DQL function tests.
+ * ST_IsClosed DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class StGeometryTypeTest extends OrmTestCase
+class StIsClosedTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -72,22 +71,26 @@ class StGeometryTypeTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionInSelect()
+    public function testFunction()
     {
-        $this->createStraightLineString();
-        $this->createAngularLineString();
+        $straight = $this->createStraightLineString();
+        $ring = $this->createRingLineString();
+        $node = $this->createNodeLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_GeometryType(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT l, ST_IsClosed(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-
         static::assertIsArray($result);
-        static::assertIsArray($result[0]);
-        static::assertCount(1, $result[0]);
-        static::assertEquals('ST_LineString', $result[0][1]);
+        static::assertCount(3, $result);
+        static::assertEquals($straight, $result[0][0]);
+        static::assertEquals(0, $result[0][1]);
+        static::assertEquals($ring, $result[1][0]);
+        static::assertEquals(1, $result[1][1]);
+        static::assertEquals($node, $result[2][0]);
+        static::assertEquals(1, $result[2][1]);
     }
 }

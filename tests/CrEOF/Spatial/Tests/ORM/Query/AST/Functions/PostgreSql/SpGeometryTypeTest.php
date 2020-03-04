@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,18 +32,23 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_GeometryType DQL function tests.
+ * SC_GeometryType DQL function tests.
+ * This function is not issue from the OGC, but it is useful for Database postgresql.
+ * It does not return the SQL MM Type ('ST_Linestring', 'ST_Polygon') use Standard\StGeometryType class for this.
+ * It returns the type of the geometry as a string. Eg: 'LINESTRING', 'POLYGON', 'MULTIPOINT'
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @see https://postgis.net/docs/ST_GeometryType.html
+ * @see https://postgis.net/docs/GeometryType.html
+ *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class StGeometryTypeTest extends OrmTestCase
+class SpGeometryTypeTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -72,7 +77,7 @@ class StGeometryTypeTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionInSelect()
+    public function testStAsText()
     {
         $this->createStraightLineString();
         $this->createAngularLineString();
@@ -80,7 +85,7 @@ class StGeometryTypeTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_GeometryType(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT PgSQL_GeometryType(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
@@ -88,6 +93,6 @@ class StGeometryTypeTest extends OrmTestCase
         static::assertIsArray($result);
         static::assertIsArray($result[0]);
         static::assertCount(1, $result[0]);
-        static::assertEquals('ST_LineString', $result[0][1]);
+        static::assertSame('LINESTRING', $result[0][1]);
     }
 }

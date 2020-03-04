@@ -39,7 +39,9 @@ use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpGeometryType as MySqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\ScGeographyFromText;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
@@ -63,6 +65,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StInteriorRingN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersects;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsClosed;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
@@ -608,6 +611,7 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_Equals', StEquals::class);
         $configuration->addCustomNumericFunction('ST_Intersects', StIntersects::class);
         $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
+        $configuration->addCustomNumericFunction('ST_IsClosed', StIsClosed::class);
         $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
             //This function is not implemented into mysql
@@ -619,7 +623,10 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
         $configuration->addCustomStringFunction('ST_ExteriorRing', StExteriorRing::class);
         $configuration->addCustomStringFunction('ST_GeometryN', StGeometryN::class);
-        $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
+        if ($this->getPlatform()->getName() !== 'mysql') {
+            //MySQL function does not respect OGC Standards
+            $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
+        }
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
         $configuration->addCustomStringFunction('ST_InteriorRingN', StInteriorRingN::class);
         $configuration->addCustomStringFunction('ST_NumInteriorRing', StNumInteriorRing::class);
@@ -647,10 +654,11 @@ abstract class OrmTestCase extends TestCase
 
         if ('postgresql' === $this->getPlatformAndVersion()) {
             //Specific functions of PostgreSQL server
+            //TODO rename ScGeographyFromText to SpGeographyFromText
             $configuration->addCustomStringFunction('SC_GeographyFromText', ScGeographyFromText::class);
+            $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            $configuration->addCustomStringFunction('geometry', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\Geometry');
             $configuration->addCustomStringFunction('st_closestpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STClosestPoint');
             $configuration->addCustomStringFunction('st_collect', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect');
             $configuration->addCustomNumericFunction('st_containsproperly', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContainsProperly');
@@ -670,6 +678,7 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
             $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
             $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
+            $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
         }
     }
 
