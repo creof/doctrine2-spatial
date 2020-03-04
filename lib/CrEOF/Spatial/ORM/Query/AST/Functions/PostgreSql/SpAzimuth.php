@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Azimuth DQL function.
+ * SP_Azimuth DQL function.
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STAzimuth extends AbstractSpatialDQLFunction
+class SpAzimuth extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

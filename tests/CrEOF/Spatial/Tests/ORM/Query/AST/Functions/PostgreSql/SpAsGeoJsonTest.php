@@ -26,28 +26,29 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\PointEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Collect DQL function tests.
+ * SP_AsGeoJson DQL function tests.
+ * This function is not issue from the OGC, but it is useful for Database postgresql.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @see https://postgis.net/docs/ST_AsGeoJson.html
+ *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class STCollectTest extends OrmTestCase
+class SpAsGeoJsonTest extends OrmTestCase
 {
+    use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -57,7 +58,7 @@ class STCollectTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::POINT_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
@@ -69,32 +70,26 @@ class STCollectTest extends OrmTestCase
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
      * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws MappingException             when mapping
-     * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
      *
      * @group geometry
      */
-    public function testSelectStCollect()
+    public function testStAsText()
     {
-        $entity = new PointEntity();
-        $entity->setPoint(new Point(1, 2));
-        $this->getEntityManager()->persist($entity);
-
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT ST_AsText(ST_Collect(geometry(p.point), ST_GeomFromText(\'POINT(-2 3)\'))) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
-            // phpcs:enable
+            'SELECT PgSQL_AsGeoJson(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
 
-        $expected = [
-            [1 => 'MULTIPOINT(1 2,-2 3)'],
-        ];
 
-        static::assertEquals($expected, $result);
+        static::assertIsArray($result);
+        static::assertIsArray($result[0]);
+        static::assertCount(1, $result[0]);
+        static::assertSame('{"type":"LineString","coordinates":[[0,0],[2,2],[5,5]]}', $result[0][1]);
     }
 }

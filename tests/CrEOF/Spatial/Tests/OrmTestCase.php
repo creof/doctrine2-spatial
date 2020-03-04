@@ -40,7 +40,10 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpGeometryType as MySqlGeometryType;
-use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\ScGeographyFromText;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAsGeoJson;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAzimuth;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCollect;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
@@ -654,13 +657,14 @@ abstract class OrmTestCase extends TestCase
 
         if ('postgresql' === $this->getPlatformAndVersion()) {
             //Specific functions of PostgreSQL server
-            //TODO rename ScGeographyFromText to SpGeographyFromText
-            $configuration->addCustomStringFunction('SC_GeographyFromText', ScGeographyFromText::class);
+            $configuration->addCustomStringFunction('PgSql_AsGeoJson', SpAsGeoJson::class);
+            $configuration->addCustomStringFunction('PgSql_Azimuth', SpAzimuth::class);
+            $configuration->addCustomStringFunction('PgSql_Collect', SpCollect::class);
+            $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomStringFunction('st_closestpoint', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STClosestPoint');
-            $configuration->addCustomStringFunction('st_collect', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect');
             $configuration->addCustomNumericFunction('st_containsproperly', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContainsProperly');
             $configuration->addCustomNumericFunction('st_covers', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCovers');
             $configuration->addCustomNumericFunction('st_coveredby', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCoveredBy');

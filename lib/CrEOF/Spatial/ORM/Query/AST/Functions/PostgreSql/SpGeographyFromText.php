@@ -29,11 +29,14 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 /**
  * SC_GeographyFromText DQL function.
  *
+ * The SQL ST_GeographyFromText is not issue from the OGC Standard, so we do not have to implement it in DQL
+ * But it is useful, so we call it with an other prefixe, because it is specific to this database server.
+ *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class ScGeographyFromText extends AbstractSpatialDQLFunction
+class SpGeographyFromText extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

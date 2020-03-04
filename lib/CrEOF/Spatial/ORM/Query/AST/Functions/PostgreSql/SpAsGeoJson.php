@@ -28,13 +28,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_AsGeoJSON DQL function.
+ * SP_AsGeoJSON DQL function.
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://mit-license.org MIT
  */
-class STAsGeoJson extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class SpAsGeoJson extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Function SQL name getter.
