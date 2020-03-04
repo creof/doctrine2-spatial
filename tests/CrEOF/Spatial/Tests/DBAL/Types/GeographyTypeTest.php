@@ -42,7 +42,7 @@ use Doctrine\ORM\ORMException;
  * @group geography
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\GeographyType
  */
 class GeographyTypeTest extends OrmTestCase
 {
