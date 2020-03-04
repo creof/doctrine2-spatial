@@ -54,7 +54,7 @@ class MultiLineStringEntity
     /**
      * @var MultiLineString
      *
-     * @Column(type="multiLineString", nullable=true)
+     * @Column(type="multilinestring", nullable=true)
      */
     protected $multiLineString;
 
