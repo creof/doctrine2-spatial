@@ -26,7 +26,6 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Mysql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
@@ -87,7 +86,6 @@ class SpBufferTest extends OrmTestCase
         );
 
         $query->setParameter('p', 'point_square', 'string');
-
         $result = $query->getResult();
 
         static::assertCount(1, $result);
