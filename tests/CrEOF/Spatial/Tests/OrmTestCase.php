@@ -665,11 +665,11 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomStringFunction('PgSql_Azimuth', SpAzimuth::class);
             $configuration->addCustomStringFunction('PgSql_ClosestPoint', SpClosestPoint::class);
             $configuration->addCustomStringFunction('PgSql_Collect', SpCollect::class);
-            $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
-            $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
             $configuration->addCustomNumericFunction('PgSql_ContainsProperly', SpContainsProperly::class);
             $configuration->addCustomNumericFunction('PgSql_CoveredBy', SpCoveredBy::class);
             $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
+            $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
+            $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistanceSphere');
