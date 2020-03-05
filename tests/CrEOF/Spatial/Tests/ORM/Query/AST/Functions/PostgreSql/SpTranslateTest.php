@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_SRID DQL function tests.
+ * SP_Translate DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,11 +40,11 @@ use Doctrine\ORM\ORMException;
  * @group dql
  *
  * @internal
- * @coversDefaultClass
+ * @translateDefaultClass
  */
-class StSridTest extends OrmTestCase
+class SpTranslateTest extends OrmTestCase
 {
-    use LineStringHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -57,10 +55,8 @@ class StSridTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::GEOMETRY_ENTITY);
-        $this->usesEntity(self::GEOGRAPHY_ENTITY);
+        $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
-        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -75,33 +71,31 @@ class StSridTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionWithGeography()
+    public function testFunctionInSelect()
     {
-        $entity = new GeometryEntity();
-        $point = new Point(1, 1);
-        $point->setSrid(2154); //Lambert93
-        $entity->setGeometry($point);
-        $this->getEntityManager()->persist($entity);
+        $bigPolygon = $this->createBigPolygon();
+        $smallPolygon = $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_SRID(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p, ST_AsText(PgSql_Translate(p.polygon, :x, :y)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpccs: enable
         );
+        $query->setParameter('x', 4.0);
+        $query->setParameter('y', -4.5);
         $result = $query->getResult();
 
-        static::assertIsArray($result);
-        static::assertIsArray($result[0]);
-        static::assertCount(1, $result[0]);
-        if ($this->getPlatform()->getName() == 'mysql') {
-            //FIXME MySQL is returning 0 insteadof 2154
-            self::markTestIncomplete('SRID not implemented in Abstraction of MySQL');
-        }
-        static::assertSame(2154, $result[0][1]);
+        static::assertCount(2, $result);
+        static::assertEquals($bigPolygon, $result[0][0]);
+        static::assertSame('POLYGON((4 -4.5,14 -4.5,14 5.5,4 5.5,4 -4.5))', $result[0][1]);
+        static::assertEquals($smallPolygon, $result[1][0]);
+        static::assertSame('POLYGON((9 0.5,11 0.5,11 2.5,9 2.5,9 0.5))', $result[1][1]);
     }
 
     /**
-     * Test a DQL containing function to test in the select.
+     * Test a DQL containing function to test in the predicate.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -110,28 +104,24 @@ class StSridTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionWithGeometry()
+    public function testFunctionInPredicate()
     {
-        $entity = new GeometryEntity();
-        $point = new Point(1, 1);
-        $point->setSrid(2154); //Lambert93
-        $entity->setGeometry($point);
-        $this->getEntityManager()->persist($entity);
+        $bigPolygon = $this->createBigPolygon();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_SRID(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Translate(p.polygon, :x, :y) = :g'
+            // phpcs:enable
         );
+        $query->setParameter('g', 'POLYGON((4 -4.5,14 -4.5,14 5.5,4 5.5,4 -4.5))', 'string');
+        $query->setParameter('x', 4.0);
+        $query->setParameter('y', -4.5);
         $result = $query->getResult();
 
-        static::assertIsArray($result);
-        static::assertIsArray($result[0]);
-        static::assertCount(1, $result[0]);
-        if ($this->getPlatform()->getName() == 'mysql') {
-            //FIXME MySQL is returning 0 insteadof 2154
-            self::markTestIncomplete('SRID not implemented in Abstraction of MySQL');
-        }
-        static::assertSame(2154, $result[0][1]);
+        static::assertCount(1, $result);
+        static::assertEquals($bigPolygon, $result[0]);
     }
 }

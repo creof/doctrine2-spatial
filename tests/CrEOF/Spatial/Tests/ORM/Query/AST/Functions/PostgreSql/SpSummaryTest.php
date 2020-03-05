@@ -41,7 +41,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Summary DQL function tests.
+ * SP_Summary DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -52,7 +52,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STSummaryTest extends OrmTestCase
+class SpSummaryTest extends OrmTestCase
 {
     /**
      * Setup the function type test.
@@ -109,7 +109,7 @@ class STSummaryTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT g, ST_Summary(g.geography) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+            'SELECT g, PgSql_Summary(g.geography) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
         );
         $result = $query->getResult();
 
@@ -161,7 +161,7 @@ class STSummaryTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT g, ST_Summary(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
+            'SELECT g, PgSql_Summary(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
         );
         $result = $query->getResult();
 

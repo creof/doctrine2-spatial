@@ -49,6 +49,9 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCoveredBy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSummary;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpTransform;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpTranslate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsBinary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StAsText;
@@ -670,6 +673,9 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
+            $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
+            $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
+            $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistanceSphere');
@@ -677,7 +683,6 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
             $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');
             $configuration->addCustomStringFunction('st_snaptogrid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid');
-            $configuration->addCustomStringFunction('st_summary', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSummary');
             // phpcs:enable
         }
 

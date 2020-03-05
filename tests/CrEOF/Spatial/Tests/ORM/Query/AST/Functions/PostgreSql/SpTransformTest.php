@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\GeometryEntity;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_SRID DQL function tests.
+ * SP_Transform DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,11 +40,11 @@ use Doctrine\ORM\ORMException;
  * @group dql
  *
  * @internal
- * @coversDefaultClass
+ * @transformDefaultClass
  */
-class StSridTest extends OrmTestCase
+class SpTransformTest extends OrmTestCase
 {
-    use LineStringHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -57,10 +55,8 @@ class StSridTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::GEOMETRY_ENTITY);
-        $this->usesEntity(self::GEOGRAPHY_ENTITY);
+        $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
-        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -75,33 +71,40 @@ class StSridTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionWithGeography()
+    public function testFunctionInSelect()
     {
-        $entity = new GeometryEntity();
-        $point = new Point(1, 1);
-        $point->setSrid(2154); //Lambert93
-        $entity->setGeometry($point);
-        $this->getEntityManager()->persist($entity);
+        $massachusetts = $this->createMassachusettsState();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
+        //FIXME The test above failed because DQL SRID is seen as a string
+//        $query = $this->getEntityManager()->createQuery(
+//            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+//            'SELECT p, ST_AsText(PgSql_Transform(p.polygon, :srid)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+//            // phpccs: enable
+//        );
+//        $query->setParameter('srid', 4326, 'integer');
+//        $result = $query->getResult();
+//
+//        static::assertCount(2, $result);
+//        static::assertEquals($test, $result[0][0]);
+//        static::assertSame('POLYGON((-71.1776848522251 42.3902896512902,-71.1776843766326 42.3903829478009, -71.1775844305465 42.3903826677917,-71.1775825927231 42.3902893647987,-71.1776848522251 42.3902896512902))', $result[0][1]);
+
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_SRID(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p, ST_AsText(PgSql_Transform(p.polygon, :proj)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpccs: enable
         );
+        $query->setParameter('proj', '+proj=longlat +datum=WGS84 +no_defs');
         $result = $query->getResult();
 
-        static::assertIsArray($result);
-        static::assertIsArray($result[0]);
-        static::assertCount(1, $result[0]);
-        if ($this->getPlatform()->getName() == 'mysql') {
-            //FIXME MySQL is returning 0 insteadof 2154
-            self::markTestIncomplete('SRID not implemented in Abstraction of MySQL');
-        }
-        static::assertSame(2154, $result[0][1]);
+        static::assertCount(1, $result);
+        static::assertEquals($massachusetts, $result[0][0]);
+        static::assertSame('POLYGON((-71.1776848522251 42.3902896512902,-71.1776843766326 42.3903829478009,-71.1775844305465 42.3903826677917,-71.1775825927231 42.3902893647987,-71.1776848522251 42.3902896512902))', $result[0][1]);
     }
 
     /**
-     * Test a DQL containing function to test in the select.
+     * Test a DQL containing function to test in the predicate.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -110,28 +113,23 @@ class StSridTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testFunctionWithGeometry()
+    public function testFunctionInPredicate()
     {
-        $entity = new GeometryEntity();
-        $point = new Point(1, 1);
-        $point->setSrid(2154); //Lambert93
-        $entity->setGeometry($point);
-        $this->getEntityManager()->persist($entity);
+        $massachusetts = $this->createMassachusettsState();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $query = $this->getEntityManager()->createQuery(
-            'SELECT ST_SRID(g.geometry) FROM CrEOF\Spatial\Tests\Fixtures\GeometryEntity g'
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Transform(p.polygon, :proj) = ST_GeomFromText(:g)'
         );
+        $query->setParameter('proj', '+proj=longlat +datum=WGS84 +no_defs');
+        $query->setParameter('g', 'POLYGON((-71.1776848522251 42.3902896512902,-71.1776843766326 42.3903829478009,-71.1775844305465 42.3903826677917,-71.1775825927231 42.3902893647987,-71.1776848522251 42.3902896512902))', 'string');
         $result = $query->getResult();
+        // phpcs:enable
 
-        static::assertIsArray($result);
-        static::assertIsArray($result[0]);
-        static::assertCount(1, $result[0]);
-        if ($this->getPlatform()->getName() == 'mysql') {
-            //FIXME MySQL is returning 0 insteadof 2154
-            self::markTestIncomplete('SRID not implemented in Abstraction of MySQL');
-        }
-        static::assertSame(2154, $result[0][1]);
+        static::assertCount(1, $result);
+        static::assertEquals($massachusetts, $result[0]);
     }
 }

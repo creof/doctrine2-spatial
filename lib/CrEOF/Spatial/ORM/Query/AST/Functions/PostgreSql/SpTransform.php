@@ -27,13 +27,12 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Summary DQL function.
+ * SP_Transform DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class STSummary extends AbstractSpatialDQLFunction
+class SpTransform extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class STSummary extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Summary';
+        return 'ST_Transform';
     }
 
     /**
@@ -54,7 +53,7 @@ class STSummary extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 3;
     }
 
     /**
@@ -66,7 +65,7 @@ class STSummary extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**

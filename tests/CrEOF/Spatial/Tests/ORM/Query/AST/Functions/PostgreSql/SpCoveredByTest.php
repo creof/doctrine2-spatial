@@ -34,9 +34,8 @@ use Doctrine\ORM\ORMException;
 /**
  * SP_CoveredBy DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *

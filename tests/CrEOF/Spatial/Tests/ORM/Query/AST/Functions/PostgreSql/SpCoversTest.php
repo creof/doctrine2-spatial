@@ -34,9 +34,8 @@ use Doctrine\ORM\ORMException;
 /**
  * SP_Covers DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
@@ -81,10 +80,10 @@ class SpCoversTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p, PgSql_Covers(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            'SELECT p, PgSql_Covers(p.polygon, ST_GeomFromText(:l)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
             // phpcs: enable
         );
-        $query->setParameter('p1', 'LINESTRING(4 4,8 8)', 'string');
+        $query->setParameter('l', 'LINESTRING(4 4,8 8)', 'string');
         $result = $query->getResult();
 
         static::assertCount(2, $result);
