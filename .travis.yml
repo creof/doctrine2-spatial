@@ -22,8 +22,11 @@ script:
     fi
 
 after_script:
-  - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
-  - ./vendor/bin/coveralls -v --exclude-no-stmt
+  - |
+    if [ "x$COVERAGE" == "xyes" ]; then
+       ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
+       ./vendor/bin/coveralls -v --exclude-no-stmt
+    fi
   #Push code climate coverage
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   # Code should respect rules

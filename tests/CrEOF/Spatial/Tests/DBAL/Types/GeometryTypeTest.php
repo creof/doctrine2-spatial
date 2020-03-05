@@ -274,6 +274,8 @@ class GeometryTypeTest extends OrmTestCase
      * @throws MappingException             when mapping
      * @throws OptimisticLockException      when clear fails
      * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group srid
      */
     public function testPolygonGeometryWithSrid()
     {

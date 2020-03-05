@@ -74,6 +74,33 @@ trait PolygonHelperTrait
     }
 
     /**
+     * Create a Polygon from an array of linestrings.
+     *
+     * @param array    $lineStrings the array of linestrings
+     * @param int|null $srid        Spatial Reference System Identifier
+     *
+     * @return PolygonEntity
+     * @throws DBALException when credentials fail
+     * @throws InvalidValueException when geometries are not valid
+     * @throws ORMException when cache is not created
+     * @throws UnsupportedPlatformException when platform is not supported
+     */
+    private function createPolygon(array $lineStrings, int $srid = null): PolygonEntity
+    {
+        $polygon = new Polygon($lineStrings);
+        if (null !== $srid) {
+            $polygon->setSrid($srid);
+        }
+
+        $polygonEntity = new PolygonEntity();
+        $polygonEntity->setPolygon($polygon);
+
+        $this->getEntityManager()->persist($polygonEntity);
+
+        return $polygonEntity;
+    }
+
+    /**
      * Create an eccentric polygon and persist it in database.
      * Square (6 6, 10 10).
      *
@@ -190,52 +217,31 @@ trait PolygonHelperTrait
 
     /**
      * Create the Massachusetts state plane US feet geometry and persist it in database.
-     * SQUARE (5 5, 7 7).
      *
-     * @throws UnsupportedPlatformException when platform is not supported
-     * @throws DBALException                when credentials fail
-     * @throws ORMException                 when cache is not created
-     * @throws InvalidValueException        when geometries are not valid
-     */
-    protected function createMassachusettsState(): PolygonEntity
-    {
-        return $this->createPolygon([
-            new LineString(
-                [
-                    new Point(743238, 2967416),
-                    new Point(743238, 2967450),
-                    new Point(743265, 2967450),
-                    new Point(743265.625, 2967416),
-                    new Point(743238, 2967416),
-                ],
-                2249
-            )
-        ], 2249);
-    }
-
-    /**
-     * Create a Polygon from an array of linestrings.
+     * @param bool $forwardSrid forward SRID for creation
      *
-     * @param array    $lineStrings the array of linestrings
-     * @param int|null $srid        SRID
      * @return PolygonEntity
      * @throws DBALException when credentials fail
      * @throws InvalidValueException when geometries are not valid
      * @throws ORMException when cache is not created
      * @throws UnsupportedPlatformException when platform is not supported
      */
-    private function createPolygon(array $lineStrings, int $srid = null): PolygonEntity
+    protected function createMassachusettsState(bool $forwardSrid = true): PolygonEntity
     {
-        $polygon = new Polygon($lineStrings);
-        if (null !== $srid) {
-            $polygon->setSrid($srid);
+        $srid = null;
+
+        if ($forwardSrid) {
+            $srid = 2249;
         }
 
-        $polygonEntity = new PolygonEntity();
-        $polygonEntity->setPolygon($polygon);
-
-        $this->getEntityManager()->persist($polygonEntity);
-
-        return $polygonEntity;
+        return $this->createPolygon([
+            new LineString([
+                new Point(743238, 2967416),
+                new Point(743238, 2967450),
+                new Point(743265, 2967450),
+                new Point(743265.625, 2967416),
+                new Point(743238, 2967416),
+            ])
+        ], $srid);
     }
 }
