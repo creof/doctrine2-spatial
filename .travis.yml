@@ -10,6 +10,7 @@ install:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - composer config -g  discard-changes 1 # because we used travis cache and, sometimes, packages change
   - composer install --prefer-source
   - mkdir -p ./build/coverage
 
