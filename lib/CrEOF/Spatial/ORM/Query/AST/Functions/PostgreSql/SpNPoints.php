@@ -27,12 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Buffer DQL function.
+ * SP_NPoints DQL function.
+ * This function is equivalent to the OGC Standard SP_NumPoints function, but it accepts all geometries.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STSimplify extends AbstractSpatialDQLFunction
+class SpNPoints extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -41,7 +42,7 @@ class STSimplify extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Simplify';
+        return 'ST_NPoints';
     }
 
     /**
@@ -53,7 +54,7 @@ class STSimplify extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -65,7 +66,7 @@ class STSimplify extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
