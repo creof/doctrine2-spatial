@@ -33,7 +33,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class STDistanceSphere extends AbstractSpatialDQLFunction
+class SpDistanceSphere extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

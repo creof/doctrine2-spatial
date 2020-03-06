@@ -43,7 +43,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class STDistanceSphereTest extends OrmTestCase
+class SpDistanceSphereTest extends OrmTestCase
 {
     use PointHelperTrait;
 
@@ -81,7 +81,9 @@ class STDistanceSphereTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT p, ST_Distance_Sphere(p.point, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p, PgSql_Distance_Sphere(p.point, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            // phpcs:enable
         );
 
         $query->setParameter('p', 'POINT(-89.4 43.066667)', 'string');

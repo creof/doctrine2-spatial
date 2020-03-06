@@ -33,6 +33,8 @@ use Doctrine\ORM\Query\QueryException;
 /**
  * ST_SnapToGrid DQL function.
  *
+ * @see https://postgis.net/docs/ST_SnapToGrid.html
+ *
  * Possible signatures with 2, 3, 5 or 6 parameters:
  *  geometry ST_SnapToGrid(geometry geomA, float size);
  *  geometry ST_SnapToGrid(geometry geomA, float sizeX, float sizeY);
@@ -43,7 +45,7 @@ use Doctrine\ORM\Query\QueryException;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class SpSnapToGrid extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Parse SQL.

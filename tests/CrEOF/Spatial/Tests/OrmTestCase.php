@@ -47,11 +47,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCollect;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpContainsProperly;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCoveredBy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpDistanceSphere;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpNPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpScale;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSimplify;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSnapToGrid;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSplit;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSummary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpTransform;
@@ -675,22 +677,22 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('PgSql_ContainsProperly', SpContainsProperly::class);
             $configuration->addCustomNumericFunction('PgSql_CoveredBy', SpCoveredBy::class);
             $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
+            $configuration->addCustomNumericFunction('PgSql_Distance_Sphere', SpDistanceSphere::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
             $configuration->addCustomNumericFunction('PgSql_NPoints', SpNPoints::class);
             $configuration->addCustomNumericFunction('PgSql_Scale', SpScale::class);
             $configuration->addCustomNumericFunction('PgSql_Simplify', SpSimplify::class);
             $configuration->addCustomNumericFunction('PgSql_Split', SpSplit::class);
+            $configuration->addCustomStringFunction('PgSql_SnapToGrid', SpSnapToGrid::class);
+            $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
             $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
             $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
-            $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
 
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            $configuration->addCustomNumericFunction('st_distance_sphere', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistanceSphere');
             $configuration->addCustomStringFunction('st_geomfromewkt', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromEWKT');
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
             $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');
-            $configuration->addCustomStringFunction('st_snaptogrid', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid');
             // phpcs:enable
         }
 
