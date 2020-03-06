@@ -25,16 +25,15 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
-use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
 
 /**
- * ST_Split DQL function.
+ * SP_Scale DQL function.
  *
  * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STSplit extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class SpScale extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +42,7 @@ class STSplit extends AbstractSpatialDQLFunction implements ReturnsGeometryInter
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Split';
+        return 'ST_Scale';
     }
 
     /**
@@ -55,7 +54,9 @@ class STSplit extends AbstractSpatialDQLFunction implements ReturnsGeometryInter
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        //TODO When third dimension will be implemented, this function will be able to accept 4 parameters
+        //TODO When fourth dimension will be implemented, this function will be able to accept 5 parameters
+        return 3;
     }
 
     /**
@@ -67,7 +68,7 @@ class STSplit extends AbstractSpatialDQLFunction implements ReturnsGeometryInter
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 3;
     }
 
     /**

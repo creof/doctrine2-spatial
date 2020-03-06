@@ -49,6 +49,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCoveredBy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpScale;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSplit;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSummary;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpTransform;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpTranslate;
@@ -673,6 +675,8 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
+            $configuration->addCustomNumericFunction('PgSql_Split', SpSplit::class);
+            $configuration->addCustomNumericFunction('PgSql_Scale', SpScale::class);
             $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
             $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
             $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
