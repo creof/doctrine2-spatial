@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_SetSRID DQL function.
+ * ST_MakeEnvelope DQL function.
  *
- * @author  Tom Vogt <tom@lemuria.org>
+ * @author  Dragos Protung
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STSetSRID extends AbstractSpatialDQLFunction
+class SpMakeEnvelope extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STSetSRID extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_SetSRID';
+        return 'ST_MakeEnvelope';
     }
 
     /**
@@ -54,7 +54,7 @@ class STSetSRID extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 5;
     }
 
     /**
@@ -66,7 +66,7 @@ class STSetSRID extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 4;
     }
 
     /**

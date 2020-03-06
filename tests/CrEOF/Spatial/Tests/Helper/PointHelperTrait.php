@@ -130,6 +130,26 @@ trait PointHelperTrait
     }
 
     /**
+     * Create Tours city in Lambert93 (French SRID) as geometry Point entity and store it in database.
+     *
+     * @param bool $setSrid Initialize the SRID to 2154 if true.
+     *
+     * @throws DBALException when credentials fail
+     * @throws InvalidValueException when geometries are not valid
+     * @throws ORMException when cache is not created
+     * @throws UnsupportedPlatformException when platform is not supported
+     */
+    protected function createToursLambert93(bool $setSrid = true): PointEntity
+    {
+        $pointEntity = $this->createGeometry(new GeometryPoint(525375.21, 6701871.83));
+        if ($setSrid) {
+            $pointEntity->getPoint()->setSrid(2154);
+        }
+
+        return $pointEntity;
+    }
+
+    /**
      * Create the point A (1, 2).
      *
      * @throws InvalidValueException        when geometries are not valid
@@ -171,14 +191,21 @@ trait PointHelperTrait
     /**
      * Create the point origin (0, 0).
      *
-     * @throws InvalidValueException        when geometries are not valid
+     * @param bool $setSrid Set the SRID to zero instead of null
+     *
+     * @throws DBALException when credentials fail
+     * @throws InvalidValueException when geometries are not valid
+     * @throws ORMException when cache is not created
      * @throws UnsupportedPlatformException when platform is not supported
-     * @throws DBALException                when credentials fail
-     * @throws ORMException                 when cache is not created
      */
-    protected function createPointO(): PointEntity
+    protected function createPointO($setSrid = false): PointEntity
     {
-        return $this->createGeometry(new GeometryPoint(0, 0));
+        $geometryEntity = $this->createGeometry(new GeometryPoint(0, 0));
+        if ($setSrid) {
+            $geometryEntity->getPoint()->setSrid(0);
+        }
+
+        return $geometryEntity;
     }
 
     /**

@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Point DQL function.
+ * ST_Perimeter DQL function.
  *
- * @author  Tom Vogt <tom@lemuria.org>
+ * @author  Tiago Brito
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STPoint extends AbstractSpatialDQLFunction
+class StPerimeter extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STPoint extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Point';
+        return 'ST_Perimeter';
     }
 
     /**
@@ -54,7 +54,7 @@ class STPoint extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -66,7 +66,7 @@ class STPoint extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**

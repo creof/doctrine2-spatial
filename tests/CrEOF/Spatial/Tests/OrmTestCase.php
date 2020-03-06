@@ -50,6 +50,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpDistanceSphere;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeEnvelope;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpNPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpScale;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSimplify;
@@ -90,9 +91,12 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumGeometries;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumInteriorRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPerimeter;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointOnSurface;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSetSRID;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StStartPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSymDifference;
@@ -650,6 +654,8 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_Length', StLength::class);
         $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
+        $configuration->addCustomStringFunction('ST_Perimeter', StPerimeter::class);
+        $configuration->addCustomStringFunction('ST_Point', StPoint::class);
         $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
         if ($this->getPlatform()->getName() !== 'mysql') {
             //This function is not implemented into mysql
@@ -661,6 +667,7 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
         }
 
+        $configuration->addCustomNumericFunction('ST_SetSRID', StSetSRID::class);
         $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
         $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
         $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
@@ -680,6 +687,7 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('PgSql_Distance_Sphere', SpDistanceSphere::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
+            $configuration->addCustomStringFunction('PgSql_MakeEnvelope', SpMakeEnvelope::class);
             $configuration->addCustomNumericFunction('PgSql_NPoints', SpNPoints::class);
             $configuration->addCustomNumericFunction('PgSql_Scale', SpScale::class);
             $configuration->addCustomNumericFunction('PgSql_Simplify', SpSimplify::class);
@@ -692,7 +700,6 @@ abstract class OrmTestCase extends TestCase
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             $configuration->addCustomStringFunction('st_geomfromewkt', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromEWKT');
             $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
-            $configuration->addCustomStringFunction('st_makeenvelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeEnvelope');
             // phpcs:enable
         }
 
