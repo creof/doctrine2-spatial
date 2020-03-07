@@ -48,6 +48,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpContainsProperly;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCoveredBy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpDistanceSphere;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpDWithin;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeogFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeEnvelope;
@@ -685,6 +687,8 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('PgSql_CoveredBy', SpCoveredBy::class);
             $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
             $configuration->addCustomNumericFunction('PgSql_Distance_Sphere', SpDistanceSphere::class);
+            $configuration->addCustomNumericFunction('PgSql_DWithin', SpDWithin::class);
+            $configuration->addCustomStringFunction('PgSql_GeogFromText', SpGeogFromText::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
             $configuration->addCustomStringFunction('PgSql_MakeEnvelope', SpMakeEnvelope::class);

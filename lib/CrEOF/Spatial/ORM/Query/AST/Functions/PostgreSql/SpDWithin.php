@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_Contains DQL function.
+ * ST_DWithin DQL function.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  David Pacheco
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class StDistance extends AbstractSpatialDQLFunction
+class SpDWithin extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class StDistance extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_Distance';
+        return 'ST_DWithin';
     }
 
     /**
@@ -54,7 +54,7 @@ class StDistance extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 3;
+        return 4;
     }
 
     /**
@@ -78,7 +78,6 @@ class StDistance extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        // DO NOT ADD MySQL in this array, it does not accept the optional third parameter as described in OGC standards
         return ['postgresql'];
     }
 }

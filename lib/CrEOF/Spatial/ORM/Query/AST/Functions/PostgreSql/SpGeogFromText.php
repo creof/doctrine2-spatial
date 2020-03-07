@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_DWithin DQL function.
+ * SP_GeogFromText DQL function.
+ * This function accept EWKT Text.
  *
- * @author  David Pacheco
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  */
-class STDWithin extends AbstractSpatialDQLFunction
+class SpGeogFromText extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STDWithin extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_DWithin';
+        return 'ST_GeogFromText';
     }
 
     /**
@@ -54,7 +54,7 @@ class STDWithin extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 3;
+        return 2;
     }
 
     /**
@@ -66,7 +66,7 @@ class STDWithin extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
