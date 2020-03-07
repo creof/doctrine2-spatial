@@ -86,16 +86,16 @@ class SpScaleTest extends OrmTestCase
             'SELECT l, ST_AsText(PgSQL_Scale(l.lineString, :x, :y)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
             // phpcs:enable
         );
-        $query->setParameter('x', 0.5);
-        $query->setParameter('y', 1.4);
+        $query->setParameter('x', 2);
+        $query->setParameter('y', 4);
         $result = $query->getResult();
 
 
         static::assertIsArray($result);
         static::assertCount(2, $result);
         static::assertEquals($straightLineString, $result[0][0]);
-        static::assertSame('LINESTRING(0 0,1 2.8,2.5 7)', $result[0][1]);
+        static::assertSame('LINESTRING(0 0,4 8,10 20)', $result[0][1]);
         static::assertEquals($angularLineString, $result[1][0]);
-        static::assertEquals('LINESTRING(1.5 4.2,2 21,2.5 30.8)', $result[1][1]);
+        static::assertEquals('LINESTRING(6 12,8 60,10 88)', $result[1][1]);
     }
 }
