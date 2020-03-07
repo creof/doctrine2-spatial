@@ -33,7 +33,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://mit-license.org MIT
  */
-class STLineLocatePoint extends AbstractSpatialDQLFunction
+class SpLineLocatePoint extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

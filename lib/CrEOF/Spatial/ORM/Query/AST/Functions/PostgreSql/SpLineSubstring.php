@@ -34,7 +34,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STLineSubstring extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
+class SpLineSubstring extends AbstractSpatialDQLFunction implements ReturnsGeometryInterface
 {
     /**
      * Function SQL name getter.

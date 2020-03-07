@@ -56,6 +56,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeom
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeomFromEwkt;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpLineCrossingDirection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpLineInterpolatePoint;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpLineLocatePoint;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpLineSubstring;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeBox2D;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeEnvelope;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeLine;
@@ -618,110 +620,16 @@ abstract class OrmTestCase extends TestCase
     {
         $configuration = $this->getEntityManager()->getConfiguration();
 
-        //Generic spatial functions described in OGC Standard
-        $configuration->addCustomNumericFunction('ST_Area', StArea::class);
-        $configuration->addCustomStringFunction('ST_AsBinary', StAsBinary::class);
-        $configuration->addCustomStringFunction('ST_AsText', StAsText::class);
-        if ($this->getPlatform()->getName() !== 'mysql') {
-            //This function is not implemented into mysql
-            $configuration->addCustomStringFunction('ST_Boundary', StBoundary::class);
-            //This function is implemented into mysql, but the third parameter does not respect OGC standards
-            $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
-        }
-
-        $configuration->addCustomStringFunction('ST_Centroid', StCentroid::class);
-        $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
-        $configuration->addCustomStringFunction('ST_ConvexHull', StConvexHull::class);
-        $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
-        $configuration->addCustomStringFunction('ST_Difference', StDifference::class);
-        $configuration->addCustomNumericFunction('ST_Dimension', StDimension::class);
-        $configuration->addCustomNumericFunction('ST_Disjoint', StDisjoint::class);
-        $configuration->addCustomNumericFunction('ST_Distance', StDistance::class);
-        $configuration->addCustomNumericFunction('ST_Equals', StEquals::class);
-        $configuration->addCustomNumericFunction('ST_Intersects', StIntersects::class);
-        $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
-        $configuration->addCustomNumericFunction('ST_IsClosed', StIsClosed::class);
-        $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
-        if ($this->getPlatform()->getName() !== 'mysql') {
-            //This function is not implemented into mysql
-            $configuration->addCustomNumericFunction('ST_IsRing', StIsRing::class);
-        }
-
-        $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
-        $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
-        $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
-        $configuration->addCustomStringFunction('ST_ExteriorRing', StExteriorRing::class);
-        $configuration->addCustomStringFunction('ST_GeometryN', StGeometryN::class);
-        if ($this->getPlatform()->getName() !== 'mysql') {
-            //MySQL function does not respect OGC Standards
-            $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
-        }
-        $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
-        $configuration->addCustomStringFunction('ST_InteriorRingN', StInteriorRingN::class);
-        $configuration->addCustomStringFunction('ST_NumInteriorRing', StNumInteriorRing::class);
-        $configuration->addCustomStringFunction('ST_NumGeometries', StNumGeometries::class);
-        $configuration->addCustomNumericFunction('ST_Length', StLength::class);
-        $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
-        $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
-        $configuration->addCustomStringFunction('ST_Perimeter', StPerimeter::class);
-        $configuration->addCustomStringFunction('ST_Point', StPoint::class);
-        $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
-        if ($this->getPlatform()->getName() !== 'mysql') {
-            //This function is not implemented into mysql
-            $configuration->addCustomStringFunction('ST_PointOnSurface', StPointOnSurface::class);
-        }
-        $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
-        $configuration->addCustomStringFunction('ST_Union', StUnion::class);
-        if ($this->getPlatform()->getName() !== 'mysql') {
-            $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
-        }
-
-        $configuration->addCustomNumericFunction('ST_SetSRID', StSetSRID::class);
-        $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
-        $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
-        $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
-        $configuration->addCustomNumericFunction('ST_StartPoint', StStartPoint::class);
-        $configuration->addCustomNumericFunction('ST_X', StX::class);
-        $configuration->addCustomNumericFunction('ST_Y', StY::class);
+        $this->addStandardFunctions($configuration);
 
         if ('postgresql' === $this->getPlatformAndVersion()) {
             //Specific functions of PostgreSQL server
-            $configuration->addCustomStringFunction('PgSql_AsGeoJson', SpAsGeoJson::class);
-            $configuration->addCustomStringFunction('PgSql_Azimuth', SpAzimuth::class);
-            $configuration->addCustomStringFunction('PgSql_ClosestPoint', SpClosestPoint::class);
-            $configuration->addCustomStringFunction('PgSql_Collect', SpCollect::class);
-            $configuration->addCustomNumericFunction('PgSql_ContainsProperly', SpContainsProperly::class);
-            $configuration->addCustomNumericFunction('PgSql_CoveredBy', SpCoveredBy::class);
-            $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
-            $configuration->addCustomNumericFunction('PgSql_Distance_Sphere', SpDistanceSphere::class);
-            $configuration->addCustomNumericFunction('PgSql_DWithin', SpDWithin::class);
-            $configuration->addCustomNumericFunction('PgSql_Expand', SpExpand::class);
-            $configuration->addCustomStringFunction('PgSql_GeogFromText', SpGeogFromText::class);
-            $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
-            $configuration->addCustomNumericFunction('PgSql_GeomFromEwkt', SpGeomFromEwkt::class);
-            $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
-            $configuration->addCustomNumericFunction('PgSql_LineCrossingDirection', SpLineCrossingDirection::class);
-            $configuration->addCustomStringFunction('PgSql_LineInterpolatePoint', SpLineInterpolatePoint::class);
-            $configuration->addCustomStringFunction('PgSql_MakeEnvelope', SpMakeEnvelope::class);
-            $configuration->addCustomStringFunction('PgSql_MakeBox2D', SpMakeBox2D::class);
-            $configuration->addCustomStringFunction('PgSql_MakeLine', SpMakeLine::class);
-            $configuration->addCustomStringFunction('PgSql_MakePoint', SpMakePoint::class);
-            $configuration->addCustomNumericFunction('PgSql_NPoints', SpNPoints::class);
-            $configuration->addCustomNumericFunction('PgSql_Scale', SpScale::class);
-            $configuration->addCustomNumericFunction('PgSql_Simplify', SpSimplify::class);
-            $configuration->addCustomNumericFunction('PgSql_Split', SpSplit::class);
-            $configuration->addCustomStringFunction('PgSql_SnapToGrid', SpSnapToGrid::class);
-            $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
-            $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
-            $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
+            $this->addSpecificPostgreSqlFunctions($configuration);
         }
 
-        //This test does not work when we compare to mysql (on Travis only)
+        //This test does not work when we compare to 'mysql' (on Travis only)
         if ('postgresql' !== $this->getPlatform()->getName()) {
-            $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
-            $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
-            $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
-            $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
+            $this->addSpecificMySqlFunctions($configuration);
         }
     }
 
@@ -844,5 +752,128 @@ abstract class OrmTestCase extends TestCase
                 // A linestring minus another crossing linestring returns initial linestring splited
                 static::assertSame('POLYGON((0 0,0 10,10 10,10 0,0 0))', $value);
         }
+    }
+
+    /**
+     * Complete configuration with PostgreSQL spatial functions.
+     *
+     * @param Configuration $configuration the current configuration
+     */
+    private function addSpecificPostgreSqlFunctions(Configuration $configuration): void
+    {
+        $configuration->addCustomStringFunction('PgSql_AsGeoJson', SpAsGeoJson::class);
+        $configuration->addCustomStringFunction('PgSql_Azimuth', SpAzimuth::class);
+        $configuration->addCustomStringFunction('PgSql_ClosestPoint', SpClosestPoint::class);
+        $configuration->addCustomStringFunction('PgSql_Collect', SpCollect::class);
+        $configuration->addCustomNumericFunction('PgSql_ContainsProperly', SpContainsProperly::class);
+        $configuration->addCustomNumericFunction('PgSql_CoveredBy', SpCoveredBy::class);
+        $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
+        $configuration->addCustomNumericFunction('PgSql_Distance_Sphere', SpDistanceSphere::class);
+        $configuration->addCustomNumericFunction('PgSql_DWithin', SpDWithin::class);
+        $configuration->addCustomNumericFunction('PgSql_Expand', SpExpand::class);
+        $configuration->addCustomStringFunction('PgSql_GeogFromText', SpGeogFromText::class);
+        $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
+        $configuration->addCustomNumericFunction('PgSql_GeomFromEwkt', SpGeomFromEwkt::class);
+        $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
+        $configuration->addCustomNumericFunction('PgSql_LineCrossingDirection', SpLineCrossingDirection::class);
+        $configuration->addCustomNumericFunction('PgSql_LineSubstring', SpLineSubstring::class);
+        $configuration->addCustomNumericFunction('PgSql_LineLocatePoint', SpLineLocatePoint::class);
+        $configuration->addCustomStringFunction('PgSql_LineInterpolatePoint', SpLineInterpolatePoint::class);
+        $configuration->addCustomStringFunction('PgSql_MakeEnvelope', SpMakeEnvelope::class);
+        $configuration->addCustomStringFunction('PgSql_MakeBox2D', SpMakeBox2D::class);
+        $configuration->addCustomStringFunction('PgSql_MakeLine', SpMakeLine::class);
+        $configuration->addCustomStringFunction('PgSql_MakePoint', SpMakePoint::class);
+        $configuration->addCustomNumericFunction('PgSql_NPoints', SpNPoints::class);
+        $configuration->addCustomNumericFunction('PgSql_Scale', SpScale::class);
+        $configuration->addCustomNumericFunction('PgSql_Simplify', SpSimplify::class);
+        $configuration->addCustomNumericFunction('PgSql_Split', SpSplit::class);
+        $configuration->addCustomStringFunction('PgSql_SnapToGrid', SpSnapToGrid::class);
+        $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
+        $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
+        $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
+    }
+
+    /**
+     * Complete configuration with MySQL spatial functions.
+     *
+     * @param Configuration $configuration the current configuration
+     */
+    private function addSpecificMySqlFunctions(Configuration $configuration): void
+    {
+        $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
+        $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
+        $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
+        $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
+    }
+
+    /**
+     * Add all standard functions.
+     *
+     * @param Configuration $configuration the configuration to update
+     */
+    private function addStandardFunctions(Configuration $configuration): void
+    {
+        //Generic spatial functions described in OGC Standard
+        $configuration->addCustomNumericFunction('ST_Area', StArea::class);
+        $configuration->addCustomStringFunction('ST_AsBinary', StAsBinary::class);
+        $configuration->addCustomStringFunction('ST_AsText', StAsText::class);
+        //This function is not implemented into mysql
+        $configuration->addCustomStringFunction('ST_Boundary', StBoundary::class);
+        //This function is implemented into mysql, but the third parameter does not respect OGC standards
+        $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
+
+        $configuration->addCustomStringFunction('ST_Centroid', StCentroid::class);
+        $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
+        $configuration->addCustomStringFunction('ST_ConvexHull', StConvexHull::class);
+        $configuration->addCustomNumericFunction('ST_Crosses', StCrosses::class);
+        $configuration->addCustomStringFunction('ST_Difference', StDifference::class);
+        $configuration->addCustomNumericFunction('ST_Dimension', StDimension::class);
+        $configuration->addCustomNumericFunction('ST_Disjoint', StDisjoint::class);
+        $configuration->addCustomNumericFunction('ST_Distance', StDistance::class);
+        $configuration->addCustomNumericFunction('ST_Equals', StEquals::class);
+        $configuration->addCustomNumericFunction('ST_Intersects', StIntersects::class);
+        $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
+        $configuration->addCustomNumericFunction('ST_IsClosed', StIsClosed::class);
+        $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
+
+        //This function is not implemented into mysql
+        $configuration->addCustomNumericFunction('ST_IsRing', StIsRing::class);
+
+        $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
+        $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
+        $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
+        $configuration->addCustomStringFunction('ST_ExteriorRing', StExteriorRing::class);
+        $configuration->addCustomStringFunction('ST_GeometryN', StGeometryN::class);
+
+        //MySQL function does not respect OGC Standards
+        $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
+
+        $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
+        $configuration->addCustomStringFunction('ST_InteriorRingN', StInteriorRingN::class);
+        $configuration->addCustomStringFunction('ST_NumInteriorRing', StNumInteriorRing::class);
+        $configuration->addCustomStringFunction('ST_NumGeometries', StNumGeometries::class);
+        $configuration->addCustomNumericFunction('ST_Length', StLength::class);
+        $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
+        $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
+        $configuration->addCustomStringFunction('ST_Perimeter', StPerimeter::class);
+        $configuration->addCustomStringFunction('ST_Point', StPoint::class);
+        $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
+
+        //This function is not implemented into mysql
+        $configuration->addCustomStringFunction('ST_PointOnSurface', StPointOnSurface::class);
+
+        $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
+        $configuration->addCustomStringFunction('ST_Union', StUnion::class);
+
+        //This function is not implemented into mysql
+        $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
+
+        $configuration->addCustomNumericFunction('ST_SetSRID', StSetSRID::class);
+        $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
+        $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
+        $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
+        $configuration->addCustomNumericFunction('ST_StartPoint', StStartPoint::class);
+        $configuration->addCustomNumericFunction('ST_X', StX::class);
+        $configuration->addCustomNumericFunction('ST_Y', StY::class);
     }
 }
