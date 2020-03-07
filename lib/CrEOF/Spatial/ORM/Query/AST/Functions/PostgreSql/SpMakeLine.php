@@ -35,7 +35,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STMakeLine extends AbstractSpatialDQLFunction
+class SpMakeLine extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.

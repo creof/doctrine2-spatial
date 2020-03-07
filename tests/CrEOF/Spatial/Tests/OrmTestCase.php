@@ -49,10 +49,17 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCoveredBy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpCovers;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpDistanceSphere;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpDWithin;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpExpand;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeogFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeographyFromText;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeometryType as PgSqlGeometryType;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeomFromEwkt;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpLineCrossingDirection;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpLineInterpolatePoint;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeBox2D;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeEnvelope;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakeLine;
+use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpMakePoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpNPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpScale;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpSimplify;
@@ -688,10 +695,17 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomNumericFunction('PgSql_Covers', SpCovers::class);
             $configuration->addCustomNumericFunction('PgSql_Distance_Sphere', SpDistanceSphere::class);
             $configuration->addCustomNumericFunction('PgSql_DWithin', SpDWithin::class);
+            $configuration->addCustomNumericFunction('PgSql_Expand', SpExpand::class);
             $configuration->addCustomStringFunction('PgSql_GeogFromText', SpGeogFromText::class);
             $configuration->addCustomStringFunction('PgSql_GeographyFromText', SpGeographyFromText::class);
+            $configuration->addCustomNumericFunction('PgSql_GeomFromEwkt', SpGeomFromEwkt::class);
             $configuration->addCustomNumericFunction('PgSql_GeometryType', PgSqlGeometryType::class);
+            $configuration->addCustomNumericFunction('PgSql_LineCrossingDirection', SpLineCrossingDirection::class);
+            $configuration->addCustomStringFunction('PgSql_LineInterpolatePoint', SpLineInterpolatePoint::class);
             $configuration->addCustomStringFunction('PgSql_MakeEnvelope', SpMakeEnvelope::class);
+            $configuration->addCustomStringFunction('PgSql_MakeBox2D', SpMakeBox2D::class);
+            $configuration->addCustomStringFunction('PgSql_MakeLine', SpMakeLine::class);
+            $configuration->addCustomStringFunction('PgSql_MakePoint', SpMakePoint::class);
             $configuration->addCustomNumericFunction('PgSql_NPoints', SpNPoints::class);
             $configuration->addCustomNumericFunction('PgSql_Scale', SpScale::class);
             $configuration->addCustomNumericFunction('PgSql_Simplify', SpSimplify::class);
@@ -700,11 +714,6 @@ abstract class OrmTestCase extends TestCase
             $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
             $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
             $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
-
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            $configuration->addCustomStringFunction('st_geomfromewkt', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromEWKT');
-            $configuration->addCustomNumericFunction('st_linecrossingdirection', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLineCrossingDirection');
-            // phpcs:enable
         }
 
         //This test does not work when we compare to mysql (on Travis only)

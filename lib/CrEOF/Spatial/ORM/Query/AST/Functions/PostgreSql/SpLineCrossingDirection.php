@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * SRID DQL function.
+ * ST_LineCrossingDirection DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
-class SRID extends AbstractSpatialDQLFunction
+class SpLineCrossingDirection extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class SRID extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'SRID';
+        return 'ST_LineCrossingDirection';
     }
 
     /**
@@ -54,7 +54,7 @@ class SRID extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -66,7 +66,7 @@ class SRID extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -78,6 +78,6 @@ class SRID extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

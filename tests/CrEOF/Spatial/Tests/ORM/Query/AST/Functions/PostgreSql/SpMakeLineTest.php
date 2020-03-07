@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,18 +32,17 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Point DQL function tests.
+ * SP_MakeLine DQL function tests.
  *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql
  *
  * @internal
  * @coversDefaultClass
  */
-class StPointTest extends OrmTestCase
+class SpMakeLineTest extends OrmTestCase
 {
     use PointHelperTrait;
 
@@ -63,39 +62,6 @@ class StPointTest extends OrmTestCase
     }
 
     /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testPredicate()
-    {
-        $this->createToursLambert93();
-        $pointO = $this->createPointO();
-        $this->createPointA();
-        $this->createPointB();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p WHERE ST_EQUALS(p.point, ST_Point(:x, :y)) = true'
-            // phpcs:enable
-        );
-        $query->setParameter('x', 0, 'integer');
-        $query->setParameter('y', 0, 'integer');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($pointO, $result[0]);
-    }
-
-    /**
      * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
@@ -105,26 +71,21 @@ class StPointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectWithSrid()
+    public function testSelect()
     {
-        $tours = $this->createToursLambert93();
-        $this->createPointO(true);
+        $this->createNewYorkGeometry();// Unused fake point
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p WHERE ST_EQUALS(p.point, ST_SetSRID(ST_Point(:x, :y), :srid)) = true'
-            // phpcs:enable
+            'SELECT t, ST_AsText(PgSql_MakeLine(:a, :b)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity t'
         );
-
-        $query->setParameter('x', 525375.21);
-        $query->setParameter('y', 6701871.83);
-        $query->setParameter('srid', 2154);
+        $query->setParameter('a', 'LineString(0 0, 1 1)');
+        $query->setParameter('b', 'LineString(2 2, 3 3)');
 
         $result = $query->getResult();
 
         static::assertCount(1, $result);
-        static::assertEquals($tours, $result[0]);
+        static::assertEquals('LINESTRING(0 0,1 1,2 2,3 3)', $result[0][1]);
     }
 }

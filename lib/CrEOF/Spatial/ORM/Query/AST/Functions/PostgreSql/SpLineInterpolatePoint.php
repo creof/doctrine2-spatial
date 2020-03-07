@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Equals DQL function.
+ * ST_Line_Interpolate_Point DQL function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
+ * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class Equals extends AbstractSpatialDQLFunction
+class SpLineInterpolatePoint extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class Equals extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'Equals';
+        return 'ST_Line_Interpolate_Point';
     }
 
     /**
@@ -78,6 +78,6 @@ class Equals extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql'];
     }
 }

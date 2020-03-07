@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_MakePoint DQL function.
+ * ST_MakeBox2D DQL function.
  *
- * @author  David Pacheco
+ * @author  Tom Vogt <tom@lemuria.org>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class STMakePoint extends AbstractSpatialDQLFunction
+class SpMakeBox2D extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class STMakePoint extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'ST_MakePoint';
+        return 'ST_MakeBox2D';
     }
 
     /**
@@ -54,7 +54,7 @@ class STMakePoint extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 3;
+        return 2;
     }
 
     /**

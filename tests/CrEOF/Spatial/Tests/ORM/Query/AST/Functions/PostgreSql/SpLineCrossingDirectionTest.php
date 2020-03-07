@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Point DQL function tests.
+ * ST_LineCrossingDirection DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -43,9 +43,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StPointTest extends OrmTestCase
+class SpLineCrossingDirectionTest extends OrmTestCase
 {
-    use PointHelperTrait;
+    use LineStringHelperTrait;
 
     /**
      * Setup the function type test.
@@ -56,43 +56,10 @@ class StPointTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::POINT_ENTITY);
+        $this->usesEntity(self::LINESTRING_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testPredicate()
-    {
-        $this->createToursLambert93();
-        $pointO = $this->createPointO();
-        $this->createPointA();
-        $this->createPointB();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p WHERE ST_EQUALS(p.point, ST_Point(:x, :y)) = true'
-            // phpcs:enable
-        );
-        $query->setParameter('x', 0, 'integer');
-        $query->setParameter('y', 0, 'integer');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($pointO, $result[0]);
     }
 
     /**
@@ -105,26 +72,62 @@ class StPointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectWithSrid()
+    public function testInSelect()
     {
-        $tours = $this->createToursLambert93();
-        $this->createPointO(true);
+        $lineStringX = $this->createLineStringX();
+        $lineStringY = $this->createLineStringY();
+        $lineStringZ = $this->createLineStringZ();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p WHERE ST_EQUALS(p.point, ST_SetSRID(ST_Point(:x, :y), :srid)) = true'
+            'SELECT l, PgSql_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
             // phpcs:enable
         );
 
-        $query->setParameter('x', 525375.21);
-        $query->setParameter('y', 6701871.83);
-        $query->setParameter('srid', 2154);
+        $query->setParameter('p1', 'LINESTRING(12 6,5 11,8 12,5 15)', 'string');
+
+        $result = $query->getResult();
+
+        static::assertCount(3, $result);
+        static::assertEquals($lineStringX, $result[0][0]);
+        static::assertEquals(2, $result[0][1]);
+        static::assertEquals($lineStringY, $result[1][0]);
+        static::assertEquals(1, $result[1][1]);
+        static::assertEquals($lineStringZ, $result[2][0]);
+        static::assertEquals(-1, $result[2][1]);
+    }
+
+    /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testInPredicate()
+    {
+        $this->createLineStringX();
+        $lineStringY = $this->createLineStringY();
+        $this->createLineStringZ();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE PgSql_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1'
+            // phpcs:enable
+        );
+
+        $query->setParameter('p1', 'LINESTRING(12 6,5 11,8 12,5 15)', 'string');
 
         $result = $query->getResult();
 
         static::assertCount(1, $result);
-        static::assertEquals($tours, $result[0]);
+        static::assertEquals($lineStringY, $result[0]);
     }
 }
