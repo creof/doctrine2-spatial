@@ -57,6 +57,7 @@ class StGeogFromTextTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::GEOGRAPHY_ENTITY);
+        $this->usesEntity(self::POINT_ENTITY);
         $this->supportsPlatform('postgresql');
 
         parent::setUp();

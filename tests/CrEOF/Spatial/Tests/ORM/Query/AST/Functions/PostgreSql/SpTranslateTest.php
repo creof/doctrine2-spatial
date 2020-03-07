@@ -113,7 +113,7 @@ class SpTranslateTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-        'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Translate(p.polygon, :x, :y) = :g'
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Translate(p.polygon, :x, :y) = :g'
             // phpcs:enable
         );
         $query->setParameter('g', 'POLYGON((4 -4.5,14 -4.5,14 5.5,4 5.5,4 -4.5))', 'string');
