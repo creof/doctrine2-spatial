@@ -43,7 +43,7 @@ use Doctrine\ORM\ORMException;
  * @group geometry
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geometry\PointType
  */
 class PointTypeTest extends OrmTestCase
 {

@@ -44,7 +44,7 @@ use Doctrine\ORM\ORMException;
  * @group srid
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geography\PointType
  */
 class GeoPointSridTest extends OrmTestCase
 {
