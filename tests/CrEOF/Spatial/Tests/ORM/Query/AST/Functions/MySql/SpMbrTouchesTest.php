@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,7 +32,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Intersects DQL function tests.
+ * MySQL_MbrTouches DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,7 +42,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StIntersectsTest extends OrmTestCase
+class SpMbrTouchesTest extends OrmTestCase
 {
     use PolygonHelperTrait;
 
@@ -56,7 +56,6 @@ class StIntersectsTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
-        $this->supportsPlatform('postgresql');
         $this->supportsPlatform('mysql');
 
         parent::setUp();
@@ -72,33 +71,27 @@ class StIntersectsTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectStDisjoint()
+    public function testFunctionInPredicate()
     {
         $bigPolygon = $this->createBigPolygon();
-        $smallPolygon = $this->createSmallPolygon();
-        $outerPolygon = $this->createOuterPolygon();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT p, ST_Intersects(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MySQL_MbrTouches(p.polygon, ST_GeomFromText(:p)) = true'
+            // phpcs:enable
         );
-
-        $query->setParameter('p1', 'POLYGON((5 5,7 5,7 7,5 7,5 5))', 'string');
-
+        $query->setParameter('p', 'LINESTRING(0 0, 0 10)', 'string');
         $result = $query->getResult();
 
-        static::assertCount(3, $result);
-        static::assertEquals($bigPolygon, $result[0][0]);
-        static::assertEquals(1, $result[0][1]);
-        static::assertEquals($smallPolygon, $result[1][0]);
-        static::assertEquals(1, $result[1][1]);
-        static::assertEquals($outerPolygon, $result[2][0]);
-        static::assertEquals(0, $result[2][1]);
+        static::assertCount(1, $result);
+        static::assertEquals($bigPolygon, $result[0]);
     }
 
     /**
-     * Test a DQL containing function to test in the predicate.
+     * Test a DQL containing function to test.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -107,41 +100,22 @@ class StIntersectsTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testStDisjointWhereParameter()
+    public function testFunctionInSelect()
     {
-        $bigPolygon = $this->createBigPolygon();
-        $smallPolygon = $this->createSmallPolygon();
-        $outerPolygon = $this->createOuterPolygon();
-
+        $this->createBigPolygon();
+        $this->createSmallPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Intersects(p.polygon, ST_GeomFromText(:p1)) = true'
+            'SELECT MySQL_MbrTouches(p.polygon, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
             // phpcs:enable
         );
-
-        $query->setParameter('p1', 'POLYGON((5 5,7 5,7 7,5 7,5 5))', 'string');
-
+        $query->setParameter('p', 'LINESTRING(0 0, 0 10)', 'string');
         $result = $query->getResult();
 
-        static::assertCount(2, $result);
-        static::assertEquals($bigPolygon, $result[0]);
-        static::assertEquals($smallPolygon, $result[1]);
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Intersects(p.polygon, ST_GeomFromText(:p1)) = true'
-            // phpcs:enable
-        );
-
-        $query->setParameter('p1', 'POLYGON((15 15,17 15,17 17,15 17,15 15))', 'string');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($outerPolygon, $result[0]);
+        static::assertEquals(1, $result[0][1]);
+        static::assertEquals(0, $result[1][1]);
     }
 }

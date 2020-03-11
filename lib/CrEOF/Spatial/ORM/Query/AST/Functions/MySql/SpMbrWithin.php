@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * MBREqual DQL function.
+ * MBRWithin DQL function
+ * Whether MBR of one geometry is within MBR of another.
  *
- * @author  luca capra <luca.capra@gmail.com>
+ * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://dlambert.mit-license.org MIT
+ * @license https://mdhheydari.mit-license.org MIT
  */
-class MBREqual extends AbstractSpatialDQLFunction
+class SpMbrWithin extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +43,7 @@ class MBREqual extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'MBREqual';
+        return 'MBRWithin';
     }
 
     /**

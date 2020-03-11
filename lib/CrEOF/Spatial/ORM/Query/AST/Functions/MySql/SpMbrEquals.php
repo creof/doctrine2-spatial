@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * MBREqual DQL function.
+ * MBREquals DQL function.
  *
  * @author  luca capra <luca.capra@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class MBREqual extends AbstractSpatialDQLFunction
+class SpMbrEquals extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +42,7 @@ class MBREqual extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'MBREqual';
+        return 'MBREquals';
     }
 
     /**

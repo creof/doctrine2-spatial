@@ -32,7 +32,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_Intersects DQL function tests.
+ * MySQL_MbrIntersects DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,7 +42,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StIntersectsTest extends OrmTestCase
+class SpMbrIntersectsTest extends OrmTestCase
 {
     use PolygonHelperTrait;
 
@@ -56,7 +56,6 @@ class StIntersectsTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::POLYGON_ENTITY);
-        $this->supportsPlatform('postgresql');
         $this->supportsPlatform('mysql');
 
         parent::setUp();
@@ -81,7 +80,9 @@ class StIntersectsTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            'SELECT p, ST_Intersects(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p, MySQL_MbrIntersects(p.polygon, ST_GeomFromText(:p1)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpcs:enable
         );
 
         $query->setParameter('p1', 'POLYGON((5 5,7 5,7 7,5 7,5 5))', 'string');
@@ -118,7 +119,7 @@ class StIntersectsTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Intersects(p.polygon, ST_GeomFromText(:p1)) = true'
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MySQL_MbrIntersects(p.polygon, ST_GeomFromText(:p1)) = true'
             // phpcs:enable
         );
 
@@ -133,7 +134,7 @@ class StIntersectsTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE ST_Intersects(p.polygon, ST_GeomFromText(:p1)) = true'
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE MySQL_MbrIntersects(p.polygon, ST_GeomFromText(:p1)) = true'
             // phpcs:enable
         );
 

@@ -41,6 +41,13 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpGeometryType as MySqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpLineString;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrContains;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrDisjoint;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrEquals;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrIntersects;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrOverlaps;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrTouches;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrWithin;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAsGeoJson;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAzimuth;
@@ -137,7 +144,6 @@ use CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity;
 use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
-use CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql\StPolyFromWkbTest;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
@@ -815,6 +821,13 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
         $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
         $configuration->addCustomNumericFunction('Mysql_LineString', SpLineString::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRContains', SpMbrContains::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRDisjoint', SpMbrDisjoint::class);
+        $configuration->addCustomNumericFunction('Mysql_MBREquals', SpMbrEquals::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRIntersects', SpMbrIntersects::class);
+        $configuration->addCustomNumericFunction('Mysql_MBROverlaps', SpMbrOverlaps::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRTouches', SpMbrTouches::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRWithin', SpMbrWithin::class);
         $configuration->addCustomNumericFunction('Mysql_Point', SpPoint::class);
     }
 

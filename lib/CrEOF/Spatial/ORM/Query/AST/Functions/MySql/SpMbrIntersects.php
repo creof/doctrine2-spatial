@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Description of STContains.
+ * MBRIntersects DQL function
+ * Whether MBRs of two geometries intersect.
  *
- * @author  Maximilian
+ * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://alexandre-tranchant.mit-license.org
+ * @license https://mdhheydari.mit-license.org MIT
  */
-class DistanceFromMultyLine extends AbstractSpatialDQLFunction
+class SpMbrIntersects extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +43,7 @@ class DistanceFromMultyLine extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'distance_from_multyline';
+        return 'MBRIntersects';
     }
 
     /**

@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * MBRContains DQL function.
+ * ST_Overlaps DQL function.
  *
+ * @author  Dragos Protung
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class MBRContains extends AbstractSpatialDQLFunction
+class SpMbrOverlaps extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -41,7 +42,7 @@ class MBRContains extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'MBRContains';
+        return 'ST_Overlaps';
     }
 
     /**
@@ -77,6 +78,6 @@ class MBRContains extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

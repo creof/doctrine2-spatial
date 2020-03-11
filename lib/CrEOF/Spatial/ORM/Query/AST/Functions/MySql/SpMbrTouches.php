@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * MBRDisjoint DQL function.
+ * MBRTouches DQL function
+ * Whether MBRs of two geometries touch.
  *
+ * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://alexandre-tranchant.mit-license.org
+ * @license https://mdhheydari.mit-license.org MIT
  */
-class MBRDisjoint extends AbstractSpatialDQLFunction
+class SpMbrTouches extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -41,7 +43,7 @@ class MBRDisjoint extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'MBRDisjoint';
+        return 'MBRTouches';
     }
 
     /**
