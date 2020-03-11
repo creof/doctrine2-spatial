@@ -24,10 +24,10 @@
 
 namespace CrEOF\Spatial\Tests;
 
-use CrEOF\Spatial\DBAL\Types\GeographyType;
-use CrEOF\Spatial\DBAL\Types\Geography\PointType as GeographyPointType;
 use CrEOF\Spatial\DBAL\Types\Geography\LineStringType as GeographyLineStringType;
+use CrEOF\Spatial\DBAL\Types\Geography\PointType as GeographyPointType;
 use CrEOF\Spatial\DBAL\Types\Geography\PolygonType as GeographyPolygonType;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\DBAL\Types\Geometry\LineStringType;
 use CrEOF\Spatial\DBAL\Types\Geometry\MultiLineStringType;
 use CrEOF\Spatial\DBAL\Types\Geometry\MultiPointType;
@@ -36,9 +36,9 @@ use CrEOF\Spatial\DBAL\Types\Geometry\PointType;
 use CrEOF\Spatial\DBAL\Types\Geometry\PolygonType;
 use CrEOF\Spatial\DBAL\Types\GeometryType;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpGeometryType as MySqlGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpLineString;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpMbrContains;
@@ -176,8 +176,8 @@ abstract class OrmTestCase extends TestCase
     public const GEOGRAPHY_ENTITY = GeographyEntity::class;
     public const GEOMETRY_ENTITY = GeometryEntity::class;
     public const LINESTRING_ENTITY = LineStringEntity::class;
-    public const MULTIPOINT_ENTITY = MultiPointEntity::class;
     public const MULTILINESTRING_ENTITY = MultiLineStringEntity::class;
+    public const MULTIPOINT_ENTITY = MultiPointEntity::class;
     public const MULTIPOLYGON_ENTITY = MultiPolygonEntity::class;
     public const NO_HINT_GEOMETRY_ENTITY = NoHintGeometryEntity::class;
     public const POINT_ENTITY = PointEntity::class;
@@ -364,6 +364,48 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
+     * Assert empty geometry.
+     * MySQL5 does not return the standard answer, but this bug was solved in MySQL8.
+     * So test for an empty geometry is a little more complex than to compare two strings.
+     *
+     * @param mixed                 $value    Value to test
+     * @param AbstractPlatform|null $platform the platform
+     */
+    protected static function assertBigPolygon($value, AbstractPlatform $platform = null): void
+    {
+        switch ($platform->getName()) {
+            case 'mysql':
+                //MySQL does not respect creation order of points composing a Polygon.
+                static::assertSame('POLYGON((0 10,0 0,10 0,10 10,0 10))', $value);
+                break;
+            case 'postgresl':
+            default:
+                //Here is the good result.
+                // A linestring minus another crossing linestring returns initial linestring splited
+                static::assertSame('POLYGON((0 0,0 10,10 10,10 0,0 0))', $value);
+        }
+    }
+
+    /**
+     * Assert empty geometry.
+     * MySQL5 does not return the standard answer, but this bug was solved in MySQL8.
+     * So test for an empty geometry is a little more complex than to compare two strings.
+     *
+     * @param mixed                 $value    Value to test
+     * @param AbstractPlatform|null $platform the platform
+     */
+    protected static function assertEmptyGeometry($value, AbstractPlatform $platform = null): void
+    {
+        $expected = 'GEOMETRYCOLLECTION EMPTY';
+        if ($platform instanceof MySQL57Platform && !$platform instanceof MySQL80Platform) {
+            //MySQL5 does not return the standard answer
+            //This bug was solved in MySQL8
+            $expected = 'GEOMETRYCOLLECTION()';
+        }
+        static::assertSame($expected, $value);
+    }
+
+    /**
      * Return common connection parameters.
      *
      * @return array
@@ -394,6 +436,7 @@ abstract class OrmTestCase extends TestCase
         if (isset($GLOBALS['db_version'])) {
             $connectionParams['driverOptions']['server_version'] = (string) $GLOBALS['db_version'];
         }
+
         return $connectionParams;
     }
 
@@ -512,6 +555,25 @@ abstract class OrmTestCase extends TestCase
     protected function getPlatform()
     {
         return static::getConnection()->getDatabasePlatform();
+    }
+
+    /**
+     * Return the platform completed by the version number of the server for mysql.
+     *
+     * @throws DBALException                when connection failed
+     * @throws UnsupportedPlatformException when platform is not supported
+     */
+    protected function getPlatformAndVersion(): string
+    {
+        if ($this->getPlatform() instanceof MySQL80Platform) {
+            return 'mysql8';
+        }
+
+        if ($this->getPlatform() instanceof MySQL57Platform) {
+            return 'mysql5';
+        }
+
+        return $this->getPlatform()->getName();
     }
 
     /**
@@ -709,65 +771,25 @@ abstract class OrmTestCase extends TestCase
     }
 
     /**
-     * Return the platform completed by the version number of the server for mysql.
+     * Complete configuration with MySQL spatial functions.
      *
-     * @throws DBALException                when connection failed
-     * @throws UnsupportedPlatformException when platform is not supported
+     * @param Configuration $configuration the current configuration
      */
-    protected function getPlatformAndVersion(): string
+    private function addSpecificMySqlFunctions(Configuration $configuration): void
     {
-        if ($this->getPlatform() instanceof MySQL80Platform) {
-            return 'mysql8';
-        }
-
-        if ($this->getPlatform() instanceof MySQL57Platform) {
-            return 'mysql5';
-        }
-
-
-        return $this->getPlatform()->getName();
-    }
-
-    /**
-     * Assert empty geometry.
-     * MySQL5 does not return the standard answer, but this bug was solved in MySQL8.
-     * So test for an empty geometry is a little more complex than to compare two strings.
-     *
-     * @param mixed                 $value    Value to test
-     * @param AbstractPlatform|null $platform the platform
-     */
-    protected static function assertEmptyGeometry($value, AbstractPlatform $platform = null): void
-    {
-        $expected = 'GEOMETRYCOLLECTION EMPTY';
-        if ($platform instanceof MySQL57Platform && !$platform instanceof MySQL80Platform) {
-            //MySQL5 does not return the standard answer
-            //This bug was solved in MySQL8
-            $expected = 'GEOMETRYCOLLECTION()';
-        }
-        self::assertSame($expected, $value);
-    }
-
-    /**
-     * Assert empty geometry.
-     * MySQL5 does not return the standard answer, but this bug was solved in MySQL8.
-     * So test for an empty geometry is a little more complex than to compare two strings.
-     *
-     * @param mixed                 $value    Value to test
-     * @param AbstractPlatform|null $platform the platform
-     */
-    protected static function assertBigPolygon($value, AbstractPlatform $platform = null): void
-    {
-        switch ($platform->getName()) {
-            case 'mysql':
-                //MySQL does not respect creation order of points composing a Polygon.
-                static::assertSame('POLYGON((0 10,0 0,10 0,10 10,0 10))', $value);
-                break;
-            case 'postgresl':
-            default:
-                //Here is the good result.
-                // A linestring minus another crossing linestring returns initial linestring splited
-                static::assertSame('POLYGON((0 0,0 10,10 10,10 0,0 0))', $value);
-        }
+        $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
+        $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
+        $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
+        $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
+        $configuration->addCustomNumericFunction('Mysql_LineString', SpLineString::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRContains', SpMbrContains::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRDisjoint', SpMbrDisjoint::class);
+        $configuration->addCustomNumericFunction('Mysql_MBREquals', SpMbrEquals::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRIntersects', SpMbrIntersects::class);
+        $configuration->addCustomNumericFunction('Mysql_MBROverlaps', SpMbrOverlaps::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRTouches', SpMbrTouches::class);
+        $configuration->addCustomNumericFunction('Mysql_MBRWithin', SpMbrWithin::class);
+        $configuration->addCustomNumericFunction('Mysql_Point', SpPoint::class);
     }
 
     /**
@@ -807,28 +829,6 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('PgSql_Summary', SpSummary::class);
         $configuration->addCustomNumericFunction('PgSql_Transform', SpTransform::class);
         $configuration->addCustomNumericFunction('PgSql_Translate', SpTranslate::class);
-    }
-
-    /**
-     * Complete configuration with MySQL spatial functions.
-     *
-     * @param Configuration $configuration the current configuration
-     */
-    private function addSpecificMySqlFunctions(Configuration $configuration): void
-    {
-        $configuration->addCustomNumericFunction('Mysql_Distance', SpDistance::class);
-        $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
-        $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
-        $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
-        $configuration->addCustomNumericFunction('Mysql_LineString', SpLineString::class);
-        $configuration->addCustomNumericFunction('Mysql_MBRContains', SpMbrContains::class);
-        $configuration->addCustomNumericFunction('Mysql_MBRDisjoint', SpMbrDisjoint::class);
-        $configuration->addCustomNumericFunction('Mysql_MBREquals', SpMbrEquals::class);
-        $configuration->addCustomNumericFunction('Mysql_MBRIntersects', SpMbrIntersects::class);
-        $configuration->addCustomNumericFunction('Mysql_MBROverlaps', SpMbrOverlaps::class);
-        $configuration->addCustomNumericFunction('Mysql_MBRTouches', SpMbrTouches::class);
-        $configuration->addCustomNumericFunction('Mysql_MBRWithin', SpMbrWithin::class);
-        $configuration->addCustomNumericFunction('Mysql_Point', SpPoint::class);
     }
 
     /**

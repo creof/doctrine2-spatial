@@ -72,22 +72,23 @@ class SpDWithinTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectGeometry()
+    public function testSelectGeography()
     {
-        $newYork = $this->createNewYorkGeometry();
-        $losAngeles = $this->createLosAngelesGeometry();
-        $dallas = $this->createDallasGeometry();
+        $newYork = $this->createNewYorkGeography();
+        $losAngeles = $this->createLosAngelesGeography();
+        $dallas = $this->createDallasGeography();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p, PgSql_DWithin(p.point, ST_GeomFromText(:p), :d) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            'SELECT g, PgSql_DWithin(g.geography, PgSql_GeographyFromText(:p), :d, :spheroid) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
             // phpcs:enable
         );
 
         $query->setParameter('p', 'POINT(-89.4 43.066667)', 'string');
-        $query->setParameter('d', 20.0);
+        $query->setParameter('d', 2000000.0); //2.000.000m=2.000km
+        $query->setParameter('spheroid', true, 'boolean');
 
         $result = $query->getResult();
 
@@ -110,23 +111,22 @@ class SpDWithinTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelectGeography()
+    public function testSelectGeometry()
     {
-        $newYork = $this->createNewYorkGeography();
-        $losAngeles = $this->createLosAngelesGeography();
-        $dallas = $this->createDallasGeography();
+        $newYork = $this->createNewYorkGeometry();
+        $losAngeles = $this->createLosAngelesGeometry();
+        $dallas = $this->createDallasGeometry();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT g, PgSql_DWithin(g.geography, PgSql_GeographyFromText(:p), :d, :spheroid) FROM CrEOF\Spatial\Tests\Fixtures\GeographyEntity g'
+            'SELECT p, PgSql_DWithin(p.point, ST_GeomFromText(:p), :d) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
             // phpcs:enable
         );
 
         $query->setParameter('p', 'POINT(-89.4 43.066667)', 'string');
-        $query->setParameter('d', 2000000.0); //2.000.000m=2.000km
-        $query->setParameter('spheroid', true, 'boolean');
+        $query->setParameter('d', 20.0);
 
         $result = $query->getResult();
 

@@ -27,7 +27,6 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
-use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
@@ -75,7 +74,7 @@ class StConvexHullTest extends OrmTestCase
      */
     public function testSelectStConvexHull()
     {
-        $this->markTestIncomplete('ST_COLLECT should be implement');
+        static::markTestIncomplete('ST_COLLECT should be implement');
         $origin = $this->createPointO();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();

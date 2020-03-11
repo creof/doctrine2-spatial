@@ -5,22 +5,15 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 ### Work in progress
 - New file to help contributors to pull request a new spatial function and test it  
-- Limit backward incompatibility
-- Not-Camel-Case Classes tagged must be as deprecated and declared as children of new Camel case classes
-- All class shall be in camel case format.
-
-*Process:*
-- `MbrContains` class shall be created (a copy/paste of `MBRContains`)
-- `MBRContains` class shall inherit MbrContains and core of function shall be removed.
-- `MBRContains` class shall be tagged as deprecated
-
 - All method shall be in camel case format (if possible cf limitations of doctrine interfaces).
 
 ### Added
+- Code coverage is now really at 90 percent. (CreOf code coverage was not valid because of AST functions which contained only properties)
+- Adding support of PHP7.2, PHP7.3, PHP7.4
+- Not-Camel-Case Classes tagged must be as deprecated and declared as children of new Camel case classes
 - Needed PHP extension added in composer.json
 - AST Functions updated to avoid misconfiguration (some properties was missing)
 - AST Functions updated to avoid code coverage to detect which function was not tested 
-- Adding support of PHP7.2, PHP7.3, PHP7.4
 - Removing deprecations of doctrine2
 - Project forked from creof/doctrine-spatial2
 ### Removed

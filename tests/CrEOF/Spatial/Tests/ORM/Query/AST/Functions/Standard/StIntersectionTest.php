@@ -27,11 +27,8 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
-use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Platforms\MySQL57Platform;
-use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -116,7 +113,7 @@ class StIntersectionTest extends OrmTestCase
     public function testStIntersectionWhereParameter()
     {
         $lineStringA = $this->createLineStringA();
-        $lineStringB = $this->createLineStringB();
+        $this->createLineStringB();
         $this->createLineStringC();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();

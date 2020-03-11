@@ -90,7 +90,6 @@ class SpSplitTest extends OrmTestCase
         $query->setParameter('g', 'POINT (3 3)');
         $result = $query->getResult();
 
-
         static::assertIsArray($result);
         static::assertCount(1, $result);
         static::assertEquals($straightLineString, $result[0][0]);

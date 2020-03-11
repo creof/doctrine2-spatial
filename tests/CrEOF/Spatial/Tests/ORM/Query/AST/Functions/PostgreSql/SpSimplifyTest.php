@@ -85,7 +85,6 @@ class SpSimplifyTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-
         static::assertIsArray($result);
         static::assertCount(1, $result);
         static::assertEquals($pointO, $result[0][0]);

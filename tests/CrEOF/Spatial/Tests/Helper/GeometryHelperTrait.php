@@ -65,18 +65,18 @@ trait GeometryHelperTrait
         $entity = new GeometryEntity();
         $entity->setGeometry($geometry);
         $this->getEntityManager()->persist($entity);
+
         return $entity;
     }
-
 
     /**
      * Create a geometric point at origin.
      *
      * @param int|null $srid Spatial Reference System Identifier
      *
-     * @throws DBALException when credentials fail
-     * @throws InvalidValueException when point is an invalid geometry
-     * @throws ORMException when cache is not created
+     * @throws DBALException                when credentials fail
+     * @throws InvalidValueException        when point is an invalid geometry
+     * @throws ORMException                 when cache is not created
      * @throws UnsupportedPlatformException when platform is not supported
      */
     protected function createPointO(int $srid = null): GeometryEntity
@@ -104,6 +104,7 @@ trait GeometryHelperTrait
             [2, 2],
             [5, 5],
         ]);
+
         return $this->createGeometry($straightLineString);
     }
 }

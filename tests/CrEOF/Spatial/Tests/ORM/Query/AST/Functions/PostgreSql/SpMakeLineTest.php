@@ -73,7 +73,7 @@ class SpMakeLineTest extends OrmTestCase
      */
     public function testSelect()
     {
-        $this->createNewYorkGeometry();// Unused fake point
+        $this->createNewYorkGeometry(); // Unused fake point
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

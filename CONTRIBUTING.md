@@ -7,7 +7,7 @@ Contributing
 2 - Create the class test into the CrEOF\Spatial\ORM\Query\AST\Functions
 3 - Declare the new function into the [OrmTestCase](./tests/CrEOF/Spatial/Tests/OrmTestCase.php) class test
 4 - Launch the test ;) (Read the last paragraph of this page, to know how to config your dev environment)
-5 - Update the [MySQL](doc/mysql.md) or [PostGreSQL](doc/postgresql.md) description
+5 - Update the [standard](doc/common.md), [MySQL](doc/mysql.md) or [PostGreSQL](doc/postgresql.md) description
 6 - Add your function into the configuration [symfony chapter](doc/configuration/configuration.md) 
 
 ## Code quality
@@ -19,7 +19,7 @@ Before a commit, launch the quality script:
 composer check-quality-code
 ```
 
-You can launch PHPCS-FIXER only with:
+You can launch PHPCS-FIXER to fix errors with:
 ```bash
 composer phpcsfixer
 ```

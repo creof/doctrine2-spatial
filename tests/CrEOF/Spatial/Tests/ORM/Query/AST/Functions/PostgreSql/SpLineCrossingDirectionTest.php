@@ -63,6 +63,38 @@ class SpLineCrossingDirectionTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testInPredicate()
+    {
+        $this->createLineStringX();
+        $lineStringY = $this->createLineStringY();
+        $this->createLineStringZ();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE PgSql_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1'
+            // phpcs:enable
+        );
+
+        $query->setParameter('p1', 'LINESTRING(12 6,5 11,8 12,5 15)', 'string');
+
+        $result = $query->getResult();
+
+        static::assertCount(1, $result);
+        static::assertEquals($lineStringY, $result[0]);
+    }
+
+    /**
      * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
@@ -97,37 +129,5 @@ class SpLineCrossingDirectionTest extends OrmTestCase
         static::assertEquals(1, $result[1][1]);
         static::assertEquals($lineStringZ, $result[2][0]);
         static::assertEquals(-1, $result[2][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testInPredicate()
-    {
-        $this->createLineStringX();
-        $lineStringY = $this->createLineStringY();
-        $this->createLineStringZ();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE PgSql_LineCrossingDirection(l.lineString, ST_GeomFromText(:p1)) = 1'
-            // phpcs:enable
-        );
-
-        $query->setParameter('p1', 'LINESTRING(12 6,5 11,8 12,5 15)', 'string');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($lineStringY, $result[0]);
     }
 }

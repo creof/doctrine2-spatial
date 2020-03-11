@@ -41,6 +41,7 @@ use Doctrine\ORM\ORMException;
  *
  * @internal
  * @translateDefaultClass
+ * @coversNothing
  */
 class SpTranslateTest extends OrmTestCase
 {
@@ -59,6 +60,37 @@ class SpTranslateTest extends OrmTestCase
         $this->supportsPlatform('postgresql');
 
         parent::setUp();
+    }
+
+    /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testFunctionInPredicate()
+    {
+        $bigPolygon = $this->createBigPolygon();
+        $this->createSmallPolygon();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Translate(p.polygon, :x, :y) = :g'
+            // phpcs:enable
+        );
+        $query->setParameter('g', 'POLYGON((4 -4.5,14 -4.5,14 5.5,4 5.5,4 -4.5))', 'string');
+        $query->setParameter('x', 4.0);
+        $query->setParameter('y', -4.5);
+        $result = $query->getResult();
+
+        static::assertCount(1, $result);
+        static::assertEquals($bigPolygon, $result[0]);
     }
 
     /**
@@ -92,36 +124,5 @@ class SpTranslateTest extends OrmTestCase
         static::assertSame('POLYGON((4 -4.5,14 -4.5,14 5.5,4 5.5,4 -4.5))', $result[0][1]);
         static::assertEquals($smallPolygon, $result[1][0]);
         static::assertSame('POLYGON((9 0.5,11 0.5,11 2.5,9 2.5,9 0.5))', $result[1][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testFunctionInPredicate()
-    {
-        $bigPolygon = $this->createBigPolygon();
-        $this->createSmallPolygon();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Translate(p.polygon, :x, :y) = :g'
-            // phpcs:enable
-        );
-        $query->setParameter('g', 'POLYGON((4 -4.5,14 -4.5,14 5.5,4 5.5,4 -4.5))', 'string');
-        $query->setParameter('x', 4.0);
-        $query->setParameter('y', -4.5);
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($bigPolygon, $result[0]);
     }
 }

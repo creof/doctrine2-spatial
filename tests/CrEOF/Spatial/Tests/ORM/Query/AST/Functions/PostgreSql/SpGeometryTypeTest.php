@@ -35,7 +35,7 @@ use Doctrine\ORM\ORMException;
  * SC_GeometryType DQL function tests.
  * This function is not issue from the OGC, but it is useful for Database postgresql.
  * It does not return the SQL MM Type ('ST_Linestring', 'ST_Polygon') use Standard\StGeometryType class for this.
- * It returns the type of the geometry as a string. Eg: 'LINESTRING', 'POLYGON', 'MULTIPOINT'
+ * It returns the type of the geometry as a string. Eg: 'LINESTRING', 'POLYGON', 'MULTIPOINT'.
  *
  * @see https://postgis.net/docs/ST_GeometryType.html
  * @see https://postgis.net/docs/GeometryType.html
@@ -88,7 +88,6 @@ class SpGeometryTypeTest extends OrmTestCase
             'SELECT PgSQL_GeometryType(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
-
 
         static::assertIsArray($result);
         static::assertIsArray($result[0]);

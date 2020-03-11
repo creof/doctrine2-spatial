@@ -74,7 +74,7 @@ class StMPointFromWkbTest extends OrmTestCase
      */
     public function testSelect()
     {
-        $this->createPointO();// Unused fake point
+        $this->createPointO(); // Unused fake point
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -103,7 +103,7 @@ class StMPointFromWkbTest extends OrmTestCase
      */
     public function testSelectWithSrid()
     {
-        $this->createPointO();// Unused fake point
+        $this->createPointO(); // Unused fake point
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 

@@ -91,7 +91,6 @@ class MultiPointTest extends TestCase
      * Test to add point to a multipoint.
      *
      * @throws InvalidValueException this should not happen
-     *
      * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiPointAddPoints()

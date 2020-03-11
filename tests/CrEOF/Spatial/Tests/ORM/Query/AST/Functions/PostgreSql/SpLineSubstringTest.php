@@ -62,38 +62,6 @@ class StLineSubstringTest extends OrmTestCase
     }
 
     /**
-     * Test a DQL containing function to test in the select.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testSelect()
-    {
-        $this->createStraightLineString();
-        $this->createLineStringA();
-        $this->createLineStringB();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT ST_AsText(PgSql_LineSubstring(l.lineString, :start, :end)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
-            // phpcs:enable
-        );
-        $query->setParameter('start', 0.4);
-        $query->setParameter('end', 0.8);
-        $result = $query->getResult();
-
-        static::assertEquals('LINESTRING(2 2,4 4)', $result[0][1]);
-        static::assertEquals('LINESTRING(4 4,8 8)', $result[1][1]);
-        static::assertEquals('LINESTRING(6 6,12 2)', $result[2][1]);
-    }
-
-    /**
      * Test a DQL containing function to test in the predicate.
      *
      * @throws DBALException                when connection failed
@@ -124,5 +92,37 @@ class StLineSubstringTest extends OrmTestCase
 
         static::assertCount(1, $result);
         static::assertEquals($straightLineString, $result[0]);
+    }
+
+    /**
+     * Test a DQL containing function to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testSelect()
+    {
+        $this->createStraightLineString();
+        $this->createLineStringA();
+        $this->createLineStringB();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT ST_AsText(PgSql_LineSubstring(l.lineString, :start, :end)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            // phpcs:enable
+        );
+        $query->setParameter('start', 0.4);
+        $query->setParameter('end', 0.8);
+        $result = $query->getResult();
+
+        static::assertEquals('LINESTRING(2 2,4 4)', $result[0][1]);
+        static::assertEquals('LINESTRING(4 4,8 8)', $result[1][1]);
+        static::assertEquals('LINESTRING(6 6,12 2)', $result[2][1]);
     }
 }

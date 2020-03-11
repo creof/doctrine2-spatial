@@ -91,7 +91,6 @@ class SpClosestPointTest extends OrmTestCase
         $query->setParameter('p', 'POINT(4 3)');
         $result = $query->getResult();
 
-
         static::assertIsArray($result);
         static::assertCount(3, $result);
         static::assertEquals($straight, $result[0][0]);
@@ -101,6 +100,7 @@ class SpClosestPointTest extends OrmTestCase
         static::assertEquals($ring, $result[2][0]);
         static::assertSame('POINT(1 1)', $result[2][1]);
     }
+
     /**
      * Test a DQL containing function to test in the select.
      *

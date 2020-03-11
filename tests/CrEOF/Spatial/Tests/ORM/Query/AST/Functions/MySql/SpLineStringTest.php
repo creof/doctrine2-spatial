@@ -71,36 +71,6 @@ class SpLineStringTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelect()
-    {
-        $this->createLineStringA();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l, ST_AsText(MySql_LineString(MySql_Point(:x, :y), MySql_Point(:y, :x))) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
-            // phpcs:enable
-        );
-        $query->setParameter('x', 1, 'integer');
-        $query->setParameter('y', 2, 'integer');
-
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals('LINESTRING(1 2,2 1)', $result[0][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the select.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
     public function testPredicate()
     {
         $lineStringA = $this->createLineStringA();
@@ -120,5 +90,35 @@ class SpLineStringTest extends OrmTestCase
 
         static::assertCount(1, $result);
         static::assertEquals($lineStringA, $result[0]);
+    }
+
+    /**
+     * Test a DQL containing function to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testSelect()
+    {
+        $this->createLineStringA();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT l, ST_AsText(MySql_LineString(MySql_Point(:x, :y), MySql_Point(:y, :x))) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            // phpcs:enable
+        );
+        $query->setParameter('x', 1, 'integer');
+        $query->setParameter('y', 2, 'integer');
+
+        $result = $query->getResult();
+
+        static::assertCount(1, $result);
+        static::assertEquals('LINESTRING(1 2,2 1)', $result[0][1]);
     }
 }

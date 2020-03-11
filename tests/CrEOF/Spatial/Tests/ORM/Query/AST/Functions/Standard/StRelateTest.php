@@ -27,7 +27,6 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\Standard;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
-use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
@@ -46,6 +45,7 @@ use Doctrine\ORM\ORMException;
 class StRelateTest extends OrmTestCase
 {
     use LineStringHelperTrait;
+
     /**
      * Setup the function type test.
      *
@@ -79,7 +79,7 @@ class StRelateTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            "SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE ST_Relate(l.lineString, ST_GeomFromText(:p)) = 'FF1FF0102'"
+            "SELECT l FROM CrEOF\\Spatial\\Tests\\Fixtures\\LineStringEntity l WHERE ST_Relate(l.lineString, ST_GeomFromText(:p)) = 'FF1FF0102'"
             // phpcs:enable
         );
         $query->setParameter('p', 'LINESTRING(6 6, 8 8, 11 11)', 'string');

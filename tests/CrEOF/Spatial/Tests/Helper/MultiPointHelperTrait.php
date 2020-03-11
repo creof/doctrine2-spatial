@@ -26,12 +26,9 @@ namespace CrEOF\Spatial\Tests\Helper;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\PHP\Types\Geography\Point as GeographyPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point as GeometryPoint;
-use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
 use CrEOF\Spatial\Tests\Fixtures\MultiPointEntity;
-use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
@@ -70,7 +67,6 @@ trait MultiPointHelperTrait
         $multipoint->addPoint(new GeometryPoint(1, 1));
 
         return $this->createMultipoint($multipoint);
-
     }
 
     /**

@@ -91,9 +91,8 @@ class SpScaleTest extends OrmTestCase
         //FIXME Try to solve this issue
         //SQLSTATE[XX000]: Internal error: 7 ERROR:  parse error - invalid geometry
         //HINT:  "2" <-- parse error at position 2 within geometry
-        self::markTestSkipped('On Linux env only, Postgis throw an internal error');
+        static::markTestSkipped('On Linux env only, Postgis throw an internal error');
         $result = $query->getResult();
-
 
         static::assertIsArray($result);
         static::assertCount(2, $result);

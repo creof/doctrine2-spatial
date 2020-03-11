@@ -72,34 +72,6 @@ class StPolyFromWkbTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testSelect()
-    {
-        $this->createBigPolygon();// Unused fake polygon
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        // phpcs:disable Generic.Files.LineLength.MaxExceeded
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT p, ST_AsText(ST_PolyFromWkb(:wkb)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
-        );
-        $query->setParameter('wkb', hex2bin('010300000001000000050000000000000000000000000000000000000000000000000024400000000000000000000000000000244000000000000024400000000000000000000000000000244000000000000000000000000000000000'), 'blob');
-        $result = $query->getResult();
-        // phpcs:enable
-
-        static::assertCount(1, $result);
-        static::assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[0][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the select.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
     public function testPredicate()
     {
         $bigPolygon = $this->createBigPolygon();
@@ -117,5 +89,33 @@ class StPolyFromWkbTest extends OrmTestCase
 
         static::assertCount(1, $result);
         static::assertEquals($bigPolygon, $result[0]);
+    }
+
+    /**
+     * Test a DQL containing function to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testSelect()
+    {
+        $this->createBigPolygon(); // Unused fake polygon
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, ST_AsText(ST_PolyFromWkb(:wkb)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+        );
+        $query->setParameter('wkb', hex2bin('010300000001000000050000000000000000000000000000000000000000000000000024400000000000000000000000000000244000000000000024400000000000000000000000000000244000000000000000000000000000000000'), 'blob');
+        $result = $query->getResult();
+        // phpcs:enable
+
+        static::assertCount(1, $result);
+        static::assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[0][1]);
     }
 }

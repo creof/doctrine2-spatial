@@ -62,6 +62,31 @@ class SpCoversTest extends OrmTestCase
     }
 
     /**
+     * Test a DQL containing function to test in the predicate.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testFunctionInPredicate()
+    {
+        $bigPolygon = $this->createBigPolygon();
+        $this->createSmallPolygon();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Covers(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query->setParameter('p1', 'LINESTRING(4 4,8 8)', 'string');
+        $result = $query->getResult();
+
+        static::assertCount(1, $result);
+        static::assertEquals($bigPolygon, $result[0]);
+    }
+
+    /**
      * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
@@ -91,30 +116,5 @@ class SpCoversTest extends OrmTestCase
         static::assertTrue($result[0][1]);
         static::assertEquals($smallPolygon, $result[1][0]);
         static::assertFalse($result[1][1]);
-    }
-
-    /**
-     * Test a DQL containing function to test in the predicate.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testFunctionInPredicate()
-    {
-        $bigPolygon = $this->createBigPolygon();
-        $this->createSmallPolygon();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_Covers(p.polygon, ST_GeomFromText(:p1)) = true');
-        $query->setParameter('p1', 'LINESTRING(4 4,8 8)', 'string');
-        $result = $query->getResult();
-
-        static::assertCount(1, $result);
-        static::assertEquals($bigPolygon, $result[0]);
     }
 }

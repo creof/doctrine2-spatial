@@ -62,37 +62,6 @@ class StLineLocatePointTest extends OrmTestCase
     }
 
     /**
-     * Test a DQL containing function to test in the select.
-     *
-     * @throws DBALException                when connection failed
-     * @throws ORMException                 when cache is not set
-     * @throws UnsupportedPlatformException when platform is unsupported
-     * @throws InvalidValueException        when geometries are not valid
-     *
-     * @group geometry
-     */
-    public function testSelect()
-    {
-        $this->createStraightLineString();
-        $this->createLineStringA();
-        $this->createLineStringB();
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT PgSql_LineLocatePoint(l.lineString, :point) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
-            // phpcs:enable
-        );
-        $query->setParameter('point', 'POINT(4 3)');
-        $result = $query->getResult();
-
-        static::assertEquals(0.7, $result[0][1]);
-        static::assertEquals(0.35, $result[1][1]);
-        static::assertEquals(0.4, $result[2][1]);
-    }
-
-    /**
      * Test a DQL containing function to test in the predicate.
      *
      * @throws DBALException                when connection failed
@@ -125,5 +94,36 @@ class StLineLocatePointTest extends OrmTestCase
         static::assertCount(2, $result);
         static::assertEquals($lineA, $result[0]);
         static::assertEquals($lineB, $result[1]);
+    }
+
+    /**
+     * Test a DQL containing function to test in the select.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group geometry
+     */
+    public function testSelect()
+    {
+        $this->createStraightLineString();
+        $this->createLineStringA();
+        $this->createLineStringB();
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT PgSql_LineLocatePoint(l.lineString, :point) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            // phpcs:enable
+        );
+        $query->setParameter('point', 'POINT(4 3)');
+        $result = $query->getResult();
+
+        static::assertEquals(0.7, $result[0][1]);
+        static::assertEquals(0.35, $result[1][1]);
+        static::assertEquals(0.4, $result[2][1]);
     }
 }

@@ -35,7 +35,7 @@ use Doctrine\ORM\ORMException;
  * SC_GeometryType DQL function tests.
  * The SQL ST_GeometryType function does not respect the OGC.
  * It should sreturns the SQL MM Type ('ST_Linestring', 'ST_Polygon'),
- * But MySQL returns the type of the geometry as a string. Eg: 'LINESTRING', 'POLYGON', 'MULTIPOINT'
+ * But MySQL returns the type of the geometry as a string. Eg: 'LINESTRING', 'POLYGON', 'MULTIPOINT'.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -85,7 +85,6 @@ class SpGeometryTypeTest extends OrmTestCase
             'SELECT Mysql_GeometryType(l.lineString) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
         );
         $result = $query->getResult();
-
 
         static::assertIsArray($result);
         static::assertIsArray($result[0]);

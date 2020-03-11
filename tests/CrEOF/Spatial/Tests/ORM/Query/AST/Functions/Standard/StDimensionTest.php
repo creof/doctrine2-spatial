@@ -85,7 +85,6 @@ class StDimensionTest extends OrmTestCase
         );
         $result = $query->getResult();
 
-
         static::assertIsArray($result);
         static::assertIsArray($result[0]);
         static::assertCount(1, $result[0]);

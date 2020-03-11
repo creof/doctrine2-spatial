@@ -79,7 +79,7 @@ class StEqualsTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            "SELECT ST_Equals(l.lineString, ST_GeomFromText('LINESTRING(0 0, 5 5)')) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l"
+            "SELECT ST_Equals(l.lineString, ST_GeomFromText('LINESTRING(0 0, 5 5)')) FROM CrEOF\\Spatial\\Tests\\Fixtures\\LineStringEntity l"
         );
         $result = $query->getResult();
 

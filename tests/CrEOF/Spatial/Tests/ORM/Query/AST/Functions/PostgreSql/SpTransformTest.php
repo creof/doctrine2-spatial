@@ -41,6 +41,7 @@ use Doctrine\ORM\ORMException;
  *
  * @internal
  * @transformDefaultClass
+ * @coversNothing
  */
 class SpTransformTest extends OrmTestCase
 {
@@ -135,7 +136,7 @@ class SpTransformTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         //FIXME The test above failed because DQL SRID is seen as a string
-        self::markTestSkipped('The test above failed because DQL SRID is seen as a string');
+        static::markTestSkipped('The test above failed because DQL SRID is seen as a string');
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
             'SELECT p, ST_AsText(PgSql_Transform(p.polygon, :srid)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
