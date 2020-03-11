@@ -41,7 +41,9 @@ use Doctrine\ORM\Tools\ToolsException;
  * @group geometry
  *
  * @internal
- * @coversDefaultClass
+ *
+ * @covers \CrEOF\Spatial\DBAL\Platform\MySql<extended>
+ * @covers \CrEOF\Spatial\DBAL\Platform\PostgreSql<extended>
  */
 class PlatformTest extends OrmMockTestCase
 {
