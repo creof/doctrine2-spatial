@@ -88,7 +88,7 @@ class SpScaleTest extends OrmTestCase
         );
         $query->setParameter('x', 2);
         $query->setParameter('y', 4);
-        //FIXME Try to solve this issue
+        //TODO Try to solve this issue on Travis Linux
         //SQLSTATE[XX000]: Internal error: 7 ERROR:  parse error - invalid geometry
         //HINT:  "2" <-- parse error at position 2 within geometry
         static::markTestSkipped('On Linux env only, Postgis throw an internal error');

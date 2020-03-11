@@ -112,7 +112,9 @@ class SpMbrWithinTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             'SELECT p, MySQL_MbrWithin(p.polygon, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
+            // phpcs:enable
         );
         $query->setParameter('p', 'POLYGON((0 0, 0 12, 12 12, 12 0, 0 0))', 'string');
         $result = $query->getResult();

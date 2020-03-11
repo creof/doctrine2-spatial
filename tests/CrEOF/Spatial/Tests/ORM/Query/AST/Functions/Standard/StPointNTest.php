@@ -114,9 +114,9 @@ class StPointNTest extends OrmTestCase
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
             'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l where  ST_PointN(l.lineString, :n) = ST_GeomFromText(:p)'
-        // phpcs: enable
+            // phpcs: enable
         );
         $query->setParameter('n', 2, 'integer');
         $query->setParameter('p', 'POINT(2 2)', 'string');

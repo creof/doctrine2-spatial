@@ -135,7 +135,7 @@ class SpTransformTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        //FIXME The test above failed because DQL SRID is seen as a string
+        //TODO The test above failed because DQL SRID is seen as a string
         static::markTestSkipped('The test above failed because DQL SRID is seen as a string');
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded

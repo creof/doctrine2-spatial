@@ -79,7 +79,11 @@ class SpContainsProperlyTest extends OrmTestCase
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) = true');
+        $query = $this->getEntityManager()->createQuery(
+            // phpcs:disable Generic.Files.LineLength.MaxExceeded
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE PgSql_ContainsProperly(p.polygon, ST_GeomFromText(:p1)) = true'
+            // phpcs:enable
+        );
 
         $query->setParameter('p1', 'LINESTRING(5 5,7 5,7 7,5 7,5 5)', 'string');
 
