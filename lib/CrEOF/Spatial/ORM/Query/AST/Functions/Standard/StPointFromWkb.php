@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * Point function.
+ * ST_PointFromWKB function.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class Point extends AbstractSpatialDQLFunction
+class StPointFromWkb extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -41,7 +41,7 @@ class Point extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'Point';
+        return 'ST_PointFromWKB';
     }
 
     /**
@@ -65,7 +65,7 @@ class Point extends AbstractSpatialDQLFunction
      */
     protected function getMinParameter(): int
     {
-        return 2;
+        return 1;
     }
 
     /**
@@ -77,6 +77,6 @@ class Point extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

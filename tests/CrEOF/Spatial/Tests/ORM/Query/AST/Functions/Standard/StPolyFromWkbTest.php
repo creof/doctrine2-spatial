@@ -26,13 +26,13 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PolygonHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_LineLocatePoint DQL function tests.
+ * ST_PolyFromWkb DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,9 +42,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StLineLocatePointTest extends OrmTestCase
+class StPolyFromWkbTest extends OrmTestCase
 {
-    use LineStringHelperTrait;
+    use PolygonHelperTrait;
 
     /**
      * Setup the function type test.
@@ -55,8 +55,9 @@ class StLineLocatePointTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::POLYGON_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -73,27 +74,24 @@ class StLineLocatePointTest extends OrmTestCase
      */
     public function testSelect()
     {
-        $this->createStraightLineString();
-        $this->createLineStringA();
-        $this->createLineStringB();
+        $this->createBigPolygon();// Unused fake polygon
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT PgSql_LineLocatePoint(l.lineString, :point) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
-            // phpcs:enable
+            'SELECT p, ST_AsText(ST_PolyFromWkb(:wkb)) FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p'
         );
-        $query->setParameter('point', 'POINT(4 3)');
+        $query->setParameter('wkb', hex2bin('010300000001000000050000000000000000000000000000000000000000000000000024400000000000000000000000000000244000000000000024400000000000000000000000000000244000000000000000000000000000000000'), 'blob');
         $result = $query->getResult();
+        // phpcs:enable
 
-        static::assertEquals(0.7, $result[0][1]);
-        static::assertEquals(0.35, $result[1][1]);
-        static::assertEquals(0.4, $result[2][1]);
+        static::assertCount(1, $result);
+        static::assertEquals('POLYGON((0 0,10 0,10 10,0 10,0 0))', $result[0][1]);
     }
 
     /**
-     * Test a DQL containing function to test in the predicate.
+     * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -104,26 +102,20 @@ class StLineLocatePointTest extends OrmTestCase
      */
     public function testPredicate()
     {
-        $this->createStraightLineString();
-        $lineA = $this->createLineStringA();
-        $lineB = $this->createLineStringB();
-
+        $bigPolygon = $this->createBigPolygon();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
-            // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE PgSql_LineLocatePoint(l.lineString, ST_GeomFromText(:point)) < :percent'
-            // phpcs:enable
+            'SELECT p FROM CrEOF\Spatial\Tests\Fixtures\PolygonEntity p WHERE p.polygon = ST_PolyFromWkb(:wkb)'
         );
-
-        $query->setParameter('point', 'POINT(4 3)', 'string');
-        $query->setParameter('percent', 0.5);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $query->setParameter('wkb', hex2bin('010300000001000000050000000000000000000000000000000000000000000000000024400000000000000000000000000000244000000000000024400000000000000000000000000000244000000000000000000000000000000000'), 'blob');
+        // phpcs:enable
 
         $result = $query->getResult();
 
-        static::assertCount(2, $result);
-        static::assertEquals($lineA, $result[0]);
-        static::assertEquals($lineB, $result[1]);
+        static::assertCount(1, $result);
+        static::assertEquals($bigPolygon, $result[0]);
     }
 }

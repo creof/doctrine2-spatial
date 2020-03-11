@@ -40,6 +40,8 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpDistance;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBuffer;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpBufferStrategy;
 use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpGeometryType as MySqlGeometryType;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpLineString;
+use CrEOF\Spatial\ORM\Query\AST\Functions\MySql\SpPoint;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAsGeoJson;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpAzimuth;
 use CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpClosestPoint;
@@ -90,6 +92,7 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StExteriorRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeometryType;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromWkb;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StInteriorRingN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersection;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIntersects;
@@ -98,14 +101,20 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsEmpty;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StIsSimple;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StLength;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StLineStringFromWkb;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StMLineFromWkb;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StMPointFromWkb;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StMPolyFromWkb;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumGeometries;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumInteriorRing;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StNumPoints;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StOverlaps;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPerimeter;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPoint;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointFromWkb;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointN;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPointOnSurface;
+use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StPolyFromWkb;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StRelate;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSetSRID;
 use CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StSrid;
@@ -128,6 +137,7 @@ use CrEOF\Spatial\Tests\Fixtures\MultiPolygonEntity;
 use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
+use CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql\StPolyFromWkbTest;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
@@ -804,6 +814,8 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('Mysql_Buffer', SpBuffer::class);
         $configuration->addCustomNumericFunction('Mysql_BufferStrategy', SpBufferStrategy::class);
         $configuration->addCustomNumericFunction('Mysql_GeometryType', MySqlGeometryType::class);
+        $configuration->addCustomNumericFunction('Mysql_LineString', SpLineString::class);
+        $configuration->addCustomNumericFunction('Mysql_Point', SpPoint::class);
     }
 
     /**
@@ -848,20 +860,27 @@ abstract class OrmTestCase extends TestCase
         //MySQL function does not respect OGC Standards
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
 
+        $configuration->addCustomStringFunction('ST_GeomFromWkb', StGeomFromWkb::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
         $configuration->addCustomStringFunction('ST_InteriorRingN', StInteriorRingN::class);
+        $configuration->addCustomNumericFunction('ST_Length', StLength::class);
+        $configuration->addCustomStringFunction('ST_LineStringFromWkb', StLineStringFromWkb::class);
+        $configuration->addCustomStringFunction('ST_MPointFromWkb', StMPointFromWkb::class);
+        $configuration->addCustomStringFunction('ST_MLineFromWkb', StMLineFromWkb::class);
+        $configuration->addCustomStringFunction('ST_MPolyFromWkb', StMPolyFromWkb::class);
         $configuration->addCustomStringFunction('ST_NumInteriorRing', StNumInteriorRing::class);
         $configuration->addCustomStringFunction('ST_NumGeometries', StNumGeometries::class);
-        $configuration->addCustomNumericFunction('ST_Length', StLength::class);
         $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
         $configuration->addCustomStringFunction('ST_Perimeter', StPerimeter::class);
         $configuration->addCustomStringFunction('ST_Point', StPoint::class);
+        $configuration->addCustomStringFunction('ST_PointFromWkb', StPointFromWkb::class);
         $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
 
         //This function is not implemented into mysql
         $configuration->addCustomStringFunction('ST_PointOnSurface', StPointOnSurface::class);
 
+        $configuration->addCustomStringFunction('ST_PolyFromWkb', StPolyFromWkb::class);
         $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
         $configuration->addCustomStringFunction('ST_Union', StUnion::class);
 

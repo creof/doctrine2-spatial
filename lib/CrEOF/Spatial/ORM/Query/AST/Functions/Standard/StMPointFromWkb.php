@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * NumInteriorRings DQL function
- * Return number of interior rings in Polygon.
+ * ST_MPointFromWkb function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class NumInteriorRings extends AbstractSpatialDQLFunction
+class StMPointFromWkb extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -43,7 +41,7 @@ class NumInteriorRings extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'NumInteriorRings';
+        return 'ST_MPointFromWkb';
     }
 
     /**
@@ -55,7 +53,7 @@ class NumInteriorRings extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -79,6 +77,6 @@ class NumInteriorRings extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }

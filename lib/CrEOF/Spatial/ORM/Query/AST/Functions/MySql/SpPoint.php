@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
@@ -32,10 +32,11 @@ use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org
  */
-class Point extends AbstractSpatialDQLFunction
+class SpPoint extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
+     * Mysql does not implement OGC function ST_Point. Use this version.
      *
      * @since 2.0 This function replace the protected property functionName.
      */

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
+namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
@@ -32,7 +32,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_LineLocatePoint DQL function tests.
+ * SP_MakePoint DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,7 +42,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StLineLocatePointTest extends OrmTestCase
+class SpLineStringTest extends OrmTestCase
 {
     use LineStringHelperTrait;
 
@@ -56,7 +56,7 @@ class StLineLocatePointTest extends OrmTestCase
     protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
-        $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -73,27 +73,26 @@ class StLineLocatePointTest extends OrmTestCase
      */
     public function testSelect()
     {
-        $this->createStraightLineString();
         $this->createLineStringA();
-        $this->createLineStringB();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT PgSql_LineLocatePoint(l.lineString, :point) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT l, ST_AsText(MySql_LineString(MySql_Point(:x, :y), MySql_Point(:y, :x))) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
             // phpcs:enable
         );
-        $query->setParameter('point', 'POINT(4 3)');
+        $query->setParameter('x', 1, 'integer');
+        $query->setParameter('y', 2, 'integer');
+
         $result = $query->getResult();
 
-        static::assertEquals(0.7, $result[0][1]);
-        static::assertEquals(0.35, $result[1][1]);
-        static::assertEquals(0.4, $result[2][1]);
+        static::assertCount(1, $result);
+        static::assertEquals('LINESTRING(1 2,2 1)', $result[0][1]);
     }
 
     /**
-     * Test a DQL containing function to test in the predicate.
+     * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -104,26 +103,22 @@ class StLineLocatePointTest extends OrmTestCase
      */
     public function testPredicate()
     {
-        $this->createStraightLineString();
-        $lineA = $this->createLineStringA();
-        $lineB = $this->createLineStringB();
-
+        $lineStringA = $this->createLineStringA();
+        $this->createLineStringB();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE PgSql_LineLocatePoint(l.lineString, ST_GeomFromText(:point)) < :percent'
+            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE MySql_LineString(MySql_Point(:x, :x), MySql_Point(:y, :y)) = l.lineString'
             // phpcs:enable
         );
-
-        $query->setParameter('point', 'POINT(4 3)', 'string');
-        $query->setParameter('percent', 0.5);
+        $query->setParameter('x', 0, 'integer');
+        $query->setParameter('y', 10, 'integer');
 
         $result = $query->getResult();
 
-        static::assertCount(2, $result);
-        static::assertEquals($lineA, $result[0]);
-        static::assertEquals($lineB, $result[1]);
+        static::assertCount(1, $result);
+        static::assertEquals($lineStringA, $result[0]);
     }
 }

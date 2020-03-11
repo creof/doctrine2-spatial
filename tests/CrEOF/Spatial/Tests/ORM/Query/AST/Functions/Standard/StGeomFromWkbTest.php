@@ -26,13 +26,13 @@ namespace CrEOF\Spatial\Tests\ORM\Query\AST\Functions\PostgreSql;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
+use CrEOF\Spatial\Tests\Helper\PointHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_LineLocatePoint DQL function tests.
+ * ST_GeomFromWkb DQL function tests.
  *
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
@@ -42,9 +42,9 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class StLineLocatePointTest extends OrmTestCase
+class StGeomFromWkbTest extends OrmTestCase
 {
-    use LineStringHelperTrait;
+    use PointHelperTrait;
 
     /**
      * Setup the function type test.
@@ -55,8 +55,9 @@ class StLineLocatePointTest extends OrmTestCase
      */
     protected function setUp(): void
     {
-        $this->usesEntity(self::LINESTRING_ENTITY);
+        $this->usesEntity(self::POINT_ENTITY);
         $this->supportsPlatform('postgresql');
+        $this->supportsPlatform('mysql');
 
         parent::setUp();
     }
@@ -73,27 +74,25 @@ class StLineLocatePointTest extends OrmTestCase
      */
     public function testSelect()
     {
-        $this->createStraightLineString();
-        $this->createLineStringA();
-        $this->createLineStringB();
+        $this->createNewYorkGeometry();// Unused fake point
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT PgSql_LineLocatePoint(l.lineString, :point) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l'
+            'SELECT t, ST_AsText(ST_GeomFromWkb(:wkb)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity t'
             // phpcs:enable
         );
-        $query->setParameter('point', 'POINT(4 3)');
+        $query->setParameter('wkb', hex2bin('0101000000000000000000F03F000000000000F0BF'), 'blob');
+
         $result = $query->getResult();
 
-        static::assertEquals(0.7, $result[0][1]);
-        static::assertEquals(0.35, $result[1][1]);
-        static::assertEquals(0.4, $result[2][1]);
+        static::assertCount(1, $result);
+        static::assertEquals('POINT(1 -1)', $result[0][1]);
     }
 
     /**
-     * Test a DQL containing function to test in the predicate.
+     * Test a DQL containing function to test in the select.
      *
      * @throws DBALException                when connection failed
      * @throws ORMException                 when cache is not set
@@ -102,28 +101,23 @@ class StLineLocatePointTest extends OrmTestCase
      *
      * @group geometry
      */
-    public function testPredicate()
+    public function testSelectWithSrid()
     {
-        $this->createStraightLineString();
-        $lineA = $this->createLineStringA();
-        $lineB = $this->createLineStringB();
-
+        $this->createNewYorkGeometry();// Unused fake point
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT l FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l WHERE PgSql_LineLocatePoint(l.lineString, ST_GeomFromText(:point)) < :percent'
+            'SELECT t, ST_SRID(ST_GeomFromWkb(:wkb, :srid)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity t'
             // phpcs:enable
         );
-
-        $query->setParameter('point', 'POINT(4 3)', 'string');
-        $query->setParameter('percent', 0.5);
+        $query->setParameter('wkb', hex2bin('0101000000000000000000F03F000000000000F0BF'), 'blob');
+        $query->setParameter('srid', 2154);
 
         $result = $query->getResult();
 
-        static::assertCount(2, $result);
-        static::assertEquals($lineA, $result[0]);
-        static::assertEquals($lineB, $result[1]);
+        static::assertCount(1, $result);
+        static::assertEquals(2154, $result[0][1]);
     }
 }

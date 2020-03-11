@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\ORM\Query\AST\Functions\MySql5;
+namespace CrEOF\Spatial\ORM\Query\AST\Functions\Standard;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * GeometryType DQL function.
+ * ST_PolyFromWkb function.
  *
- * @author  Mohammad Heydari <mdh.heydari@gmail.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
- * @license https://mdhheydari.mit-license.org MIT
+ * @license https://alexandre-tranchant.mit-license.org
  */
-class GeometryType extends AbstractSpatialDQLFunction
+class StPolyFromWkb extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -42,7 +41,7 @@ class GeometryType extends AbstractSpatialDQLFunction
      */
     protected function getFunctionName(): string
     {
-        return 'GeometryType';
+        return 'ST_PolyFromWkb';
     }
 
     /**
@@ -54,7 +53,7 @@ class GeometryType extends AbstractSpatialDQLFunction
      */
     protected function getMaxParameter(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -78,6 +77,6 @@ class GeometryType extends AbstractSpatialDQLFunction
      */
     protected function getPlatforms(): array
     {
-        return ['mysql'];
+        return ['postgresql', 'mysql'];
     }
 }
