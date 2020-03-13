@@ -11,8 +11,12 @@ install:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
   - composer config -g  discard-changes 1 # because we used travis cache and, sometimes, packages change
-  - composer install --prefer-source
   - mkdir -p ./build/coverage
+  - |
+    if [ "$DOCTRINE" == "2.8.x-dev" ]; then
+       cp ./tests/travis/composer.orm2.8.json ./composer.json
+    fi
+  - composer install --prefer-source
 
 script:
   - |
@@ -41,7 +45,7 @@ jobs:
     #MySQL 8 - PHP7.2
     - stage: Test MySQL
       php: 7.2
-      env: DB=mysql.docker MYSQL_VERSION=8.0
+      env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
       sudo: required
       services:
         - docker
@@ -50,7 +54,7 @@ jobs:
     #MySQLi8 - PHP7.2
     - stage: Test MySQLi
       php: 7.2
-      env: DB=mysqli.docker MYSQL_VERSION=8.0
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
       sudo: required
       services:
         - docker
@@ -59,7 +63,7 @@ jobs:
     #PostgreSQL 11 PHP7.2 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.2
-      env: DB=pgsql POSTGRESQL_VERSION=11.0
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.7
       sudo: required
       addons:
         postgresql: "11"
@@ -72,7 +76,7 @@ jobs:
     #MySQL 8 PHP 7.3
     - stage: Test MySQL
       php: 7.3
-      env: DB=mysql.docker MYSQL_VERSION=8.0
+      env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
       sudo: required
       services:
         - docker
@@ -81,7 +85,7 @@ jobs:
     #MySQLi 8 PHP 7.3
     - stage: Test MySQLi
       php: 7.3
-      env: DB=mysqli.docker MYSQL_VERSION=8.0
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
       sudo: required
       services:
         - docker
@@ -90,7 +94,7 @@ jobs:
     #PostgreSQL11 PHP 7.3 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.3
-      env: DB=pgsql POSTGRESQL_VERSION=11.0
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.7
       sudo: required
       addons:
         postgresql: "11"
@@ -101,13 +105,13 @@ jobs:
     #MySQL 5.7 PHP 7.4
     - stage: Test MySQL
       php: 7.4
-      env: DB=mysql MYSQL_VERSION=5.7 COVERAGE=yes
+      env: DB=mysql MYSQL_VERSION=5.7 COVERAGE=yes DOCTRINE=2.7
       services:
         - mysql
     #MySQL 8 PHP 7.4
     - stage: Test MySQL
       php: 7.4
-      env: DB=mysql.docker MYSQL_VERSION=8.0 COVERAGE=yes
+      env: DB=mysql.docker MYSQL_VERSION=8.0 COVERAGE=yes DOCTRINE=2.7
       sudo: required
       services:
         - docker
@@ -116,13 +120,13 @@ jobs:
     #MySQLi5.7 PHP 7.4
     - stage: Test MySQLi
       php: 7.4
-      env: DB=mysqli MYSQL_VERSION=5.7 COVERAGE=yes
+      env: DB=mysqli MYSQL_VERSION=5.7 COVERAGE=yes DOCTRINE=2.7
       services:
         - mysql
     #MySQLi8 PHP 7.4
     - stage: Test MySQLi
       php: 7.4
-      env: DB=mysqli.docker MYSQL_VERSION=8.0 COVERAGE=yes
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 COVERAGE=yes DOCTRINE=2.7
       sudo: required
       services:
         - docker
@@ -131,7 +135,7 @@ jobs:
     #PostgreSQL9.6 PHP7.4 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.4
-      env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes
+      env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes DOCTRINE=2.7
       addons:
         postgresql: "9.6"
         apt:
@@ -141,7 +145,7 @@ jobs:
     #PostgreSQL10 PHP7.4 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.4
-      env: DB=pgsql POSTGRESQL_VERSION=10.0 COVERAGE=yes
+      env: DB=pgsql POSTGRESQL_VERSION=10.0 COVERAGE=yes DOCTRINE=2.7
       sudo: required
       addons:
         postgresql: "10"
@@ -154,7 +158,7 @@ jobs:
     #PostgreSQL11 PHP7.4 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.4
-      env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes DOCTRINE=2.7
       sudo: required
       addons:
         postgresql: "11"
@@ -162,3 +166,36 @@ jobs:
           packages:
             - postgis
             - postgresql-11-postgis-2.5
+
+    #MySQL 8 PHP 7.3
+    - stage: Test MySQL
+      php: 7.3
+      env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.8.x-dev
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #MySQLi 8 PHP 7.3
+    - stage: Test MySQLi
+      php: 7.3
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.8.x-dev
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL11 PHP 7.3 Postgis 2.5
+    - stage: Test PostgreSQL
+      php: 7.3
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.8.x-dev
+      sudo: required
+      addons:
+        postgresql: "11"
+        apt:
+          packages:
+            - postgis
+            - postgresql-11-postgis-2.5
+
+  allow_failures:
+    - env: DOCTRINE=2.8.x-dev
