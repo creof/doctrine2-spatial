@@ -1,80 +1,38 @@
-# Common Functions
+# Standard Functions
 Doctrine spatial is playing around name of functions. The DQL will respect
 the OGC standards. As example to get a geometry from a text, the GeoStandard suggests to
 name function ST_GeomFromText(). PostGreSQL and MySQL8 respects this name, but MySQL5 does not.
 
 So when you compose yor DQL query, use ST_GeomFromText.
+In this example, we suppose that :
+* ```MyEntity``` is your Entity with a geometric property,
+* ```geometry``` is your geometric property (SQL column).
+* ```SqlTable``` is the real table name of your entity in your SQL database 
+* ```geometry_column``` is the real column name in your SQL database 
+
 ```dql
-SELECT ST_GeomFromText(geometry) FROM TABLESAMPLE
+SELECT ST_GeomFromText(geometry) FROM MyEntity
 ```
-Then Doctrine Spatial Layer will create the functional SQL query.
-For MySQL8 and PostgreSQL generated SQL query will be:
+Then Doctrine layer will create the functional SQL query.
 ```sql
-SELECT ST_GeomFromText(geometry) FROM TABLESAMPLE
+SELECT ST_GeomFromText(geometry_column) FROM SqlTable
 ```
-With MySQL5, the generated SQL query will be:
-```sql
-SELECT GeomFromText(geometry) FROM TABLESAMPLE
-```
+All spatial functions declared in the OGC Standard and implemented in this doctrine spatial library.
+Some of them have been documented.
 
-These DQL functions are implemented and will return a valid SQL function when used.
+You can find OGC Standard documented functions in this [directory](./standard/index.md). Some functions are not documented, yet.
+You can find OGC Standard implemented functions in this [directory](../lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard).
 
-* [ST_Area(geometry)](./common/ST_Area.md)
-* [ST_AsBinary(geometry)](./common/ST_AsBinary.md)
-* [ST_AsText(geometry)](./common/ST_AsText.md)
-* [ST_Buffer(geometry, double, [integer])](./common/ST_Buffer.md)
-* [ST_Centroid(geometry)](./common/ST_Centroid.md)
-* [ST_Contains(geometry A, geometry B)](./common/ST_Contains.md)
-* [ST_ConvexHull(geometry)](./common/ST_ConvexHull.md)
-* [ST_Crosses(geometry, geometry)](./common/ST_Crosses.md)
-* [ST_Difference(geometry A, geometry B)](./common/ST_Difference.md)
-* [ST_Dimension(geometry)](./common/ST_Dimension.md)
-* [ST_Disjoint(geometry, geometry)](./common/ST_Disjoint.md)
-* [ST_Distance(geometry, geometry)](./common/ST_Distance.md)
-* [ST_EndPoint(geometry)](./common/ST_EndPoint.md)
-* [ST_Envelope(geometry)](./common/ST_Envelope.md)
-* [ST_Equals(geometry, geometry)](./common/ST_Equals.md)
-* [ST_ExteriorRing(geometry)](./common/ST_ExteriorRing.md)
-* [ST_GeoHash()](./common/ST_GeoHash.md)
-* [ST_GeomCollFromText()](./common/ST_GeomCollFromText.md)
-* [ST_GeometryN(geometry,int)](./common/ST_GeometryN.md)
-* [GeometryType(geometry)](./common/GeometryType.md)
-* [ST_GeomFromGeoJSON()](./common/ST_GeomFromGeoJSON.md)
-* [ST_GeomFromText(text,[<srid>])](./common/ST_GeomFromText.md)
-* [ST_GeomFromWKB(bytea,[<srid>])](./common/ST_GeomFromWKB.md)
-* [ST_InteriorRingN(geometry,integer)](./common/ST_InteriorRingN.md)
-* [ST_Intersection(geometry, geometry)](./common/ST_Intersection.md)
-* [ST_Intersects(geometry, geometry)](./common/ST_Intersects.md)
-* [ST_IsClosed(geometry)](./common/ST_IsClosed.md)
-* [ST_IsEmpty(geometry)](./common/ST_IsEmpty.md)
-* [ST_IsSimple(geometry)](./common/ST_IsSimple.md)
-* [ST_IsValid()](./common/ST_IsValid.md)
-* [ST_Length(geometry)](./common/ST_Length.md)
-* [ST_LineFromText(text,[<srid>])](./common/ST_LineFromText.md)
-* [ST_LineFromWKB(bytea,[<srid>])](./common/ST_LineFromWKB.md)
-* [ST_MakeEnvelope()](./common/ST_MakeEnvelope.md)
-* [ST_MLineFromText(text,[<srid>])](./common/ST_MLineFromText.md)
-* [ST_MLineFromWKB(bytea,[<srid>])](./common/ST_MLineFromWKB.md)
-* [ST_MPointFromText(text,[<srid>])](./common/ST_MPointFromText.md)
-* [ST_MPointFromWKB(bytea,[<srid>])](./common/ST_MPointFromWKB.md)
-* [ST_MPolyFromText(text,[<srid>])](./common/ST_MPolyFromText.md)
-* [ST_MPolyFromWKB(bytea,[<srid>])](./common/ST_MPolyFromWKB.md)
-* [ST_NumGeometries(geometry)](./common/ST_NumGeometries.md)
-* [ST_NumInteriorRing(geometry)](./common/ST_NumInteriorRing.md)
-* [ST_NumPoints(geometry)](./common/ST_NumPoints.md)
-* [ST_Overlaps(geometry, geometry)](./common/ST_Overlaps.md)
-* [ST_PointFromGeoHash()](./common/ST_PointFromGeoHash.md)
-* [ST_PointFromText(text,[<srid>])](./common/ST_PointFromText.md)
-* [ST_PointFromWKB(bytea,[<srid>])](./common/ST_PointFromWKB.md)
-* [ST_PointN(geometry,integer)](./common/ST_PointN.md)
-* [ST_PolyFromText(text,[<srid>])](./common/ST_PolyFromText.md)
-* [ST_PolyFromWKB(bytea,[<srid>])](./common/ST_PolyFromWKB.md)
-* [ST_SRID(geometry)](./common/ST_SRID.md)
-* [ST_StartPoint(geometry)](./common/ST_StartPoint.md)
-* [ST_SymDifference(geometry A, geometry B)](./common/ST_SymDifference.md)
-* [ST_Touches(geometry, geometry)](./common/ST_Touches.md)
-* [ST_Union(geometry set)](./common/ST_Union.md)
-* [ST_Union(geometry, geometry)](./common/ST_Union.md)
-* [ST_Within(geometry A, geometry B)](./common/ST_Within.md)
-* [ST_X(geometry)](./common/ST_X.md)
-* [ST_Y(geometry)](./common/ST_Y.md)
+If your application will only be used with one database server, you can use the spectific spatial function of your 
+database server. But if your application could be deployed with different database server, you should avoid specific 
+non-standard functions. 
+
+You can find PostgreSQL documented functions in this [directory](./postgresql). Some functions are not documented, yet.
+You can find PostgreSQL implemented functions in this [directory](../lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql).
+
+(Do not forget that MySQL is not the best database server and 
+[has a lot of issues](https://sqlpro.developpez.com/tutoriel/dangers-mysql-mariadb/), you should avoid it.)
+You can find MySQL documented functions in this [directory](./mysql). Some functions are not documented, yet.
+You can find MySQL implemented functions in this [directory](../lib/CrEOF/Spatial/ORM/Query/AST/Functions/MySql).
+
+

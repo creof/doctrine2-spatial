@@ -6,11 +6,11 @@ environment.
 ## How to test library?
 
 Doctrine library is available for MySQL and PostGreSQL. Be aware that MariaDB spatial functions does not returns the
-same results than MySQL spatial functions. Then tests failed on MariaDB (especially with the Contains function). So do 
-not use MariaDB.
+same results than MySQL spatial functions. Then tests failed on MariaDB. So do not use MariaDB to test MySQL 
+abstraction.
 
 ### How to test on MySQL?
-I supposed that composer and MySQL are installed. 
+I suppose that composer and MySQL are already installed on your dev environment. 
 1. Create a role that can create database and locally connect with a password,
 2. Create a phpunit.mysql.xml file copied from phpunit.mysql.xml.dist file,
 3. Edit this phpunit.mysql.xml to change connection parameters.
@@ -35,7 +35,7 @@ If you use an IDE like PHPStorm, you can create configurations to launch the six
 * MySQL, PHP7.4 and PHPUnit 9.0
 * PostgreSQL, PHP7.4 and PHPUnit 
 
-Here I described an easy way to switch PHP version via console. (But there is a lot of way to do it.)
+Here I described an easy way to switch PHP version via console. (But there is a lot of ways to do it.)
 
 **Symfony console**
 I suppose you have installed all php versions on your dev environment.
@@ -75,8 +75,3 @@ echo 7.4 > .php-version
 symfony php phpunit-9.phar --configuration phpunit.mysql.xml 
 symfony php phpunit-9.phar --configuration phpunit.pgsql.xml 
 ```
-
-## Which geometries are in test suite?
-
-[TestHelperTrait.php](../tests/CrEOF/Spatial/Tests/TestHelperTrait.php) provides some protected methods to create 
-and persist some geometry entities.
