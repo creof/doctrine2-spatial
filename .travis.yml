@@ -167,8 +167,8 @@ jobs:
             - postgis
             - postgresql-11-postgis-2.5
 
-    #MySQL 8 PHP 7.3
-    - stage: Test MySQL
+    #MySQL 8 PHP 7.3 AND doctrine 2.8.x-dev
+    - stage: Test Doctrine 2.8.x-dev
       php: 7.3
       env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.8.x-dev
       sudo: required
@@ -176,8 +176,8 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
-    #MySQLi 8 PHP 7.3
-    - stage: Test MySQLi
+    #MySQLi 8 PHP 7.3 AND doctrine 2.8.x-dev
+    - stage: Test Doctrine 2.8.x-dev
       php: 7.3
       env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.8.x-dev
       sudo: required
@@ -185,8 +185,8 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
-    #PostgreSQL11 PHP 7.3 Postgis 2.5
-    - stage: Test PostgreSQL
+    #PostgreSQL11 PHP 7.3 Postgis 2.5 AND doctrine 2.8.x-dev
+    - stage: Test Doctrine 2.8.x-dev
       php: 7.3
       env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.8.x-dev
       sudo: required
