@@ -33,6 +33,10 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
  * Abstract spatial platform.
+ *
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre-tranchant@gmail.com>
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractPlatform implements PlatformInterface
 {
@@ -121,7 +125,7 @@ abstract class AbstractPlatform implements PlatformInterface
         $typeFamily = $type->getTypeFamily();
         $typeName = mb_strtoupper($value['type']);
 
-        $constName = sprintf('CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface::%s', $typeName);
+        $constName = sprintf('%s::%s', GeometryInterface::class, $typeName);
 
         if (!defined($constName)) {
             throw new InvalidValueException(sprintf('Unsupported %s type "%s".', $typeFamily, $typeName));

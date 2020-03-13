@@ -123,6 +123,35 @@ trait PolygonHelperTrait
     }
 
     /**
+     * Create the Massachusetts state plane US feet geometry and persist it in database.
+     *
+     * @param bool $forwardSrid forward SRID for creation
+     *
+     * @throws DBALException                when credentials fail
+     * @throws InvalidValueException        when geometries are not valid
+     * @throws ORMException                 when cache is not created
+     * @throws UnsupportedPlatformException when platform is not supported
+     */
+    protected function createMassachusettsState(bool $forwardSrid = true): PolygonEntity
+    {
+        $srid = null;
+
+        if ($forwardSrid) {
+            $srid = 2249;
+        }
+
+        return $this->createPolygon([
+            new LineString([
+                new Point(743238, 2967416),
+                new Point(743238, 2967450),
+                new Point(743265, 2967450),
+                new Point(743265.625, 2967416),
+                new Point(743238, 2967416),
+            ]),
+        ], $srid);
+    }
+
+    /**
      * Create the Outer Polygon and persist it in database.
      * Square (15 15, 17 17).
      *
@@ -142,25 +171,6 @@ trait PolygonHelperTrait
                 new Point(15, 15),
             ]),
         ]);
-    }
-
-    /**
-     * Create a Polygon from an array of linestrings.
-     *
-     * @param array $lineStrings the array of linestrings
-     *
-     * @throws UnsupportedPlatformException when platform is not supported
-     * @throws DBALException                when credentials fail
-     * @throws ORMException                 when cache is not created
-     * @throws InvalidValueException        when geometries are not valid
-     */
-    protected function createPolygon(array $lineStrings): PolygonEntity
-    {
-        $polygon = new PolygonEntity();
-        $polygon->setPolygon(new Polygon($lineStrings));
-        $this->getEntityManager()->persist($polygon);
-
-        return $polygon;
     }
 
     /**
@@ -205,5 +215,31 @@ trait PolygonHelperTrait
                 new Point(5, 5),
             ]),
         ]);
+    }
+
+    /**
+     * Create a Polygon from an array of linestrings.
+     *
+     * @param array    $lineStrings the array of linestrings
+     * @param int|null $srid        Spatial Reference System Identifier
+     *
+     * @throws DBALException                when credentials fail
+     * @throws InvalidValueException        when geometries are not valid
+     * @throws ORMException                 when cache is not created
+     * @throws UnsupportedPlatformException when platform is not supported
+     */
+    private function createPolygon(array $lineStrings, int $srid = null): PolygonEntity
+    {
+        $polygon = new Polygon($lineStrings);
+        if (null !== $srid) {
+            $polygon->setSrid($srid);
+        }
+
+        $polygonEntity = new PolygonEntity();
+        $polygonEntity->setPolygon($polygon);
+
+        $this->getEntityManager()->persist($polygonEntity);
+
+        return $polygonEntity;
     }
 }

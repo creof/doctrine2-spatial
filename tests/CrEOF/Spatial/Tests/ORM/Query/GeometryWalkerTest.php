@@ -81,10 +81,7 @@ class GeometryWalkerTest extends OrmTestCase
 
         switch ($this->getPlatform()->getName()) {
             case 'mysql':
-                $asBinary = 'AsBinary';
-                $startPoint = 'StartPoint';
-                $envelope = 'Envelope';
-                break;
+            case 'postgresql':
             default:
                 $asBinary = 'ST_AsBinary';
                 $startPoint = 'ST_StartPoint';
@@ -139,10 +136,7 @@ class GeometryWalkerTest extends OrmTestCase
 
         switch ($this->getPlatform()->getName()) {
             case 'mysql':
-                $asText = 'AsText';
-                $startPoint = 'StartPoint';
-                $envelope = 'Envelope';
-                break;
+            case 'postgresql':
             default:
                 $asText = 'ST_AsText';
                 $startPoint = 'ST_StartPoint';

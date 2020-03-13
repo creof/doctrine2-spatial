@@ -8,6 +8,7 @@
     <description>Alexandre Tranchant rule set.</description>
     <!-- Import some rules of clean code rule set -->
     <rule ref="rulesets/cleancode.xml">
+        <exclude name="BooleanArgumentFlag"/>
         <exclude name="StaticAccess"/>
     </rule>
     <!-- Import the some rules of code size rule set -->

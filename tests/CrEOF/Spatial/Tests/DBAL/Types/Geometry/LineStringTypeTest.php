@@ -44,7 +44,7 @@ use Doctrine\ORM\ORMException;
  * @group geometry
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
  */
 class LineStringTypeTest extends OrmTestCase
 {

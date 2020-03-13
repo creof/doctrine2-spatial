@@ -237,7 +237,8 @@ abstract class AbstractSpatialType extends Type
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        $const = sprintf('self::PLATFORM_%s', mb_strtoupper($platform->getName()));
+        $platformName = $platform->getName();
+        $const = sprintf('self::PLATFORM_%s', mb_strtoupper($platformName));
 
         if (!defined($const)) {
             throw new UnsupportedPlatformException(sprintf(

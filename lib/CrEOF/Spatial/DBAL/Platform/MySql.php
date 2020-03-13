@@ -28,7 +28,11 @@ use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * MySql spatial platform.
+ * MySql5.7 and less spatial platform.
+ *
+ * @author  Derek J. Lambert <dlambert@dereklambert.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://dlambert.mit-license.org MIT
  */
 class MySql extends AbstractPlatform
 {
@@ -42,7 +46,7 @@ class MySql extends AbstractPlatform
      */
     public function convertToDatabaseValueSql(AbstractSpatialType $type, $sqlExpr)
     {
-        return sprintf('GeomFromText(%s)', $sqlExpr);
+        return sprintf('ST_GeomFromText(%s)', $sqlExpr);
     }
 
     /**
@@ -55,7 +59,7 @@ class MySql extends AbstractPlatform
      */
     public function convertToPhpValueSql(AbstractSpatialType $type, $sqlExpr)
     {
-        return sprintf('AsBinary(%s)', $sqlExpr);
+        return sprintf('ST_AsBinary(%s)', $sqlExpr);
     }
 
     /**

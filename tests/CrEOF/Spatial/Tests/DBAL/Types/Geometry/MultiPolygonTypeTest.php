@@ -46,7 +46,7 @@ use Doctrine\ORM\ORMException;
  * @group geometry
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geometry\MultiPolygonType
  */
 class MultiPolygonTypeTest extends OrmTestCase
 {

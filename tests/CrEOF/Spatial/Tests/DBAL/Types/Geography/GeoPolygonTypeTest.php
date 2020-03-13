@@ -45,7 +45,7 @@ use Doctrine\ORM\ORMException;
  * @group geography
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geography\PolygonType
  */
 class GeoPolygonTypeTest extends OrmTestCase
 {

@@ -46,7 +46,7 @@ use Doctrine\ORM\ORMException;
  * @group geometry
  *
  * @internal
- * @coversDefaultClass
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\GeometryType
  */
 class GeometryTypeTest extends OrmTestCase
 {
@@ -253,6 +253,47 @@ class GeometryTypeTest extends OrmTestCase
         ];
 
         $entity->setGeometry(new Polygon($rings));
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
+        $this->getEntityManager()->clear();
+
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEOMETRY_ENTITY)->find($id);
+
+        static::assertEquals($entity, $queryEntity);
+    }
+
+    /**
+     * Test to store a polygon geometry with SRID and retrieve it by its identifier.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     *
+     * @group srid
+     */
+    public function testPolygonGeometryWithSrid()
+    {
+        $entity = new GeometryEntity();
+
+        $rings = [
+            new LineString([
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ]),
+        ];
+
+        $polygon = new Polygon($rings);
+        $polygon->setSrid(4326);
+        $entity->setGeometry($polygon);
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 

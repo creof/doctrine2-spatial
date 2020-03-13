@@ -24,6 +24,7 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiLineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -41,6 +42,8 @@ class MultiLineStringTest extends TestCase
 {
     /**
      * Test an empty multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testEmptyMultiLineString()
     {
@@ -51,6 +54,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test to convert multiline string to json.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testJson()
     {
@@ -80,6 +85,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test to convert a multiline string to a string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiLineStringFromArraysToString()
     {
@@ -108,6 +115,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test to get last line from multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiLineStringFromObjectsGetLastLineString()
     {
@@ -136,6 +145,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test to get first line from multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiLineStringFromObjectsGetSingleLineString()
     {
@@ -164,6 +175,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test to create multiline string from line string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testMultiLineStringFromObjectsToArray()
     {
@@ -211,6 +224,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test a solid multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testSolidMultiLineStringAddRings()
     {
@@ -261,6 +276,8 @@ class MultiLineStringTest extends TestCase
 
     /**
      * Test a solid multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
      */
     public function testSolidMultiLineStringFromArraysGetRings()
     {
