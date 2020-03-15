@@ -14,7 +14,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-
 # -- Project information -----------------------------------------------------
 
 project = 'Doctrine spatial extension'
@@ -23,7 +22,6 @@ author = 'Alexandre Tranchant'
 
 # The full version, including alpha/beta/rc tags
 release = '2.0.0'
-
 
 # -- General configuration ---------------------------------------------------
 
