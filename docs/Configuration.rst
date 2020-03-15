@@ -1,8 +1,8 @@
 Configuration
 =============
 
-Configuration for Symfony applications
---------------------------------------
+Configuration for applications using Symfony framework
+------------------------------------------------------
 To configure Doctrine spatial extension on your Symfony application, you only need to edit your ``config/doctrine.yaml``
 file. Two steps are sufficient. First step will help you to declare spatial types on DQL. The second step will help you
 to declare a spatial function.
@@ -58,12 +58,12 @@ Declare a new function
         dql:
             numeric_functions:
                 #Declare functions returning a numeric value
-                #A good practice is to prefix functions with ST_ when they are issue from the Standard directory
-                st_contains: CrEOF\Spatial\ORM\Query\AST\Functions\Standard\STContains
+                #A good practice is to prefix functions with ST when they are issue from the Standard directory
+                st_area: CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea
             string_functions:
                 #Declare functions returning a string
                 st_envelope: CrEOF\Spatial\ORM\Query\AST\Functions\Standard\STEnvelope
-                #A good practice is to prefix functions with SP_ when they are not issue from the Standard directory
+                #A good practice is to prefix functions with SP when they are not issue from the Standard directory
                 sp_asgeojson: CrEOF\Spatial\ORM\Query\AST\Functions\Postgresql\SpAsGeoJson
                 #You can use the DQL function name you want and then use it in your DQL
                 myDQLFunctionAlias: CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StCentroid
@@ -82,6 +82,56 @@ does not implements geographic data.
 
 Nota: By default, function declared by the `Open Geospatial Consortium`_ in the `standards of SQL Options`_ are prefixed
 by ``ST_``, other functions should not be declared with this prefix. We suggest to use the ``SP_`` prefix (specific).
+
+Configuration for other application
+-----------------------------------
+
+Declare your geometric types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Doctrine allows you to create new mapping types. We used this functionnality to create spatial types in this extension.
+You only need to let Doctrine know which type you want to use. Two lines are sufficient to do it. The first line calls
+the ``Type`` class. The second line, declare a type. In the below example, we declare a geometric ``point`` type.
+
+.. code-block:: php
+
+    <?php
+    // in your bootstrapping code
+
+    // ...
+
+    use Doctrine\DBAL\Types\Type;
+
+    // ...
+
+    // Register types provided by the doctrine2 spatial extension
+    Type::addType('point', 'CrEOF\Spatial\DBAL\Types\Geometry\PointType');
+
+Declare a new function
+^^^^^^^^^^^^^^^^^^^^^^
+
+You can register functions of the doctrine spatial extension adding them to the ORM configuration:
+
+.. code-block:: php
+
+    <?php
+
+    // in your bootstrapping code
+
+    // ...
+
+    use Doctrine\ORM\Configuration\Doctrine\ORM\Configuration;
+
+    // ...
+
+    $config = new Configuration();
+    // This is an example to declare a standard spatial function which is returning a string
+    $config->addCustomStringFunction('ST_Envelope', 'CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope');
+    // This is another example to declare a standard spatial function which is returning a numeric
+    $config->addCustomNumericFunction('ST_Area', 'CrEOF\Spatial\ORM\Query\AST\Functions\Standard\StArea');
+    // This is another example to declare a Postgresql specific function which is returning a string
+    $config->addCustomNumericFunction('SP_GeoJson', 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\SpGeoJson');
+
 
 .. _ISO/IEC 13249-3:2016: https://www.iso.org/standard/60343.html
 .. _MySQL spatial functions have a lot of bugs: https://sqlpro.developpez.com/tutoriel/dangers-mysql-mariadb/

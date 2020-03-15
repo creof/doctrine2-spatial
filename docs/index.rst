@@ -1,10 +1,7 @@
-.. Doctrine spatial extension documentation master file, created by
-   sphinx-quickstart on Fri Mar 13 12:58:42 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. Doctrine spatial extension documentation master file, created by Alexandre Tranchant
 
 Welcome to Doctrine spatial extension's documentation!
-======================================================
+######################################################
 
 Doctrine spatial extension provides spatial types, spatial functions for doctrine. It allow you to manage
 spatial entity and to store them into your database server.
@@ -17,19 +14,16 @@ we recommend that you favor the PostgreSql database server because of `the short
 Any help is welcomed to implement new abstracted platforms like Microsoft Sql Server.
 
 Contents
---------
+********
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
 
    Installation
    Configuration
    Entity
-
-
-Search
-------
-
-* :ref:`search`
+   Repository
+   Glossary
+   Contributing
 
 .. _the shortcomings and vulnerabilities of MySql: https://sqlpro.developpez.com/tutoriel/dangers-mysql-mariadb/

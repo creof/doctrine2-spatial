@@ -8,18 +8,22 @@ Use a geometry column only if your entity can store different types (points and 
 Example1: Entity with a spatial point
 -------------------------------------
 
-Below, you will is an example to declare an entity with a ``point``. Before you need to declare the point type as
+Below, you will find an example to declare an entity with a ``point``. Before you need to declare the point type as
 described in the :doc:`configuration section <./Configuration>`.
 
 .. code-block:: php
 
     <?php
 
+    // We declare the class of the type we want to use.
     use CrEOF\Spatial\PHP\Types\Geometry\Point;
+    // We declare the Mapping as usual
     use Doctrine\ORM\Mapping as ORM;
 
     /**
      * Point entity example.
+     *
+     * As you can see we do not change anything in Entity and Table annotations. Feel free to use them as usual.
      *
      * @ORM\Entity
      * @ORM\Table
@@ -27,7 +31,9 @@ described in the :doc:`configuration section <./Configuration>`.
     class PointEntity
     {
         /**
-         * @var int
+         * @var int The usual Doctrine Identifier
+         *
+         *  As you can see we do not change anything in Entity and Table annotations. Feel free to use it as usual.
          *
          * @ORM\Id
          * @ORM\GeneratedValue(strategy="AUTO")
@@ -38,15 +44,18 @@ described in the :doc:`configuration section <./Configuration>`.
         /**
          * @var Point
          *
-         * As you can see we declare a point of type point.
-         * point shall be declared in the doctrine.yaml as a custom type
+         * As you can see we declare a point property of type point.
+         * point shall be declared in the doctrine.yaml as a custom type.
+         * Feel free to use options as usual. As example, I declared that point is not nullable. But you can
+         * set it to nullable=true if you want.
          *
-         * @ORM\Column(type="point", nullable=true)
+         * @ORM\Column(type="point", nullable=false)
          */
         protected $point;
 
         /**
          * Get id.
+         * This is the usual Id getter.
          *
          * @return int
          */
@@ -58,6 +67,7 @@ described in the :doc:`configuration section <./Configuration>`.
         /**
          * Get point.
          * This is a standard getter.
+         *
          * @return Point
          */
         public function getPoint(): Point
