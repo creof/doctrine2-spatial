@@ -19,6 +19,7 @@
 project = 'Doctrine spatial extension'
 copyright = '2020, Alexandre Tranchant'
 author = 'Alexandre Tranchant'
+master = 'contents'
 
 # The full version, including alpha/beta/rc tags
 release = '2.0.0'
