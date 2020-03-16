@@ -842,11 +842,8 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomNumericFunction('ST_Area', StArea::class);
         $configuration->addCustomStringFunction('ST_AsBinary', StAsBinary::class);
         $configuration->addCustomStringFunction('ST_AsText', StAsText::class);
-        //This function is not implemented into mysql
         $configuration->addCustomStringFunction('ST_Boundary', StBoundary::class);
-        //This function is implemented into mysql, but the third parameter does not respect OGC standards
         $configuration->addCustomNumericFunction('ST_Buffer', StBuffer::class);
-
         $configuration->addCustomStringFunction('ST_Centroid', StCentroid::class);
         $configuration->addCustomNumericFunction('ST_Contains', StContains::class);
         $configuration->addCustomStringFunction('ST_ConvexHull', StConvexHull::class);
@@ -860,19 +857,13 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_Intersection', StIntersection::class);
         $configuration->addCustomNumericFunction('ST_IsClosed', StIsClosed::class);
         $configuration->addCustomNumericFunction('ST_IsEmpty', StIsEmpty::class);
-
-        //This function is not implemented into mysql
         $configuration->addCustomNumericFunction('ST_IsRing', StIsRing::class);
-
         $configuration->addCustomNumericFunction('ST_IsSimple', StIsSimple::class);
         $configuration->addCustomStringFunction('ST_EndPoint', StEndPoint::class);
         $configuration->addCustomStringFunction('ST_Envelope', StEnvelope::class);
         $configuration->addCustomStringFunction('ST_ExteriorRing', StExteriorRing::class);
         $configuration->addCustomStringFunction('ST_GeometryN', StGeometryN::class);
-
-        //MySQL function does not respect OGC Standards
         $configuration->addCustomStringFunction('ST_GeometryType', StGeometryType::class);
-
         $configuration->addCustomStringFunction('ST_GeomFromWkb', StGeomFromWkb::class);
         $configuration->addCustomStringFunction('ST_GeomFromText', StGeomFromText::class);
         $configuration->addCustomStringFunction('ST_InteriorRingN', StInteriorRingN::class);
@@ -885,27 +876,21 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_NumGeometries', StNumGeometries::class);
         $configuration->addCustomNumericFunction('ST_NumPoints', StNumPoints::class);
         $configuration->addCustomStringFunction('ST_Overlaps', StOverlaps::class);
-        $configuration->addCustomStringFunction('ST_Perimeter', StPerimeter::class);
+        $configuration->addCustomNumericFunction('ST_Perimeter', StPerimeter::class);
         $configuration->addCustomStringFunction('ST_Point', StPoint::class);
         $configuration->addCustomStringFunction('ST_PointFromWkb', StPointFromWkb::class);
         $configuration->addCustomStringFunction('ST_PointN', StPointN::class);
-
-        //This function is not implemented into mysql
         $configuration->addCustomStringFunction('ST_PointOnSurface', StPointOnSurface::class);
-
         $configuration->addCustomStringFunction('ST_PolyFromWkb', StPolyFromWkb::class);
-        $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
-        $configuration->addCustomStringFunction('ST_Union', StUnion::class);
-
-        //This function is not implemented into mysql
         $configuration->addCustomStringFunction('ST_Relate', StRelate::class);
-
+        $configuration->addCustomStringFunction('ST_SymDifference', StSymDifference::class);
         $configuration->addCustomNumericFunction('ST_SetSRID', StSetSRID::class);
         $configuration->addCustomNumericFunction('ST_SRID', StSrid::class);
-        $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
-        $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
         $configuration->addCustomNumericFunction('ST_StartPoint', StStartPoint::class);
+        $configuration->addCustomNumericFunction('ST_Touches', StTouches::class);
+        $configuration->addCustomStringFunction('ST_Union', StUnion::class);
+        $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
         $configuration->addCustomNumericFunction('ST_X', StX::class);
-        $configuration->addCustomNumericFunction('ST_Y', StY::class);
+        $configuration->addCustomNumericFunction('ST_YST_Y', StY::class);
     }
 }

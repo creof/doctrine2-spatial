@@ -4,7 +4,7 @@ Installation
 Installation via composer
 -------------------------
 
-Add the `alexandret/spatial2-doctrine` package in your composer.json and update your dependencies.
+Add the `alexandret/spatial2-doctrine` package in your composer.json.
 
 .. code-block:: bash
 
@@ -25,13 +25,13 @@ Installation without composer
 
 If you're not using composer, you can
 :download:`download the library  <https://github.com/Alexandre-T/doctrine2-spatial/archive/master.zip>`.
-Then copy and paste the lib directory into
+Then copy and paste the lib directory where you store all libraries of your application.
 
 Installation to contribute
 --------------------------
 
-If you want to contribute, do not hesitate. Any help is welcome. The simpliest way is too fork the Github project, then
-to locally clone this forked project. The contribution page explains how to proceed and how to test your updates.
+If you want to contribute, do not hesitate. Any help is welcomed. The simplest way is too fork the Github project, then
+to locally clone your forked project. The :doc:`contribution <./Contributing>` page explains how to proceed and how to test your updates.
 
 
 
