@@ -4,6 +4,18 @@ Contributing
 Documentation
 =============
 
+This documentation is done with sphinx. All documentation are stored in the ``docs`` directory. To contribute to this
+documentation (and fix the lot of typo), you need to install python, sphinx and the "readthedocs" template.
+
+1. Fork this project,
+2. Locally clone your forked project,
+3. Edit files in the ``docs`` directory
+4. Launch the ``make html``
+5. Verify that documentation is improved
+6. Commit your contribution with an explicit message
+7. Push your commit on your forked project,
+8. Do a pull request on your forked project to the Alexandre-T/doctrine2-spatial project
+
 Source code
 ===========
 
