@@ -25,6 +25,8 @@ script:
     else
        ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml
     fi
+  # Code shall respect rules
+  - composer check-quality-code
 
 after_script:
   - |
@@ -34,8 +36,6 @@ after_script:
     fi
   #Push code climate coverage
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-  # Code should respect rules
-  - composer check-quality-code
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK

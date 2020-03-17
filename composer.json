@@ -36,13 +36,13 @@
             "php-cs-fixer fix --dry-run --config=.php_cs.dist --allow-risky=yes -vvv",
             "phpcs --standard=phpcs.xml.dist -s",
             "phpmd lib text ./phpmd.lib.xml",
-            "phpmd tests xml ./phpmd.test.xml --exclude OrmTestCase.php"
+            "phpmd tests text ./phpmd.test.xml --exclude OrmTestCase.php"
         ],
         "phpcs": "phpcs --standard=phpcs.xml.dist -s",
         "phpcsfixer": "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
         "phpmd": [
             "phpmd lib text ./phpmd.lib.xml",
-            "phpmd tests xml ./phpmd.test.xml --exclude OrmTestCase.php"
+            "phpmd tests text ./phpmd.test.xml --exclude OrmTestCase.php"
         ],
         "test-mysql": "phpunit --configuration phpunit.mysql.xml",
         "test-pgsql": "phpunit --configuration phpunit.pgsql.xml"

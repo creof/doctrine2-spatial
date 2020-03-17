@@ -2,14 +2,15 @@
 All notable changes to this project will be documented in this file using the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
-### Work in progress
-- New file to help contributors to pull request a new spatial function and test it.  
+## [2.0.0-RC0] Release candidat - 2020-03-18
 
 ### Added
 - A new documentation hosted on ReadTheDocs.
 - Adding support of PHP7.2, PHP7.3, PHP7.4,
 - Needed PHP extension added in composer.json,
+- Spatial function implementing the ISO/IEC 13249-3:2016 or [OGC Standard](https://www.ogc.org/standards/sfs) are now stored in the [Standard](./lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard) directory.
+- Specific spatial function of the PostgreSql server are now store in the [PostgreSql](./lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql) directory.
+- Specific spatial function of the PostgreSql server are now store in the [MySql](./lib/CrEOF/Spatial/ORM/Query/AST/Functions/MySql) directory.
 - Code coverage is now really at 90 percent. (CreOf code coverage was not valid because of AST functions which contained only properties),
 - AST Functions updated to avoid misconfiguration (some properties was missing),
 - AST Functions updated to detect which function was not tested,

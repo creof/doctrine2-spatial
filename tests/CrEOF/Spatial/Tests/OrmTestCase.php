@@ -891,6 +891,6 @@ abstract class OrmTestCase extends TestCase
         $configuration->addCustomStringFunction('ST_Union', StUnion::class);
         $configuration->addCustomNumericFunction('ST_Within', StWithin::class);
         $configuration->addCustomNumericFunction('ST_X', StX::class);
-        $configuration->addCustomNumericFunction('ST_YST_Y', StY::class);
+        $configuration->addCustomNumericFunction('ST_Y', StY::class);
     }
 }

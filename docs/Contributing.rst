@@ -186,6 +186,48 @@ Here is an example of setup, each line is commented to help you to understand ho
             static::assertSame('POLYGON((-4 -4,4 -4,4 4,-4 4,-4 -4))', $result[0][1]);
         }
 
+Now, open the `OrmTestCase.php file`_] and declare your function in one of this three methods:
+
+* ``addStandardFunctions``
+* ``addMySqlFunctions``
+* ``addPostgreSqlFunctions``
+
+
+You can launch the test. This :doc:`document <./Test>` helps you how to config your dev environment.
+Please do not forgot to update documentation by adding your function in one of these three tables:
+
+* :ref:`Standard functions`
+* :ref:`Specific MySql functions`
+* :ref:`Specific PostGreSQL functions`
+
+Quality of your code
+====================
+
+Quality of code is auto-verified by php-cs-fixer, php code sniffer and php mess detector.
+
+Before a commit, launch the quality script:
+
+.. code-block:: bash
+
+    composer check-quality-code
+
+You can launch PHPCS-FIXER to fix errors with:
+
+.. code-block:: bash
+
+    composer phpcsfixer
+
+You can launch PHP Code Sniffer only with:
+.. code-block:: bash
+
+    composer phpcs
+
+You can launch PHP Mess Detector only with:
+
+.. code-block:: bash
+
+    composer phpmd
+
 .. _Common directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Common
 .. _MySql directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/MySql
 .. _PostgreSql directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql
@@ -195,3 +237,4 @@ Here is an example of setup, each line is commented to help you to understand ho
 .. _ST_Polygonize: https://postgis.net/docs/manual-2.5/ST_Polygonize.html
 .. _SnapToGrid: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql/SpSnapToGrid.php
 .. _functions test directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/tests/CrEOF/Spatial/ORM/Query/AST/Functions/
+.. _OrmTestCase.php file: https://github.com/Alexandre-T/doctrine2-spatial/blob/master/tests/CrEOF/Spatial/Tests/OrmTestCase.php
