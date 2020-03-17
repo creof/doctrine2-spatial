@@ -4,18 +4,20 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 ### Work in progress
-- New file to help contributors to pull request a new spatial function and test it  
-- All method shall be in camel case format (if possible cf limitations of doctrine interfaces).
+- New file to help contributors to pull request a new spatial function and test it.  
 
 ### Added
-- Code coverage is now really at 90 percent. (CreOf code coverage was not valid because of AST functions which contained only properties)
-- Adding support of PHP7.2, PHP7.3, PHP7.4
-- Not-Camel-Case Classes tagged must be as deprecated and declared as children of new Camel case classes
-- Needed PHP extension added in composer.json
-- AST Functions updated to avoid misconfiguration (some properties was missing)
-- AST Functions updated to avoid code coverage to detect which function was not tested 
-- Removing deprecations of doctrine2
-- Project forked from creof/doctrine-spatial2
+- A new documentation hosted on ReadTheDocs.
+- Adding support of PHP7.2, PHP7.3, PHP7.4,
+- Needed PHP extension added in composer.json,
+- Code coverage is now really at 90 percent. (CreOf code coverage was not valid because of AST functions which contained only properties),
+- AST Functions updated to avoid misconfiguration (some properties was missing),
+- AST Functions updated to detect which function was not tested,
+- A lot of spatial functions,
+- A lot of PostgreSql functions,
+- Deprecated MySql functions replaced by their new names, 
+- Removing deprecations of doctrine2,
+- Project forked from creof/doctrine-spatial2.
 ### Removed
 - Removing support of PHP5.*, PHP7.0, PHP7.1
 

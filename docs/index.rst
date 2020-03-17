@@ -31,5 +31,6 @@ Contents
    Repository
    Glossary
    Contributing
+   Test
 
 .. _the shortcomings and vulnerabilities of MySql: https://sqlpro.developpez.com/tutoriel/dangers-mysql-mariadb/
