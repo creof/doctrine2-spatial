@@ -214,14 +214,21 @@ class PointTest extends TestCase
     public function testGoodStringPoints()
     {
         $point = new Point('79:56:55W', '40:26:46N');
+        $expected = '{"type":"Point","coordinates":[-79.9486111111111,40.44611111111111],"srid":null}';
 
         static::assertEquals(40.446111111111, $point->getLatitude());
         static::assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals($expected, $point->toJson());
+        static::assertEquals($expected, json_encode($point));
 
         $point = new Point('79°56\'55"W', '40°26\'46"N');
+        $point->setSrid(4326);
+        $expected = '{"type":"Point","coordinates":[-79.9486111111111,40.44611111111111],"srid":4326}';
 
         static::assertEquals(40.446111111111, $point->getLatitude());
         static::assertEquals(-79.948611111111, $point->getLongitude());
+        static::assertEquals($expected, $point->toJson());
+        static::assertEquals($expected, json_encode($point));
 
         $point = new Point('79° 56\' 55" W', '40° 26\' 46" N');
 

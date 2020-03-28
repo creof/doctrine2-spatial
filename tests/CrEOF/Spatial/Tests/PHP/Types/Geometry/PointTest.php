@@ -206,10 +206,16 @@ class PointTest extends TestCase
      */
     public function testJson()
     {
-        $expected = '{"type":"Point","coordinates":[5,5]}';
+        $expected = '{"type":"Point","coordinates":[5,5],"srid":null}';
         $point = new Point([5, 5]);
 
         static::assertEquals($expected, $point->toJson());
+        static::assertEquals($expected, json_encode($point));
+
+        $point->setSrid(4326);
+        $expected = '{"type":"Point","coordinates":[5,5],"srid":4326}';
+        static::assertEquals($expected, $point->toJson());
+        static::assertEquals($expected, json_encode($point));
     }
 
     /**

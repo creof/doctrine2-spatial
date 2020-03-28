@@ -56,7 +56,7 @@ class PolygonTest extends TestCase
     public function testJson()
     {
         // phpcs:disable Generic.Files.LineLength.MaxExceeded
-        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
+        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]],"srid":null}';
         // phpcs:enable
         $rings = [
             [
@@ -75,8 +75,15 @@ class PolygonTest extends TestCase
             ],
         ];
         $polygon = new Polygon($rings);
-
         static::assertEquals($expected, $polygon->toJson());
+        static::assertEquals($expected, json_encode($polygon));
+
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]],"srid":4326}';
+        // phpcs:enable
+        $polygon->setSrid(4326);
+        static::assertEquals($expected, $polygon->toJson());
+        static::assertEquals($expected, json_encode($polygon));
     }
 
     /**

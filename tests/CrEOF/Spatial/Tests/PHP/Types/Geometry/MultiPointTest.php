@@ -74,7 +74,7 @@ class MultiPointTest extends TestCase
      */
     public function testJson()
     {
-        $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
+        $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":null}';
         $multiPoint = new MultiPoint(
             [
                 [0, 0],
@@ -85,6 +85,12 @@ class MultiPointTest extends TestCase
         );
 
         static::assertEquals($expected, $multiPoint->toJson());
+        static::assertEquals($expected, json_encode($multiPoint));
+
+        $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":4326}';
+        $multiPoint->setSrid(4326);
+        static::assertEquals($expected, $multiPoint->toJson());
+        static::assertEquals($expected, json_encode($multiPoint));
     }
 
     /**

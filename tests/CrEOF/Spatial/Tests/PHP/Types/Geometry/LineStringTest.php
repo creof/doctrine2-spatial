@@ -65,7 +65,7 @@ class LineStringTest extends TestCase
      */
     public function testJson()
     {
-        $expected = '{"type":"LineString","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
+        $expected = '{"type":"LineString","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":null}';
 
         $lineString = new LineString(
             [
@@ -76,6 +76,11 @@ class LineStringTest extends TestCase
             ]
         );
         static::assertEquals($expected, $lineString->toJson());
+
+        $expected = '{"type":"LineString","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":4326}';
+        $lineString->setSrid(4326);
+        static::assertEquals($expected, $lineString->toJson());
+        static::assertEquals($expected, json_encode($lineString));
     }
 
     /**

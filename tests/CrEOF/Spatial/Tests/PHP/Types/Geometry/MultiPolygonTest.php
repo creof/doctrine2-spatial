@@ -64,7 +64,7 @@ class MultiPolygonTest extends TestCase
     public function testJson()
     {
         // phpcs:disable Generic.Files.LineLength.MaxExceeded
-        $expected = '{"type":"MultiPolygon","coordinates":[[[[0,0],[10,0],[10,10],[0,10],[0,0]]],[[[5,5],[7,5],[7,7],[5,7],[5,5]]]]}';
+        $expected = '{"type":"MultiPolygon","coordinates":[[[[0,0],[10,0],[10,10],[0,10],[0,0]]],[[[5,5],[7,5],[7,7],[5,7],[5,5]]]],"srid":null}';
         // phpcs:enable
         $polygons = [
             [
@@ -89,6 +89,14 @@ class MultiPolygonTest extends TestCase
         $multiPolygon = new MultiPolygon($polygons);
 
         static::assertEquals($expected, $multiPolygon->toJson());
+        static::assertEquals($expected, json_encode($multiPolygon));
+
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expected = '{"type":"MultiPolygon","coordinates":[[[[0,0],[10,0],[10,10],[0,10],[0,0]]],[[[5,5],[7,5],[7,7],[5,7],[5,5]]]],"srid":4326}';
+        // phpcs:enable
+        $multiPolygon->setSrid(4326);
+        static::assertEquals($expected, $multiPolygon->toJson());
+        static::assertEquals($expected, json_encode($multiPolygon));
     }
 
     /**

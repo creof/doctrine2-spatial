@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\PHP\Types;
 
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
+use JsonSerializable;
 
 /**
  * Abstract geometry object for spatial types.
@@ -33,7 +34,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license https://dlambert.mit-license.org MIT
  */
-abstract class AbstractGeometry implements GeometryInterface
+abstract class AbstractGeometry implements GeometryInterface, JsonSerializable
 {
     /**
      * Spatial Reference System Identifier.
@@ -50,6 +51,26 @@ abstract class AbstractGeometry implements GeometryInterface
     public function getSrid()
     {
         return $this->srid;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON.
+     *
+     * @see https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @see https://github.com/creof/doctrine2-spatial/issues/140
+     *
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     *               which is a value of any type other than a resource
+     *
+     * @since 2.0.0.rc-1
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'type' => $this->getType(),
+            'coordinates' => $this->toArray(),
+            'srid' => $this->getSrid(),
+        ];
     }
 
     /**
@@ -85,6 +106,7 @@ abstract class AbstractGeometry implements GeometryInterface
         $json = [];
         $json['type'] = $this->getType();
         $json['coordinates'] = $this->toArray();
+        $json['srid'] = $this->getSrid();
 
         return json_encode($json);
     }
