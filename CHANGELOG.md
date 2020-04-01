@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file using the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] Version 2 - 2020-04-01
+
+## [2.0.0-RC1] Release candidat - 2020-03-26
+
+### Added
+- Geometric and geographic entities implements JsonSerialization.
+
 ## [2.0.0-RC0] Release candidat - 2020-03-18
 
 ### Added
