@@ -4,10 +4,10 @@ Currently MySQL and PostgreSQL with PostGIS are supported.
 Could potentially add support for other platforms if an interest is expressed.
 
 ## Current status
-[![Build Status](https://travis-ci.org/Alexandre-T/doctrine2-spatial.svg?branch=master)](https://travis-ci.org/Alexandre-T/doctrine2-spatial)
-[![Code Climate](https://codeclimate.com/github/Alexandre-T/doctrine2-spatial/badges/gpa.svg)](https://codeclimate.com/github/Alexandre-T/doctrine2-spatial)
-[![Coverage Status](https://coveralls.io/repos/Alexandre-T/doctrine2-spatial/badge.svg?branch=master&service=github)](https://coveralls.io/github/Alexandre-T/doctrine2-spatial?branch=master)
-[![Downloads](https://img.shields.io/packagist/dm/alexandret/doctrine2-spatial.svg)](https://packagist.org/packages/alexandret/doctrine2-spatial)
+[![Build Status](https://travis-ci.org/creof/doctrine2-spatial.svg?branch=master)](https://travis-ci.org/Alexandre-T/doctrine2-spatial)
+[![Code Climate](https://codeclimate.com/github/creof/doctrine2-spatial/badges/gpa.svg)](https://codeclimate.com/github/Alexandre-T/doctrine2-spatial)
+[![Coverage Status](https://coveralls.io/repos/creof/doctrine2-spatial/badge.svg?branch=master&service=github)](https://coveralls.io/github/Alexandre-T/doctrine2-spatial?branch=master)
+[![Downloads](https://img.shields.io/packagist/dm/creof/doctrine2-spatial.svg)](https://packagist.org/packages/creof/doctrine2-spatial)
 [![Documentation Status](https://readthedocs.org/projects/doctrine2-spatial/badge/?version=latest)](https://doctrine2-spatial.readthedocs.io/en/latest/?badge=latest)
 
 Documentation 
