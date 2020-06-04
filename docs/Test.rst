@@ -41,9 +41,9 @@ If you use an IDE like PHPStorm, you can create configurations to launch the six
 
 * MySQL, PHP7.2 and PHPUnit 8.5
 * PostgreSQL, PHP7.2 and PHPUnit
-* MySQL, PHP7.3 and PHPUnit 9.0
+* MySQL, PHP7.3 and PHPUnit 8.5
 * PostgreSQL, PHP7.3 and PHPUnit
-* MySQL, PHP7.4 and PHPUnit 9.0
+* MySQL, PHP7.4 and PHPUnit 8.5
 * PostgreSQL, PHP7.4 and PHPUnit
 
 In this section, I described an easy way to switch PHP version via console. (But there is a lot of ways to do it.)
@@ -83,8 +83,8 @@ Now PHP 7.2 will be used each time you use one of this command:
 
     $ symfony composer
 
-4. Download PHPUnit.phar for version 8 and version 9: Go on https://phar.phpunit.de
-5. You should now have a phpunit-8.phar and a phpunit-9.phar in your directory
+4. Download PHPUnit.phar for version 8: Go on https://phar.phpunit.de
+5. You should now have a phpunit-8.phar and a phpunit-8.phar in your directory
 6. This script launch the six test-suites:
 
 .. code-block:: bash
@@ -93,8 +93,8 @@ Now PHP 7.2 will be used each time you use one of this command:
     $ symfony php phpunit-8.phar --configuration phpunit.mysql.xml
     $ symfony php phpunit-8.phar --configuration phpunit.pgsql.xml
     $ echo 7.3 > .php-version
-    $ symfony php phpunit-9.phar --configuration phpunit.mysql.xml
-    $ symfony php phpunit-9.phar --configuration phpunit.pgsql.xml
+    $ symfony php phpunit-8.phar --configuration phpunit.mysql.xml
+    $ symfony php phpunit-8.phar --configuration phpunit.pgsql.xml
     $ echo 7.4 > .php-version
-    $ symfony php phpunit-9.phar --configuration phpunit.mysql.xml
-    $ symfony php phpunit-9.phar --configuration phpunit.pgsql.xml
+    $ symfony php phpunit-8.phar --configuration phpunit.mysql.xml
+    $ symfony php phpunit-8.phar --configuration phpunit.pgsql.xml
