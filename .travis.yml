@@ -142,7 +142,7 @@ jobs:
           packages:
             - postgis
             - postgresql-9.6-postgis-2.5
-    #PostgreSQL10 PHP7.4 Postgis 2.5
+    #PostgreSQL10 PHP7.4 Postgis 2.4
     - stage: Test PostgreSQL
       php: 7.4
       env: DB=pgsql POSTGRESQL_VERSION=10.0 COVERAGE=yes DOCTRINE=2.7
@@ -154,7 +154,7 @@ jobs:
             - postgresql-10
             - postgresql-client-10
             - postgis
-            - postgresql-10-postgis-2.5
+            - postgresql-10-postgis-2.4
     #PostgreSQL11 PHP7.4 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.4
