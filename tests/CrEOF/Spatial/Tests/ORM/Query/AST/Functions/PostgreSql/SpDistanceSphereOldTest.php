@@ -32,7 +32,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 
 /**
- * ST_DistanceSphere DQL function tests.
+ * ST_Distance_Sphere DQL function tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
@@ -43,7 +43,7 @@ use Doctrine\ORM\ORMException;
  * @internal
  * @coversDefaultClass
  */
-class SpDistanceSphereTest extends OrmTestCase
+class SpDistanceSphereOldTest extends OrmTestCase
 {
     use PointHelperTrait;
 
@@ -82,7 +82,7 @@ class SpDistanceSphereTest extends OrmTestCase
 
         $query = $this->getEntityManager()->createQuery(
             // phpcs:disable Generic.Files.LineLength.MaxExceeded
-            'SELECT p, PgSql_Distance_Sphere(p.point, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
+            'SELECT p, PgSql_Distance_Sphere_Old(p.point, ST_GeomFromText(:p)) FROM CrEOF\Spatial\Tests\Fixtures\PointEntity p'
             // phpcs:enable
         );
 

@@ -27,13 +27,13 @@ namespace CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql;
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 
 /**
- * ST_DistanceSphere DQL function.
+ * ST_Distance_Sphere DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
-class SpDistanceSphere extends AbstractSpatialDQLFunction
+class SpDistanceSphereOld extends AbstractSpatialDQLFunction
 {
     /**
      * Function SQL name getter.
@@ -44,7 +44,7 @@ class SpDistanceSphere extends AbstractSpatialDQLFunction
     {
         //Be careful ST_Distance_Sphere has been replaced by ST_DistanceSphere since PostGis 2.2.0
         //@see https://postgis.net/docs/ST_DistanceSphere.html
-        return 'ST_DistanceSphere';
+        return 'ST_Distance_Sphere';
     }
 
     /**
