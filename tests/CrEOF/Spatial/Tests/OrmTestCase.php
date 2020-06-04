@@ -146,7 +146,7 @@ use CrEOF\Spatial\Tests\Fixtures\NoHintGeometryEntity;
 use CrEOF\Spatial\Tests\Fixtures\PointEntity;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
