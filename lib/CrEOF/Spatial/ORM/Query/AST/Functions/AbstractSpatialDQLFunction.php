@@ -59,7 +59,7 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     /**
      * @var Node[]
      */
-    private $geometryExpression = [];
+    protected $geometryExpression = [];
 
     /**
      * Get the SQL.
@@ -117,7 +117,7 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
      *
      * @since 2.0 This function replace the protected property geomExpr which is now private.
      */
-    final protected function addGeometryExpression(Node $expression): self
+    protected function addGeometryExpression(Node $expression): self
     {
         $this->geometryExpression[] = $expression;
 
@@ -138,7 +138,7 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
      *
      * @return Node[]
      */
-    final protected function getGeometryExpressions(): array
+    protected function getGeometryExpressions(): array
     {
         return $this->geometryExpression;
     }

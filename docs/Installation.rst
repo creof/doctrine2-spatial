@@ -4,11 +4,11 @@ Installation
 Installation via composer
 -------------------------
 
-Add the `alexandret/spatial2-doctrine` package in your composer.json.
+Add the `creof/spatial2-doctrine` package in your composer.json.
 
 .. code-block:: bash
 
-    $ composer require alexandret/doctrine2-spatial
+    $ composer require creof/doctrine2-spatial
 
 Or you can edit directly `composer.json` file by adding this line on your requirements:
 
@@ -16,7 +16,7 @@ Or you can edit directly `composer.json` file by adding this line on your requir
 
     "require": {
     	...
-        "alexandret/doctrine2-spatial": "^2.0"
+        "creof/doctrine2-spatial": "^2.0"
 
 Be careful, the version 2.0.0 will only be available at the end of march 2020.
 
