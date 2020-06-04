@@ -24,7 +24,7 @@ Installation without composer
 -----------------------------
 
 If you're not using composer, you can
-:download:`download the library  <https://github.com/Alexandre-T/doctrine2-spatial/archive/master.zip>`.
+:download:`download the library  <https://github.com/creof/doctrine2-spatial/archive/master.zip>`.
 Then copy and paste the lib directory where you store all libraries of your application.
 
 Installation to contribute

@@ -138,4 +138,4 @@ You can register functions of the doctrine spatial extension adding them to the 
 .. _Open Geospatial Consortium: https://www.ogc.org/
 .. _Open Geospatial Consortium standard: https://www.ogc.org/standards/sfs
 .. _standards of SQL Options: https://www.ogc.org/standards/sfs
-.. _DBAL/Types: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/DBAL/Types
+.. _DBAL/Types: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/DBAL/Types

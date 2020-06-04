@@ -355,5 +355,5 @@ has been replaced by the Standard function ST_GeomFromText since MySql 5.7. So i
 it and use the standard function declared in the StGeomFromText class.
 
 .. _ISO/IEC 13249-3: https://www.iso.org/standard/60343.html
-.. _Functions/Standards directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard
+.. _Functions/Standards directory: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard
 

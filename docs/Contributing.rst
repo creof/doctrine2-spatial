@@ -14,7 +14,7 @@ documentation (and fix the lot of typo), you need to install python, sphinx and 
 5. Verify that documentation is improved
 6. Commit your contribution with an explicit message
 7. Push your commit on your forked project,
-8. Do a pull request on your forked project to the Alexandre-T/doctrine2-spatial project
+8. Do a pull request on your forked project to the creof/doctrine2-spatial project
 
 Source code
 ===========
@@ -228,13 +228,13 @@ You can launch PHP Mess Detector only with:
 
     composer phpmd
 
-.. _Common directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Common
-.. _MySql directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/MySql
-.. _PostgreSql directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql
-.. _Standard directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard
+.. _Common directory: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Common
+.. _MySql directory: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/MySql
+.. _PostgreSql directory: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql
+.. _Standard directory: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard
 .. _ISO/IEC 13249-3: https://www.iso.org/standard/60343.html
 .. _OGC standards: https://www.ogc.org/standards/sfs
 .. _ST_Polygonize: https://postgis.net/docs/manual-2.5/ST_Polygonize.html
-.. _SnapToGrid: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql/SpSnapToGrid.php
-.. _functions test directory: https://github.com/Alexandre-T/doctrine2-spatial/tree/master/tests/CrEOF/Spatial/ORM/Query/AST/Functions/
-.. _OrmTestCase.php file: https://github.com/Alexandre-T/doctrine2-spatial/blob/master/tests/CrEOF/Spatial/Tests/OrmTestCase.php
+.. _SnapToGrid: https://github.com/creof/doctrine2-spatial/tree/master/lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql/SpSnapToGrid.php
+.. _functions test directory: https://github.com/creof/doctrine2-spatial/tree/master/tests/CrEOF/Spatial/ORM/Query/AST/Functions/
+.. _OrmTestCase.php file: https://github.com/creof/doctrine2-spatial/blob/master/tests/CrEOF/Spatial/Tests/OrmTestCase.php
