@@ -226,38 +226,87 @@ abstract class AbstractPoint extends AbstractGeometry
      * @param array $argv list of arguments
      *
      * @throws InvalidValueException when an argument is not valid
-     *
-     * @return array
      */
-    protected function validateArguments(array $argv = null)
+    protected function validateArguments(array $argv = null): array
     {
         $argc = count($argv);
 
-        if (1 == $argc && is_array($argv[0])) {
+        switch ($argc) {
+            case 1:
+                return $this->checkOneArgument($argv);
+            case 2:
+                return $this->checkTwoArguments($argv);
+            case 3:
+                return $this->checkThreeArguments($argv);
+            default:
+                throw $this->exception($argv);
+        }
+    }
+
+    /**
+     * Check and the argv argument.
+     *
+     * @param array|null $argv the argument which should be an array
+     *
+     * @throws InvalidValueException when argv is not an array
+     */
+    private function checkOneArgument(?array $argv): array
+    {
+        if (is_array($argv[0])) {
             return $argv[0];
         }
 
-        if (2 == $argc) {
-            if (is_array($argv[0]) && (is_numeric($argv[1]) || null === $argv[1] || is_string($argv[1]))) {
-                $argv[0][] = $argv[1];
+        throw $this->exception($argv);
+    }
 
-                return $argv[0];
-            }
-
-            if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1]))) {
-                return $argv;
-            }
+    /**
+     * Check and the argv argument which have three elements.
+     *
+     * @param array|null $argv the argument which should be an array
+     *
+     * @throws InvalidValueException when argv is not an array
+     */
+    private function checkThreeArguments(?array $argv): array
+    {
+        if ($this->isNumericOrString($argv[0])
+            && $this->isNumericOrString($argv[1])
+            && $this->isNumericOrStringOrNull($argv[2])
+        ) {
+            return $argv;
         }
 
-        if (3 == $argc) {
-            if ((is_numeric($argv[0]) || is_string($argv[0]))
-                && (is_numeric($argv[1]) || is_string($argv[1]))
-                && (is_numeric($argv[2]) || null === $argv[2] || is_string($argv[2]))
-            ) {
-                return $argv;
-            }
+        throw $this->exception($argv);
+    }
+
+    /**
+     * Check and the argv argument which have two elements.
+     *
+     * @param array|null $argv the argument which should be an array
+     *
+     * @throws InvalidValueException when argv is not an array
+     */
+    private function checkTwoArguments(?array $argv): array
+    {
+        if (is_array($argv[0]) && (is_numeric($argv[1]) || null === $argv[1] || is_string($argv[1]))) {
+            $argv[0][] = $argv[1];
+
+            return $argv[0];
         }
 
+        if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1]))) {
+            return $argv;
+        }
+
+        throw $this->exception($argv);
+    }
+
+    /**
+     * Create a new InvalidException.
+     *
+     * @param array|null $argv the argv is read to compute message of exception
+     */
+    private function exception(?array $argv): InvalidValueException
+    {
         array_walk($argv, function (&$value) {
             if (is_array($value)) {
                 $value = 'Array';
@@ -266,11 +315,31 @@ abstract class AbstractPoint extends AbstractGeometry
             }
         });
 
-        throw new InvalidValueException(sprintf(
+        return new InvalidValueException(sprintf(
             'Invalid parameters passed to %s::%s: %s',
             get_class($this),
             '__construct',
             implode(', ', $argv)
         ));
+    }
+
+    /**
+     * Is parameter numeric or string?
+     *
+     * @param mixed $parameter to test
+     */
+    private function isNumericOrString($parameter): bool
+    {
+        return is_numeric($parameter) || is_string($parameter);
+    }
+
+    /**
+     * Is parameter numeric or string or null?
+     *
+     * @param mixed $parameter to test
+     */
+    private function isNumericOrStringOrNull($parameter): bool
+    {
+        return is_numeric($parameter) || is_string($parameter) || null === ($parameter);
     }
 }
