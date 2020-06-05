@@ -34,7 +34,7 @@ use Doctrine\ORM\ORMException;
 /**
  * ST_InteriorRingN DQL function tests.
  *
- * @author  Alexandre Tranchant <alexandre-tranchant@gmail.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql

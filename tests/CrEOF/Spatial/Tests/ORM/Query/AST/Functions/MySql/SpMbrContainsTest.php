@@ -34,7 +34,7 @@ use Doctrine\ORM\ORMException;
 /**
  * Contains DQL function tests.
  *
- * @author  Alexandre Tranchant <alexandre-tranchant@gmail.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license http://alexandre-tranchant.mit-license.org MIT
  *
  * @group dql

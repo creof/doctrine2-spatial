@@ -35,7 +35,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
  * Abstract spatial platform.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @author  Alexandre Tranchant <alexandre-tranchant@gmail.com>
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
  * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractPlatform implements PlatformInterface
