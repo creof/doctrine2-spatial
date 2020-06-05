@@ -60,19 +60,16 @@ jobs:
         - docker
       before_script:
         - bash ./tests/travis/install-mysql-8.0.sh
-    #PostgreSQL 11 PHP7.2 Postgis 2.5
+    #PostgreSQL9.6 PHP7.2 Postgis 2.5
     - stage: Test PostgreSQL
       php: 7.2
-      env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.7
-      sudo: required
+      env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes DOCTRINE=2.7
       addons:
-        postgresql: "11"
+        postgresql: "9.6"
         apt:
           packages:
-            - postgresql-11
-            - postgresql-client-11
             - postgis
-            - postgresql-11-postgis-2.5
+            - postgresql-9.6-postgis-2.5
     #MySQL 8 PHP 7.3
     - stage: Test MySQL
       php: 7.3
@@ -151,8 +148,6 @@ jobs:
         postgresql: "10"
         apt:
           packages:
-            - postgresql-10
-            - postgresql-client-10
             - postgis
             - postgresql-10-postgis-2.4
     #PostgreSQL11 PHP7.4 Postgis 2.5
