@@ -40,6 +40,11 @@ plugins:
         enabled: false
   fixme:
     enabled: true
+    config:
+      strings:
+        - FIXME
+        - BUG
+        - XXX
   phpcodesniffer:
     enabled: true
   phpmd:
