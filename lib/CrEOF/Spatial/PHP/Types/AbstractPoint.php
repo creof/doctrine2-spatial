@@ -287,13 +287,13 @@ abstract class AbstractPoint extends AbstractGeometry
      */
     private function checkTwoArguments(?array $argv): array
     {
-        if (is_array($argv[0]) && (is_numeric($argv[1]) || null === $argv[1] || is_string($argv[1]))) {
+        if (is_array($argv[0]) && ($this->isNumericOrStringOrNull($argv[1]))) {
             $argv[0][] = $argv[1];
 
             return $argv[0];
         }
 
-        if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1]))) {
+        if ($this->isNumericOrString($argv[0]) && $this->isNumericOrString($argv[1])) {
             return $argv;
         }
 
