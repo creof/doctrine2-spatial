@@ -118,6 +118,8 @@ doctrine:
                 st_contains:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
                 st_crosses:             CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STCrosses
                 st_disjoint:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STDisjoint
+                st_distance:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STDistance
+                st_distance_sphere:     CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STDistanceSphere
                 st_equals:              CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STEquals
                 st_intersects:          CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
                 st_overlaps:            CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STOverlaps
