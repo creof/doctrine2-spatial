@@ -31,6 +31,7 @@ doctrine:
                 stcollect:               CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCollect
                 stsnaptogrid:            CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSnapToGrid
                 stoverlaps:              CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STOverlaps
+		stgeomfromgeojson:       CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromGeoJson
             numeric_functions:
                 # for postgresql
                 starea:                  CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
