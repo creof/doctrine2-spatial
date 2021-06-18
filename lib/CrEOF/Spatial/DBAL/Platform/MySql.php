@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,51 +25,67 @@
 namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
+use CrEOF\Spatial\DBAL\Types\GeographyType;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
- * MySql spatial platform
+ * MySql5.7 and less spatial platform.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://dlambert.mit-license.org MIT
  */
 class MySql extends AbstractPlatform
 {
     /**
-     * Gets the SQL declaration snippet for a field of this type.
+     * Convert to database value.
      *
-     * @param array $fieldDeclaration
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration)
+    public function convertToDatabaseValueSql(AbstractSpatialType $type, $sqlExpr)
     {
-        if ($fieldDeclaration['type']->getSQLType() === GeographyInterface::GEOGRAPHY) {
+        if ($type instanceof GeographyType) {
+            //This shall be updated when Geography will be implemented in MySql
+            return sprintf('ST_GeomFromText(%s)', $sqlExpr);
+        }
+
+        return sprintf('ST_GeomFromText(%s)', $sqlExpr);
+    }
+
+    /**
+     * Convert to php value to SQL.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
+     *
+     * @return string
+     */
+    public function convertToPhpValueSql(AbstractSpatialType $type, $sqlExpr)
+    {
+        if ($type instanceof GeographyType) {
+            //This shall be updated when Geography will be implemented in MySql
+            return sprintf('ST_AsBinary(%s)', $sqlExpr);
+        }
+
+        return sprintf('ST_AsBinary(%s)', $sqlExpr);
+    }
+
+    /**
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array $fieldDeclaration array SHALL contains 'type' as key
+     *
+     * @return string
+     */
+    public function getSqlDeclaration(array $fieldDeclaration)
+    {
+        if (GeographyInterface::GEOGRAPHY === $fieldDeclaration['type']->getSQLType()) {
             return 'GEOMETRY';
         }
 
-        return strtoupper($fieldDeclaration['type']->getSQLType());
-    }
-
-    /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr)
-    {
-        return sprintf('AsBinary(%s)', $sqlExpr);
-    }
-
-    /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
-     *
-     * @return string
-     */
-    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr)
-    {
-        return sprintf('GeomFromText(%s)', $sqlExpr);
+        return mb_strtoupper($fieldDeclaration['type']->getSQLType());
     }
 }

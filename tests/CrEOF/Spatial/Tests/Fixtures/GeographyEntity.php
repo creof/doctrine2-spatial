@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +25,30 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 
 /**
- * Geography entity
+ * Geography entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @Entity
  */
 class GeographyEntity
 {
     /**
-     * @var int $id
+     * @var GeographyInterface
+     *
+     * @Column(type="geography", nullable=true)
+     */
+    protected $geography;
+
+    /**
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -45,14 +57,17 @@ class GeographyEntity
     protected $id;
 
     /**
-     * @var GeographyInterface $geography
+     * Get geography.
      *
-     * @Column(type="geography", nullable=true)
+     * @return GeographyInterface
      */
-    protected $geography;
+    public function getGeography()
+    {
+        return $this->geography;
+    }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -62,9 +77,9 @@ class GeographyEntity
     }
 
     /**
-     * Set geography
+     * Set geography.
      *
-     * @param GeographyInterface $geography
+     * @param GeographyInterface $geography Geography to set
      *
      * @return self
      */
@@ -73,15 +88,5 @@ class GeographyEntity
         $this->geography = $geography;
 
         return $this;
-    }
-
-    /**
-     * Get geography
-     *
-     * @return GeographyInterface
-     */
-    public function getGeography()
-    {
-        return $this->geography;
     }
 }

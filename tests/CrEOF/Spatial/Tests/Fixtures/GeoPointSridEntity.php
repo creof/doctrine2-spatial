@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +25,23 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geography\Point;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 
 /**
- * Geography point entity specifying SRID
+ * Geography point entity specifying SRID.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @Entity
  */
 class GeoPointSridEntity
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -45,14 +50,14 @@ class GeoPointSridEntity
     protected $id;
 
     /**
-     * @var Point $point
+     * @var Point
      *
-     * @Column(type="geopoint", nullable=true, options={"srid"="4326"})
+     * @Column(type="geopoint", nullable=true, options={"srid": "4326"})
      */
     protected $point;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -62,9 +67,19 @@ class GeoPointSridEntity
     }
 
     /**
-     * Set geography
+     * Get geography.
      *
-     * @param Point $point
+     * @return Point
+     */
+    public function getPoint()
+    {
+        return $this->point;
+    }
+
+    /**
+     * Set geography.
+     *
+     * @param Point $point point to set
      *
      * @return self
      */
@@ -73,15 +88,5 @@ class GeoPointSridEntity
         $this->point = $point;
 
         return $this;
-    }
-
-    /**
-     * Get geography
-     *
-     * @return Point
-     */
-    public function getPoint()
-    {
-        return $this->point;
     }
 }

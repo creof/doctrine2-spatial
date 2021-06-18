@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,28 +24,119 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geometry;
 
-use Doctrine\ORM\Query;
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
- * Doctrine LineStringType tests
+ * Doctrine LineStringType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @group geometry
+ *
+ * @internal
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
  */
 class LineStringTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    /**
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         parent::setUp();
     }
 
+    /**
+     * Test to store and find a line string in table.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
+    public function testFindByLineString()
+    {
+        $lineString = new LineString(
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+            ]
+        );
+        $entity = new LineStringEntity();
+
+        $entity->setLineString($lineString);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $this->getEntityManager()->clear();
+
+        $result = $this->getEntityManager()
+            ->getRepository(self::LINESTRING_ENTITY)
+            ->findByLineString($lineString)
+        ;
+
+        static::assertEquals($entity, $result[0]);
+    }
+
+    /**
+     * Test to store and find it by id.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
+    public function testLineString()
+    {
+        $lineString = new LineString(
+            [
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+            ]
+        );
+        $entity = new LineStringEntity();
+
+        $entity->setLineString($lineString);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
+        $this->getEntityManager()->clear();
+
+        $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
+
+        static::assertEquals($entity, $queryEntity);
+    }
+
+    /**
+     * Test to store a null line string, then to find it with its id.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testNullLineStringType()
     {
         $entity = new LineStringEntity();
@@ -58,52 +150,8 @@ class LineStringTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
-    public function testLineString()
-    {
-        $lineString = new LineString(
-            array(
-                new Point(0, 0),
-                new Point(1, 1),
-                new Point(2, 2)
-            )
-        );
-        $entity = new LineStringEntity();
-
-        $entity->setLineString($lineString);
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
-    public function testFindByLineString()
-    {
-        $lineString = new LineString(
-            array(
-                 new Point(0, 0),
-                 new Point(1, 1),
-                 new Point(2, 2)
-            )
-        );
-        $entity = new LineStringEntity();
-
-        $entity->setLineString($lineString);
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $this->getEntityManager()->clear();
-
-        $result = $this->getEntityManager()->getRepository(self::LINESTRING_ENTITY)->findByLineString($lineString);
-
-        $this->assertEquals($entity, $result[0]);
-    }
+    //TODO test to find all null linestring
 }

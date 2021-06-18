@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,31 +24,44 @@
 
 namespace CrEOF\Spatial\PHP\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+
 /**
- * Abstract Polygon object for POLYGON spatial types
+ * Abstract Polygon object for POLYGON spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractPolygon extends AbstractGeometry
 {
     /**
-     * @var array[] $rings
+     * Polygons are rings.
+     *
+     * @var array[]
      */
-    protected $rings = array();
+    protected $rings = [];
 
     /**
-     * @param AbstractLineString[]|array[] $rings
-     * @param null|int                     $srid
+     * Abstract polygon constructor.
+     *
+     * @param AbstractLineString[]|array[] $rings the polygons
+     * @param int|null                     $srid  Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException When a ring is invalid
      */
     public function __construct(array $rings, $srid = null)
     {
         $this->setRings($rings)
-            ->setSrid($srid);
+            ->setSrid($srid)
+        ;
     }
 
     /**
-     * @param AbstractLineString|array[] $ring
+     * Add a polygon to geometry.
+     *
+     * @param AbstractLineString|array[] $ring Ring to add to geometry
+     *
+     * @throws InvalidValueException when a ring is invalid
      *
      * @return self
      */
@@ -59,21 +73,9 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @return AbstractLineString[]
-     */
-    public function getRings()
-    {
-        $rings = array();
-
-        for ($i = 0; $i < count($this->rings); $i++) {
-            $rings[] = $this->getRing($i);
-        }
-
-        return $rings;
-    }
-
-    /**
-     * @param int $index
+     * Polygon getter.
+     *
+     * @param int $index index of polygon, use -1 to get last one
      *
      * @return AbstractLineString
      */
@@ -83,13 +85,43 @@ abstract class AbstractPolygon extends AbstractGeometry
             $index = count($this->rings) - 1;
         }
 
-        $lineStringClass = $this->getNamespace() . '\LineString';
+        $lineStringClass = $this->getNamespace().'\LineString';
 
         return new $lineStringClass($this->rings[$index], $this->srid);
     }
 
     /**
-     * @param AbstractLineString[] $rings
+     * Rings getter.
+     *
+     * @return AbstractLineString[]
+     */
+    public function getRings()
+    {
+        $rings = [];
+
+        for ($i = 0; $i < count($this->rings); ++$i) {
+            $rings[] = $this->getRing($i);
+        }
+
+        return $rings;
+    }
+
+    /**
+     * Type getter.
+     *
+     * @return string Polygon
+     */
+    public function getType()
+    {
+        return self::POLYGON;
+    }
+
+    /**
+     * Rings fluent setter.
+     *
+     * @param AbstractLineString[] $rings Rings to set
+     *
+     * @throws InvalidValueException when a ring is invalid
      *
      * @return self
      */
@@ -101,14 +133,8 @@ abstract class AbstractPolygon extends AbstractGeometry
     }
 
     /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::POLYGON;
-    }
-
-    /**
+     * Converts rings to array.
+     *
      * @return array[]
      */
     public function toArray()

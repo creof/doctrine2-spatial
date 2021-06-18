@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,27 +25,36 @@
 namespace CrEOF\Spatial\ORM\Query;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\ReturnsGeometryInterface;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\AST\SelectExpression;
+use Doctrine\ORM\Query\ParserResult;
+use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * GeometryWalker
+ * GeometryWalker.
  *
  * Custom DQL AST walker to return geometry objects from queries instead of strings.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 class GeometryWalker extends SqlWalker
 {
     /**
+     * Result set mapping.
+     *
      * @var ResultSetMapping
      */
     protected $rsm;
 
     /**
-     * {@inheritDoc}
+     * Initializes TreeWalker with important information about the ASTs to be walked.
+     *
+     * @param AbstractQuery $query           the parsed Query
+     * @param ParserResult  $parserResult    the result of the parsing process
+     * @param array         $queryComponents the query components (symbol table)
      */
     public function __construct($query, $parserResult, array $queryComponents)
     {
@@ -56,17 +66,19 @@ class GeometryWalker extends SqlWalker
     /**
      * Walks down a SelectExpression AST node and generates the corresponding SQL.
      *
-     * @param SelectExpression $selectExpression
+     * @param SelectExpression $selectExpression Select expression AST node
      *
-     * @return string The SQL.
+     * @throws QueryException when error happend during walking into select expression
+     *
+     * @return string the SQL
      */
     public function walkSelectExpression($selectExpression)
     {
         $expr = $selectExpression->expression;
-        $sql  = parent::walkSelectExpression($selectExpression);
+        $sql = parent::walkSelectExpression($selectExpression);
 
         if ($expr instanceof ReturnsGeometryInterface && !$selectExpression->hiddenAliasResultVariable) {
-            $alias = trim(strrchr($sql, ' '));
+            $alias = trim(mb_strrchr($sql, ' '));
             $this->rsm->typeMappings[$alias] = 'geometry';
         }
 

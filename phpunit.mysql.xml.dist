@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit colors="true"
+         bootstrap="./tests/CrEOF/Spatial/Tests/TestInit.php"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.0/phpunit.xsd"
+        >
+
+<!--    <groups>-->
+<!--        <exclude>-->
+<!--            <group>srid</group> &lt;!&ndash; MySQL does not support SRID set into a Geometry Entity &ndash;&gt;-->
+<!--        </exclude>-->
+<!--    </groups>-->
+
+    <testsuites>
+        <testsuite name="Doctrine spatial library">
+            <directory>./tests/CrEOF/Spatial/Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <var name="db_type" value="pdo_mysql"/>
+        <var name="db_host" value="localhost" />
+        <var name="db_username" value="root" />
+        <var name="db_password" value="your-secret-password" /> <!-- Change it -->
+        <var name="db_name" value="spatial_tests" />
+        <var name="db_port" value="3306" />
+        <!-- Execute dummy SELECT statement before each test to mark DB query log -->
+        <var name="opt_mark_sql" value="true" />
+        <!-- Enable SQLLoggerStack and query logging exception in tests -->
+        <var name="opt_use_debug_stack" value="true" />
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./lib/</directory>
+            <exclude>
+                <directory suffix=".php">./tests/CrEOF/Spatial/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

@@ -7,19 +7,45 @@
         {
             "name": "Derek Lambert",
             "email": "dlambert@dereklambert.com"
+        },
+        {
+            "name": "Alexandre Tranchant",
+            "email": "alexandre.tranchant@gmail.com"
         }
     ],
     "license": "MIT",
     "require": {
-        "doctrine/orm": ">=2.3",
+        "php": "^7.2",
+        "ext-json": "*",
+        "ext-mbstring": "*",
         "creof/geo-parser": "~2.0",
         "creof/wkt-parser": "~2.0",
-        "creof/wkb-parser": "~2.0"
+        "creof/wkb-parser": "~2.0",
+        "doctrine/orm": "^2.7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "<5.0",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpmd/phpmd": "@stable",
+        "phpunit/phpunit": "^8.0.0",
         "phpunit/phpcov": "*",
-        "satooshi/php-coveralls": "~1.0"
+        "php-coveralls/php-coveralls": "~1.0",
+        "squizlabs/php_codesniffer": "3.*"
+    },
+    "scripts": {
+        "check-quality-code": [
+            "php-cs-fixer fix --dry-run --config=.php_cs.dist --allow-risky=yes -vvv",
+            "phpcs --standard=phpcs.xml.dist -s",
+            "phpmd lib text ./phpmd.lib.xml",
+            "phpmd tests text ./phpmd.test.xml --exclude OrmTestCase.php"
+        ],
+        "phpcs": "phpcs --standard=phpcs.xml.dist -s",
+        "phpcsfixer": "php-cs-fixer --config=.php_cs.dist fix --allow-risky=yes -vvv",
+        "phpmd": [
+            "phpmd lib text ./phpmd.lib.xml",
+            "phpmd tests text ./phpmd.test.xml --exclude OrmTestCase.php"
+        ],
+        "test-mysql": "phpunit --configuration phpunit.mysql.xml",
+        "test-pgsql": "phpunit --configuration phpunit.pgsql.xml"
     },
     "autoload": {
         "psr-0": {

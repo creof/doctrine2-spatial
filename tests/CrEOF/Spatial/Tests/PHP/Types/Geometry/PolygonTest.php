@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,273 +24,313 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use PHPUnit\Framework\TestCase;
+
 /**
- * Polygon object tests
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * Polygon object tests.
  *
  * @group php
+ *
+ * @internal
+ * @coversDefaultClass
  */
-class PolygonTest extends \PHPUnit_Framework_TestCase
+class PolygonTest extends TestCase
 {
+    /**
+     * Test an empty polygon.
+     */
     public function testEmptyPolygon()
     {
-        $polygon = new Polygon(array());
+        $polygon = new Polygon([]);
 
-        $this->assertEmpty($polygon->getRings());
-    }
-
-    public function testSolidPolygonFromObjectsToArray()
-    {
-        $expected = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-        $rings = array(
-            new LineString(
-                array(
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0)
-                )
-            )
-        );
-
-        $polygon = new Polygon($rings);
-
-        $this->assertEquals($expected, $polygon->toArray());
-    }
-
-    public function testSolidPolygonFromArrayOfPoints()
-    {
-        $expected = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-        $rings = array(
-            array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            )
-        );
-
-        $polygon = new Polygon($rings);
-
-        $this->assertEquals($expected, $polygon->toArray());
-    }
-
-    public function testSolidPolygonFromArraysGetRings()
-    {
-        $expected = array(
-            new LineString(
-                array(
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0)
-                )
-            )
-        );
-        $rings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-
-        $polygon = new Polygon($rings);
-
-        $this->assertEquals($expected, $polygon->getRings());
-    }
-
-
-    public function testSolidPolygonFromArrayAddRings()
-    {
-        $expected = array(
-            new LineString(
-                array(
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0)
-                )
-            ),
-            new LineString(
-                array(
-                    new Point(2, 2),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(2, 2)
-                )
-            )
-        );
-
-        $rings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-
-        $polygon = new Polygon($rings);
-
-        $polygon->addRing(
-            array(
-                array(2, 2),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(2, 2)
-            )
-        );
-
-        $this->assertEquals($expected, $polygon->getRings());
-    }
-
-    public function testRingPolygonFromObjectsGetSingleRing()
-    {
-        $ring1 = new LineString(
-            array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            )
-        );
-        $ring2 = new LineString(
-            array(
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5)
-            )
-        );
-        $polygon = new Polygon(array($ring1, $ring2));
-
-        $this->assertEquals($ring1, $polygon->getRing(0));
-    }
-
-    public function testRingPolygonFromObjectsGetLastRing()
-    {
-        $ring1 = new LineString(
-            array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            )
-        );
-        $ring2 = new LineString(
-            array(
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5)
-            )
-        );
-        $polygon = new Polygon(array($ring1, $ring2));
-
-        $this->assertEquals($ring2, $polygon->getRing(-1));
+        static::assertEmpty($polygon->getRings());
     }
 
     /**
-     * Test Polygon with open ring
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid polygon, ring "(0 0,10 0,10 10,0 10)" is not closed
+     * Test to export json.
+     */
+    public function testJson()
+    {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]],"srid":null}';
+        // phpcs:enable
+        $rings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+        $polygon = new Polygon($rings);
+        static::assertEquals($expected, $polygon->toJson());
+        static::assertEquals($expected, json_encode($polygon));
+
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]],"srid":4326}';
+        // phpcs:enable
+        $polygon->setSrid(4326);
+        static::assertEquals($expected, $polygon->toJson());
+        static::assertEquals($expected, json_encode($polygon));
+    }
+
+    /**
+     * Test Polygon with open ring.
      */
     public function testOpenPolygonRing()
     {
-        $rings = array(
-            new LineString(array(
+        $this->expectException(InvalidValueException::class);
+        $this->expectExceptionMessage('Invalid polygon, ring "(0 0,10 0,10 10,0 10)" is not closed');
+
+        $rings = [
+            new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
                 new Point(10, 10),
-                new Point(0, 10)
-            ))
-        );
+                new Point(0, 10),
+            ]),
+        ];
 
         new Polygon($rings);
     }
 
+    /**
+     * Test to get last ring.
+     */
+    public function testRingPolygonFromObjectsGetLastRing()
+    {
+        $ringA = new LineString(
+            [
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ]
+        );
+        $ringB = new LineString(
+            [
+                new Point(5, 5),
+                new Point(7, 5),
+                new Point(7, 7),
+                new Point(5, 7),
+                new Point(5, 5),
+            ]
+        );
+        $polygon = new Polygon([$ringA, $ringB]);
+
+        static::assertEquals($ringB, $polygon->getRing(-1));
+    }
+
+    /**
+     * Test to get the first ring.
+     */
+    public function testRingPolygonFromObjectsGetSingleRing()
+    {
+        $ringA = new LineString(
+            [
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ]
+        );
+        $ringB = new LineString(
+            [
+                new Point(5, 5),
+                new Point(7, 5),
+                new Point(7, 7),
+                new Point(5, 7),
+                new Point(5, 5),
+            ]
+        );
+        $polygon = new Polygon([$ringA, $ringB]);
+
+        static::assertEquals($ringA, $polygon->getRing(0));
+    }
+
+    /**
+     * Test a solid polygon from array add rings.
+     *
+     * @throws InvalidValueException This should not happen
+     */
+    public function testSolidPolygonFromArrayAddRings()
+    {
+        $expected = [
+            new LineString(
+                [
+                    new Point(0, 0),
+                    new Point(10, 0),
+                    new Point(10, 10),
+                    new Point(0, 10),
+                    new Point(0, 0),
+                ]
+            ),
+            new LineString(
+                [
+                    new Point(2, 2),
+                    new Point(10, 0),
+                    new Point(10, 10),
+                    new Point(0, 10),
+                    new Point(2, 2),
+                ]
+            ),
+        ];
+
+        $rings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+
+        $polygon = new Polygon($rings);
+
+        $polygon->addRing(
+            [
+                [2, 2],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [2, 2],
+            ]
+        );
+
+        static::assertEquals($expected, $polygon->getRings());
+    }
+
+    /**
+     * Test a solid polygon from an array of points.
+     */
+    public function testSolidPolygonFromArrayOfPoints()
+    {
+        $expected = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+        $rings = [
+            [
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ],
+        ];
+
+        $polygon = new Polygon($rings);
+
+        static::assertEquals($expected, $polygon->toArray());
+    }
+
+    /**
+     * Test a solid polygon from an array of rings.
+     */
+    public function testSolidPolygonFromArraysGetRings()
+    {
+        $expected = [
+            new LineString(
+                [
+                    new Point(0, 0),
+                    new Point(10, 0),
+                    new Point(10, 10),
+                    new Point(0, 10),
+                    new Point(0, 0),
+                ]
+            ),
+        ];
+        $rings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+
+        $polygon = new Polygon($rings);
+
+        static::assertEquals($expected, $polygon->getRings());
+    }
+
+    /**
+     * Test a solid polygon from arrays to string.
+     */
     public function testSolidPolygonFromArraysToString()
     {
         $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
-        $rings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            ),
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
+        $rings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
         $polygon = new Polygon($rings);
-        $result = (string)$polygon;
+        $result = (string) $polygon;
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
-    public function testJson()
+    /**
+     * Test solid polygon from objects to array.
+     */
+    public function testSolidPolygonFromObjectsToArray()
     {
-        $expected = '{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
-        $rings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
+        $expected = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+        $rings = [
+            new LineString(
+                [
+                    new Point(0, 0),
+                    new Point(10, 0),
+                    new Point(10, 10),
+                    new Point(0, 10),
+                    new Point(0, 0),
+                ]
             ),
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
+        ];
+
         $polygon = new Polygon($rings);
 
-        $this->assertEquals($expected, $polygon->toJson());
+        static::assertEquals($expected, $polygon->toArray());
     }
 }

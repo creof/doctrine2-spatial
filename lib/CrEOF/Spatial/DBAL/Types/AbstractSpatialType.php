@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,48 +24,34 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
+use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
 /**
- * Abstract Doctrine GEOMETRY type
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * Abstract Doctrine GEOMETRY type.
  */
 abstract class AbstractSpatialType extends Type
 {
-    const PLATFORM_MYSQL      = 'MySql';
-    const PLATFORM_POSTGRESQL = 'PostgreSql';
+    public const PLATFORM_MYSQL = 'MySql';
+    public const PLATFORM_POSTGRESQL = 'PostgreSql';
+
+    // phpcs:disable Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
 
     /**
-     * @return string
-     */
-    public function getTypeFamily()
-    {
-        return $this instanceof GeographyType ? GeographyInterface::GEOGRAPHY : GeometryInterface::GEOMETRY;
-    }
-
-    /**
-     * Gets the SQL name of this type.
+     * Does working with this column require SQL conversion functions?
      *
-     * @return string
-     */
-    public function getSQLType()
-    {
-        $class = get_class($this);
-        $start = strrpos($class, '\\') + 1;
-        $len   = strlen($class) - $start - 4;
-
-        return substr($class, strrpos($class, '\\') + 1, $len);
-    }
-
-    /**
+     * This is a metadata function that is required for example in the ORM.
+     * Usage of {@link convertToDatabaseValueSql} and
+     * {@link convertToPhpValueSql} works for any type and mostly
+     * does nothing. This method can additionally be used for optimization purposes.
+     *
+     * Spatial types requires conversion.
+     *
      * @return bool
      */
     public function canRequireSQLConversion()
@@ -72,23 +59,25 @@ abstract class AbstractSpatialType extends Type
         return true;
     }
 
+    // phpcs:enable
+
     /**
      * Converts a value from its PHP representation to its database representation of this type.
      *
-     * @param mixed            $value
-     * @param AbstractPlatform $platform
+     * @param GeometryInterface $value    the value to convert
+     * @param AbstractPlatform  $platform the database platform
      *
-     * @return mixed
-     * @throws InvalidValueException
-     * @throws UnsupportedPlatformException
+     * @throws InvalidValueException when value is not of type Geometry interface
+     *
+     * @return string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if ($value === null) {
+        if (null === $value) {
             return $value;
         }
 
-        if (! ($value instanceof GeometryInterface)) {
+        if (!($value instanceof GeometryInterface)) {
             throw new InvalidValueException('Geometry column values must implement GeometryInterface');
         }
 
@@ -96,38 +85,31 @@ abstract class AbstractSpatialType extends Type
     }
 
     /**
-     * Modifies the SQL expression (identifier, parameter) to convert to a PHP value.
-     *
-     * @param string           $sqlExpr
-     * @param AbstractPlatform $platform
-     *
-     * @return string
-     */
-    public function convertToPHPValueSQL($sqlExpr, $platform)
-    {
-        return $this->getSpatialPlatform($platform)->convertToPHPValueSQL($this, $sqlExpr);
-    }
-
-    /**
      * Modifies the SQL expression (identifier, parameter) to convert to a database value.
      *
-     * @param string           $sqlExpr
-     * @param AbstractPlatform $platform
+     * @param string           $sqlExpr  the SQL expression
+     * @param AbstractPlatform $platform the database platform
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
+    public function convertToDatabaseValueSql($sqlExpr, AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSQL($this, $sqlExpr);
+        return $this->getSpatialPlatform($platform)->convertToDatabaseValueSql($this, $sqlExpr);
     }
+
+    // phpcs:disable Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
 
     /**
      * Converts a value from its database representation to its PHP representation of this type.
      *
-     * @param mixed            $value
-     * @param AbstractPlatform $platform
+     * @param resource|string|null $value    value to convert to PHP
+     * @param AbstractPlatform     $platform platform database
      *
-     * @return mixed
+     * @throws UnsupportedPlatformException when platform is unsupported
+     *
+     * @return GeometryInterface|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -135,11 +117,42 @@ abstract class AbstractSpatialType extends Type
             return null;
         }
 
-        if (ctype_alpha($value[0])) {
-            return $this->getSpatialPlatform($platform)->convertStringToPHPValue($this, $value);
+        if (!is_resource($value) && ctype_alpha($value[0])) {
+            return $this->getSpatialPlatform($platform)->convertStringToPhpValue($this, $value);
         }
 
-        return $this->getSpatialPlatform($platform)->convertBinaryToPHPValue($this, $value);
+        return $this->getSpatialPlatform($platform)->convertBinaryToPhpValue($this, $value);
+    }
+
+    // phpcs:enable
+
+    /**
+     * Modifies the SQL expression (identifier, parameter) to convert to a PHP value.
+     *
+     * @param string           $sqlExpr  SQL expression
+     * @param AbstractPlatform $platform platform database
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
+     *
+     * @return string
+     */
+    public function convertToPhpValueSql($sqlExpr, $platform)
+    {
+        return $this->getSpatialPlatform($platform)->convertToPhpValueSql($this, $sqlExpr);
+    }
+
+    /**
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractPlatform $platform platform database
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
+     *
+     * @return array
+     */
+    public function getMappedDatabaseTypes(AbstractPlatform $platform)
+    {
+        return $this->getSpatialPlatform($platform)->getMappedDatabaseTypes($this);
     }
 
     /**
@@ -155,27 +168,45 @@ abstract class AbstractSpatialType extends Type
     /**
      * Gets the SQL declaration snippet for a field of this type.
      *
-     * @param array            $fieldDeclaration
-     * @param AbstractPlatform $platform
+     * @param array            $fieldDeclaration the field declaration
+     * @param AbstractPlatform $platform         database platform
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
      *
      * @return string
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $this->getSpatialPlatform($platform)->getSQLDeclaration($fieldDeclaration);
+        return $this->getSpatialPlatform($platform)->getSqlDeclaration($fieldDeclaration);
     }
 
+    // phpcs:disable Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+
     /**
-     * Get an array of database types that map to this Doctrine type.
+     * Gets the SQL name of this type.
      *
-     * @param AbstractPlatform $platform
-     *
-     * @return array
+     * @return string
      */
-    public function getMappedDatabaseTypes(AbstractPlatform $platform)
+    public function getSQLType()
     {
-        return $this->getSpatialPlatform($platform)->getMappedDatabaseTypes($this);
+        $class = get_class($this);
+        $start = mb_strrpos($class, '\\') + 1;
+        $len = mb_strlen($class) - $start - 4;
+
+        return mb_substr($class, mb_strrpos($class, '\\') + 1, $len);
     }
+
+    // phpcs:enable
+
+    /**
+     * @return string
+     */
+    public function getTypeFamily()
+    {
+        return $this instanceof GeographyType ? GeographyInterface::GEOGRAPHY : GeometryInterface::GEOMETRY;
+    }
+
+    // phpcs:disable Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
 
     /**
      * If this Doctrine Type maps to an already mapped database type,
@@ -183,32 +214,41 @@ abstract class AbstractSpatialType extends Type
      * one of those types as commented, which will have Doctrine use an SQL
      * comment to typehint the actual Doctrine Type.
      *
-     * @param AbstractPlatform $platform
+     * @param AbstractPlatform $platform database platform
      *
      * @return bool
      */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         // TODO onSchemaColumnDefinition event listener?
-        return true;
+        return $platform instanceof AbstractPlatform;
     }
 
+    // phpcs:enable
+
     /**
-     * @param AbstractPlatform $platform
+     * Return the spatial platform when it is accepted.
+     *
+     * @param AbstractPlatform $platform the database platform
+     *
+     * @throws UnsupportedPlatformException when platform is not declared in constant
      *
      * @return PlatformInterface
-     * @throws UnsupportedPlatformException
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        $const = sprintf('self::PLATFORM_%s', strtoupper($platform->getName()));
+        $platformName = $platform->getName();
+        $const = sprintf('self::PLATFORM_%s', mb_strtoupper($platformName));
 
-        if (! defined($const)) {
-            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
+        if (!defined($const)) {
+            throw new UnsupportedPlatformException(sprintf(
+                'DBAL platform "%s" is not currently supported.',
+                $platform->getName()
+            ));
         }
 
         $class = sprintf('CrEOF\Spatial\DBAL\Platform\%s', constant($const));
 
-        return new $class;
+        return new $class();
     }
 }

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,98 +24,138 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geography\LineString;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
 use CrEOF\Spatial\PHP\Types\Geography\Polygon;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeographyEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
- * Doctrine GeographyType tests
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * Doctrine GeographyType tests.
  *
  * @group geography
+ *
+ * @internal
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\GeographyType
  */
 class GeographyTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    /**
+     * Setup the geography type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOGRAPHY_ENTITY);
+
         parent::setUp();
     }
 
-    public function testNullGeography()
+    /**
+     * Test to store and retrieve a geography composed by a linestring.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
+    public function testLineStringGeography()
     {
         $entity = new GeographyEntity();
 
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
+        $entity->setGeography(new LineString([
+            new Point(0, 0),
+            new Point(1, 1),
+        ]));
+        $this->storeAndRetrieve($entity);
     }
 
+    /**
+     * Test to store and retrieve a null geography.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
+    public function testNullGeography()
+    {
+        $entity = new GeographyEntity();
+        $this->storeAndRetrieve($entity);
+    }
+
+    /**
+     * Test to store and retrieve a geography composed by a single point.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
     public function testPointGeography()
     {
         $entity = new GeographyEntity();
 
         $entity->setGeography(new Point(1, 1));
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
+        $this->storeAndRetrieve($entity);
     }
 
-    public function testLineStringGeography()
-    {
-        $entity = new GeographyEntity();
-
-        $entity->setGeography(new LineString(
-            array(
-                 new Point(0, 0),
-                 new Point(1, 1)
-            ))
-        );
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
+    /**
+     * Test to store and retrieve a geography composed by a polygon.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     * @throws InvalidValueException        when geometries are not valid
+     */
     public function testPolygonGeography()
     {
         $entity = new GeographyEntity();
 
-        $rings = array(
-            new LineString(array(
+        $rings = [
+            new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
                 new Point(10, 10),
                 new Point(0, 10),
-                new Point(0, 0)
-            ))
-        );
+                new Point(0, 0),
+            ]),
+        ];
 
         $entity->setGeography(new Polygon($rings));
+        $this->storeAndRetrieve($entity);
+    }
+
+    /**
+     * Store and retrieve geography entity in database.
+     * Then assert data are equals, not same.
+     *
+     * @param GeographyEntity $entity Entity to test
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
+    private function storeAndRetrieve(GeographyEntity $entity)
+    {
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
@@ -124,25 +165,6 @@ class GeographyTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEOGRAPHY_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testBadGeographyValue()
-    {
-        $entity = new GeographyEntity();
-
-        try {
-            $entity->setGeography('POINT(0 0)');
-        } catch (\TypeError $exception) {
-            throw new \PHPUnit_Framework_Error(
-                $exception->getMessage(),
-                $exception->getCode(),
-                $exception->getFile(),
-                $exception->getLine()
-            );
-        }
+        static::assertEquals($entity, $queryEntity);
     }
 }

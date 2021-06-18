@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,33 +27,41 @@ namespace CrEOF\Spatial\PHP\Types;
 use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
- * Abstract MultiPoint object for MULTIPOINT spatial types
+ * Abstract MultiPoint object for MULTIPOINT spatial types.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractMultiPoint extends AbstractGeometry
 {
     /**
-     * @var array[] $points
+     * @var array[]
      */
-    protected $points = array();
+    protected $points = [];
 
     /**
-     * @param AbstractPoint[]|array[] $points
-     * @param null|int                $srid
+     * Abstract multipoint constructor.
+     *
+     * @param AbstractPoint[]|array[] $points array of point
+     * @param int|null                $srid   Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException when a point is not valid
      */
     public function __construct(array $points, $srid = null)
     {
         $this->setPoints($points)
-            ->setSrid($srid);
+            ->setSrid($srid)
+        ;
     }
 
     /**
-     * @param AbstractPoint|array $point
+     * Add a point to geometry.
+     *
+     * @param AbstractPoint|array $point Point to add to geometry
+     *
+     * @throws InvalidValueException when the point is not valid
      *
      * @return self
-     * @throws InvalidValueException
      */
     public function addPoint($point)
     {
@@ -62,33 +71,9 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
-     * @return AbstractPoint[]
-     */
-    public function getPoints()
-    {
-        $points = array();
-
-        for ($i = 0; $i < count($this->points); $i++) {
-            $points[] = $this->getPoint($i);
-        }
-
-        return $points;
-    }
-
-    /**
-     * @param AbstractPoint[]|array[] $points
+     * Point getter.
      *
-     * @return self
-     */
-    public function setPoints($points)
-    {
-        $this->points = $this->validateMultiPointValue($points);
-
-        return $this;
-    }
-
-    /**
-     * @param int $index
+     * @param int $index index of the point to retrieve. -1 to get last point.
      *
      * @return AbstractPoint
      */
@@ -103,13 +88,31 @@ abstract class AbstractMultiPoint extends AbstractGeometry
                 break;
         }
 
-        $pointClass = $this->getNamespace() . '\Point';
+        $pointClass = $this->getNamespace().'\Point';
 
         return new $pointClass($point[0], $point[1], $this->srid);
     }
 
     /**
-     * @return string
+     * Points getter.
+     *
+     * @return AbstractPoint[]
+     */
+    public function getPoints()
+    {
+        $points = [];
+
+        for ($i = 0; $i < count($this->points); ++$i) {
+            $points[] = $this->getPoint($i);
+        }
+
+        return $points;
+    }
+
+    /**
+     * Type getter.
+     *
+     * @return string Multipoint
      */
     public function getType()
     {
@@ -117,6 +120,24 @@ abstract class AbstractMultiPoint extends AbstractGeometry
     }
 
     /**
+     * Points fluent setter.
+     *
+     * @param AbstractPoint[]|array[] $points the points
+     *
+     * @throws InvalidValueException when a point is invalid
+     *
+     * @return self
+     */
+    public function setPoints($points)
+    {
+        $this->points = $this->validateMultiPointValue($points);
+
+        return $this;
+    }
+
+    /**
+     * Convert multipoint to array.
+     *
      * @return array[]
      */
     public function toArray()

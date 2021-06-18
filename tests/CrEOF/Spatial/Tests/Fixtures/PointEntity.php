@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +25,25 @@
 namespace CrEOF\Spatial\Tests\Fixtures;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * Point entity
+ * Point entity.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @Entity
- * @Table()
+ * @Table
  */
 class PointEntity
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -46,14 +52,14 @@ class PointEntity
     protected $id;
 
     /**
-     * @var Point $point
+     * @var Point
      *
      * @Column(type="point", nullable=true)
      */
     protected $point;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -63,9 +69,19 @@ class PointEntity
     }
 
     /**
-     * Set point
+     * Get point.
      *
-     * @param Point $point
+     * @return Point
+     */
+    public function getPoint()
+    {
+        return $this->point;
+    }
+
+    /**
+     * Set point.
+     *
+     * @param Point $point point to set
      *
      * @return self
      */
@@ -74,15 +90,5 @@ class PointEntity
         $this->point = $point;
 
         return $this;
-    }
-
-    /**
-     * Get point
-     *
-     * @return Point
-     */
-    public function getPoint()
-    {
-        return $this->point;
     }
 }

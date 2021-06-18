@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,38 +30,128 @@ use CrEOF\Geo\String\Parser;
 use CrEOF\Spatial\Exception\InvalidValueException;
 
 /**
- * Abstract point object for POINT spatial types
+ * Abstract point object for POINT spatial types.
  *
- * http://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
- * http://docs.geotools.org/latest/userguide/library/referencing/order.html
+ * https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
+ * https://docs.geotools.org/latest/userguide/library/referencing/order.html
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 abstract class AbstractPoint extends AbstractGeometry
 {
     /**
-     * @var float $x
+     * The longitude.
+     *
+     * @var float
      */
     protected $x;
 
     /**
-     * @var float $y
+     * The Latitude.
+     *
+     * @var float
      */
     protected $y;
 
+    /**
+     * AbstractPoint constructor.
+     *
+     * @throws InvalidValueException when point is invalid
+     */
     public function __construct()
     {
         $argv = $this->validateArguments(func_get_args());
 
-        call_user_func_array(array($this, 'construct'), $argv);
+        call_user_func_array([$this, 'construct'], $argv);
     }
 
     /**
-     * @param mixed $x
+     * Latitude getter.
+     *
+     * @return float
+     */
+    public function getLatitude()
+    {
+        return $this->getY();
+    }
+
+    /**
+     * Longitude getter.
+     *
+     * @return float
+     */
+    public function getLongitude()
+    {
+        return $this->getX();
+    }
+
+    /**
+     * Type getter.
+     *
+     * @return string Point
+     */
+    public function getType()
+    {
+        return self::POINT;
+    }
+
+    /**
+     * X getter. (Longitude getter).
+     *
+     * @return float
+     */
+    public function getX()
+    {
+        return $this->x;
+    }
+
+    /**
+     * Y getter. Latitude getter.
+     *
+     * @return float
+     */
+    public function getY()
+    {
+        return $this->y;
+    }
+
+    /**
+     * Latitude fluent setter.
+     *
+     * @param mixed $latitude the new latitude of point
+     *
+     * @throws InvalidValueException when latitude is not valid
      *
      * @return self
-     * @throws InvalidValueException
+     */
+    public function setLatitude($latitude)
+    {
+        return $this->setY($latitude);
+    }
+
+    /**
+     * Longitude setter.
+     *
+     * @param mixed $longitude the new longitude
+     *
+     * @throws InvalidValueException when longitude is not valid
+     *
+     * @return self
+     */
+    public function setLongitude($longitude)
+    {
+        return $this->setX($longitude);
+    }
+
+    /**
+     * X setter. (Latitude setter).
+     *
+     * @param mixed $x the new X
+     *
+     * @throws InvalidValueException when x is not valid
+     *
+     * @return self
      */
     public function setX($x)
     {
@@ -78,18 +169,13 @@ abstract class AbstractPoint extends AbstractGeometry
     }
 
     /**
-     * @return float
-     */
-    public function getX()
-    {
-        return $this->x;
-    }
-
-    /**
-     * @param mixed $y
+     * Y setter. Longitude Setter.
+     *
+     * @param mixed $y the new Y value
+     *
+     * @throws InvalidValueException when Y is invalid, not in valid range
      *
      * @return self
-     * @throws InvalidValueException
      */
     public function setY($y)
     {
@@ -107,98 +193,120 @@ abstract class AbstractPoint extends AbstractGeometry
     }
 
     /**
-     * @return float
-     */
-    public function getY()
-    {
-        return $this->y;
-    }
-
-
-    /**
-     * @param mixed $latitude
+     * Convert point into an array X, Y.
+     * Latitude, longitude.
      *
-     * @return self
-     */
-    public function setLatitude($latitude)
-    {
-        return $this->setY($latitude);
-    }
-
-    /**
-     * @return float
-     */
-    public function getLatitude()
-    {
-        return $this->getY();
-    }
-
-    /**
-     * @param mixed $longitude
-     *
-     * @return self
-     */
-    public function setLongitude($longitude)
-    {
-        return $this->setX($longitude);
-    }
-
-    /**
-     * @return float
-     */
-    public function getLongitude()
-    {
-        return $this->getX();
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return self::POINT;
-    }
-
-    /**
      * @return array
      */
     public function toArray()
     {
-        return array($this->x, $this->y);
+        return [$this->x, $this->y];
     }
 
     /**
-     * @param array $argv
+     * Abstract point constructor.
      *
-     * @return array
-     * @throws InvalidValueException
+     * @param int      $x    X, latitude
+     * @param int      $y    Y, longitude
+     * @param int|null $srid Spatial Reference System Identifier
+     *
+     * @throws InvalidValueException if x or y are invalid
      */
-    protected function validateArguments(array $argv = null)
+    protected function construct($x, $y, $srid = null)
+    {
+        $this->setX($x)
+            ->setY($y)
+            ->setSrid($srid)
+        ;
+    }
+
+    /**
+     * Validate arguments.
+     *
+     * @param array $argv list of arguments
+     *
+     * @throws InvalidValueException when an argument is not valid
+     */
+    protected function validateArguments(array $argv = null): array
     {
         $argc = count($argv);
 
-        if (1 == $argc && is_array($argv[0])) {
+        switch ($argc) {
+            case 1:
+                return $this->checkOneArgument($argv);
+            case 2:
+                return $this->checkTwoArguments($argv);
+            case 3:
+                return $this->checkThreeArguments($argv);
+            default:
+                throw $this->exception($argv);
+        }
+    }
+
+    /**
+     * Check and the argv argument.
+     *
+     * @param array|null $argv the argument which should be an array
+     *
+     * @throws InvalidValueException when argv is not an array
+     */
+    private function checkOneArgument(?array $argv): array
+    {
+        if (is_array($argv[0])) {
             return $argv[0];
         }
 
-        if (2 == $argc) {
-            if (is_array($argv[0]) && (is_numeric($argv[1]) || is_null($argv[1]) || is_string($argv[1]))) {
-                $argv[0][] = $argv[1];
+        throw $this->exception($argv);
+    }
 
-                return $argv[0];
-            }
-
-            if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1]))) {
-                return $argv;
-            }
+    /**
+     * Check and the argv argument which have three elements.
+     *
+     * @param array|null $argv the argument which should be an array
+     *
+     * @throws InvalidValueException when argv is not an array
+     */
+    private function checkThreeArguments(?array $argv): array
+    {
+        if ($this->isNumericOrString($argv[0])
+            && $this->isNumericOrString($argv[1])
+            && $this->isNumericOrStringOrNull($argv[2])
+        ) {
+            return $argv;
         }
 
-        if (3 == $argc) {
-            if ((is_numeric($argv[0]) || is_string($argv[0])) && (is_numeric($argv[1]) || is_string($argv[1])) && (is_numeric($argv[2]) || is_null($argv[2]) || is_string($argv[2]))) {
-                return $argv;
-            }
+        throw $this->exception($argv);
+    }
+
+    /**
+     * Check and the argv argument which have two elements.
+     *
+     * @param array|null $argv the argument which should be an array
+     *
+     * @throws InvalidValueException when argv is not an array
+     */
+    private function checkTwoArguments(?array $argv): array
+    {
+        if (is_array($argv[0]) && ($this->isNumericOrStringOrNull($argv[1]))) {
+            $argv[0][] = $argv[1];
+
+            return $argv[0];
         }
 
+        if ($this->isNumericOrString($argv[0]) && $this->isNumericOrString($argv[1])) {
+            return $argv;
+        }
+
+        throw $this->exception($argv);
+    }
+
+    /**
+     * Create a new InvalidException.
+     *
+     * @param array|null $argv the argv is read to compute message of exception
+     */
+    private function exception(?array $argv): InvalidValueException
+    {
         array_walk($argv, function (&$value) {
             if (is_array($value)) {
                 $value = 'Array';
@@ -207,18 +315,31 @@ abstract class AbstractPoint extends AbstractGeometry
             }
         });
 
-        throw new InvalidValueException(sprintf('Invalid parameters passed to %s::%s: %s', get_class($this), '__construct', implode(', ', $argv)));
+        return new InvalidValueException(sprintf(
+            'Invalid parameters passed to %s::%s: %s',
+            get_class($this),
+            '__construct',
+            implode(', ', $argv)
+        ));
     }
 
     /**
-     * @param int      $x
-     * @param int      $y
-     * @param null|int $srid
+     * Is parameter numeric or string?
+     *
+     * @param mixed $parameter to test
      */
-    protected function construct($x, $y, $srid = null)
+    private function isNumericOrString($parameter): bool
     {
-        $this->setX($x)
-            ->setY($y)
-            ->setSrid($srid);
+        return is_numeric($parameter) || is_string($parameter);
+    }
+
+    /**
+     * Is parameter numeric or string or null?
+     *
+     * @param mixed $parameter to test
+     */
+    private function isNumericOrStringOrNull($parameter): bool
+    {
+        return is_numeric($parameter) || is_string($parameter) || null === ($parameter);
     }
 }

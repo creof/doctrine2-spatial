@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,165 +24,199 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Spatial\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use PHPUnit\Framework\TestCase;
 
 /**
- * LineString object tests
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * LineString object tests.
  *
  * @group php
+ *
+ * @internal
+ * @coversDefaultClass
  */
-class LineStringTest extends \PHPUnit_Framework_TestCase
+class LineStringTest extends TestCase
 {
+    /**
+     * Test LineString bad parameter.
+     */
+    public function testBadLineString()
+    {
+        $this->expectException(InvalidValueException::class);
+        $this->expectExceptionMessage('Invalid LineString Point value of type "integer"');
+
+        new LineString([1, 2, 3, 4]);
+    }
+
+    /**
+     * Test an empty line string.
+     */
     public function testEmptyLineString()
     {
-        $lineString = new LineString(array());
+        $lineString = new LineString([]);
 
-        $this->assertEmpty($lineString->getPoints());
+        static::assertEmpty($lineString->getPoints());
     }
 
-    public function testLineStringFromObjectsToArray()
+    /**
+     * Test to convert line string to json.
+     */
+    public function testJson()
     {
-        $expected = array(
-            array(0, 0),
-            array(1, 1),
-            array(2, 2),
-            array(3, 3)
-        );
-        $lineString = new LineString(array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3)
-        ));
+        $expected = '{"type":"LineString","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":null}';
 
-        $this->assertCount(4, $lineString->getPoints());
-        $this->assertEquals($expected, $lineString->toArray());
-    }
-
-    public function testLineStringFromArraysGetPoints()
-    {
-        $expected = array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3)
-        );
         $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
         );
-        $actual = $lineString->getPoints();
+        static::assertEquals($expected, $lineString->toJson());
 
-        $this->assertCount(4, $actual);
-        $this->assertEquals($expected, $actual);
+        $expected = '{"type":"LineString","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":4326}';
+        $lineString->setSrid(4326);
+        static::assertEquals($expected, $lineString->toJson());
+        static::assertEquals($expected, json_encode($lineString));
     }
 
-    public function testLineStringFromArraysGetSinglePoint()
-    {
-        $expected = new Point(1, 1);
-        $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
-        );
-        $actual = $lineString->getPoint(1);
-
-        $this->assertEquals($expected, $actual);
-    }
-
+    /**
+     * Test to get last point.
+     */
     public function testLineStringFromArraysGetLastPoint()
     {
         $expected = new Point(3, 3);
         $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
         );
         $actual = $lineString->getPoint(-1);
 
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testLineStringFromArraysIsOpen()
-    {
-        $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
-        );
-
-        $this->assertFalse($lineString->isClosed());
-    }
-
-    public function testLineStringFromArraysIsClosed()
-    {
-        $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
-        );
-
-        $this->assertTrue($lineString->isClosed());
+        static::assertEquals($expected, $actual);
     }
 
     /**
-     * Test LineString bad parameter
-     *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid LineString Point value of type "integer"
+     * Test to get all points of a line string.
      */
-    public function testBadLineString()
+    public function testLineStringFromArraysGetPoints()
     {
-        new LineString(array(1, 2, 3 ,4));
+        $expected = [
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3),
+        ];
+        $lineString = new LineString(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+        $actual = $lineString->getPoints();
+
+        static::assertCount(4, $actual);
+        static::assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get second point of a linestring.
+     */
+    public function testLineStringFromArraysGetSinglePoint()
+    {
+        $expected = new Point(1, 1);
+        $lineString = new LineString(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+        $actual = $lineString->getPoint(1);
+
+        static::assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test to verify that a line is closed.
+     */
+    public function testLineStringFromArraysIsClosed()
+    {
+        $lineString = new LineString(
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
+        );
+
+        static::assertTrue($lineString->isClosed());
+    }
+
+    /**
+     * Test to verify that a line is opened.
+     */
+    public function testLineStringFromArraysIsOpen()
+    {
+        $lineString = new LineString(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+
+        static::assertFalse($lineString->isClosed());
+    }
+
+    /**
+     * Test to convert line to string.
+     */
     public function testLineStringFromArraysToString()
     {
         $expected = '0 0,0 5,5 0,0 0';
         $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
         );
 
-        $this->assertEquals($expected, (string) $lineString);
+        static::assertEquals($expected, (string) $lineString);
     }
 
-    public function testJson()
+    /**
+     * Test to convert line to array.
+     */
+    public function testLineStringFromObjectsToArray()
     {
-        $expected = "{\"type\":\"LineString\",\"coordinates\":[[0,0],[0,5],[5,0],[0,0]]}";
+        $expected = [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+            [3, 3],
+        ];
+        $lineString = new LineString([
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3),
+        ]);
 
-        $lineString = new LineString(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
-        );
-        $this->assertEquals($expected, $lineString->toJson());
+        static::assertCount(4, $lineString->getPoints());
+        static::assertEquals($expected, $lineString->toArray());
     }
 }

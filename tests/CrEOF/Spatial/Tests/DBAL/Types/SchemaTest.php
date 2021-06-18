@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,27 +24,42 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Query;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\ORMException;
 
 /**
- * Doctrine schema related tests
+ * Doctrine schema related tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
+ *
+ * @internal
+ * @coversDefaultClass
  */
 class SchemaTest extends OrmTestCase
 {
-    protected function setUp()
+    /**
+     * Setup the geography type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEOMETRY_ENTITY);
         $this->usesEntity(self::POINT_ENTITY);
         $this->usesEntity(self::LINESTRING_ENTITY);
         $this->usesEntity(self::POLYGON_ENTITY);
+        $this->usesEntity(self::MULTIPOINT_ENTITY);
         $this->usesEntity(self::MULTIPOLYGON_ENTITY);
 
-        if ($this->getPlatform()->getName() === 'postgresql') {
+        //TODO : Verify what MySQL can do with geography
+        if ('postgresql' === $this->getPlatform()->getName()) {
             $this->usesEntity(self::GEOGRAPHY_ENTITY);
             $this->usesEntity(self::GEO_POINT_SRID_ENTITY);
             $this->usesEntity(self::GEO_LINESTRING_ENTITY);
@@ -53,38 +69,58 @@ class SchemaTest extends OrmTestCase
         parent::setUp();
     }
 
+    /**
+     * Test doctrine type mapping.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     public function testDoctrineTypeMapping()
     {
         $platform = $this->getPlatform();
 
         foreach ($this->getAllClassMetadata() as $metadata) {
             foreach ($metadata->getFieldNames() as $fieldName) {
-                $doctrineType  = $metadata->getTypeOfField($fieldName);
-                $type          = Type::getType($doctrineType);
-                $databaseTypes =  $type->getMappedDatabaseTypes($platform);
+                $doctrineType = $metadata->getTypeOfField($fieldName);
+                $type = Type::getType($doctrineType);
+                $databaseTypes = $type->getMappedDatabaseTypes($platform);
 
                 foreach ($databaseTypes as $databaseType) {
                     $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($databaseType);
 
-                    $this->assertEquals($doctrineType, $typeMapping);
+                    static::assertEquals($doctrineType, $typeMapping);
                 }
             }
         }
     }
 
+    /**
+     * Testto reverse shema mapping.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
     public function testSchemaReverseMapping()
     {
         $result = $this->getSchemaTool()->getUpdateSchemaSql($this->getAllClassMetadata(), true);
 
-        $this->assertCount(0, $result);
+        static::assertCount(0, $result);
     }
 
     /**
-     * @return \Doctrine\ORM\Mapping\ClassMetadata[]
+     * All class metadata getter.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     *
+     * @return ClassMetadata[]
      */
     private function getAllClassMetadata()
     {
-        $metadata = array();
+        $metadata = [];
 
         foreach (array_keys($this->getUsedEntityClasses()) as $entityClass) {
             $metadata[] = $this->getEntityManager()->getClassMetadata($entityClass);

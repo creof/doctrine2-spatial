@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,29 +24,89 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types\Geography;
 
-use Doctrine\ORM\Query;
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geography\LineString;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
 use CrEOF\Spatial\PHP\Types\Geography\Polygon;
-use CrEOF\Spatial\Tests\OrmTestCase;
 use CrEOF\Spatial\Tests\Fixtures\GeoPolygonEntity;
+use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
- * PolygonType tests
+ * PolygonType tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  *
  * @group geography
+ *
+ * @internal
+ * @coversDefaultClass \CrEOF\Spatial\DBAL\Types\Geography\PolygonType
  */
 class GeoPolygonTypeTest extends OrmTestCase
 {
-    protected function setUp()
+    /**
+     * Setup the test.
+     *
+     * @throws DBALException                When connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
+    protected function setUp(): void
     {
         $this->usesEntity(self::GEO_POLYGON_ENTITY);
         parent::setUp();
     }
 
+    /**
+     * Test the find by polygon method.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
+    public function testFindByPolygon()
+    {
+        $rings = [
+            new LineString([
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ]),
+        ];
+        $entity = new GeoPolygonEntity();
+
+        $entity->setPolygon(new Polygon($rings));
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $result = $this->getEntityManager()
+            ->getRepository(self::GEO_POLYGON_ENTITY)
+            ->findByPolygon(new Polygon($rings))
+        ;
+
+        static::assertEquals($entity, $result[0]);
+    }
+
+    /**
+     * Test to store an empty polygon.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testNullPolygon()
     {
         $entity = new GeoPolygonEntity();
@@ -59,53 +120,37 @@ class GeoPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
-    public function testSolidPolygon()
-    {
-        $rings = array(
-            new LineString(array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            ))
-        );
-        $entity = new GeoPolygonEntity();
-
-        $entity->setPolygon(new Polygon($rings));
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        $id = $entity->getId();
-
-        $this->getEntityManager()->clear();
-
-        $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
-
-        $this->assertEquals($entity, $queryEntity);
-    }
-
+    /**
+     * Test to store a polygon ring.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
     public function testPolygonRing()
     {
-        $rings = array(
-            new LineString(array(
+        $rings = [
+            new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
                 new Point(10, 10),
                 new Point(0, 10),
-                new Point(0, 0)
-            )),
-            new LineString(array(
+                new Point(0, 0),
+            ]),
+            new LineString([
                 new Point(5, 5),
                 new Point(7, 5),
                 new Point(7, 7),
                 new Point(5, 7),
-                new Point(5, 5)
-            ))
-        );
+                new Point(5, 5),
+            ]),
+        ];
         $entity = new GeoPolygonEntity();
 
         $entity->setPolygon(new Polygon($rings));
@@ -118,29 +163,42 @@ class GeoPolygonTypeTest extends OrmTestCase
 
         $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $queryEntity);
+        static::assertEquals($entity, $queryEntity);
     }
 
-    public function testFindByPolygon()
+    /**
+     * Test to store a solid polygon.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometry contains an invalid value
+     * @throws MappingException             when mapping
+     * @throws OptimisticLockException      when clear fails
+     */
+    public function testSolidPolygon()
     {
-        $rings = array(
-            new LineString(array(
+        $rings = [
+            new LineString([
                 new Point(0, 0),
                 new Point(10, 0),
                 new Point(10, 10),
                 new Point(0, 10),
-                new Point(0, 0)
-            ))
-        );
+                new Point(0, 0),
+            ]),
+        ];
         $entity = new GeoPolygonEntity();
 
         $entity->setPolygon(new Polygon($rings));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
+
+        $id = $entity->getId();
+
         $this->getEntityManager()->clear();
 
-        $result = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->findByPolygon(new Polygon($rings));
+        $queryEntity = $this->getEntityManager()->getRepository(self::GEO_POLYGON_ENTITY)->find($id);
 
-        $this->assertEquals($entity, $result[0]);
+        static::assertEquals($entity, $queryEntity);
     }
 }

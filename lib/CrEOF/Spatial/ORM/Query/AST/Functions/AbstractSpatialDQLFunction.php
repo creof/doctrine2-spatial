@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,48 +25,69 @@
 namespace CrEOF\Spatial\ORM\Query\AST\Functions;
 
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\ORM\Query\AST\ASTException;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Abstract spatial DQL function
+ * Abstract spatial DQL function.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://dlambert.mit-license.org MIT
+ *
+ * This spatial class is updated to avoid non-covered code. A lot of PostgreSQL was not tested, but that tha was not
+ * displayed by coverage rapport. Some MySQL methods generates bug since MySQL 8.0 because their name was updated.
+ *
+ * It is not possible to evaluate which function is tested or not with a children containing only protected methods.
+ * The new pattern consists to create an abstract method for each removed property.
+ * Then, if function is not tested, the code coverage tools will report this information.
+ *
+ * Thus if we analyse platform version, we can implements the getFunctionName method to return geomfromtext for
+ * MySQL Version 5.7 and return st_geomfromtext for version 8.0
+ *
+ * @see https://stackoverflow.com/questions/60377271/why-some-spatial-functions-does-not-exists-on-my-mysql-server
  */
 abstract class AbstractSpatialDQLFunction extends FunctionNode
 {
     /**
-     * @var string
-     */
-    protected $functionName;
-
-    /**
-     * @var array
-     */
-    protected $platforms = array();
-
-    /**
      * @var Node[]
      */
-    protected $geomExpr = array();
+    protected $geometryExpression = [];
 
     /**
-     * @var int
+     * Get the SQL.
+     *
+     * @param SqlWalker $sqlWalker the SQL Walker
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws DBALException                when an invalid platform was specified for this connection
+     * @throws ASTException                 when node cannot dispatch SqlWalker
      */
-    protected $minGeomExpr;
+    public function getSql(SqlWalker $sqlWalker): string
+    {
+        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
+
+        $arguments = [];
+        foreach ($this->getGeometryExpressions() as $expression) {
+            $arguments[] = $expression->dispatch($sqlWalker);
+        }
+
+        return sprintf('%s(%s)', $this->getFunctionName(), implode(', ', $arguments));
+    }
 
     /**
-     * @var int
-     */
-    protected $maxGeomExpr;
-
-    /**
-     * @param Parser $parser
+     * Parse SQL.
+     *
+     * @param Parser $parser parser
+     *
+     * @throws QueryException Query exception
      */
     public function parse(Parser $parser)
     {
@@ -74,44 +96,92 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
-        $this->geomExpr[] = $parser->ArithmeticPrimary();
+        $this->addGeometryExpression($parser->ArithmeticPrimary());
 
-        while (count($this->geomExpr) < $this->minGeomExpr || (($this->maxGeomExpr === null || count($this->geomExpr) < $this->maxGeomExpr) && $lexer->lookahead['type'] != Lexer::T_CLOSE_PARENTHESIS)) {
+        while (count($this->geometryExpression) < $this->getMinParameter()
+            || ((count($this->geometryExpression) < $this->getMaxParameter())
+                && Lexer::T_CLOSE_PARENTHESIS != $lexer->lookahead['type'])
+        ) {
             $parser->match(Lexer::T_COMMA);
 
-            $this->geomExpr[] = $parser->ArithmeticPrimary();
+            $this->addGeometryExpression($parser->ArithmeticPrimary());
         }
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
     /**
-     * @param SqlWalker $sqlWalker
+     * Geometry expressions fluent adder.
      *
-     * @return string
+     * @param Node $expression the node expression to add to the array of geometry expression
+     *
+     * @since 2.0 This function replace the protected property geomExpr which is now private.
      */
-    public function getSql(SqlWalker $sqlWalker)
+    protected function addGeometryExpression(Node $expression): self
     {
-        $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
+        $this->geometryExpression[] = $expression;
 
-        $arguments = array();
-        foreach ($this->geomExpr as $expression) {
-            $arguments[] = $expression->dispatch($sqlWalker);
-        }
-
-        return sprintf('%s(%s)', $this->functionName, implode(', ', $arguments));
+        return $this;
     }
 
     /**
-     * @param AbstractPlatform $platform
+     * Function SQL name getter.
      *
-     * @throws UnsupportedPlatformException
+     * @since 2.0 This function replace the protected property functionName.
      */
-    protected function validatePlatform(AbstractPlatform $platform)
+    abstract protected function getFunctionName(): string;
+
+    /**
+     * Geometry expressions getter.
+     *
+     * @since 2.0 This function replace the protected property geomExpr which is now private.
+     *
+     * @return Node[]
+     */
+    protected function getGeometryExpressions(): array
+    {
+        return $this->geometryExpression;
+    }
+
+    /**
+     * Maximum number of parameter for the spatial function.
+     *
+     * @since 2.0 This function replace the protected property maxGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     */
+    abstract protected function getMaxParameter(): int;
+
+    /**
+     * Minimum number of parameter for the spatial function.
+     *
+     * @since 2.0 This function replace the protected property minGeomExpr.
+     *
+     * @return int the inherited methods shall NOT return null, but 0 when function has no parameter
+     */
+    abstract protected function getMinParameter(): int;
+
+    /**
+     * Get the platforms accepted.
+     *
+     * @since 2.0 This function replace the protected property platforms.
+     *
+     * @return string[] a non-empty array of accepted platforms
+     */
+    abstract protected function getPlatforms(): array;
+
+    /**
+     * Test that the platform supports spatial type.
+     *
+     * @param AbstractPlatform $platform database spatial
+     *
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
+    protected function validatePlatform(AbstractPlatform $platform): void
     {
         $platformName = $platform->getName();
 
-        if (isset($this->platforms) && !in_array($platformName, $this->platforms)) {
+        if (!in_array($platformName, $this->getPlatforms())) {
             throw new UnsupportedPlatformException(
                 sprintf('DBAL platform "%s" is not currently supported.', $platformName)
             );

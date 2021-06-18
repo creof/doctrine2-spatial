@@ -1,8 +1,36 @@
 # Change Log
-All notable changes to this project will be documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
-This project adheres to [Semantic Versioning](http://semver.org/).
+All notable changes to this project will be documented in this file using the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
+This project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.0] Version 2 - 2020-04-01
+
+## [2.0.0-RC1] Release candidat - 2020-03-26
+
+### Added
+- Geometric and geographic entities implements JsonSerialization.
+
+## [2.0.0-RC0] Release candidat - 2020-03-18
+
+### Added
+- A new documentation hosted on ReadTheDocs.
+- Adding support of PHP7.2, PHP7.3, PHP7.4,
+- Needed PHP extension added in composer.json,
+- Spatial function implementing the ISO/IEC 13249-3:2016 or [OGC Standard](https://www.ogc.org/standards/sfs) are now stored in the [Standard](./lib/CrEOF/Spatial/ORM/Query/AST/Functions/Standard) directory.
+- Specific spatial function of the PostgreSql server are now store in the [PostgreSql](./lib/CrEOF/Spatial/ORM/Query/AST/Functions/PostgreSql) directory.
+- Specific spatial function of the PostgreSql server are now store in the [MySql](./lib/CrEOF/Spatial/ORM/Query/AST/Functions/MySql) directory.
+- Code coverage is now really at 90 percent. (CreOf code coverage was not valid because of AST functions which contained only properties),
+- AST Functions updated to avoid misconfiguration (some properties was missing),
+- AST Functions updated to detect which function was not tested,
+- A lot of spatial functions,
+- A lot of PostgreSql functions,
+- Deprecated MySql functions replaced by their new names, 
+- Removing deprecations of doctrine2,
+- Project forked from creof/doctrine-spatial2.
+### Removed
+- Removing support of PHP5.*, PHP7.0, PHP7.1
+
+## [1.1.1] - 2020-02-21 
+Nota: This version was never published by creof. But the fork begins at this date.
 ### Added
 - Added support for PostgreSql ST_MakeEnvelope function.
 ### Changed

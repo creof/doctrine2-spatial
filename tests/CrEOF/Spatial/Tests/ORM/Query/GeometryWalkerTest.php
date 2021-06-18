@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,139 +24,148 @@
 
 namespace CrEOF\Spatial\Tests\ORM\Query;
 
-use CrEOF\Spatial\PHP\Types\Geometry\LineString;
+use CrEOF\Spatial\Exception\InvalidValueException;
+use CrEOF\Spatial\Exception\UnsupportedPlatformException;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use CrEOF\Spatial\Tests\Fixtures\LineStringEntity;
+use CrEOF\Spatial\Tests\Helper\LineStringHelperTrait;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
 
 /**
- * GeometryWalker tests
+ * GeometryWalker tests.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://dlambert.mit-license.org MIT
  *
  * @group dql
+ *
+ * @internal
+ * @coversDefaultClass
  */
 class GeometryWalkerTest extends OrmTestCase
 {
-    protected function setUp()
+    use LineStringHelperTrait;
+
+    /**
+     * Setup the function type test.
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     */
+    protected function setUp(): void
     {
         $this->usesEntity(self::LINESTRING_ENTITY);
         parent::setUp();
     }
 
     /**
+     * Test the geometry walker binary.
+     *
      * @group geometry
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testGeometryWalkerBinary()
     {
-        $lineString1 = new LineString(array(
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5)
-        ));
-        $lineString2 = new LineString(array(
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22)
-        ));
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         switch ($this->getPlatform()->getName()) {
             case 'mysql':
-                $asBinary   = 'AsBinary';
-                $startPoint = 'StartPoint';
-                $envelope   = 'Envelope';
-                break;
+            case 'postgresql':
             default:
-                $asBinary   = 'ST_AsBinary';
+                $asBinary = 'ST_AsBinary';
                 $startPoint = 'ST_StartPoint';
-                $envelope   = 'ST_Envelope';
+                $envelope = 'ST_Envelope';
                 break;
         }
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asBinary, $startPoint);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asBinary,
+            $startPoint
+        );
+        $query = $this->getEntityManager()->createQuery($queryString);
+        $query->setHint(
+            Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'CrEOF\Spatial\ORM\Query\GeometryWalker'
+        );
+
+        $result = $query->getResult();
+        static::assertEquals(new Point(0, 0), $result[0][1]);
+        static::assertEquals(new Point(3, 3), $result[1][1]);
+
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asBinary,
+            $envelope
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
-        $this->assertEquals(new Point(0, 0), $result[0][1]);
-        $this->assertEquals(new Point(3, 3), $result[1][1]);
-
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asBinary, $envelope);
-        $query = $this->getEntityManager()->createQuery($queryString);
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
-
-        $result = $query->getResult();
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
     }
 
     /**
+     * Test the geometry walker.
+     *
      * @group geometry
+     *
+     * @throws DBALException                when connection failed
+     * @throws ORMException                 when cache is not set
+     * @throws UnsupportedPlatformException when platform is unsupported
+     * @throws InvalidValueException        when geometries are not valid
      */
     public function testGeometryWalkerText()
     {
-        $lineString1 = new LineString(array(
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(5, 5)
-        ));
-        $lineString2 = new LineString(array(
-            new Point(3, 3),
-            new Point(4, 15),
-            new Point(5, 22)
-        ));
-        $entity1 = new LineStringEntity();
-
-        $entity1->setLineString($lineString1);
-        $this->getEntityManager()->persist($entity1);
-
-        $entity2 = new LineStringEntity();
-
-        $entity2->setLineString($lineString2);
-        $this->getEntityManager()->persist($entity2);
+        $this->createStraightLineString();
+        $this->createAngularLineString();
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
         switch ($this->getPlatform()->getName()) {
             case 'mysql':
-                $asText   = 'AsText';
-                $startPoint = 'StartPoint';
-                $envelope   = 'Envelope';
-                break;
+            case 'postgresql':
             default:
-                $asText   = 'ST_AsText';
+                $asText = 'ST_AsText';
                 $startPoint = 'ST_StartPoint';
-                $envelope   = 'ST_Envelope';
+                $envelope = 'ST_Envelope';
                 break;
         }
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asText, $startPoint);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asText,
+            $startPoint
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
-        $this->assertEquals(new Point(0, 0), $result[0][1]);
-        $this->assertEquals(new Point(3, 3), $result[1][1]);
+        static::assertEquals(new Point(0, 0), $result[0][1]);
+        static::assertEquals(new Point(3, 3), $result[1][1]);
 
-        $queryString = sprintf('SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l', $asText, $envelope);
+        $queryString = sprintf(
+            'SELECT %s(%s(l.lineString)) FROM CrEOF\Spatial\Tests\Fixtures\LineStringEntity l',
+            $asText,
+            $envelope
+        );
         $query = $this->getEntityManager()->createQuery($queryString);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'CrEOF\Spatial\ORM\Query\GeometryWalker');
 
         $result = $query->getResult();
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
-        $this->assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[0][1]);
+        static::assertInstanceOf('CrEOF\Spatial\PHP\Types\Geometry\Polygon', $result[1][1]);
     }
 }

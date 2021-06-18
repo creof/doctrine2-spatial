@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,259 +24,309 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiLineString;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use PHPUnit\Framework\TestCase;
+
 /**
- * MultiLineString object tests
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * MultiLineString object tests.
  *
  * @group php
+ *
+ * @internal
+ * @coversDefaultClass
  */
-class MultiLineStringTest extends \PHPUnit_Framework_TestCase
+class MultiLineStringTest extends TestCase
 {
+    /**
+     * Test an empty multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testEmptyMultiLineString()
     {
-        $multiLineString = new MultiLineString(array());
+        $multiLineString = new MultiLineString([]);
 
-        $this->assertEmpty($multiLineString->getLineStrings());
+        static::assertEmpty($multiLineString->getLineStrings());
     }
 
+    /**
+     * Test to convert multiline string to json.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testJson()
+    {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expected = '{"type":"MultiLineString","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]],"srid":null}';
+        // phpcs:enable
+        $lineStrings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+        $multiLineString = new MultiLineString($lineStrings);
+
+        static::assertEquals($expected, $multiLineString->toJson());
+        static::assertEquals($expected, json_encode($multiLineString));
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expected = '{"type":"MultiLineString","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]],"srid":4326}';
+        // phpcs:enable
+        $multiLineString->setSrid(4326);
+        static::assertEquals($expected, $multiLineString->toJson());
+        static::assertEquals($expected, json_encode($multiLineString));
+    }
+
+    /**
+     * Test to convert a multiline string to a string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testMultiLineStringFromArraysToString()
+    {
+        $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
+        $lineStrings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+        $multiLineString = new MultiLineString($lineStrings);
+        $result = (string) $multiLineString;
+
+        static::assertEquals($expected, $result);
+    }
+
+    /**
+     * Test to get last line from multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testMultiLineStringFromObjectsGetLastLineString()
+    {
+        $firstLineString = new LineString(
+            [
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ]
+        );
+        $lastLineString = new LineString(
+            [
+                new Point(5, 5),
+                new Point(7, 5),
+                new Point(7, 7),
+                new Point(5, 7),
+                new Point(5, 5),
+            ]
+        );
+        $polygon = new MultiLineString([$firstLineString, $lastLineString]);
+
+        static::assertEquals($lastLineString, $polygon->getLineString(-1));
+    }
+
+    /**
+     * Test to get first line from multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testMultiLineStringFromObjectsGetSingleLineString()
+    {
+        $firstLineString = new LineString(
+            [
+                new Point(0, 0),
+                new Point(10, 0),
+                new Point(10, 10),
+                new Point(0, 10),
+                new Point(0, 0),
+            ]
+        );
+        $lastLineString = new LineString(
+            [
+                new Point(5, 5),
+                new Point(7, 5),
+                new Point(7, 7),
+                new Point(5, 7),
+                new Point(5, 5),
+            ]
+        );
+        $multiLineString = new MultiLineString([$firstLineString, $lastLineString]);
+
+        static::assertEquals($firstLineString, $multiLineString->getLineString(0));
+    }
+
+    /**
+     * Test to create multiline string from line string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testMultiLineStringFromObjectsToArray()
     {
-        $expected = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            ),
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-        $lineStrings = array(
+        $expected = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
+        $lineStrings = [
             new LineString(
-                array(
+                [
                     new Point(0, 0),
                     new Point(10, 0),
                     new Point(10, 10),
                     new Point(0, 10),
-                    new Point(0, 0)
-                )
+                    new Point(0, 0),
+                ]
             ),
             new LineString(
-                array(
+                [
                     new Point(0, 0),
                     new Point(10, 0),
                     new Point(10, 10),
                     new Point(0, 10),
-                    new Point(0, 0)
-                )
-            )
-        );
+                    new Point(0, 0),
+                ]
+            ),
+        ];
 
         $multiLineString = new MultiLineString($lineStrings);
 
-        $this->assertEquals($expected, $multiLineString->toArray());
+        static::assertEquals($expected, $multiLineString->toArray());
     }
 
-    public function testSolidMultiLineStringFromArraysGetRings()
-    {
-        $expected = array(
-            new LineString(
-                array(
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0)
-                )
-            ),
-            new LineString(
-                array(
-                    new Point(0, 0),
-                    new Point(10, 0),
-                    new Point(10, 10),
-                    new Point(0, 10),
-                    new Point(0, 0)
-                )
-            )
-        );
-        $rings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            ),
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-
-        $multiLineString = new MultiLineString($rings);
-
-        $this->assertEquals($expected, $multiLineString->getLineStrings());
-    }
-
-
-
+    /**
+     * Test a solid multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testSolidMultiLineStringAddRings()
     {
-        $expected = array(
+        $expected = [
             new LineString(
-                array(
+                [
                     new Point(0, 0),
                     new Point(10, 0),
                     new Point(10, 10),
                     new Point(0, 10),
-                    new Point(0, 0)
-                )
+                    new Point(0, 0),
+                ]
             ),
             new LineString(
-                array(
+                [
                     new Point(0, 0),
                     new Point(10, 0),
                     new Point(10, 10),
                     new Point(0, 10),
-                    new Point(0, 0)
-                )
-            )
-        );
-        $rings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
+                    new Point(0, 0),
+                ]
             ),
-        );
+        ];
+        $rings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
 
         $multiLineString = new MultiLineString($rings);
 
         $multiLineString->addLineString(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ]
         );
 
-        $this->assertEquals($expected, $multiLineString->getLineStrings());
+        static::assertEquals($expected, $multiLineString->getLineStrings());
     }
 
-    public function testMultiLineStringFromObjectsGetSingleLineString()
+    /**
+     * Test a solid multiline string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testSolidMultiLineStringFromArraysGetRings()
     {
-        $lineString1 = new LineString(
-            array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            )
-        );
-        $lineString2 = new LineString(
-            array(
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5)
-            )
-        );
-        $multiLineString = new MultiLineString(array($lineString1, $lineString2));
-
-        $this->assertEquals($lineString1, $multiLineString->getLineString(0));
-    }
-
-    public function testMultiLineStringFromObjectsGetLastLineString()
-    {
-        $lineString1 = new LineString(
-            array(
-                new Point(0, 0),
-                new Point(10, 0),
-                new Point(10, 10),
-                new Point(0, 10),
-                new Point(0, 0)
-            )
-        );
-        $lineString2 = new LineString(
-            array(
-                new Point(5, 5),
-                new Point(7, 5),
-                new Point(7, 7),
-                new Point(5, 7),
-                new Point(5, 5)
-            )
-        );
-        $polygon = new MultiLineString(array($lineString1, $lineString2));
-
-        $this->assertEquals($lineString2, $polygon->getLineString(-1));
-    }
-
-    public function testMultiLineStringFromArraysToString()
-    {
-        $expected = '(0 0,10 0,10 10,0 10,0 0),(0 0,10 0,10 10,0 10,0 0)';
-        $lineStrings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
+        $expected = [
+            new LineString(
+                [
+                    new Point(0, 0),
+                    new Point(10, 0),
+                    new Point(10, 10),
+                    new Point(0, 10),
+                    new Point(0, 0),
+                ]
             ),
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-        $multiLineString = new MultiLineString($lineStrings);
-        $result  = (string) $multiLineString;
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testJson()
-    {
-        $expected = '{"type":"MultiLineString","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[0,0],[10,0],[10,10],[0,10],[0,0]]]}';
-        $lineStrings = array(
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
+            new LineString(
+                [
+                    new Point(0, 0),
+                    new Point(10, 0),
+                    new Point(10, 10),
+                    new Point(0, 10),
+                    new Point(0, 0),
+                ]
             ),
-            array(
-                array(0, 0),
-                array(10, 0),
-                array(10, 10),
-                array(0, 10),
-                array(0, 0)
-            )
-        );
-        $multiLineString = new MultiLineString($lineStrings);
+        ];
+        $rings = [
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+            [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+            ],
+        ];
 
-        $this->assertEquals($expected, $multiLineString->toJson());
+        $multiLineString = new MultiLineString($rings);
+
+        static::assertEquals($expected, $multiLineString->getLineStrings());
     }
 }

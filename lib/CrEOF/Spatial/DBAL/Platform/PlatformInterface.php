@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (C) 2020 Alexandre Tranchant
  * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,66 +28,75 @@ use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 
 /**
- * Spatial platform interface
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * Spatial platform interface.
  */
 interface PlatformInterface
 {
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * Convert Binary to php value.
+     *
+     * @param AbstractSpatialType $type    Spatial type
+     * @param string              $sqlExpr Sql expression
      *
      * @return GeometryInterface
      */
-    public function convertBinaryToPHPValue(AbstractSpatialType $type, $sqlExpr);
+    public function convertBinaryToPhpValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * Convert string data to a php value.
+     *
+     * @param AbstractSpatialType $type    The abstract spatial type
+     * @param string              $sqlExpr the SQL expression
      *
      * @return GeometryInterface
      */
-    public function convertStringToPHPValue(AbstractSpatialType $type, $sqlExpr);
+    public function convertStringToPhpValue(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param GeometryInterface   $value
+     * Convert to database value.
+     *
+     * @param AbstractSpatialType $type  The spatial type
+     * @param GeometryInterface   $value The geometry interface
      *
      * @return string
      */
     public function convertToDatabaseValue(AbstractSpatialType $type, GeometryInterface $value);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * Convert to database value to SQL.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
-    public function convertToDatabaseValueSQL(AbstractSpatialType $type, $sqlExpr);
+    public function convertToDatabaseValueSql(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * @param AbstractSpatialType $type
-     * @param string              $sqlExpr
+     * Convert to php value to SQL.
+     *
+     * @param AbstractSpatialType $type    The spatial type
+     * @param string              $sqlExpr The SQL expression
      *
      * @return string
      */
-    public function convertToPHPValueSQL(AbstractSpatialType $type, $sqlExpr);
+    public function convertToPhpValueSql(AbstractSpatialType $type, $sqlExpr);
 
     /**
-     * Gets the SQL declaration snippet for a field of this type.
+     * Get an array of database types that map to this Doctrine type.
      *
-     * @param array $fieldDeclaration
-     *
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration);
-
-    /**
-     * @param AbstractSpatialType $type
+     * @param AbstractSpatialType $type the spatial type
      *
      * @return string[]
      */
     public function getMappedDatabaseTypes(AbstractSpatialType $type);
+
+    /**
+     * Gets the SQL declaration snippet for a field of this type.
+     *
+     * @param array $fieldDeclaration array SHALL contains 'type' as key
+     *
+     * @return string
+     */
+    public function getSqlDeclaration(array $fieldDeclaration);
 }

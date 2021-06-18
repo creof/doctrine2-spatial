@@ -1,41 +1,196 @@
 language: php
+dist: bionic
 
-sudo: false
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
 
-php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - hhvm
-
-env:
-  - ORM=2.3
-  - ORM=2.4
-  - ORM=2.5
-
-before_script:
-  - composer self-update
-  - cp ./tests/travis/composer.orm$ORM.json ./composer.json
-  - composer install --prefer-source
+install:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+  - composer config -g  discard-changes 1 # because we used travis cache and, sometimes, packages change
   - mkdir -p ./build/coverage
+  - |
+    if [ "$DOCTRINE" == "2.8.x-dev" ]; then
+       cp ./tests/travis/composer.orm2.8.json ./composer.json
+    fi
+  - composer install --prefer-source
 
 script:
-  - ./vendor/bin/phpunit -v -c ./tests/travis/travis.pgsql.xml --coverage-php ./build/coverage/coverage-pgsql-$TRAVIS_PHP_VERSION-$ORM.cov
-  - ./vendor/bin/phpunit -v -c ./tests/travis/travis.mysql.xml --coverage-php ./build/coverage/coverage-mysql-$TRAVIS_PHP_VERSION-$ORM.cov
+  - |
+    if [ "x$COVERAGE" == "xyes" ]; then
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml --coverage-php ./build/coverage/coverage-$DB-$TRAVIS_PHP_VERSION-2.7.cov
+    else
+       ./vendor/bin/phpunit -v --configuration ./tests/travis/$DB.travis.xml
+    fi
+  # Code shall respect rules
+  - composer check-quality-code
 
 after_script:
-  - ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
-  - ./vendor/bin/coveralls -v --exclude-no-stmt
+  - |
+    if [ "x$COVERAGE" == "xyes" ]; then
+       ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage
+       ./vendor/bin/coveralls -v --exclude-no-stmt
+    fi
+  #Push code climate coverage
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_WEBHOOK
 
-matrix:
+jobs:
+  include:
+    #MySQL 8 - PHP7.2
+    - stage: Test MySQL
+      php: 7.2
+      env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #MySQLi8 - PHP7.2
+    - stage: Test MySQLi
+      php: 7.2
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL9.6 PHP7.2 Postgis 2.5
+    - stage: Test PostgreSQL
+      php: 7.2
+      env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes DOCTRINE=2.7
+      addons:
+        postgresql: "9.6"
+        apt:
+          packages:
+            - postgis
+            - postgresql-9.6-postgis-2.5
+    #MySQL 8 PHP 7.3
+    - stage: Test MySQL
+      php: 7.3
+      env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #MySQLi 8 PHP 7.3
+    - stage: Test MySQLi
+      php: 7.3
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.7
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL11 PHP 7.3 Postgis 2.5
+    - stage: Test PostgreSQL
+      php: 7.3
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.7
+      sudo: required
+      addons:
+        postgresql: "11"
+        apt:
+          packages:
+            - postgis
+            - postgresql-11-postgis-2.5
+    #MySQL 5.7 PHP 7.4
+    - stage: Test MySQL
+      php: 7.4
+      env: DB=mysql MYSQL_VERSION=5.7 COVERAGE=yes DOCTRINE=2.7
+      services:
+        - mysql
+    #MySQL 8 PHP 7.4
+    - stage: Test MySQL
+      php: 7.4
+      env: DB=mysql.docker MYSQL_VERSION=8.0 COVERAGE=yes DOCTRINE=2.7
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #MySQLi5.7 PHP 7.4
+    - stage: Test MySQLi
+      php: 7.4
+      env: DB=mysqli MYSQL_VERSION=5.7 COVERAGE=yes DOCTRINE=2.7
+      services:
+        - mysql
+    #MySQLi8 PHP 7.4
+    - stage: Test MySQLi
+      php: 7.4
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 COVERAGE=yes DOCTRINE=2.7
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL9.6 PHP7.4 Postgis 2.5
+    - stage: Test PostgreSQL
+      php: 7.4
+      env: DB=pgsql POSTGRESQL_VERSION=9.6 COVERAGE=yes DOCTRINE=2.7
+      addons:
+        postgresql: "9.6"
+        apt:
+          packages:
+            - postgis
+            - postgresql-9.6-postgis-2.5
+    #PostgreSQL10 PHP7.4 Postgis 2.4
+    - stage: Test PostgreSQL
+      php: 7.4
+      env: DB=pgsql POSTGRESQL_VERSION=10.0 COVERAGE=yes DOCTRINE=2.7
+      sudo: required
+      addons:
+        postgresql: "10"
+        apt:
+          packages:
+            - postgis
+            - postgresql-10-postgis-2.4
+    #PostgreSQL11 PHP7.4 Postgis 2.5
+    - stage: Test PostgreSQL
+      php: 7.4
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 COVERAGE=yes DOCTRINE=2.7
+      sudo: required
+      addons:
+        postgresql: "11"
+        apt:
+          packages:
+            - postgis
+            - postgresql-11-postgis-2.5
+
+    #MySQL 8 PHP 7.3 AND doctrine 2.8.x-dev
+    - stage: Test Doctrine 2.8.x-dev
+      php: 7.3
+      env: DB=mysql.docker MYSQL_VERSION=8.0 DOCTRINE=2.8.x-dev
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #MySQLi 8 PHP 7.3 AND doctrine 2.8.x-dev
+    - stage: Test Doctrine 2.8.x-dev
+      php: 7.3
+      env: DB=mysqli.docker MYSQL_VERSION=8.0 DOCTRINE=2.8.x-dev
+      sudo: required
+      services:
+        - docker
+      before_script:
+        - bash ./tests/travis/install-mysql-8.0.sh
+    #PostgreSQL11 PHP 7.3 Postgis 2.5 AND doctrine 2.8.x-dev
+    - stage: Test Doctrine 2.8.x-dev
+      php: 7.3
+      env: DB=pgsql POSTGRESQL_VERSION=11.0 DOCTRINE=2.8.x-dev
+      sudo: required
+      addons:
+        postgresql: "11"
+        apt:
+          packages:
+            - postgis
+            - postgresql-11-postgis-2.5
+
   allow_failures:
-    - php: hhvm     # driver for PostgreSQL currently unsupported by HHVM, requires 3rd party dependency
-  exclude:
-    - php: 5.3
-      env: ORM=2.5  # ORM >=2.5 requires PHP >=5.4
+    - env: DOCTRINE=2.8.x-dev

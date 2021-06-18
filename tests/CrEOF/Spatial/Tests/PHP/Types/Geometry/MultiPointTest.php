@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2012 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,165 +24,217 @@
 
 namespace CrEOF\Spatial\Tests\PHP\Types\Spatial\Geometry;
 
+use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use PHPUnit\Framework\TestCase;
 
 /**
- * MultiPoint object tests
- *
- * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * MultiPoint object tests.
  *
  * @group php
+ *
+ * @author  Alexandre Tranchant <alexandre.tranchant@gmail.com>
+ * @license https://alexandre-tranchant.mit-license.org MIT
+ *
+ * @internal
+ * @coversDefaultClass
  */
-class MultiPointTest extends \PHPUnit_Framework_TestCase
+class MultiPointTest extends TestCase
 {
+    /**
+     * Test MultiPoint bad parameter.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testBadLineString()
+    {
+        $this->expectException(InvalidValueException::class);
+        $this->expectExceptionMessage('Invalid MultiPoint Point value of type "integer"');
+
+        new MultiPoint([1, 2, 3, 4]);
+    }
+
+    /**
+     * Test an empty multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testEmptyMultiPoint()
     {
-        $multiPoint = new MultiPoint(array());
+        $multiPoint = new MultiPoint([]);
 
-        $this->assertEmpty($multiPoint->getPoints());
+        static::assertEmpty($multiPoint->getPoints());
     }
 
-    public function testMultiPointFromObjectsToArray()
+    /**
+     * Test to convert multipoint to json.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testJson()
     {
-        $expected = array(
-            array(0, 0),
-            array(1, 1),
-            array(2, 2),
-            array(3, 3)
-        );
-        $multiPoint = new MultiPoint(array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3)
-        ));
-
-        $this->assertCount(4, $multiPoint->getPoints());
-        $this->assertEquals($expected, $multiPoint->toArray());
-    }
-
-    public function testMultiPointFromArraysGetPoints()
-    {
-        $expected = array(
-            new Point(0, 0),
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3)
-        );
+        $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":null}';
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
         );
-        $actual = $multiPoint->getPoints();
 
-        $this->assertCount(4, $actual);
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $multiPoint->toJson());
+        static::assertEquals($expected, json_encode($multiPoint));
+
+        $expected = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]],"srid":4326}';
+        $multiPoint->setSrid(4326);
+        static::assertEquals($expected, $multiPoint->toJson());
+        static::assertEquals($expected, json_encode($multiPoint));
     }
 
-
-
+    /**
+     * Test to add point to a multipoint.
+     *
+     * @throws InvalidValueException this should not happen
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testMultiPointAddPoints()
     {
-        $expected = array(
+        $expected = [
             new Point(0, 0),
             new Point(1, 1),
             new Point(2, 2),
-            new Point(3, 3)
-        );
+            new Point(3, 3),
+        ];
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-            )
+            [
+                [0, 0],
+                [1, 1],
+            ]
         );
 
         $multiPoint
-            ->addPoint(array(2, 2))
-            ->addPoint(array(3, 3))
+            ->addPoint([2, 2])
+            ->addPoint([3, 3])
         ;
 
         $actual = $multiPoint->getPoints();
 
-        $this->assertCount(4, $actual);
-        $this->assertEquals($expected, $actual);
+        static::assertCount(4, $actual);
+        static::assertEquals($expected, $actual);
     }
 
-    public function testMultiPointFromArraysGetSinglePoint()
-    {
-        $expected = new Point(1, 1);
-        $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
-        );
-        $actual = $multiPoint->getPoint(1);
-
-        $this->assertEquals($expected, $actual);
-    }
-
+    /**
+     * Test to get last point from a multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testMultiPointFromArraysGetLastPoint()
     {
         $expected = new Point(3, 3);
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(1, 1),
-                array(2, 2),
-                array(3, 3)
-            )
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
         );
         $actual = $multiPoint->getPoint(-1);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
-     * Test MultiPoint bad parameter
+     * Test to get points from a multipoint.
      *
-     * @expectedException        \CrEOF\Spatial\Exception\InvalidValueException
-     * @expectedExceptionMessage Invalid MultiPoint Point value of type "integer"
+     * @throws InvalidValueException This should not happen because of selected value
      */
-    public function testBadLineString()
+    public function testMultiPointFromArraysGetPoints()
     {
-        new MultiPoint(array(1, 2, 3 ,4));
+        $expected = [
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3),
+        ];
+        $multiPoint = new MultiPoint(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+        $actual = $multiPoint->getPoints();
+
+        static::assertCount(4, $actual);
+        static::assertEquals($expected, $actual);
     }
 
+    /**
+     * Test to get first point from a multipoint.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testMultiPointFromArraysGetSinglePoint()
+    {
+        $expected = new Point(1, 1);
+        $multiPoint = new MultiPoint(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]
+        );
+        $actual = $multiPoint->getPoint(1);
+
+        static::assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test to convert multipoint to string.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
     public function testMultiPointFromArraysToString()
     {
-        $expected   = '0 0,0 5,5 0,0 0';
+        $expected = '0 0,0 5,5 0,0 0';
         $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
+            [
+                [0, 0],
+                [0, 5],
+                [5, 0],
+                [0, 0],
+            ]
         );
 
-        $this->assertEquals($expected, (string) $multiPoint);
+        static::assertEquals($expected, (string) $multiPoint);
     }
 
-    public function testJson()
+    /**
+     * Test to convert multipoint to array.
+     *
+     * @throws InvalidValueException This should not happen because of selected value
+     */
+    public function testMultiPointFromObjectsToArray()
     {
-        $expected   = '{"type":"MultiPoint","coordinates":[[0,0],[0,5],[5,0],[0,0]]}';
-        $multiPoint = new MultiPoint(
-            array(
-                array(0, 0),
-                array(0, 5),
-                array(5, 0),
-                array(0, 0)
-            )
-        );
+        $expected = [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+            [3, 3],
+        ];
+        $multiPoint = new MultiPoint([
+            new Point(0, 0),
+            new Point(1, 1),
+            new Point(2, 2),
+            new Point(3, 3),
+        ]);
 
-        $this->assertEquals($expected, $multiPoint->toJson());
+        static::assertCount(4, $multiPoint->getPoints());
+        static::assertEquals($expected, $multiPoint->toArray());
     }
 }

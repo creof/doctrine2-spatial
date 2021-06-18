@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2013 Derek J. Lambert
+ * Copyright (C) 2020 Alexandre Tranchant
+ * Copyright (C) 2015 Derek J. Lambert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@
 namespace CrEOF\Spatial\PHP\Types\Geometry;
 
 /**
- * Geometry interface for Geometry objects
+ * Geometry interface for Geometry objects.
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
- * @license http://dlambert.mit-license.org MIT
+ * @license https://dlambert.mit-license.org MIT
  */
 interface GeometryInterface
 {
-    const GEOMETRY           = 'Geometry';
-    const POINT              = 'Point';
-    const LINESTRING         = 'LineString';
-    const POLYGON            = 'Polygon';
-    const MULTIPOINT         = 'MultiPoint';
-    const MULTILINESTRING    = 'MultiLineString';
-    const MULTIPOLYGON       = 'MultiPolygon';
-    const GEOMETRYCOLLECTION = 'GeometryCollection';
+    public const GEOMETRY = 'Geometry';
+    public const GEOMETRYCOLLECTION = 'GeometryCollection';
+    public const LINESTRING = 'LineString';
+    public const MULTILINESTRING = 'MultiLineString';
+    public const MULTIPOINT = 'MultiPoint';
+    public const MULTIPOLYGON = 'MultiPolygon';
+    public const POINT = 'Point';
+    public const POLYGON = 'Polygon';
 
     /**
      * @return string
