@@ -1,14 +1,14 @@
 <?php
 
-
 namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPolygon;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+
 /**
- * Polygon object tests
+ * MultiPolygon object tests
  *
  * @author  Derek J. Lambert <dlambert@dereklambert.com>
  * @license http://dlambert.mit-license.org MIT
@@ -203,8 +203,6 @@ class MultiPolygonTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $multiPolygon->getPolygons());
     }
-
-
 
     public function testMultiPolygonFromObjectsGetSinglePolygon()
     {

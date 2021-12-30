@@ -26,6 +26,7 @@ namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+
 /**
  * Polygon object tests
  *
@@ -124,7 +125,6 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $polygon->getRings());
     }
-
 
     public function testSolidPolygonFromArrayAddRings()
     {
