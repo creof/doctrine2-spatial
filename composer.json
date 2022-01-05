@@ -14,7 +14,7 @@
         "doctrine/orm": ">=2.3",
         "creof/geo-parser": "~2.0",
         "creof/wkt-parser": "~2.0",
-        "creof/wkb-parser": "dev-master"
+        "creof/wkb-parser": "2.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "<5.0",
