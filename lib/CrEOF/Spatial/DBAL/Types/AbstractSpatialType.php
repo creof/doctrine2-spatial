@@ -206,11 +206,11 @@ abstract class AbstractSpatialType extends Type
     {
         $class = null;
 
-        if ($platform instanceof \Doctrine\DBAL\Platforms\MySQL80Platform) {
+        if ($platform instanceof MySQL80Platform) {
             $class = MySql80::class;
-        } elseif ($platform instanceof \Doctrine\DBAL\Platforms\MySQLPlatform) {
+        } elseif ($platform instanceof MySQLPlatform) {
             $class = MySql::class;
-        } elseif ($platform instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform) {
+        } elseif ($platform instanceof PostgreSQLPlatform) {
             $class = PostgreSql::class;
         }
 

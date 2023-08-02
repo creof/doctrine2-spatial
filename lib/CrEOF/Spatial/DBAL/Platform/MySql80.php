@@ -24,7 +24,6 @@
 namespace CrEOF\Spatial\DBAL\Platform;
 
 use CrEOF\Spatial\DBAL\Types\AbstractSpatialType;
-use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 
 /**
  * MySql spatial platform
