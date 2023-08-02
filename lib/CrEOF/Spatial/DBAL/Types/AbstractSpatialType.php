@@ -23,12 +23,18 @@
 
 namespace CrEOF\Spatial\DBAL\Types;
 
+use CrEOF\Spatial\DBAL\Platform\MySql;
+use CrEOF\Spatial\DBAL\Platform\MySql80;
+use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
+use CrEOF\Spatial\DBAL\Platform\PostgreSql;
 use CrEOF\Spatial\Exception\InvalidValueException;
 use CrEOF\Spatial\Exception\UnsupportedPlatformException;
-use CrEOF\Spatial\DBAL\Platform\PlatformInterface;
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 use CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -39,9 +45,6 @@ use Doctrine\DBAL\Types\Type;
  */
 abstract class AbstractSpatialType extends Type
 {
-    const PLATFORM_MYSQL      = 'MySql';
-    const PLATFORM_POSTGRESQL = 'PostgreSql';
-
     /**
      * @return string
      */
@@ -201,13 +204,19 @@ abstract class AbstractSpatialType extends Type
      */
     private function getSpatialPlatform(AbstractPlatform $platform)
     {
-        $const = sprintf('self::PLATFORM_%s', strtoupper($platform->getName()));
+        $class = null;
 
-        if (! defined($const)) {
-            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platform->getName()));
+        if ($platform instanceof \Doctrine\DBAL\Platforms\MySQL80Platform) {
+            $class = MySql80::class;
+        } elseif ($platform instanceof \Doctrine\DBAL\Platforms\MySQLPlatform) {
+            $class = MySql::class;
+        } elseif ($platform instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform) {
+            $class = PostgreSql::class;
         }
 
-        $class = sprintf('CrEOF\Spatial\DBAL\Platform\%s', constant($const));
+        if (!$class) {
+            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', get_class($platform)));
+        }
 
         return new $class;
     }
