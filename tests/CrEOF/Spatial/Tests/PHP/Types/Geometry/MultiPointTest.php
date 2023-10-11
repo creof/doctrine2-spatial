@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace CrEOF\Spatial\Tests\PHP\Types\Spatial\Geometry;
+namespace CrEOF\Spatial\Tests\PHP\Types\Geometry;
 
 use CrEOF\Spatial\PHP\Types\Geometry\MultiPoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -83,8 +83,6 @@ class MultiPointTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(4, $actual);
         $this->assertEquals($expected, $actual);
     }
-
-
 
     public function testMultiPointAddPoints()
     {

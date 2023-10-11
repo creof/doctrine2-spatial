@@ -45,16 +45,19 @@ class Point extends AbstractPoint implements GeographyInterface
      */
     public function setX($x)
     {
-        $parser = new Parser($x);
+        if (!is_numeric($x)) {
+            $parser = new Parser($x);
 
-        try {
-            $x = (float) $parser->parse();
-        } catch (RangeException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
-        } catch (UnexpectedValueException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            try {
+                $x = $parser->parse();
+            } catch (RangeException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            } catch (UnexpectedValueException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            }
         }
 
+        $x = (float) $x;
         if ($x < -180 || $x > 180) {
             throw new InvalidValueException(sprintf('Invalid longitude value "%s", must be in range -180 to 180.', $x));
         }
@@ -72,16 +75,19 @@ class Point extends AbstractPoint implements GeographyInterface
      */
     public function setY($y)
     {
-        $parser = new Parser($y);
+        if (!is_numeric($y)) {
+            $parser = new Parser($y);
 
-        try {
-            $y = (float) $parser->parse();
-        } catch (RangeException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
-        } catch (UnexpectedValueException $e) {
-            throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            try {
+                $y = $parser->parse();
+            } catch (RangeException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            } catch (UnexpectedValueException $e) {
+                throw new InvalidValueException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            }
         }
 
+        $y = (float) $y;
         if ($y < -90 || $y > 90) {
             throw new InvalidValueException(sprintf('Invalid latitude value "%s", must be in range -90 to 90.', $y));
         }
