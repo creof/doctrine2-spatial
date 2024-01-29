@@ -66,8 +66,10 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
 
     /**
      * @param Parser $parser
+     *
+     * @return void
      */
-    public function parse(Parser $parser)
+    public function parse(Parser $parser): void
     {
         $lexer = $parser->getLexer();
 
