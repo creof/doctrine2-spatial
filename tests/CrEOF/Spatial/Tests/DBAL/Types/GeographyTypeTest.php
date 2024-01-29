@@ -23,7 +23,6 @@
 
 namespace CrEOF\Spatial\Tests\DBAL\Types;
 
-use Doctrine\ORM\Query;
 use CrEOF\Spatial\PHP\Types\Geography\LineString;
 use CrEOF\Spatial\PHP\Types\Geography\Point;
 use CrEOF\Spatial\PHP\Types\Geography\Polygon;
@@ -138,7 +137,12 @@ class GeographyTypeTest extends OrmTestCase
         try {
             $entity->setGeography('POINT(0 0)');
         } catch (\TypeError $exception) {
-            throw new \PHPUnit_Framework_Error($exception->getMessage(), $exception->getCode());
+            throw new \PHPUnit_Framework_Error(
+                $exception->getMessage(),
+                $exception->getCode(),
+                $exception->getFile(),
+                $exception->getLine()
+            );
         }
     }
 }

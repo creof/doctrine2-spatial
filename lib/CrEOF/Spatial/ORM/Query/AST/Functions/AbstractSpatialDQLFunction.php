@@ -66,8 +66,10 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
 
     /**
      * @param Parser $parser
+     *
+     * @return void
      */
-    public function parse(Parser $parser)
+    public function parse(Parser $parser): void
     {
         $lexer = $parser->getLexer();
 
@@ -94,19 +96,12 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     {
         $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
-        $result = sprintf('%s(', $this->functionName);
-
-        for ($i = 0, $size = count($this->geomExpr); $i < $size;) {
-            $result .= $this->geomExpr[$i]->dispatch($sqlWalker);
-
-            if (++$i < $size) {
-                $result .= ', ';
-            }
+        $arguments = array();
+        foreach ($this->geomExpr as $expression) {
+            $arguments[] = $expression->dispatch($sqlWalker);
         }
 
-        $result .= ')';
-
-        return $result;
+        return sprintf('%s(%s)', $this->functionName, implode(', ', $arguments));
     }
 
     /**
@@ -118,8 +113,10 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
     {
         $platformName = $platform->getName();
 
-        if (isset($this->platforms) && ! in_array($platformName, $this->platforms)) {
-            throw new UnsupportedPlatformException(sprintf('DBAL platform "%s" is not currently supported.', $platformName));
+        if (isset($this->platforms) && !in_array($platformName, $this->platforms)) {
+            throw new UnsupportedPlatformException(
+                sprintf('DBAL platform "%s" is not currently supported.', $platformName)
+            );
         }
     }
 }
