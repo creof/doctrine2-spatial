@@ -198,7 +198,7 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getEntityManager()
     {
-        if (isset($this->entityManager)) {
+        if (null !== $this->entityManager) {
             return $this->entityManager;
         }
 
@@ -209,7 +209,8 @@ abstract class OrmTestCase extends \PHPUnit_Framework_TestCase
 
         $config = new Configuration();
 
-        $config->setMetadataCacheImpl(new ArrayCache);
+        $config->setMetadataCacheImpl(new ArrayCache());
+        $config->setResultCacheImpl(new ArrayCache());
         $config->setProxyDir(__DIR__ . '/Proxies');
         $config->setProxyNamespace('CrEOF\Spatial\Tests\Proxies');
         $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver(array(realpath(__DIR__ . '/Fixtures')), true));

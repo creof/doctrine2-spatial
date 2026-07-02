@@ -79,7 +79,7 @@ abstract class AbstractPolygon extends AbstractGeometry
      */
     public function getRing($index)
     {
-        if (-1 == $index) {
+        if (-1 === $index) {
             $index = count($this->rings) - 1;
         }
 
