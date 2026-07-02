@@ -90,7 +90,7 @@ abstract class AbstractSpatialDQLFunction extends FunctionNode
      *
      * @return string
      */
-    public function getSql(SqlWalker $sqlWalker)
+    public function getSql(SqlWalker $sqlWalker): string
     {
         $this->validatePlatform($sqlWalker->getConnection()->getDatabasePlatform());
 
