@@ -99,7 +99,7 @@ abstract class AbstractGeometry implements GeometryInterface
             case ($point instanceof AbstractPoint):
                 return $point->toArray();
                 break;
-            case (is_array($point) && count($point) == 2 && is_numeric($point[0]) && is_numeric($point[1])):
+            case (is_array($point) && count($point) === 2 && is_numeric($point[0]) && is_numeric($point[1])):
                 return array_values($point);
                 break;
             default:
@@ -115,14 +115,8 @@ abstract class AbstractGeometry implements GeometryInterface
      */
     protected function validateRingValue($ring)
     {
-        switch (true) {
-            case ($ring instanceof AbstractLineString):
-                $ring = $ring->toArray();
-                break;
-            case (is_array($ring)):
-                break;
-            default:
-                throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
+        if (! (is_array($ring) || $ring instanceof AbstractLineString)) {
+            throw new InvalidValueException(sprintf('Invalid %s LineString value of type "%s"', $this->getType(), (is_object($ring) ? get_class($ring) : gettype($ring))));
         }
 
         $ring = $this->validateLineStringValue($ring);
@@ -187,6 +181,7 @@ abstract class AbstractGeometry implements GeometryInterface
             if ($polygon instanceof GeometryInterface) {
                 $polygon = $polygon->toArray();
             }
+
             $polygon = $this->validatePolygonValue($polygon);
         }
 

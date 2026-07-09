@@ -131,8 +131,6 @@ class MultiLineStringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $multiLineString->getLineStrings());
     }
 
-
-
     public function testSolidMultiLineStringAddRings()
     {
         $expected = array(

@@ -35,8 +35,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  */
 class PointTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testGoodNumericPoint()
+    public function testGoodNumericPoints()
     {
         $point1 = new Point(-73.7562317, 42.6525793);
 
@@ -49,8 +48,12 @@ class PointTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(40.446111111111, $point1->getLatitude());
         $this->assertEquals(-79.948611111111, $point1->getLongitude());
-    }
 
+        $point2 = new Point(0.00001, 0.00003);
+
+        $this->assertEquals(0.00003, $point2->getLatitude());
+        $this->assertEquals(0.00001, $point2->getLongitude());
+    }
 
     public function testGoodStringPoints()
     {
@@ -239,7 +242,6 @@ class PointTest extends \PHPUnit_Framework_TestCase
     {
         new Point();
     }
-
 
     /**
      * Test bad string parameters - Two invalid parameters

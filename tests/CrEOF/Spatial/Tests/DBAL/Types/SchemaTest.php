@@ -64,7 +64,7 @@ class SchemaTest extends OrmTestCase
                 $databaseTypes =  $type->getMappedDatabaseTypes($platform);
 
                 foreach ($databaseTypes as $databaseType) {
-                    $typeMapping = $this->getPlatform()->getDoctrineTypeMapping($databaseType);
+                    $typeMapping = $platform->getDoctrineTypeMapping($databaseType);
 
                     $this->assertEquals($doctrineType, $typeMapping);
                 }
